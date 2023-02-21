@@ -111,11 +111,11 @@ import { AuthModule, LogLevel } from 'angular-auth-oidc-client';
     MatListModule,
     AuthModule.forRoot({
       config: {
-        authority: 'https://api.vipps.no/access-management-1.0/access/.well-known/openid-configuration',
-        redirectUrl: window.location.origin,
-        postLogoutRedirectUri: window.location.origin,
-        clientId: 'e45b9cd6-2526-43b0-9710-a6a0c2e25534',
-        scope: 'openid profile email offline_access',
+        authority: 'https://apitest.vipps.no/access-management-1.0/access/.well-known/openid-configuration',
+        redirectUrl: 'https://138.109-247-35.customer.lyse.net/login',
+        postLogoutRedirectUri: 'https://138.109-247-35.customer.lyse.net/login',
+        clientId: 'ec1d0cfe-3fae-4246-87bb-05deee9605a3',
+        scope: 'openid email name phoneNumber',
         responseType: 'code',
         silentRenew: true,
         useRefreshToken: true,
