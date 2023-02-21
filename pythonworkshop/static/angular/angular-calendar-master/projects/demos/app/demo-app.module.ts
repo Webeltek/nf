@@ -44,7 +44,8 @@ import { NgbCarouselModule } from '@ng-bootstrap/ng-bootstrap';
 import { MatExpansionModule} from '@angular/material/expansion';
 import { MatCardModule } from '@angular/material/card';
 import { ChangePassComponent } from './change-pass/change-pass.component';
-import {MatListModule} from '@angular/material/list';   
+import { MatListModule } from '@angular/material/list';
+import { AuthModule, LogLevel } from 'angular-auth-oidc-client';   
 //import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 
 /* const config: SocketIoConfig = {
@@ -107,7 +108,20 @@ import {MatListModule} from '@angular/material/list';
     NgbCarouselModule,
     MatExpansionModule,
     MatCardModule,
-    MatListModule
+    MatListModule,
+    AuthModule.forRoot({
+      config: {
+        authority: 'https://apitest.vipps.no/access-management-1.0/access/.well-known/openid-configuration',
+        redirectUrl: window.location.origin,
+        postLogoutRedirectUri: window.location.origin,
+        clientId: 'ec1d0cfe-3fae-4246-87bb-05deee9605a3',
+        scope: 'openid profile email offline_access',
+        responseType: 'code',
+        silentRenew: true,
+        useRefreshToken: true,
+        logLevel: LogLevel.Debug,
+      },
+    }),
   ],
   providers : [
     { provide: LOCALE_ID, useValue: 'nb' },

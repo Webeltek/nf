@@ -18,6 +18,7 @@ import { Observable, ReplaySubject, BehaviorSubject} from 'rxjs';
 import { DatePipe} from '@angular/common';
 import { SelectionModel } from '@angular/cdk/collections';
 import { TranslateService } from '@ngx-translate/core';
+import { OidcSecurityService } from 'angular-auth-oidc-client';
 
 export interface Room {
   row: string,
@@ -42,7 +43,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     private actRoute: ActivatedRoute,
     public dialog: MatDialog,
     private httpService: HttpEventService,
-    public translate: TranslateService) {
+    public translate: TranslateService,
+    public oidcSecurityService: OidcSecurityService) {
       translate.addLangs(['gb', 'no']);
       translate.setDefaultLang('gb');
     }
@@ -60,6 +62,9 @@ export class HomeComponent implements OnInit, OnDestroy {
 
 
   ngOnInit(): void {
+    this.oidcSecurityService.checkAuth().subscribe(({ isAuthenticated, userData}) => {
+      //todo after authentication actionS
+    });
     this.router.events.subscribe({
       next : (routerEvent)=>{
         if (routerEvent instanceof NavigationEnd){
@@ -77,6 +82,14 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.roomNamesArr= roomNamesArr;
       //console.log("HomeComp ngOnInit() roomNamesArr",this.roomNamesArr);
     })
+  }
+
+  vippsLogin() {
+    this.oidcSecurityService.authorize();
+  }
+
+  vippsLogout() {
+    this.oidcSecurityService.logoff().subscribe((result) => console.log("HC vipps logout result:",result));
   }
 
   getUserRole(){

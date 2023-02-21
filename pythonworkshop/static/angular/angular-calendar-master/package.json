@@ -166,6 +166,7 @@
     "@phenomnomnominal/tsquery": "^5.0.0",
     "@popperjs/core": "^2.11.6",
     "@scarf/scarf": "^1.1.1",
+    "angular-auth-oidc-client": "^15.0.3",
     "angular-countries-flags": "0.0.5",
     "angular-draggable-droppable": "^6.0.0",
     "angular-resizable-element": "^5.0.0",
