@@ -1,13 +1,18 @@
 import { Component, OnInit ,ViewChild } from '@angular/core';
 import { NgbCarousel } from '@ng-bootstrap/ng-bootstrap';
+
 @Component({
   selector: 'mwl-landing-page',
   templateUrl: './landing-page.component.html',
   styleUrls: ['./landing-page.component.scss']
 })
 export class LandingPageComponent implements OnInit {
+  constructor( ){}
+
   @ViewChild('ngcarousel', { static: true }) ngCarousel!: NgbCarousel;
-  ngOnInit() {}
+  ngOnInit() {
+    
+  }
   // Move to specific slide
   navigateToSlide(item: any) {
     this.ngCarousel.select(item);

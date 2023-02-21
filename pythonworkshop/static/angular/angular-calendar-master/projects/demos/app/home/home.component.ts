@@ -63,7 +63,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.oidcSecurityService.checkAuth().subscribe(({ isAuthenticated, userData}) => {
-      //todo after authentication actionS
+      console.log("HC  oidcSecurityService.checkAuth isAuthenticated, userData:" ,isAuthenticated,userData)
     });
     this.router.events.subscribe({
       next : (routerEvent)=>{
