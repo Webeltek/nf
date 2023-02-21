@@ -113,12 +113,9 @@ import { AuthModule, LogLevel } from 'angular-auth-oidc-client';
       config: {
         authority: 'https://apitest.vipps.no/access-management-1.0/access/.well-known/openid-configuration',
         redirectUrl: 'https://138.109-247-35.customer.lyse.net/login',
-        postLogoutRedirectUri: 'https://138.109-247-35.customer.lyse.net/login',
         clientId: 'ec1d0cfe-3fae-4246-87bb-05deee9605a3',
         scope: 'openid email name phoneNumber',
         responseType: 'code',
-        silentRenew: true,
-        useRefreshToken: true,
         logLevel: LogLevel.Debug,
       },
     }),
