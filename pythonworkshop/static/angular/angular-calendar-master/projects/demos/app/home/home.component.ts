@@ -18,7 +18,6 @@ import { Observable, ReplaySubject, BehaviorSubject} from 'rxjs';
 import { DatePipe} from '@angular/common';
 import { SelectionModel } from '@angular/cdk/collections';
 import { TranslateService } from '@ngx-translate/core';
-import { OidcSecurityService } from 'angular-auth-oidc-client';
 
 export interface Room {
   row: string,
@@ -43,8 +42,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     private actRoute: ActivatedRoute,
     public dialog: MatDialog,
     private httpService: HttpEventService,
-    public translate: TranslateService,
-    public oidcSecurityService: OidcSecurityService) {
+    public translate: TranslateService) {
       translate.addLangs(['gb', 'no']);
       translate.setDefaultLang('gb');
     }

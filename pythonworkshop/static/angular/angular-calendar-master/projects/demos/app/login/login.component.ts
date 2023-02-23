@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../_services/auth.service';
 import { TokenStorageService } from '../_services/token-storage.service';
 import { ActivatedRoute, Router} from '@angular/router';
+import { OidcSecurityService } from 'angular-auth-oidc-client';
 
 let apiLoaded = false;
 
@@ -51,7 +52,8 @@ export class LoginComponent implements OnInit {
   constructor(private authService: AuthService, 
     private tokenStorage: TokenStorageService,
     private actRoute: ActivatedRoute,
-    private router: Router) { }  
+    private router: Router,
+    public oidcSecurityService: OidcSecurityService) { }  
     
   ngOnInit(): void {
      //script for youtube-player
@@ -61,6 +63,10 @@ export class LoginComponent implements OnInit {
       document.body.appendChild(tag);
       apiLoaded = true;
      } */
+
+     this.oidcSecurityService.checkAuth().subscribe(({ isAuthenticated, userData}) => {
+      console.log("LC  oidcSecurityService.checkAuth isAuthenticated, userData:" ,isAuthenticated,userData)
+    }); 
 
     if (this.tokenStorage.getToken()) {
       this.isLoggedIn = true;
@@ -80,6 +86,14 @@ export class LoginComponent implements OnInit {
       this.errorMessage ="LCsignedOut";
       console.log("login signout errorMessage",this.errorMessage)
     }
+  }
+
+  vippsLogin() {
+    this.oidcSecurityService.authorize();
+  }
+
+  vippsLogout() {
+    this.oidcSecurityService.logoff().subscribe((result) => console.log("HC vipps logout result:",result));
   }
 
   onSubmit(): void {
