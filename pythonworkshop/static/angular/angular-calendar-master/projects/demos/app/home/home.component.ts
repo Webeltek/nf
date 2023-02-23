@@ -60,9 +60,6 @@ export class HomeComponent implements OnInit, OnDestroy {
 
 
   ngOnInit(): void {
-    this.oidcSecurityService.checkAuth().subscribe(({ isAuthenticated, userData}) => {
-      console.log("HC  oidcSecurityService.checkAuth isAuthenticated, userData:" ,isAuthenticated,userData)
-    });
     this.router.events.subscribe({
       next : (routerEvent)=>{
         if (routerEvent instanceof NavigationEnd){
@@ -80,14 +77,6 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.roomNamesArr= roomNamesArr;
       //console.log("HomeComp ngOnInit() roomNamesArr",this.roomNamesArr);
     })
-  }
-
-  vippsLogin() {
-    this.oidcSecurityService.authorize();
-  }
-
-  vippsLogout() {
-    this.oidcSecurityService.logoff().subscribe((result) => console.log("HC vipps logout result:",result));
   }
 
   getUserRole(){

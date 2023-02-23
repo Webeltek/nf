@@ -64,10 +64,16 @@ export class LoginComponent implements OnInit {
       apiLoaded = true;
      } */
 
-     this.oidcSecurityService.checkAuth().subscribe(({ isAuthenticated, userData}) => {
-      console.log("LC  oidcSecurityService.checkAuth isAuthenticated, userData:" ,isAuthenticated,userData)
-    }); 
+     this.oidcSecurityService.getAccessToken().subscribe((response) => {
+      let respAny = response as any;
+      console.log("LC  oidcSecurityService.getAccessToken response:" ,respAny.email)
+    });
 
+    this.oidcSecurityService.userData$.subscribe((response) => {
+      let respAny = response as any;
+      console.log("LC  oidcSecurityService.userData response:" ,respAny.email)
+    });
+    
     if (this.tokenStorage.getToken()) {
       this.isLoggedIn = true;
       this.role = this.tokenStorage.getUser().is_admin? 'admin':'user';
