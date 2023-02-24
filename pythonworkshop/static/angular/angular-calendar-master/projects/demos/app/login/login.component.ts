@@ -2,9 +2,19 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../_services/auth.service';
 import { TokenStorageService } from '../_services/token-storage.service';
 import { ActivatedRoute, Router} from '@angular/router';
-import { OidcSecurityService } from 'angular-auth-oidc-client';
+import { AuthConfig } from 'angular-oauth2-oidc';
+import { OAuthService } from 'angular-oauth2-oidc';
+import { filter } from 'rxjs/operators';
 
 let apiLoaded = false;
+export const authCodeFlowConfig: AuthConfig = {
+  issuer: 'https://api.vipps.no/access-management-1.0/access/.well-known/openid-configuration',
+  redirectUri: 'https://138.109-247-35.customer.lyse.net/login',
+  clientId: 'e45b9cd6-2526-43b0-9710-a6a0c2e25534',
+  scope: 'openid email',
+  responseType: 'code',
+  showDebugInformation : true
+}
 
 @Component({
   selector: 'app-login',
@@ -45,15 +55,22 @@ export class LoginComponent implements OnInit {
     controls: 0,
     disablekb :1,
     iv_load_policy: 3,
-
-
   }
 
   constructor(private authService: AuthService, 
     private tokenStorage: TokenStorageService,
     private actRoute: ActivatedRoute,
     private router: Router,
-    public oidcSecurityService: OidcSecurityService) { }  
+    private oauthService: OAuthService
+    ) {
+      this.oauthService.configure(authCodeFlowConfig);
+      this.oauthService.loadDiscoveryDocumentAndLogin();
+
+      // Automatically load user profile
+    this.oauthService.events
+    .pipe(filter((e) => e.type === 'token_received'))
+    .subscribe((_) => this.oauthService.loadUserProfile());
+     }  
     
   ngOnInit(): void {
      //script for youtube-player
@@ -63,16 +80,6 @@ export class LoginComponent implements OnInit {
       document.body.appendChild(tag);
       apiLoaded = true;
      } */
-
-     this.oidcSecurityService.getAccessToken().subscribe((response) => {
-      let respAny = response as any;
-      console.log("LC  oidcSecurityService.getAccessToken response:" ,respAny.email)
-    });
-
-    this.oidcSecurityService.userData$.subscribe((response) => {
-      let respAny = response as any;
-      console.log("LC  oidcSecurityService.userData response:" ,respAny.email)
-    });
     
     if (this.tokenStorage.getToken()) {
       this.isLoggedIn = true;
@@ -95,13 +102,8 @@ export class LoginComponent implements OnInit {
   }
 
   vippsLogin() {
-    this.oidcSecurityService.authorize();
+    this.oauthService.initCodeFlow();
   }
-
-  vippsLogout() {
-    this.oidcSecurityService.logoff().subscribe((result) => console.log("HC vipps logout result:",result));
-  }
-
   onSubmit(): void {
     const { username, password } = this.form;
 
