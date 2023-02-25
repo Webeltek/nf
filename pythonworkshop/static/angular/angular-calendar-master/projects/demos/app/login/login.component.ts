@@ -2,19 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../_services/auth.service';
 import { TokenStorageService } from '../_services/token-storage.service';
 import { ActivatedRoute, Router} from '@angular/router';
-import { AuthConfig } from 'angular-oauth2-oidc';
-import { OAuthService } from 'angular-oauth2-oidc';
-import { filter } from 'rxjs/operators';
+import { OidcSecurityService } from 'angular-auth-oidc-client';
 
 let apiLoaded = false;
-export const authCodeFlowConfig: AuthConfig = {
-  issuer: 'https://api.vipps.no/access-management-1.0/access/.well-known/openid-configuration',
-  redirectUri: 'https://138.109-247-35.customer.lyse.net/login',
-  clientId: 'e45b9cd6-2526-43b0-9710-a6a0c2e25534',
-  scope: 'openid email',
-  responseType: 'code',
-  showDebugInformation : true
-}
 
 @Component({
   selector: 'app-login',
@@ -61,16 +51,8 @@ export class LoginComponent implements OnInit {
     private tokenStorage: TokenStorageService,
     private actRoute: ActivatedRoute,
     private router: Router,
-    private oauthService: OAuthService
-    ) {
-      this.oauthService.configure(authCodeFlowConfig);
-      this.oauthService.loadDiscoveryDocumentAndLogin();
-
-      // Automatically load user profile
-    this.oauthService.events
-    .pipe(filter((e) => e.type === 'token_received'))
-    .subscribe((_) => this.oauthService.loadUserProfile());
-     }  
+    public oidcSecurityService: OidcSecurityService
+    ) {}  
     
   ngOnInit(): void {
      //script for youtube-player
@@ -80,6 +62,12 @@ export class LoginComponent implements OnInit {
       document.body.appendChild(tag);
       apiLoaded = true;
      } */
+
+     this.oidcSecurityService.checkAuth().subscribe((resp) => {
+      const { isAuthenticated, accessToken, idToken} = resp;
+      console.log("LC ngOnInit oidc checkAuth() accessToken, idToken: ",accessToken, idToken)
+      /*...*/
+    }); 
     
     if (this.tokenStorage.getToken()) {
       this.isLoggedIn = true;
@@ -102,8 +90,12 @@ export class LoginComponent implements OnInit {
   }
 
   vippsLogin() {
-    this.oauthService.initCodeFlow();
+    this.oidcSecurityService.authorize();
   }
+  vippsLogout(){
+    this.oidcSecurityService.logoff().subscribe((result) => console.log(result));
+  }
+
   onSubmit(): void {
     const { username, password } = this.form;
 

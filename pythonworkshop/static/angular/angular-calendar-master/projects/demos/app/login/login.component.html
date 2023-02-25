@@ -89,12 +89,11 @@
       <div class="alert alert-success" *ngIf="isLoggedIn">
         {{'LCloggedInAs' | translate}}{{ role }}.
       </div>
-    </div>
-    <mat-divider></mat-divider>
-    <div class="col-lg-4 offset-lg-4">
+
+      <mat-divider></mat-divider>
       <button mat-button class="menu-button" (click)="vippsLogin()">
         <img src="assets/log_in_with_vipps_rect_210_NO.png">
-      </button>
+      </button>  
     </div>
   </div>
   

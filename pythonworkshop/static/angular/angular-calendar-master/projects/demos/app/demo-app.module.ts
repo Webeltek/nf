@@ -45,7 +45,7 @@ import { MatExpansionModule} from '@angular/material/expansion';
 import { MatCardModule } from '@angular/material/card';
 import { ChangePassComponent } from './change-pass/change-pass.component';
 import { MatListModule } from '@angular/material/list';
-import { OAuthModule } from 'angular-oauth2-oidc';   
+import { AuthModule, LogLevel } from 'angular-auth-oidc-client';   
 //import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 
 /* const config: SocketIoConfig = {
@@ -109,7 +109,16 @@ import { OAuthModule } from 'angular-oauth2-oidc';
     MatExpansionModule,
     MatCardModule,
     MatListModule,
-    OAuthModule.forRoot(),
+    AuthModule.forRoot({
+      config: {
+        authority: 'https://api.vipps.no/access-management-1.0/access/.well-known/openid-configuration',
+        redirectUrl: 'https://webeltek.line.pm/login',
+        clientId: 'e45b9cd6-2526-43b0-9710-a6a0c2e25534',
+        scope: 'openid email',
+        responseType: 'code',
+        logLevel: LogLevel.Debug,
+      },
+    }),
   ],
   providers : [
     { provide: LOCALE_ID, useValue: 'nb' },
