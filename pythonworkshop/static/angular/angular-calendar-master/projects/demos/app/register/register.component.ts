@@ -24,10 +24,7 @@ export class RegisterComponent implements OnInit {
     public oidcSecurityService: OidcSecurityService) { }
 
   ngOnInit(): void {
-    this.oidcSecurityService.getAccessToken().subscribe((resp) => {
-      console.log("RC getAccessTogen :",resp);
-      /*...*/
-    }); 
+    
   }
 
   onSubmit(): void {
