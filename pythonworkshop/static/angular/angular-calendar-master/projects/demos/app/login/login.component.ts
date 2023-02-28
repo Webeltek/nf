@@ -63,11 +63,13 @@ export class LoginComponent implements OnInit {
       apiLoaded = true;
      } */
 
-     this.oidcSecurityService.checkAuth().subscribe((resp) => {
-      const { isAuthenticated, accessToken, idToken} = resp;
-      console.log("LC ngOnInit oidc checkAuth() accessToken, idToken: ",accessToken, idToken)
-      /*...*/
-    }); 
+     /* this.oidcSecurityService.checkAuth().subscribe((resp) => {
+      const { isAuthenticated, userData, accessToken, errorMessage} = resp;
+      console.log("LC isAthenticated",isAuthenticated);
+      console.log("LC userData",userData);
+      console.log("LC accessToken",accessToken);
+      console.log("LC errorMsg: ",errorMessage);
+    });  */
     
     if (this.tokenStorage.getToken()) {
       this.isLoggedIn = true;
@@ -91,6 +93,15 @@ export class LoginComponent implements OnInit {
 
   vippsLogin() {
     this.oidcSecurityService.authorize();
+  }
+  getUsrInfo(){
+    this.oidcSecurityService.checkAuth().subscribe((resp) => {
+      const { isAuthenticated, userData, accessToken, errorMessage} = resp;
+      console.log("LC isAthenticated",isAuthenticated);
+      console.log("LC userData",userData);
+      console.log("LC accessToken",accessToken);
+      console.log("LC errorMsg: ",errorMessage);
+    }); 
   }
   vippsLogout(){
     this.oidcSecurityService.logoff().subscribe((result) => console.log(result));

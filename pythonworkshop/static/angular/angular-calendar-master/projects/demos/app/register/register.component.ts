@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../_services/auth.service';
 import { TokenStorageService } from '../_services/token-storage.service';
+import { OidcSecurityService } from 'angular-auth-oidc-client';
 
 
 @Component({
@@ -17,9 +18,16 @@ export class RegisterComponent implements OnInit {
   isSignUpFailed = false;
   errorMessage = '';
 
-  constructor(private authService: AuthService, private tokenStorage: TokenStorageService) { }
+  constructor(
+    private authService: AuthService, 
+    private tokenStorage: TokenStorageService,
+    public oidcSecurityService: OidcSecurityService) { }
 
   ngOnInit(): void {
+    this.oidcSecurityService.getAccessToken().subscribe((resp) => {
+      console.log("RC getAccessTogen :",resp);
+      /*...*/
+    }); 
   }
 
   onSubmit(): void {
