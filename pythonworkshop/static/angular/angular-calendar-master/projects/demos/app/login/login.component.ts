@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../_services/auth.service';
 import { TokenStorageService } from '../_services/token-storage.service';
 import { ActivatedRoute, Router} from '@angular/router';
-import { OidcSecurityService, UserDataResult , LoginResponse} from 'angular-auth-oidc-client';
 import { Observable } from 'rxjs';
+import { HttpEventService } from 'projects/angular-calendar/src/modules/week/http-service.service';
 
 let apiLoaded = false;
 
@@ -48,13 +48,13 @@ export class LoginComponent implements OnInit {
     iv_load_policy: 3,
   }
 
-  userData$: Observable<UserDataResult>;
 
-  constructor(private authService: AuthService, 
+  constructor(
+    public httpService: HttpEventService,
+    private authService: AuthService, 
     private tokenStorage: TokenStorageService,
     private actRoute: ActivatedRoute,
     private router: Router,
-    public oidcSecurityService: OidcSecurityService
     ) {}  
     
   ngOnInit(): void {
@@ -65,11 +65,6 @@ export class LoginComponent implements OnInit {
       document.body.appendChild(tag);
       apiLoaded = true;
      } */
-
-    this.oidcSecurityService.isAuthenticated$.subscribe(({isAuthenticated}) => {
-      console.log("LC isAthenticated",isAuthenticated);
-    });
-    this.userData$ = this.oidcSecurityService.userData$; 
     
     if (this.tokenStorage.getToken()) {
       this.isLoggedIn = true;
@@ -92,21 +87,18 @@ export class LoginComponent implements OnInit {
   }
 
   vippsLogin() {
-    this.oidcSecurityService.authorize();
+    this.httpService.vippsAuthorize();
   }
 
   getUsrInfo(){
-    this.oidcSecurityService.checkAuth().subscribe((loginResponse: LoginResponse) => {
-      const { isAuthenticated, userData, accessToken, idToken, configId } = loginResponse;
+    this.httpService.vippsCheckAuth().subscribe((resp) => {
+      const userData = resp;
       console.log("LC userData",userData);
-      console.log("LC accessToken", accessToken);
-      console.log("LC idToken",idToken);
-      console.log("LC configId",configId);
     });
   }
   
-  vippsLogout(){
-    this.oidcSecurityService.logoff().subscribe((result) => console.log(result));
+  vippsLogOff(){
+    this.httpService.vippsLogOff().subscribe((result) => console.log(result));
   }
 
   onSubmit(): void {

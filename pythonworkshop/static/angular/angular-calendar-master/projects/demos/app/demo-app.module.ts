@@ -45,7 +45,6 @@ import { MatExpansionModule} from '@angular/material/expansion';
 import { MatCardModule } from '@angular/material/card';
 import { ChangePassComponent } from './change-pass/change-pass.component';
 import { MatListModule } from '@angular/material/list';
-import { AuthModule, OpenIdConfiguration,StsConfigStaticLoader, StsConfigLoader, LogLevel } from 'angular-auth-oidc-client';
 //import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 
 /* const config: SocketIoConfig = {
@@ -55,39 +54,6 @@ import { AuthModule, OpenIdConfiguration,StsConfigStaticLoader, StsConfigLoader,
 	}
 }
 */
-
-@Injectable({ providedIn: 'root' })
-export class ConfigService {
-  getClientAuthorization(){
-    var client_id = "e45b9cd6-2526-43b0-9710-a6a0c2e25534"
-    var client_secret = "VRnJnWPH7dfp4CbbCIViVAttgw8="
-
-    //var wordArrayAzp = CryptoJS.enc.Utf8.parse(client_id + ":" + client_secret);
-    //var client_authorization = CryptoJS.enc.Base64.stringify(wordArrayAzp);
-    //console.log("LC getClientAuthorization :",client_authorization);
-    //return client_authorization;
-  }
-
-  getConfig(): OpenIdConfiguration {
-    return {
-      /* Your config here */
-        authority: 'https://api.vipps.no/access-management-1.0/access/.well-known/openid-configuration',
-        redirectUrl: 'https://138.109-247-35.customer.lyse.net/login',
-        clientId: 'e45b9cd6-2526-43b0-9710-a6a0c2e25534',
-        scope: 'openid email',
-        responseType: 'code',
-        logLevel: LogLevel.Debug,
-        customParamsAuthRequest : {
-          
-        }
-    };
-  }
-}
-
-const authFactory = (configService: ConfigService) => {
-  const config = configService.getConfig();
-  return new StsConfigStaticLoader(config);
-};
 
 @NgModule({
   declarations: [
@@ -143,13 +109,6 @@ const authFactory = (configService: ConfigService) => {
     MatExpansionModule,
     MatCardModule,
     MatListModule,
-    AuthModule.forRoot({
-      loader: {
-        provide: StsConfigLoader,
-        useFactory: authFactory,
-        deps: [ConfigService],
-      },
-    }),
   ],
   providers : [
     { provide: LOCALE_ID, useValue: 'nb' },

@@ -1,5 +1,5 @@
 from flask import render_template, redirect,session, request, url_for, flash, \
-        current_app, session, jsonify
+        current_app, jsonify
 
 from . import auth_bp
 from .. import main_bp
