@@ -19,6 +19,8 @@ export const ROUTES: Routes = [
         { path: 'profile' , canActivate: [LoggedInGuardService], component : ProfileComponent},
         { path: 'logout' , canActivate: [LoggedInGuardService], component: LoginComponent},
 
+        { path: 'rp_landing'},
+
         { path: '', redirectTo: 'landing' , pathMatch : 'full' },
         { path: '**', component: LandingPageComponent }
     ];

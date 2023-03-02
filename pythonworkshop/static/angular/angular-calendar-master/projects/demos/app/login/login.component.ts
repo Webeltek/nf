@@ -88,7 +88,10 @@ export class LoginComponent implements OnInit {
   }
 
   vippsLogin() {
-    this.httpService.vippsAuthorize();
+    this.httpService.vippsAuthorize().subscribe((resp)=> {
+      const respAny = resp as any;
+      console.log("LC vippsLogin providers: ", "response received")
+    });
   }
 
   getUsrInfo(){

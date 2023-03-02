@@ -19,11 +19,6 @@ from oidcmsg.configure import create_from_config_file
 from oidcrp.configure import Configuration
 from oidcrp.configure import RPConfiguration
 
-try:
-    from .oidc_rp import application
-except ImportError:
-    import application
-
 
 templ_dir = os.path.abspath('pythonworkshop/templates')
 static_dir = os.path.abspath('pythonworkshop/static')
@@ -49,7 +44,7 @@ def create_app(config_name):
   moment.init_app(app)
   executor.init_app(app)
 
-  cors = CORS(app, resources={r"/api/*/*": {"origins": ["http://localhost","https://api.vipps.no/access-management-1.0/access/.well-known/*"]},r"/*":{["https://api.vipps.no/access-management-1.0/access/.well-known/*"]}},supports_credentials=True)
+  cors = CORS(app, resources={r"/api/*/*": {"origins": ["http://localhost","https://api.vipps.no/access-management-1.0/access/.well-known/*"]},r"/*":{"origins":["https://api.vipps.no/access-management-1.0/access/.well-known/*"]}},supports_credentials=True)
   #login_manager.init_app(app)
   print('mail server: ' + app.config['MAIL_SERVER'])
   print('ENV value: ' + app.config['ENV'])
@@ -60,12 +55,18 @@ def create_app(config_name):
   from .auth_bp import auth_bp
   app.register_blueprint(auth_bp)
 
-  conf = "conf.json"
+  try:
+    from .oidc_rp import application
+  except ImportError:
+    import application
+  dir_path = os.path.dirname(os.path.realpath(__file__))
+  conf = os.path.abspath('pythonworkshop')+"/oidc_rp/conf.json"
   name = 'oidc_rp'
+  template_dir = os.path.join(dir_path, 'templates')
   _config = create_from_config_file(Configuration,
                                     entity_conf=[{"class": RPConfiguration, "attr": "rp"}],
                                     filename=conf)
-  application.oidc_provider_init_app(_config.rp, name)
+  application.oidc_provider_init_app(_config.rp, name,template_folder=template_dir)
 
   #socketio.init_app(app)
 
