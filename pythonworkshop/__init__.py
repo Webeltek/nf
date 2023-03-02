@@ -49,6 +49,7 @@ def create_app(config_name):
   app.register_blueprint(main_bp)
   from .auth_bp import auth_bp
   app.register_blueprint(auth_bp)
+
   from .vipps_bp import(vipps_bp)
   app.register_blueprint(vipps_bp)
 
