@@ -14,6 +14,16 @@ from flask_executor import Executor
 #from flask_socketio import SocketIO
 from flask_cors import CORS, cross_origin
 
+from oidcmsg.configure import create_from_config_file
+
+from oidcrp.configure import Configuration
+from oidcrp.configure import RPConfiguration
+
+try:
+    from .oidc_rp import application
+except ImportError:
+    import application
+
 
 templ_dir = os.path.abspath('pythonworkshop/templates')
 static_dir = os.path.abspath('pythonworkshop/static')
@@ -50,8 +60,12 @@ def create_app(config_name):
   from .auth_bp import auth_bp
   app.register_blueprint(auth_bp)
 
-  from .vipps_bp import(vipps_bp)
-  app.register_blueprint(vipps_bp)
+  conf = "conf.json"
+  name = 'oidc_rp'
+  _config = create_from_config_file(Configuration,
+                                    entity_conf=[{"class": RPConfiguration, "attr": "rp"}],
+                                    filename=conf)
+  application.oidc_provider_init_app(_config.rp, name)
 
   #socketio.init_app(app)
 

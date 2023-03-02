@@ -142,7 +142,7 @@ export class HttpEventService{
     }
 
     private vippsInitUrl = "/vipps/init"
-    private vippsAuthUrl = "/vipps/authenticate";
+    private vippsAuthUrl = "/rp";
     private vippsCheckAuthUrl = "/vipps/code_flow";
     private vippsLogOffUrl = "/vipps/logoff";
 

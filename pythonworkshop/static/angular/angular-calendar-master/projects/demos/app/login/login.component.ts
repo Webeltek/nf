@@ -66,7 +66,6 @@ export class LoginComponent implements OnInit {
       apiLoaded = true;
      } */
 
-    this.httpService.vippsInit();
 
     if (this.tokenStorage.getToken()) {
       this.isLoggedIn = true;
