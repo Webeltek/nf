@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 from flask import Flask, render_template, request,session
-from flask.ext.session import Session
 import jinja2
 import os
 from passlib.hash import bcrypt_sha256
@@ -23,7 +22,6 @@ print('Static folder : ' + str(static_dir))
 mail = Mail()
 moment = Moment()
 executor = Executor()
-sess = Session()
 #socketio = SocketIO(cors_allowed_origins="*")
 
  #- only views that don't use FlaskForm use the provided CSRF extension
@@ -40,7 +38,6 @@ def create_app(config_name):
   mail.init_app(app)
   moment.init_app(app)
   executor.init_app(app)
-  sess.init_app(app)
 
   cors = CORS(app, resources={r"/api/*/*": {"origins": ["http://localhost","https://api.vipps.no/access-management-1.0/access/.well-known/*"]},r"/*":{["https://api.vipps.no/access-management-1.0/access/.well-known/*"]}},supports_credentials=True)
   #login_manager.init_app(app)
