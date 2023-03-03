@@ -30,24 +30,25 @@ def compact(qsdict):
     return res
 
 
-@oidc_rp_views.route('/static/<path:path>')
+@oidc_rp_views.route('/api/vipps/static/<path:path>')
 def send_js(path):
     return send_from_directory('static', path)
 
 
-@oidc_rp_views.route('/rp_landing')
+@oidc_rp_views.route('/api/vipps/rp_landing')
 def index():
     _providers = current_app.rp_config.clients.keys()
     return render_template('opbyuid.html', providers=_providers)
 
 
-@oidc_rp_views.route('/rp')
+@oidc_rp_views.route('/api/vipps/rp')
 def rp():
-    print('oidc_rp inside rp')
-    iss = request.args['dyn_iss']
+    print('inside /api/vipps/rp')
+    iss = "https://api.vipps.no/access-management-1.0/access/"
+    uid = "e45b9cd6-2526-43b0-9710-a6a0c2e25534"
     if not iss:
         iss = request.args['static_iss']
-
+    print(f'inside inside /api/vipps/rp iss: {iss}') 
     if not iss:
         uid = request.args['uid']
     else:
@@ -169,7 +170,7 @@ def get_op_identifier_by_cb_uri(url: str):
                 return k
 
 
-@oidc_rp_views.route('/authz_cb/<op_identifier>')
+@oidc_rp_views.route('/api/vipps/authz_cb/<op_identifier>')
 def authz_cb(op_identifier):
     op_identifier = get_op_identifier_by_cb_uri(request.url)
     return finalize(op_identifier, request.args)
@@ -180,7 +181,7 @@ def handle_bad_request(e):
     return 'bad request!', 400
 
 
-@oidc_rp_views.route('/repost_fragment')
+@oidc_rp_views.route('/api/vipps/repost_fragment')
 def repost_fragment():
     args = compact(parse_qs(request.args['url_fragment']))
     op_identifier = request.args['op_identifier']
@@ -193,7 +194,7 @@ def authz_im_cb(op_identifier='', **kwargs):
     return render_template('repost_fragment.html', op_identifier=op_identifier)
 
 
-@oidc_rp_views.route('/session_iframe')
+@oidc_rp_views.route('/api/vipps/session_iframe')
 def session_iframe():  # session management
     logger.debug('session_iframe request_args: {}'.format(request.args))
 
@@ -213,7 +214,7 @@ def session_iframe():  # session management
     return render_template(_template, **args)
 
 
-@oidc_rp_views.route('/session_change')
+@oidc_rp_views.route('/api/vipps/session_change')
 def session_change():
     logger.debug('session_change: {}'.format(session['op_identifier']))
     _rp = get_rp(session['op_identifier'])
@@ -234,7 +235,7 @@ def session_change():
 
 
 # post_logout_redirect_uri
-@oidc_rp_views.route('/session_logout/<op_identifier>')
+@oidc_rp_views.route('/api/vipps/session_logout/<op_identifier>')
 def session_logout(op_identifier):
     op_identifier = get_op_identifier_by_cb_uri(request.url)
     _rp = get_rp(op_identifier)
@@ -243,7 +244,7 @@ def session_logout(op_identifier):
 
 
 # RP initiated logout
-@oidc_rp_views.route('/logout')
+@oidc_rp_views.route('/api/vipps/logout')
 def logout():
     logger.debug('logout')
     _info = current_app.rph.logout(state=session['state'])
@@ -251,7 +252,7 @@ def logout():
     return redirect(_info['url'], 303)
 
 
-@oidc_rp_views.route('/bc_logout/<op_identifier>', methods=['GET', 'POST'])
+@oidc_rp_views.route('/api/vipps/bc_logout/<op_identifier>', methods=['GET', 'POST'])
 def backchannel_logout(op_identifier):
     _rp = get_rp(op_identifier)
     try:
@@ -264,7 +265,7 @@ def backchannel_logout(op_identifier):
         return "OK"
 
 
-@oidc_rp_views.route('/fc_logout/<op_identifier>', methods=['GET', 'POST'])
+@oidc_rp_views.route('/api/vipps/fc_logout/<op_identifier>', methods=['GET', 'POST'])
 def frontchannel_logout(op_identifier):
     _rp = get_rp(op_identifier)
     sid = request.args['sid']

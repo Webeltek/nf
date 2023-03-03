@@ -141,7 +141,7 @@ export class HttpEventService{
             )
     }
 
-    private vippsAuthUrl = "/rp";
+    private vippsAuthUrl = "/api/vipps/rp";
 
     vippsAuthorize(){
         return this.http.get(this.baseurl+this.vippsAuthUrl,
