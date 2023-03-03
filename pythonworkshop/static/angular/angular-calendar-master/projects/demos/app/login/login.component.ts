@@ -92,14 +92,7 @@ export class LoginComponent implements OnInit {
   }
 
   getUsrInfo(){
-    this.httpService.vippsCheckAuth().subscribe((resp) => {
-      const userData = resp;
-      console.log("LC userData",userData);
-    });
-  }
-  
-  vippsLogOff(){
-    this.httpService.vippsLogOff().subscribe((result) => console.log(result));
+      
   }
 
   onSubmit(): void {

@@ -10,7 +10,7 @@ import { LandingPageComponent } from './landing-page/landing-page.component';
 import { ChangePassComponent } from './change-pass/change-pass.component';
 
 export const ROUTES: Routes = [  
-        { path: 'login', component: LoginComponent },
+        /* { path: 'login', component: LoginComponent },
         { path: 'register', component: RegisterComponent },
         { path: 'change_pass', component: ChangePassComponent },
         { path: 'landing', component: LandingPageComponent },
@@ -20,5 +20,5 @@ export const ROUTES: Routes = [
         { path: 'logout' , canActivate: [LoggedInGuardService], component: LoginComponent},
 
         { path: '', redirectTo: 'landing' , pathMatch : 'full' },
-        { path: '**', component: LandingPageComponent }
+        { path: '**', component: LandingPageComponent } */
     ];

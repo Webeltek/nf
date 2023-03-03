@@ -43,6 +43,7 @@ def index():
 
 @oidc_rp_views.route('/rp')
 def rp():
+    print('oidc_rp inside rp')
     iss = request.args['dyn_iss']
     if not iss:
         iss = request.args['static_iss']
@@ -53,6 +54,7 @@ def rp():
         uid = ''
 
     if iss or uid:
+        print('oidc_rp inside iss or uid')
         args = {
             'req_args': {
                 "claims": {"id_token": {"acr": {"value": "https://refeds.org/profile/mfa"}}}
