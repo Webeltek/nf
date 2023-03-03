@@ -141,15 +141,9 @@ export class HttpEventService{
             )
     }
 
-    private vippsInitUrl = "/vipps/init"
     private vippsAuthUrl = "/rp";
     private vippsCheckAuthUrl = "/vipps/code_flow";
     private vippsLogOffUrl = "/vipps/logoff";
-
-    vippsInit(){
-        return this.http.get(this.baseurl+this.vippsInitUrl,
-            { headers : this.httpHeaders, observe: 'body', responseType : 'json'})
-    }
 
     vippsAuthorize(){
         return this.http.get(this.baseurl+this.vippsAuthUrl,

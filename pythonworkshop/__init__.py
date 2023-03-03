@@ -37,6 +37,7 @@ def create_app(config_name):
   #app.config.from_object(config[config_name]) warning!!render_template,  doesn't instatiate config object!!!
   app.config.from_envvar('DOTENV_FILE')
   #python-dotenv doesn't override existing envvar SECRET_KEY value which defauts to None!
+  #when using python-dotenv os.environ or os.getenv  use envvar as if they came from actual environment.
   app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
   config[config_name].init_app(app)
 
