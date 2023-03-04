@@ -58,7 +58,7 @@ def rp():
         print('oidc_rp inside iss or uid')
         args = {
             'req_args': {
-                "claims": {"id_token": {"acr": {"value": "https://refeds.org/profile/mfa"}}}
+                #"claims": {"id_token": {"acr": {"value": "https://refeds.org/profile/mfa"}}}
             }
         }
 
