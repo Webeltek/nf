@@ -34,7 +34,7 @@ export class HttpEventService{
     constructor(private http: HttpClient) { }
 
     httpHeaders = new HttpHeaders({
-        'Content-Type' : 'application/json; charset=UTF-8',
+        'Content-Type' : '*/*; charset=UTF-8',
         'Cache-Control': 'no-cache'
     });
 
@@ -144,6 +144,7 @@ export class HttpEventService{
     private vippsAuthUrl = "/api/vipps/rp";
 
     vippsAuthorize(){
+        console.log("HttpS vippsAthorize call")
         return this.http.get(this.baseurl+this.vippsAuthUrl,
             { headers : this.httpHeaders, observe: 'body', responseType : 'json'})
     }
