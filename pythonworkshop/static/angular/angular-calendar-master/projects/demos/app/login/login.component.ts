@@ -66,13 +66,16 @@ export class LoginComponent implements OnInit {
       apiLoaded = true;
      } */
 
-    this.actRoute.queryParams.subscribe(params => {
-      console.log("LC typeof params[code]",typeof params['code'])
-      if(typeof params['code']!== undefined){
+    this.actRoute.paramMap.subscribe(paramMap=>{
+      const code = paramMap.get('code');
+      const scope = paramMap.get('scope');
+      const state = paramMap.get('state');
+      console.log("LC typeof params[code]",code);
+      if(typeof code!== (undefined || null)){
         const obj = {
-          code : params['code'],
-          scope: params['scope'],
-          state : params['state']
+          code : code,
+          scope: scope,
+          state : state
         }
         this.httpService.vippsSendCb(obj)
       }
@@ -103,7 +106,19 @@ export class LoginComponent implements OnInit {
   }
 
   getUsrInfo(){
-      
+    const code = this.actRoute.snapshot.paramMap.get('code');
+    const scope = this.actRoute.snapshot.paramMap.get('scope');
+    const state = this.actRoute.snapshot.paramMap.get('state');
+      console.log("LC typeof params[code]",code);
+      if(typeof code!== (undefined || null)){
+        const obj = {
+          code : code,
+          scope: scope,
+          state : state
+        }
+        this.httpService.vippsSendCb(obj)
+      }
+    
   }
 
   onSubmit(): void {

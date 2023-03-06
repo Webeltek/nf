@@ -7,7 +7,7 @@ from flask import current_app
 from flask import redirect
 from flask import render_template, jsonify
 from flask import request
-from flask import session
+from flask import session, jsonify
 from flask.helpers import make_response
 from flask.helpers import send_from_directory
 import werkzeug
@@ -149,11 +149,11 @@ def finalize(op_identifier, request_args):
         # Where to go if the user clicks on logout
         kwargs['logout_url'] = "{}/logout".format(_context.base_url)
 
-        return render_template('opresult.html', endpoints=endpoints,
-                               userinfo=res['userinfo'],
-                               access_token=res['token'],
-                               id_token=res["id_token"],
-                               **kwargs)
+        return jsonify({'endpoints':endpoints,
+                               'userinfo':res['userinfo'],
+                               'access_token':res['token'],
+                               'id_token':res["id_token"],
+                               'kwargs': kwargs})
     else:
         return make_response(res['error'], 400)
 
@@ -173,7 +173,8 @@ def get_op_identifier_by_cb_uri(url: str):
 @oidc_rp_views.route('/api/vipps/authz_cb/<op_identifier>')
 def authz_cb(op_identifier):
     op_identifier = get_op_identifier_by_cb_uri(request.url)
-    return finalize(op_identifier, request.args)
+    resp = make_response(finalize(op_identifier, request.args))
+    return resp
 
 
 @oidc_rp_views.errorhandler(werkzeug.exceptions.BadRequest)
@@ -188,7 +189,7 @@ def repost_fragment():
     return finalize(op_identifier, args)
 
 
-@oidc_rp_views.route('/authz_im_cb')
+@oidc_rp_views.route('/api/vipps/authz_im_cb')
 def authz_im_cb(op_identifier='', **kwargs):
     logger.debug('implicit_hybrid_flow kwargs: {}'.format(kwargs))
     return render_template('repost_fragment.html', op_identifier=op_identifier)

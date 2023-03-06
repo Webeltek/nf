@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from flask import Flask, render_template, request,session
+from flask_session import Session
 import jinja2
 import os
 from passlib.hash import bcrypt_sha256
@@ -38,18 +39,17 @@ executor = Executor()
 
 def create_app(config_name):
   conf = os.path.abspath('pythonworkshop')+"/oidc_rp/conf.json"
-  name = 'oidc_rp'
   _config = create_from_config_file(Configuration,
                                     entity_conf=[{"class": RPConfiguration, "attr": "rp"}],
                                     filename=conf)
-  app=oidc_provider_init_app(_config.rp, name,template_folder=templ_dir)
+  app=oidc_provider_init_app(_config.rp,template_folder=templ_dir)
 
   print('config_name : ' + str(config[config_name]) )
   #app.config.from_object(config[config_name]) warning!!render_template,  doesn't instatiate config object!!!
-  app.config.from_envvar('DOTENV_FILE')
+  #app.config.from_envvar('DOTENV_FILE')
   #python-dotenv doesn't override existing envvar SECRET_KEY value which defauts to None!
   #when using python-dotenv os.environ or os.getenv  use envvar as if they came from actual environment.
-  app.config['SECRET_KEY_DB'] = os.environ.get('SECRET_KEY_DB')
+  #app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
   config[config_name].init_app(app)
 
   mail.init_app(app)
@@ -97,11 +97,18 @@ def oidc_provider_init_app(config, name=None, **kwargs):
     "http://localhost"\
     ]}},supports_credentials=True  )
     
-
     app.rp_config = config
 
+    app.config.from_envvar('DOTENV_FILE')
     # Session key for the application session
-    app.config['SECRET_KEY'] = os.urandom(12).hex()
+    #app.config['SECRET_KEY'] = os.urandom(12).hex()
+    app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
+    app.config.update(
+    SESSION_COOKIE_SECURE=False,
+    SESSION_COOKIE_HTTPONLY=False,
+    SESSION_COOKIE_SAMESITE='None',
+)
+    Session(app)
 
     app.users = {'test_user': {'name': 'Testing Name'}}
 
