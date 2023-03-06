@@ -1,4 +1,4 @@
-import { HttpClient } from  '@angular/common/http';
+import { HttpClient, HttpParams } from  '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http'; 
 
 import { Injectable , Output, EventEmitter} from  '@angular/core';
@@ -144,7 +144,7 @@ export class HttpEventService{
     }
 
     private vippsAuthUrl = "/api/vipps/rp";
-    private vippsAuthCbUrl = "/api/vipps/authz_cb/"
+    private vippsAuthCbUrl = "/api/vipps/authz_cb"
     vippsHeaders = new HttpHeaders({
         'Content-Type' : 'text/html; charset=UTF-8',
         'Cache-Control': 'no-cache'
@@ -166,8 +166,13 @@ export class HttpEventService{
     }
 
     vippsSendCb(obj){
-        this.http.post(this.baseurl+this.vippsAuthCbUrl,obj,
-            { headers : this.vippsHeaders, observe: 'body', responseType : 'json'}).
+        let queryParams = new HttpParams();
+        queryParams.append('code',obj['code']).append('scope',obj['scope']).append('state',obj['state']);
+        this.http.get(this.baseurl+this.vippsAuthCbUrl,
+            {   headers : this.vippsHeaders, 
+                observe: 'body',
+                params: queryParams, 
+                responseType : 'json'}).
             subscribe({
                 next:(response) =>{
                     console.log("vippsSendCb() response: " + JSON.stringify(response));

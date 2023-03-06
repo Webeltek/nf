@@ -93,7 +93,7 @@ def oidc_provider_init_app(config, name=None, **kwargs):
     name = name or __name__
     app = Flask(__name__ , static_folder=static_dir, **kwargs)
     cors = CORS(app,resources={r"/api/*/*": {"origins": [\
-    "https://138.109-247-35.customer.lyse.net*",\
+    "https://138.109-247-35.customer.lyse.net",\
     "http://localhost"\
     ]}},supports_credentials=True  )
     

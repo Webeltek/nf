@@ -67,12 +67,15 @@ export class LoginComponent implements OnInit {
      } */
 
     this.actRoute.queryParams.subscribe(params => {
-      const obj = {
-        code : params['code'],
-        scope: params['scope'],
-        state : params['state']
+      console.log("LC typeof params[code]",typeof params['code'])
+      if(typeof params['code']!== undefined){
+        const obj = {
+          code : params['code'],
+          scope: params['scope'],
+          state : params['state']
+        }
+        this.httpService.vippsSendCb(obj)
       }
-      this.httpService.vippsSendCb(obj)
     }) 
 
     if (this.tokenStorage.getToken()) {
