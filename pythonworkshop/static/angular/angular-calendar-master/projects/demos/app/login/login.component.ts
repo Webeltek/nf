@@ -66,6 +66,14 @@ export class LoginComponent implements OnInit {
       apiLoaded = true;
      } */
 
+    this.actRoute.queryParams.subscribe(params => {
+      const obj = {
+        code : params['code'],
+        scope: params['scope'],
+        state : params['state']
+      }
+      this.httpService.vippsSendCb(obj)
+    }) 
 
     if (this.tokenStorage.getToken()) {
       this.isLoggedIn = true;

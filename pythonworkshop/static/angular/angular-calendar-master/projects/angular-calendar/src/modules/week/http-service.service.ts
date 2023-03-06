@@ -34,7 +34,7 @@ export class HttpEventService{
     constructor(private http: HttpClient) { }
 
     httpHeaders = new HttpHeaders({
-        'Content-Type' : '*/*; charset=UTF-8',
+        'Content-Type' : 'application/json; charset=UTF-8',
         'Cache-Control': 'no-cache'
     });
 
@@ -48,7 +48,8 @@ export class HttpEventService{
     insertRoom(room: Room ){
         this.http.post(this.baseurl+this.insertRoomUrl, room, 
             { headers : this.httpHeaders, observe: 'body', responseType : 'json'} ) 
-            .subscribe((response) =>{
+            .subscribe({
+                next: (response) =>{
                 let roomNames : string[]=[];
                 let mod_rooms=(response as any).mod_rooms;
                 for (let room of mod_rooms){
@@ -58,7 +59,9 @@ export class HttpEventService{
                 this.addedEvent.emit(null);
                 console.log("HttpServ insertRoom() response: " + JSON.stringify(response));
                 },
-                (error) => { console.log("HttpServ insertRoom() error : " + JSON.stringify(error)) ; }
+                error: (error) => { 
+                    console.log("HttpServ insertRoom() error : " + JSON.stringify(error)) ; }
+                }
             )
     }
 
@@ -137,16 +140,41 @@ export class HttpEventService{
                 },
                 error: (error) => { 
                     console.log("deleteEvent() error : " + JSON.stringify(error)) ; }
-            }
-            )
+            })
     }
 
     private vippsAuthUrl = "/api/vipps/rp";
+    private vippsAuthCbUrl = "/api/vipps/authz_cb/"
+    vippsHeaders = new HttpHeaders({
+        'Content-Type' : 'text/html; charset=UTF-8',
+        'Cache-Control': 'no-cache'
+    })
 
     vippsAuthorize(){
         console.log("HttpS vippsAthorize call")
-        return this.http.get(this.baseurl+this.vippsAuthUrl,
-            { headers : this.httpHeaders, observe: 'body', responseType : 'json'})
+        window.location.href = "https://138.109-247-35.customer.lyse.net/api/vipps/rp"
+        /* return this.http.get(this.baseurl+this.vippsAuthUrl,
+            { headers : this.vippsHeaders, observe: 'body', responseType : 'json'})
+            .subscribe({
+                next: (response)=>{
+                    console.log("HttpS vippsAuthorize response",response);
+                },
+                error: (error) => { 
+                    console.log("vippsAuthorize() error : " + JSON.stringify(error)) ; 
+                }
+            }) */
+    }
+
+    vippsSendCb(obj){
+        this.http.post(this.baseurl+this.vippsAuthCbUrl,obj,
+            { headers : this.vippsHeaders, observe: 'body', responseType : 'json'}).
+            subscribe({
+                next:(response) =>{
+                    console.log("vippsSendCb() response: " + JSON.stringify(response));
+                },
+                error: (error) => { 
+                    console.log("vippsSendCb() error : " + JSON.stringify(error)) ; } 
+            }) 
     }
 
 

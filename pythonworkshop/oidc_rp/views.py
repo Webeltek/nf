@@ -41,7 +41,7 @@ def index():
     return render_template('opbyuid.html', providers=_providers)
 
 
-@oidc_rp_views.route('/api/vipps/rp')
+@oidc_rp_views.route('/api/vipps/rp',methods=['GET','POST'])
 def rp():
     print('inside /api/vipps/rp')
     iss = "https://api.vipps.no/access-management-1.0/access/"
