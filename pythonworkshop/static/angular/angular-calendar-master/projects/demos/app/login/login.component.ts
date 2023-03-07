@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../_services/auth.service';
 import { TokenStorageService } from '../_services/token-storage.service';
-import { ActivatedRoute, Router} from '@angular/router';
+import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { Observable } from 'rxjs';
 import { HttpEventService } from 'projects/angular-calendar/src/modules/week/http-service.service';
 
@@ -66,20 +66,30 @@ export class LoginComponent implements OnInit {
       apiLoaded = true;
      } */
 
-    this.actRoute.paramMap.subscribe(paramMap=>{
-      const code = paramMap.get('code');
-      const scope = paramMap.get('scope');
-      const state = paramMap.get('state');
-      console.log("LC typeof params[code]",code);
-      if(typeof code!== undefined && code!==null){
-        const obj = {
-          code : code,
-          scope: scope,
-          state : state
+    /* this.router.events.subscribe({
+      next : (routerEvent)=>{
+        if (routerEvent instanceof NavigationEnd){
+          
         }
-        this.httpService.vippsSendCb(obj)
+      },
+      error: (err) => {
+        console.log("LC ngOnInit actRoute.title.subscribe error",err.error.message)
+      }
+    }) */
+
+    this.actRoute.queryParams.subscribe(params=>{
+      let code = params['code'];
+      console.log("LC ngOnInit  params[code]", params['code']);
+      if(code){
+          let obj = {
+            code : params['code'],
+            scope: params['scope'],
+            state : params['state']
+          }
+          this.httpService.vippsSendCb(obj)
       }
     }) 
+     
 
     if (this.tokenStorage.getToken()) {
       this.isLoggedIn = true;
@@ -109,15 +119,15 @@ export class LoginComponent implements OnInit {
     const code = this.actRoute.snapshot.paramMap.get('code');
     const scope = this.actRoute.snapshot.paramMap.get('scope');
     const state = this.actRoute.snapshot.paramMap.get('state');
-      console.log("LC typeof params[code]",code);
-      if(typeof code!== (undefined || null)){
-        const obj = {
-          code : code,
-          scope: scope,
-          state : state
-        }
-        this.httpService.vippsSendCb(obj)
+    console.log("LC getUsrInfo typeof params[code]",code);
+    if(typeof code!== (undefined || null)){
+      const obj = {
+        code : code,
+        scope: scope,
+        state : state
       }
+      this.httpService.vippsSendCb(obj)
+    }
     
   }
 

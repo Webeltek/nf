@@ -108,6 +108,66 @@
           "client_secret_post"
         ]
       },
+      "redirect_uris": [],
+      "services": {
+        "discovery": {
+          "class": "oidcrp.oidc.provider_info_discovery.ProviderInfoDiscovery",
+          "kwargs": {}
+        },
+        "registration": {
+          "class": "oidcrp.oidc.registration.Registration",
+          "kwargs": {}
+        },
+        "authorization": {
+          "class": "oidcrp.oidc.authorization.Authorization",
+          "kwargs": {}
+        },
+        "accesstoken": {
+          "class": "oidcrp.oidc.access_token.AccessToken",
+          "kwargs": {}
+        },
+        "userinfo": {
+          "class": "oidcrp.oidc.userinfo.UserInfo",
+          "kwargs": {}
+        },
+        "end_session": {
+          "class": "oidcrp.oidc.end_session.EndSession",
+          "kwargs": {}
+        }
+      }
+    },
+    "vipps_provider": {
+      "client_preferences": {
+        "application_name": "rphandler",
+        "application_type": "web",
+        "contacts": [
+          "ops@example.com"
+        ],
+        "response_types": [
+          "code"
+        ],
+        "scope": [
+          "openid",
+          "profile",
+          "email",
+          "address",
+          "phone"
+        ],
+        "token_endpoint_auth_method": [
+          "client_secret_basic",
+          "client_secret_post"
+        ]
+      },
+      "issuer": "https://api.vipps.no/access-management-1.0/access/",
+      "client_id": "e45b9cd6-2526-43b0-9710-a6a0c2e25534",
+      "client_secret": "VRnJnWPH7dfp4CbbCIViVAttgw8=",
+      "redirect_uris": ["https://138.109-247-35.customer.lyse.net/login"],
+      "behaviour": {
+          "response_types": ["code"],
+          "scope": ["openid", "email"],
+          "token_endpoint_auth_method": ["client_secret_basic",
+                                       "client_secret_post"]
+      },
       "services": {
         "discovery": {
           "class": "oidcrp.oidc.provider_info_discovery.ProviderInfoDiscovery",
@@ -134,14 +194,14 @@
           "kwargs": {}
         }
       },
-      "client_id": "e45b9cd6-2526-43b0-9710-a6a0c2e25534",
-      "client_secret": "VRnJnWPH7dfp4CbbCIViVAttgw8=",
-      "redirect_uris": ["https://138.109-247-35.customer.lyse.net/login"],
-      "behaviour": {
-          "response_types": ["code"],
-          "scope": ["openid", "email"],
-          "token_endpoint_auth_method": ["client_secret_basic",
-                                       "client_secret_post"]
+      "add_ons": {
+        "pkce": {
+          "function": "oidcrp.oauth2.add_on.pkce.add_support",
+          "kwargs": {
+            "code_challenge_length": 64,
+            "code_challenge_method": "S256"
+          }
+        }
       }
     },
     "flask_provider": {

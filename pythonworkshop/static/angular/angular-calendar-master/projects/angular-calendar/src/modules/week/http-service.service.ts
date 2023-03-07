@@ -166,7 +166,7 @@ export class HttpEventService{
     }
 
     vippsSendCb(obj){
-        window.location.href = `https://138.109-247-35.customer.lyse.net/api/vipps/authz_cb/vipps?code=${obj['code']}&scope=${obj['scope']}&state=${obj['state']}`
+        window.location.href = `https://138.109-247-35.customer.lyse.net/api/vipps/authz_cb/vipps_provider?code=${obj['code']}&scope=${obj['scope']}&state=${obj['state']}`
         /* let queryParams = new HttpParams();
         queryParams.append('code',obj['code']).append('scope',obj['scope']).append('state',obj['state']);
         this.http.get(this.baseurl+this.vippsAuthCbUrl,
