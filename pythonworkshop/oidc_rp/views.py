@@ -149,18 +149,17 @@ def finalize(op_identifier, request_args):
         # Where to go if the user clicks on logout
         kwargs['logout_url'] = "{}/logout".format(_context.base_url)
 
-        return jsonify({'endpoints':endpoints,
-                               'userinfo':res['userinfo'],
-                               'access_token':res['token'],
-                               'id_token':res["id_token"],
-                               'kwargs': kwargs})
+        return jsonify({'userinfo':res['userinfo'],
+                        'access_token':res['token']})
     else:
         return make_response(res['error'], 400)
 
 
 def get_op_identifier_by_cb_uri(url: str):
     uri = splitquery(url)[0]
+    print(f'get_op_identifier_by_cb_uri   uri: {uri}')
     for k, v in current_app.rph.issuer2rp.items():
+        print(f'get_op_identifier_by_cb_uri key :{k}')
         _cntx = v.get_service_context()
         for endpoint in ("redirect_uris",
                          "post_logout_redirect_uris",
@@ -173,14 +172,18 @@ def get_op_identifier_by_cb_uri(url: str):
 @oidc_rp_views.route('/api/vipps/authz_cb/<op_identifier>')
 def authz_cb(op_identifier):
     op_identifier = get_op_identifier_by_cb_uri(request.url)
-    print(f'oidc_rp authz_cb op_identifier: {op_identifier}')
-    """ state_key = request.args['state']
-    print(f'state_key :{state_key}')
-    session_info=current_app.rph.get_session_information(state_key)
-    result=current_app.rph.finalize(session_info['iss'],**request.args)
-    print(f'authz_cb user_info: {result.user_info}')
-    resp = make_response(jsonify({'userinfo':result.user_info})) """
+    print(f'authz_cb op_identifier: {op_identifier}')
     return finalize(op_identifier, request.args)
+
+@oidc_rp_views.route('/api/vipps/authz_cbvipps')
+def authz_cb_vipps():
+    code_key = request.args['code']
+    print(f'authz_cb_vipps state_key :{code_key}')
+    session_info=current_app.rph.get_session_information(code_key)
+    res = current_app.rph.finalize(session_info['iss'],**session_info)
+    print(f'authz_cb_vipps user_info: {res.user_info}')
+    resp = make_response(jsonify({'userinfo':res.user_info}))
+    return resp
 
 
 @oidc_rp_views.errorhandler(werkzeug.exceptions.BadRequest)
