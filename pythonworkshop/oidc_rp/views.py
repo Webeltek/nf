@@ -170,10 +170,15 @@ def get_op_identifier_by_cb_uri(url: str):
                 return k
 
 
-@oidc_rp_views.route('/api/vipps/authz_cb/<op_identifier>')
-def authz_cb(op_identifier):
-    op_identifier = get_op_identifier_by_cb_uri(request.url)
-    resp = make_response(finalize(op_identifier, request.args))
+@oidc_rp_views.route('/api/vipps/authz_cb/vipps')
+def authz_cb():
+    #op_identifier = get_op_identifier_by_cb_uri(request.url)
+    #print(f'oidc_rp authz_cb op_identifier: {op_identifier}')
+    state_key = request.args['state']
+    res=current_app.rph.get_access_and_id_token(state_key)
+    user_info=current_app.rph.get_user_info(state_key,access_token=res['access_token'])
+    print(f'authz_cb user_info: {user_info}')
+    resp = make_response(jsonify({'userinfo':user_info}))
     return resp
 
 

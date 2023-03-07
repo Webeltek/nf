@@ -104,7 +104,7 @@ def oidc_provider_init_app(config, name=None, **kwargs):
     #app.config['SECRET_KEY'] = os.urandom(12).hex()
     app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
     app.config.update(
-    SESSION_COOKIE_SECURE=False,
+    SESSION_COOKIE_SECURE=True,
     SESSION_COOKIE_HTTPONLY=False,
     SESSION_COOKIE_SAMESITE='None',
 )

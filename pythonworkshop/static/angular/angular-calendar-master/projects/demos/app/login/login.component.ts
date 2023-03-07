@@ -71,7 +71,7 @@ export class LoginComponent implements OnInit {
       const scope = paramMap.get('scope');
       const state = paramMap.get('state');
       console.log("LC typeof params[code]",code);
-      if(typeof code!== (undefined || null)){
+      if(typeof code!== undefined && code!==null){
         const obj = {
           code : code,
           scope: scope,

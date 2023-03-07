@@ -152,7 +152,7 @@ export class HttpEventService{
 
     vippsAuthorize(){
         console.log("HttpS vippsAthorize call")
-        window.location.href = `https://138.109-247-35.customer.lyse.net/api/vipps/rp?static_iss=vipps_provider`
+        window.location.href = `https://138.109-247-35.customer.lyse.net/api/vipps/rp`
         /* return this.http.get(this.baseurl+this.vippsAuthUrl,
             { headers : this.vippsHeaders, observe: 'body', responseType : 'json'})
             .subscribe({
@@ -166,8 +166,8 @@ export class HttpEventService{
     }
 
     vippsSendCb(obj){
-        //window.location.href = `https://138.109-247-35.customer.lyse.net/api/vipps/authz_cb/vipps?code=${obj['code']}&scope=${obj['scope']}&state=${obj['state']}`
-        let queryParams = new HttpParams();
+        window.location.href = `https://138.109-247-35.customer.lyse.net/api/vipps/authz_cb/vipps?code=${obj['code']}&scope=${obj['scope']}&state=${obj['state']}`
+        /* let queryParams = new HttpParams();
         queryParams.append('code',obj['code']).append('scope',obj['scope']).append('state',obj['state']);
         this.http.get(this.baseurl+this.vippsAuthCbUrl,
             {   headers : this.vippsHeaders, 
@@ -180,7 +180,7 @@ export class HttpEventService{
                 },
                 error: (error) => { 
                     console.log("vippsSendCb() error : " + JSON.stringify(error)) ; } 
-            }) 
+            }) */ 
     }
 
 
