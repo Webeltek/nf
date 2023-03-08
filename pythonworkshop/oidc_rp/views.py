@@ -149,8 +149,7 @@ def finalize(op_identifier, request_args):
         # Where to go if the user clicks on logout
         kwargs['logout_url'] = "{}/logout".format(_context.base_url)
 
-        return jsonify({'userinfo':res['userinfo'],
-                        'access_token':res['token']})
+        return jsonify(res['userinfo']['email'])
     else:
         return make_response(res['error'], 400)
 
