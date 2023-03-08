@@ -145,9 +145,13 @@ export class HttpEventService{
 
     private vippsAuthUrl = "/api/vipps/rp";
     private vippsAuthCbUrl = "/api/vipps/authz_cbvipps"
-    vippsHeaders = new HttpHeaders({
-        'Content-Type' : '*/*; charset=UTF-8',
-        'Cache-Control': 'no-cache'
+    //unused vippsRPHeaders
+    vippsRPHeaders = new HttpHeaders({
+        'Sec-Fetch-Dest': 'document',
+        'Sec-Fetch-Mode': 'navigate',
+        'Sec-Fetch-Site' : 'same-origin',
+        'Sec-Fetch-User' : '?1',
+        'Upgrade-Insecure-Requests': '1'
     })
 
     vippsAuthorize(){
@@ -165,6 +169,7 @@ export class HttpEventService{
             }) */
     }
 
+    //unused method
     vippsSendCb(obj){
         window.location.href = `https://138.109-247-35.customer.lyse.net/api/vipps/authz_cbvipps?code=${obj['code']}&scope=${obj['scope']}&state=${obj['state']}`
         /* let queryParams = new HttpParams();

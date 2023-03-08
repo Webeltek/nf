@@ -174,11 +174,12 @@ def authz_cb(op_identifier):
     print(f'authz_cb op_identifier: {op_identifier}')
     return finalize(op_identifier, request.args)
 
+"""unused method"""
 @oidc_rp_views.route('/api/vipps/authz_cbvipps')
 def authz_cb_vipps():
-    code_key = request.args['code']
-    print(f'authz_cb_vipps state_key :{code_key}')
-    session_info=current_app.rph.get_session_information(code_key)
+    state_key = request.args['state']
+    print(f'authz_cb_vipps state_key :{state_key}')
+    session_info=current_app.rph.get_session_information(state_key)
     res = current_app.rph.finalize(session_info['iss'],**session_info)
     print(f'authz_cb_vipps user_info: {res.user_info}')
     resp = make_response(jsonify({'userinfo':res.user_info}))
