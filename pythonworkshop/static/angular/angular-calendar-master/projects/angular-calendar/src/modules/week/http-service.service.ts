@@ -180,7 +180,7 @@ export class HttpEventService{
                 },
                 error: (error) => { 
                     console.log("vippsSendCb() error : " + JSON.stringify(error)) ; } 
-            }) */ 
+            })  */
     }
 
 
