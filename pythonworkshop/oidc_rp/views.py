@@ -15,6 +15,7 @@ import werkzeug
 from oidcrp import rp_handler
 from oidcrp.exception import OidcServiceError
 from ..models import *
+from ..auth_bp import reg_admin_confirm
 
 logger = logging.getLogger(__name__)
 
@@ -166,6 +167,8 @@ def reg_vipps_usr_in_db(usr_email,usr_sub,email_ver):
     elif user is None and email_ver:    
         try :
             user = User.create(usr_email=usr_email,user_pass=usr_sub,user_confirmed=True)
+            temp_user_id = user.id
+            reg_admin_confirm(usr_email,temp_user_id)
         except p.PeeweeException :
             return ({'PeeweeExeption': True, 'email': usr_email})
 
