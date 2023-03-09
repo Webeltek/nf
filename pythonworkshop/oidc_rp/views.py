@@ -17,6 +17,8 @@ from oidcrp.exception import OidcServiceError
 from ..models import *
 from ..auth_bp.views import reg_admin_confirm
 
+from ..email import send_email, send_adm_conf_email
+
 logger = logging.getLogger(__name__)
 
 oidc_rp_views = Blueprint('oidc_rp', __name__, url_prefix='')
@@ -150,29 +152,42 @@ def finalize(op_identifier, request_args):
 
         # Where to go if the user clicks on logout
         kwargs['logout_url'] = "{}/logout".format(_context.base_url)
-        reg_vipps_usr_in_db(res['userinfo']['email'],
-                            res['userinfo']['sub'],
-                            res['userinfo']['email_verified'])
-        return jsonify(res['userinfo']['email'])
+        usr_email = res['userinfo']['email']
+        usr_sub = res['userinfo']['sub']
+        usr_email_ver = res['userinfo']['email_verified']
+        reg_vipps_usr_in_db(usr_email,usr_sub,usr_email_ver)
+        return jsonify(usr_email)
     else:
         return make_response(res['error'], 400)
     
 def reg_vipps_usr_in_db(usr_email,usr_sub,email_ver):
-    logger.debug('reg_vipps_usr_in_db{}'.format(usr_email))
+    print(f'reg_vipps_usr_in_db:  {usr_email},{usr_sub},{email_ver}')
     users_db.connect(reuse_if_open=True)
     user = User.select().where(User.user_email==usr_email).first()
     if user is not None:
         user.login_user()
         user.generate_access_token()
-        print(f'oidc_rp reg_vipps_usr_in_db usr_email:{usr_email}')
-    elif user is None and usr_email is not None and email_ver:    
+        print(f'reg_vipps_usr_in_db usr_email:{usr_email}')
+    elif user is None and (usr_email and usr_sub and email_ver) is not None:    
         try :
             user = User.create(usr_email=usr_email,user_pass=usr_sub,user_confirmed=True)
             temp_user_id = user.id
             reg_admin_confirm(usr_email,temp_user_id)
         except p.PeeweeException :
             return ({'PeeweeExeption': True, 'email': usr_email})
-    users_db.close()    
+        
+""" def vipps_usr_adm_confirm(usr_email=None,temp_usr_id=None):
+    if (usr_email and temp_usr_id) is not None:
+        users_db.connect(reuse_if_open=True)
+        msg=''
+        adm_conf_token = User.generate_admin_conf_token(temp_usr_id)
+        temp_user = User.select().where(User.id==temp_usr_id).first()
+        app= current_app._get_current_object()
+        adm_conf_email = app.config['FLASKY_CONF_ADMIN']
+        send_adm_conf_email(adm_conf_email, 'Confirm registration of account: '+temp_user.user_email,  \
+                             'auth/email/reg_admin_confirm', user=temp_user, adm_conf_token=adm_conf_token)
+        msg = 'En bekreftelses e-post har blitt sendt til admin på e-post.'
+        users_db.close() """
 
 def get_op_identifier_by_cb_uri(url: str):
     uri = splitquery(url)[0]
