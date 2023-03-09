@@ -67,7 +67,7 @@ class User(p.Model):
   
   def generate_access_token(self, expiration=3600):
         encoded = jwt.encode({'email': self.user_email, \
-        'exp': datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(seconds=expiration)},current_app.config['SECRET_KEY_DB'], algorithm='HS256')
+        'exp': datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(seconds=expiration)},current_app.config['SECRET_KEY'], algorithm='HS256')
         self.access_token = encoded
         self.save()
         return encoded
@@ -75,7 +75,7 @@ class User(p.Model):
   @staticmethod
   def check_access_token(access_token):
         try:
-          data = jwt.decode(access_token,current_app.config['SECRET_KEY_DB'],algorithms=["HS256"])
+          data = jwt.decode(access_token,current_app.config['SECRET_KEY'],algorithms=["HS256"])
         except jwt.ExpiredSignatureError:
           return 'expiredSignatureError'
         except :
@@ -85,19 +85,19 @@ class User(p.Model):
 
   def generate_confirmation_token(self, expiration=3600):
         encoded = jwt.encode({'confirm': self.id, \
-        'exp': datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(seconds=expiration)},current_app.config['SECRET_KEY_DB'], algorithm='HS256')
+        'exp': datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(seconds=expiration)},current_app.config['SECRET_KEY'], algorithm='HS256')
         return encoded
   
   @staticmethod
   def generate_admin_conf_token(user_id,expiration=3600*48):
         print(f'models generate_admin_conf_token user_id: {user_id}')
-        encoded = jwt.encode({'confirm': user_id ,'exp': datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(seconds=expiration) }, current_app.config['SECRET_KEY_DB'], algorithm='HS256')
+        encoded = jwt.encode({'confirm': user_id ,'exp': datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(seconds=expiration) }, current_app.config['SECRET_KEY'], algorithm='HS256')
         return encoded
 
   @staticmethod
   def get_tokens_user_id(token):
     try:
-        data = jwt.decode(token,current_app.config['SECRET_KEY_DB'],algorithms=["HS256"])
+        data = jwt.decode(token,current_app.config['SECRET_KEY'],algorithms=["HS256"])
         confirmed_user_id = data.get('confirm')
         print(f'User.get_tokens_user_id() data.confirm is:{confirmed_user_id}')
         return confirmed_user_id
@@ -109,7 +109,7 @@ class User(p.Model):
     print(f'User.confirm() token is: {token}')
     print(f'User.confirm(...) self.id is: {self.id}')
     try:
-        data = jwt.decode(token,current_app.config['SECRET_KEY_DB'],algorithms=["HS256"])
+        data = jwt.decode(token,current_app.config['SECRET_KEY'],algorithms=["HS256"])
         confirmed_user_id = data.get('confirm')
         print(f'User.confirm(...) data.confirm is:{confirmed_user_id}')
     except:
@@ -129,7 +129,7 @@ class User(p.Model):
     print(f'User.conf_by_adm() token is: {token}')
     print(f'User.conf_by_adm(...) self.id is: {self.id}')
     try:
-        data = jwt.decode(token,current_app.config['SECRET_KEY_DB'],algorithms=["HS256"])
+        data = jwt.decode(token,current_app.config['SECRET_KEY'],algorithms=["HS256"])
         confirmed_user_id = data.get('confirm')
         print(f'User.conf_by_adm(...) data.confirm is:{confirmed_user_id}')
     except:
@@ -146,7 +146,7 @@ class User(p.Model):
   
   def generate_pass_change_token(self, expiration=3600):
         print(f'models generate_pass_change_token user.id : {self.id}')
-        encodeed = jwt.encode({'confirm': self.id,'exp': datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(seconds=expiration)},current_app.config['SECRET_KEY_DB'], algorithm='HS256')
+        encodeed = jwt.encode({'confirm': self.id,'exp': datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(seconds=expiration)},current_app.config['SECRET_KEY'], algorithm='HS256')
         return encodeed
 
   def change_pass(self,email,newpass):
@@ -162,11 +162,11 @@ class User(p.Model):
 
   def generate_email_change_token(self, new_email, expiration=3600):
         encodeed = jwt.encode({'confirm': self.id, 'new_email' : new_email, \
-        'exp': datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(seconds=expiration) },current_app.config['SECRET_KEY_DB'], algorithm='HS256')
+        'exp': datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(seconds=expiration) },current_app.config['SECRET_KEY'], algorithm='HS256')
         return encodeed
 
   def change_email(self, token):
-        secret_key = current_app.config['SECRET_KEY_DB']
+        secret_key = current_app.config['SECRET_KEY']
         try:
             data = jwt.decode(token, secret_key, algorithms=['HS256'])
         except:

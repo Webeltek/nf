@@ -101,7 +101,7 @@ def confirm(token):
     return redirect(f'/confirm?=userconfirmed={userconfirmed}')
 
 @auth_bp.route('/api/auth/reg_admin_confirm', methods=['POST'])
-def reg_admin_confirm(usr_email=None,temp_user_id=None): 
+def reg_admin_confirm(usr_email=None,temp_usr_id=None): 
     if request.method == 'POST':
         req_json = request.get_json()
         user_email=request.json['email']
@@ -117,11 +117,11 @@ def reg_admin_confirm(usr_email=None,temp_user_id=None):
                              'auth/email/reg_admin_confirm', user=temp_user, adm_conf_token=adm_conf_token)
         msg = 'En bekreftelses e-post har blitt sendt til admin på e-post.'
         users_db.close()
-    if (user_email and temp_user_id) is not None:
+    if (usr_email and temp_usr_id) is not None:
         users_db.connect(reuse_if_open=True)
         msg=''
-        adm_conf_token = User.generate_admin_conf_token(temp_user_id)
-        temp_user = User.select().where(User.id==temp_user_id).first()
+        adm_conf_token = User.generate_admin_conf_token(temp_usr_id)
+        temp_user = User.select().where(User.id==temp_usr_id).first()
         app= current_app._get_current_object()
         adm_conf_email = app.config['FLASKY_CONF_ADMIN']
         send_adm_conf_email(adm_conf_email, 'Confirm registration of account: '+temp_user.user_email,  \
