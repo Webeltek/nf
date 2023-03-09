@@ -42,7 +42,7 @@ def before_request():
 
 
 @auth_bp.route('/api/auth/login', methods=['POST','GET'])
-def login_form():
+def login_form(usr_email=None, usr_pass=None):
     print('login_form call')
     msg = ''
     if request.method == 'POST':
@@ -54,10 +54,20 @@ def login_form():
             user.login_user()
             user.generate_access_token()
             user_dict = model_to_dict(user)
-            return jsonify({'user':user_dict,'msg':'User confirmed!'})
+            msg= 'User confirmed!'
+            return jsonify({'user':user_dict,'msg':msg})
         else:
             msg='Wrong username or password!'
         users_db.close()
+    if (usr_email and usr_pass) is not None:
+        users_db.connect(reuse_if_open=True)
+        user = User.select().where(User.user_email==usr_email).first()
+        if user is not None and user.verify_password(usr_pass) and user.user_confirmed and user.user_conf_by_admin:
+            user.login_user()
+            user.generate_access_token()
+            user_dict = model_to_dict(user)
+            msg = 'External user provider login!'
+            return jsonify({'user':user_dict,'msg':msg})
     return jsonify({'user':'nonexistent','msg':msg})
            
 

@@ -15,7 +15,7 @@ import werkzeug
 from oidcrp import rp_handler
 from oidcrp.exception import OidcServiceError
 from ..models import *
-from ..auth_bp.views import reg_admin_confirm
+from ..auth_bp.views import reg_admin_confirm, login_form
 
 from ..email import send_email, send_adm_conf_email
 
@@ -168,9 +168,7 @@ def reg_vipps_usr_in_db(usr_email,usr_sub,email_ver):
     users_db.connect(reuse_if_open=True)
     user = User.select().where(User.user_email==usr_email).first()
     if user is not None:
-        user.login_user()
-        user.generate_access_token()
-        print(f'reg_vipps_usr_in_db usr_email:{usr_email}')
+        login_form(usr_email, usr_sub)
     elif user is None and (usr_email and usr_sub and email_ver) is not None:    
         try :
             user = User.create(user_email=usr_email,user_pass=usr_sub,user_is_logged_in=True,user_confirmed=True)
