@@ -14,6 +14,7 @@ import werkzeug
 
 from oidcrp import rp_handler
 from oidcrp.exception import OidcServiceError
+from ..models import *
 
 logger = logging.getLogger(__name__)
 
@@ -148,11 +149,25 @@ def finalize(op_identifier, request_args):
 
         # Where to go if the user clicks on logout
         kwargs['logout_url'] = "{}/logout".format(_context.base_url)
-
+        reg_vipps_usr_in_db(res['userinfo']['email'],
+                            res['userinfo']['sub'],
+                            res['userinfo']['email_verified'])
         return jsonify(res['userinfo']['email'])
     else:
         return make_response(res['error'], 400)
-
+    
+def reg_vipps_usr_in_db(usr_email,usr_sub,email_ver):
+    users_db.connect(reuse_if_open=True)
+    user = User.select().where(User.user_email==request.json['email']).first()
+    if user is not None:
+        user.login_user()
+        user.generate_access_token()
+        print(f'oidc_rp reg_vipps_usr_in_db usr_email:{usr_email}')
+    elif user is None and email_ver:    
+        try :
+            user = User.create(usr_email=usr_email,user_pass=usr_sub,user_confirmed=True)
+        except p.PeeweeException :
+            return ({'PeeweeExeption': True, 'email': usr_email})
 
 def get_op_identifier_by_cb_uri(url: str):
     uri = splitquery(url)[0]
