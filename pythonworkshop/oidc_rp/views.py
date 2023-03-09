@@ -114,7 +114,10 @@ def finalize(op_identifier, request_args):
     session['state'] = request_args.get('state')
 
     if session['state']:
-        iss = _context.state.get_iss(session['state'])
+        try:
+            iss = _context.state.get_iss(session['state'])
+        except KeyError as keyErr:
+            logger.error('error in StateInterface: get the state connected to key from state database')    
     else:
         return make_response('Unknown state', 400)
 
@@ -170,7 +173,7 @@ def reg_vipps_usr_in_db(usr_email,usr_sub,email_ver):
         print(f'reg_vipps_usr_in_db usr_email:{usr_email}')
     elif user is None and (usr_email and usr_sub and email_ver) is not None:    
         try :
-            user = User.create(usr_email=usr_email,user_pass=usr_sub,user_confirmed=True)
+            user = User.create(user_email=usr_email,user_pass=usr_sub,user_is_logged_in=True,user_confirmed=True)
             temp_user_id = user.id
             reg_admin_confirm(usr_email,temp_user_id)
         except p.PeeweeException :
