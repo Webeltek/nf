@@ -117,7 +117,7 @@ def reg_admin_confirm(usr_email=None,temp_user_id=None):
                              'auth/email/reg_admin_confirm', user=temp_user, adm_conf_token=adm_conf_token)
         msg = 'En bekreftelses e-post har blitt sendt til admin på e-post.'
         users_db.close()
-    if (user_email and temp_user_id) is not None:
+    if (usr_email and temp_user_id) is not None:
         users_db.connect(reuse_if_open=True)
         msg=''
         adm_conf_token = User.generate_admin_conf_token(temp_user_id)

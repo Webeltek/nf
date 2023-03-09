@@ -15,7 +15,7 @@ import werkzeug
 from oidcrp import rp_handler
 from oidcrp.exception import OidcServiceError
 from ..models import *
-from ..auth_bp import reg_admin_confirm
+from ..auth_bp.views import reg_admin_confirm
 
 logger = logging.getLogger(__name__)
 
@@ -158,19 +158,21 @@ def finalize(op_identifier, request_args):
         return make_response(res['error'], 400)
     
 def reg_vipps_usr_in_db(usr_email,usr_sub,email_ver):
+    logger.debug('reg_vipps_usr_in_db{}'.format(usr_email))
     users_db.connect(reuse_if_open=True)
-    user = User.select().where(User.user_email==request.json['email']).first()
+    user = User.select().where(User.user_email==usr_email).first()
     if user is not None:
         user.login_user()
         user.generate_access_token()
         print(f'oidc_rp reg_vipps_usr_in_db usr_email:{usr_email}')
-    elif user is None and email_ver:    
+    elif user is None and usr_email is not None and email_ver:    
         try :
             user = User.create(usr_email=usr_email,user_pass=usr_sub,user_confirmed=True)
             temp_user_id = user.id
             reg_admin_confirm(usr_email,temp_user_id)
         except p.PeeweeException :
             return ({'PeeweeExeption': True, 'email': usr_email})
+    users_db.close()    
 
 def get_op_identifier_by_cb_uri(url: str):
     uri = splitquery(url)[0]
