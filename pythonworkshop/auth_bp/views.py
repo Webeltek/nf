@@ -19,6 +19,9 @@ from playhouse.shortcuts import model_to_dict
 #from .. import socketio
 from ldap3 import Server, Connection, ALL, Tls
 import ssl
+import logging
+
+logger = logging.getLogger(__name__)
 
 templateLoader = jinja2.PackageLoader('pythonworkshop','templates')
 templateEnv = jinja2.Environment(loader=templateLoader)
@@ -44,7 +47,7 @@ def before_request():
 
 @auth_bp.route('/api/auth/ldap', methods=['POST','GET'])
 def login_ldap(usr_email=None, usr_pass=None):
-    print('login_form call')
+    print('login_ldap call')
     msg = 'awaiting login to ldap'
     if request.method == 'POST':
         #send to ldap3 connection and retreive result
@@ -52,14 +55,17 @@ def login_ldap(usr_email=None, usr_pass=None):
         testusername='testuser'
         tls_configuration = Tls(validate=ssl.CERT_REQUIRED, version=ssl.PROTOCOL_TLSv1)
         tls_configuration.validate = ssl.CERT_NONE #temporary disable certificate validation
-        server = Server('ipa.int.bitfrost.no',use_ssl=True,tls=tls_configuration, get_info=ALL)
+        server = Server('ipar1.int.bitfrost.no', use_ssl=False, get_info=ALL)
         conn = Connection(server, 
-                          'uid=user,cn=room-booking-app-users,cn=groups,cn=accounts,dc=int,dc=bitfrost,dc=no', 'Secret123', auto_bind=True)
+                          'uid=bookingapp,cn=sysaccounts,cn=etc,dc=int,dc=bitfrost,dc=no', 'E0aA--coVIkxSDPMKiVolJRxQIBMvdDpq.Fm3gM8!eZ0', auto_bind=True)
+        conn.start_tls()
         conn.search('dc=int,dc=bitfrost,dc=no', 
-                    '(&(uid=testusername)(memberOf=cn=room-booking-app-users,cn=groups,cn=accounts,dc=int,dc=bitfrost,dc=no))',
+                    '(&(uid=bookingapp)(memberOf=cn=sysaccounts,cn=etc,dc=int,dc=bitfrost,dc=no))',
                     attributes=['cn', 'givenName', 'objectclass'])
+        logger.info('ldap conn info: {}'.format(str(conn)))
         for entry in conn.entries:
-            print(entry)
+            print(f'ldapConn entry {entry}')
+        msg = print(conn)    
     return jsonify({'user':'username','msg':msg})
         
 
@@ -235,10 +241,10 @@ def input_change_pass():
         users_db.close()
     return jsonify({'user':'nonexistent','msg':msg}) 
 
-
+"""socketio disabled"""
 def confirm_event(userstate):
     print('socketio emitting msg:')
-    socketio.emit('user_confirmed', {'data': f'user confirmed={userstate}'})
+    #socketio.emit('user_confirmed', {'data': f'user confirmed={userstate}'})
 
     """
 @auth_bp.route('/logout')

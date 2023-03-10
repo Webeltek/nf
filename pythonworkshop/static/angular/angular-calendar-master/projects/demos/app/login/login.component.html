@@ -26,7 +26,7 @@
       <form
         *ngIf="!isLoggedIn"
         name="form"
-        (ngSubmit)="f.form.valid && onSubmit()"
+        (click)="f.form.valid && onSubmit()"      
         #f="ngForm"
         novalidate
       >
@@ -71,13 +71,10 @@
           </div>
         </div>
         <div class="form-group">
-          <button class="btn btn-primary btn-block">
+          <button class="btn btn-primary btn-block" >
             {{'ToolbarLogin' | translate}}
           </button>
         </div>
-        <mat-action-row>
-          <button mat-button color="primary" (click)="onLDAPSubmit()">{{ 'PCsubmit' | translate}}</button>
-        </mat-action-row>
         <div class="form-group">
           <div
             class="alert alert-danger"
@@ -92,6 +89,12 @@
       <div class="alert alert-success" *ngIf="isLoggedIn">
         {{'LCloggedInAs' | translate}}{{ role }}.
       </div>
+      <div class="alert alert-danger"role="alert">
+        {{ errorMessage }}
+      </div>
+      <mat-action-row>
+        <button mat-button color="primary" (click)="onLDAPSubmit()">{{ 'PCsubmit' | translate}}</button>
+      </mat-action-row>
 
       <mat-divider></mat-divider>
       <!-- <button mat-button class="menu-button" (click)="vippsLogin()">

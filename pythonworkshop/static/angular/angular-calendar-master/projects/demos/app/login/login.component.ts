@@ -186,16 +186,7 @@ export class LoginComponent implements OnInit {
         let dataObj = data as any;
         //console.log("loginComp dataObj.user:",dataObj.user)
         if (dataObj.user!== 'nonexistent'){
-          let accessToken : string= dataObj.user.access_token ;
-          this.tokenStorage.saveToken(accessToken);
-          this.tokenStorage.saveUser(dataObj.user);
-          this.isLoginFailed = false;
-          this.isLoggedIn = true;
-          this.tokenStorage.authenticated$.next(true);
-          this.router.navigate(['calendar'])
-        } else if(dataObj.user === 'nonexistent'){
-          this.errorMessage = "LCwrongUserPass";
-          this.isLoginFailed = true;
+          this.errorMessage= dataObj.msg;
         }
 
       },
