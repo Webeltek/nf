@@ -55,11 +55,11 @@ def login_ldap(usr_email=None, usr_pass=None):
         testusername='testuser'
         tls_configuration = Tls(validate=ssl.CERT_REQUIRED, version=ssl.PROTOCOL_TLSv1)
         tls_configuration.validate = ssl.CERT_NONE #temporary disable certificate validation
-        server = Server('ipa.int.bitfrost.no',use_ssl=True,tls=tls_configuration, get_info=ALL)
+        server = Server('ipar1.int.bitfrost.no',port=636, use_ssl=True, get_info=ALL)
         conn = Connection(server, 
-                          'uid=bookingapp,cn=room-booking-app-users,cn=groups,cn=accounts,dc=int,dc=bitfrost,dc=no', 'E0aA--coVIkxSDPMKiVolJRxQIBMvdDpq.Fm3gM8!eZ0', auto_bind=True)
+                          'uid=bookingapp,cn=sysaccounts,cn=etc,dc=int,dc=bitfrost,dc=no', 'E0aA--coVIkxSDPMKiVolJRxQIBMvdDpq.Fm3gM8!eZ0', auto_bind=True)
         conn.search('dc=int,dc=bitfrost,dc=no', 
-                    '(&(uid=bookingapp)(memberOf=cn=room-booking-app-users,cn=groups,cn=accounts,dc=int,dc=bitfrost,dc=no))',
+                    '(&(uid=bookingapp)(memberOf=cn=sysaccounts,cn=etc,dc=int,dc=bitfrost,dc=no))',
                     attributes=['cn', 'givenName', 'objectclass'])
         logger.info('ldap conn info: {}'.format(str(conn)))
         for entry in conn.entries:
