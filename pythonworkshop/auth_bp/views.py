@@ -63,7 +63,8 @@ def login_ldap(usr_email=None, usr_pass=None):
                     attributes=['cn', 'givenName', 'objectclass'])
         logger.info('ldap conn info: {}'.format(str(conn)))
         for entry in conn.entries:
-            logger.info('ldapConn entry {}'.format(entry))
+            print(f'ldapConn entry {entry}')
+        msg = print(conn)    
     return jsonify({'user':'username','msg':msg})
         
 
