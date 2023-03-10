@@ -26,7 +26,7 @@
       <form
         *ngIf="!isLoggedIn"
         name="form"
-        (ngSubmit)="f.form.valid && onSubmit()"
+
         #f="ngForm"
         novalidate
       >
@@ -71,7 +71,7 @@
           </div>
         </div>
         <div class="form-group">
-          <button class="btn btn-primary btn-block">
+          <button class="btn btn-primary btn-block" (click)="f.form.valid && onSubmit()" >
             {{'ToolbarLogin' | translate}}
           </button>
         </div>
