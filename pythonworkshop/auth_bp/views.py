@@ -55,9 +55,10 @@ def login_ldap(usr_email=None, usr_pass=None):
         testusername='testuser'
         tls_configuration = Tls(validate=ssl.CERT_REQUIRED, version=ssl.PROTOCOL_TLSv1)
         tls_configuration.validate = ssl.CERT_NONE #temporary disable certificate validation
-        server = Server('ipar1.int.bitfrost.no',port=636, use_ssl=True, get_info=ALL)
+        server = Server('ipar1.int.bitfrost.no', use_ssl=False, get_info=ALL)
         conn = Connection(server, 
                           'uid=bookingapp,cn=sysaccounts,cn=etc,dc=int,dc=bitfrost,dc=no', 'E0aA--coVIkxSDPMKiVolJRxQIBMvdDpq.Fm3gM8!eZ0', auto_bind=True)
+        conn.start_tls()
         conn.search('dc=int,dc=bitfrost,dc=no', 
                     '(&(uid=bookingapp)(memberOf=cn=sysaccounts,cn=etc,dc=int,dc=bitfrost,dc=no))',
                     attributes=['cn', 'givenName', 'objectclass'])
@@ -240,10 +241,10 @@ def input_change_pass():
         users_db.close()
     return jsonify({'user':'nonexistent','msg':msg}) 
 
-
+"""socketio disabled"""
 def confirm_event(userstate):
     print('socketio emitting msg:')
-    socketio.emit('user_confirmed', {'data': f'user confirmed={userstate}'})
+    #socketio.emit('user_confirmed', {'data': f'user confirmed={userstate}'})
 
     """
 @auth_bp.route('/logout')
