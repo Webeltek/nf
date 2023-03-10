@@ -8,6 +8,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { LoggedInGuardService } from './_helpers/logged-in-guard.service';
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { ChangePassComponent } from './change-pass/change-pass.component';
+import { BoardAdminComponent } from './board-admin/board-admin.component';
 
 export const ROUTES: Routes = [  
         { path: 'login', component: LoginComponent },
@@ -17,8 +18,9 @@ export const ROUTES: Routes = [
         { path: 'confirm', component: ConfirmComponent },
         { path: 'calendar' , canActivate: [LoggedInGuardService], component : DemoAppComponent},
         { path: 'profile' , canActivate: [LoggedInGuardService], component : ProfileComponent},
+        { path: 'profile' , canActivate: [LoggedInGuardService], component : ProfileComponent},
         { path: 'logout' , canActivate: [LoggedInGuardService], component: LoginComponent},
-
+        { path: 'board_admin', canActivate : [LoggedInGuardService], component: BoardAdminComponent},
         { path: '', redirectTo: 'landing' , pathMatch : 'full' },
         { path: '**', component: LandingPageComponent }
     ];

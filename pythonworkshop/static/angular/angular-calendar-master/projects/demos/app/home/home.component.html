@@ -124,9 +124,15 @@
             </mat-expansion-panel>
         </ng-template>
         
-        <mat-list-item [style.padding-left]="0">
-          <button mat-button class="menu-button" routerLink="/profile">
+        <mat-list-item [style.padding-left]="0" routerLink="/profile">
+          <button mat-button class="menu-button">
             <mat-icon>account_box</mat-icon>
+            <span>{{'SideNavProfile' | translate}}</span>
+          </button>
+        </mat-list-item>
+        <mat-list-item [style.padding-left]="0" routerLink="/board_admin">
+          <button mat-button class="menu-button">
+            <mat-icon>group</mat-icon>
             <span>{{'SideNavProfile' | translate}}</span>
           </button>
         </mat-list-item>
