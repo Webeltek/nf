@@ -31,6 +31,13 @@ export class AuthService {
     }, { headers : this.httpHeaders, observe : 'body'});
   }
 
+  loginLDAP(email: string, password: string) {
+    return this.http.post(baseurl+AUTH_API + 'ldap', {
+      email,
+      password
+    }, { headers : this.httpHeaders, observe : 'body'});
+  }
+
   register( email: string, password: string): Observable<any> {
     return this.http.post(baseurl+AUTH_API + 'register', {
       email : email,

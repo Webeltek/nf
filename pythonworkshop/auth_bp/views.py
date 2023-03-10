@@ -17,6 +17,8 @@ from authlib.integrations.flask_client import OAuth
 from os import access, environ as env
 from playhouse.shortcuts import model_to_dict
 #from .. import socketio
+from ldap3 import Server, Connection, ALL, Tls
+import ssl
 
 templateLoader = jinja2.PackageLoader('pythonworkshop','templates')
 templateEnv = jinja2.Environment(loader=templateLoader)
@@ -38,8 +40,28 @@ def before_request():
             return redirect(url_for('auth_bp.unconfirmed'))
   users_db.close()
   pass 
-"""     
+"""
 
+@auth_bp.route('/api/auth/ldap', methods=['POST','GET'])
+def login_ldap(usr_email=None, usr_pass=None):
+    print('login_form call')
+    msg = 'awaiting login to ldap'
+    if request.method == 'POST':
+        #send to ldap3 connection and retreive result
+        #if login success usr: username , msg: Login success!
+        testusername='testuser'
+        tls_configuration = Tls(validate=ssl.CERT_REQUIRED, version=ssl.PROTOCOL_TLSv1)
+        tls_configuration.validate = ssl.CERT_NONE #temporary disable certificate validation
+        server = Server('ipa.int.bitfrost.no',use_ssl=True,tls=tls_configuration, get_info=ALL)
+        conn = Connection(server, 
+                          'uid=user,cn=room-booking-app-users,cn=groups,cn=accounts,dc=int,dc=bitfrost,dc=no', 'Secret123', auto_bind=True)
+        conn.search('dc=int,dc=bitfrost,dc=no', 
+                    '(&(uid=testusername)(memberOf=cn=room-booking-app-users,cn=groups,cn=accounts,dc=int,dc=bitfrost,dc=no))',
+                    attributes=['cn', 'givenName', 'objectclass'])
+        for entry in conn.entries:
+            print(entry)
+    return jsonify({'user':'username','msg':msg})
+        
 
 @auth_bp.route('/api/auth/login', methods=['POST','GET'])
 def login_form(usr_email=None, usr_pass=None):
@@ -67,6 +89,7 @@ def login_form(usr_email=None, usr_pass=None):
             user.generate_access_token()
             user_dict = model_to_dict(user)
             msg = 'External user provider login!'
+            #todo return redirect('/calendar')  with accesstoken in authorization header
             return jsonify({'user':user_dict,'msg':msg})
     return jsonify({'user':'nonexistent','msg':msg})
            
