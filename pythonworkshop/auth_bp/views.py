@@ -19,6 +19,9 @@ from playhouse.shortcuts import model_to_dict
 #from .. import socketio
 from ldap3 import Server, Connection, ALL, Tls
 import ssl
+import logging
+
+logger = logging.getLogger(__name__)
 
 templateLoader = jinja2.PackageLoader('pythonworkshop','templates')
 templateEnv = jinja2.Environment(loader=templateLoader)
@@ -54,12 +57,13 @@ def login_ldap(usr_email=None, usr_pass=None):
         tls_configuration.validate = ssl.CERT_NONE #temporary disable certificate validation
         server = Server('ipa.int.bitfrost.no',use_ssl=True,tls=tls_configuration, get_info=ALL)
         conn = Connection(server, 
-                          'uid=user,cn=room-booking-app-users,cn=groups,cn=accounts,dc=int,dc=bitfrost,dc=no', 'Secret123', auto_bind=True)
+                          'uid=bookingapp,cn=room-booking-app-users,cn=groups,cn=accounts,dc=int,dc=bitfrost,dc=no', 'E0aA--coVIkxSDPMKiVolJRxQIBMvdDpq.Fm3gM8!eZ0', auto_bind=True)
         conn.search('dc=int,dc=bitfrost,dc=no', 
-                    '(&(uid=testusername)(memberOf=cn=room-booking-app-users,cn=groups,cn=accounts,dc=int,dc=bitfrost,dc=no))',
+                    '(&(uid=bookingapp)(memberOf=cn=room-booking-app-users,cn=groups,cn=accounts,dc=int,dc=bitfrost,dc=no))',
                     attributes=['cn', 'givenName', 'objectclass'])
+        logger.info('ldap conn info: {}'.format(str(conn)))
         for entry in conn.entries:
-            print(entry)
+            logger.info('ldapConn entry {}'.format(entry))
     return jsonify({'user':'username','msg':msg})
         
 
