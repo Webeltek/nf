@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../_services/auth.service';
 import { TokenStorageService } from '../_services/token-storage.service';
-import { OidcSecurityService } from 'angular-auth-oidc-client';
 
 
 @Component({
@@ -20,8 +19,7 @@ export class RegisterComponent implements OnInit {
 
   constructor(
     private authService: AuthService, 
-    private tokenStorage: TokenStorageService,
-    public oidcSecurityService: OidcSecurityService) { }
+    private tokenStorage: TokenStorageService) { }
 
   ngOnInit(): void {
     

@@ -81,7 +81,7 @@
             role="alert"
             *ngIf="f.submitted && isLoginFailed"
           >
-            {{'LCloginFailed' | translate}}{{ errorMessage }}
+            {{'LCloginFailed' | translate}}{{ errorMessage | translate }}
           </div>
         </div>
       </form>
