@@ -47,7 +47,7 @@ def before_request():
 
 @auth_bp.route('/api/auth/ldap', methods=['POST','GET'])
 def login_ldap(usr_email=None, usr_pass=None):
-    print('login_form call')
+    print('login_ldap call')
     msg = 'awaiting login to ldap'
     if request.method == 'POST':
         #send to ldap3 connection and retreive result
