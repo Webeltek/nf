@@ -8,6 +8,7 @@
      "SideNavEditRooms": "Rediger rom",
      "SideNavProfile": "Profil",
      "SideNavLogout": "Logg ut",
+     "SideNavBoardAdmin": "Brukere",
 
      "LCusername": "Brukernavn",
      "LCuserRequired": "Brukernavn påkreves!",
@@ -21,6 +22,7 @@
      "LCsessExpired": "Sesjon utløpt!",
      "LCsignedOut": "Logget ut!",
      "LCwrongUserPass": "Feil brukernavn eller passord!",
+     "LCloginLDAP": "Logg inn LDAP",
 
      "PCuser": "Bruker",
      "PCfrom": "fra: ",

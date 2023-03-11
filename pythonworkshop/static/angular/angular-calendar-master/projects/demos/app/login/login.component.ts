@@ -4,8 +4,17 @@ import { TokenStorageService } from '../_services/token-storage.service';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { Observable } from 'rxjs';
 import { HttpEventService } from 'projects/angular-calendar/src/modules/week/http-service.service';
+import { UntypedFormControl,Validators ,FormControl, FormGroupDirective, NgForm, UntypedFormGroup} from '@angular/forms';
+import { ErrorStateMatcher } from '@angular/material/core';
 
 let apiLoaded = false;
+
+export class LoginErrorStateMatcher implements ErrorStateMatcher {
+  isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
+    const isSubmitted = form && form.submitted;
+    return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
+  }
+}
 
 @Component({
   selector: 'app-login',
@@ -13,6 +22,13 @@ let apiLoaded = false;
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
+  matcher = new LoginErrorStateMatcher();
+
+  loginFG = new UntypedFormGroup({
+    username: new UntypedFormControl('',[Validators.required,Validators.minLength(5)]),
+    pass: new UntypedFormControl('',[Validators.required,Validators.minLength(6)])
+  })
+
   form: any = {
     username: null,
     password: null
@@ -96,7 +112,7 @@ export class LoginComponent implements OnInit {
       this.role = this.tokenStorage.getUser().is_admin? 'admin':'user';
     }
     const confirmedUserEmail = this.actRoute.snapshot.paramMap.get('userEmail');
-    this.form.user_email = confirmedUserEmail;
+    this.loginFG.value.username = confirmedUserEmail;
     if (this.isLoggedIn){
       this.router.navigate(['calendar'])
     }
@@ -150,7 +166,8 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit(): void {
-    const { username, password } = this.form;
+    const  username = this.loginFG.controls.username.value; 
+    const  password  = this.loginFG.controls.pass.value;
 
     this.authService.login(username, password).subscribe({
       next: (data) => {
@@ -179,7 +196,8 @@ export class LoginComponent implements OnInit {
   }
 
   onLDAPSubmit(): void {
-    const { username, password } = this.form;
+    const  username = this.loginFG.controls.username.value; 
+    const  password  = this.loginFG.controls.pass.value;
 
     this.authService.loginLDAP(username, password).subscribe({
       next: (data) => {

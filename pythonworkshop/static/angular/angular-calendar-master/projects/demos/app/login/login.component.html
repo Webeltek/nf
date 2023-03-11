@@ -23,67 +23,39 @@
                   <p class="card-text"></p>
                 </div>
               </div>  
-      <form
+      <form [formGroup] = "loginFG"
         *ngIf="!isLoggedIn"
         name="form"
         (click)="f.form.valid && onSubmit()"      
         #f="ngForm"
         novalidate
       >
-        <div class="form-group">
-          <label for="username">{{'LCusername' | translate}}</label>
-          <input
-            type="text"
-            class="form-control"
-            name="username"
-            [(ngModel)]="form.username"
-            required
-            minlength="6"
-            #username="ngModel"
+        <mat-form-field appearance="fill">
+          <mat-label>{{'LCusername' | translate}}</mat-label>
+          <input matInput formControlName="username" type="text"
+            [errorStateMatcher]="matcher"
           />
-          <div
-            class="alert alert-danger"
-            role="alert"
-            *ngIf="username.errors && f.submitted"
-          >
-            <div *ngIf="username.errors.required">{{'LCuserRequired' | translate}}</div>
-            <div *ngIf="username.errors.minlength">{{'LCuserMinChar' | translate}}</div>
-          </div>
-        </div>
-        <div class="form-group">
-          <label for="password">{{'LCpass' | translate}}</label>
-          <input
-            type="password"
-            class="form-control"
-            name="password"
-            [(ngModel)]="form.password"
-            required
-            minlength="6"
-            #password="ngModel"
+          <mat-error *ngIf="loginFG.controls.username.errors?.['minlength']">
+            {{ 'PCemailTooshort' | translate}}
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field appearance="fill">
+          <mat-label>{{'LCpass' | translate}}</mat-label>
+          <input matInput formControlName="pass" type="password"
+          [errorStateMatcher]="matcher"
           />
-          <div
-            class="alert alert-danger"
-            role="alert"
-            *ngIf="password.errors && f.submitted"
-          >
-            <div *ngIf="password.errors.required">{{'LCpassRequired' | translate}}</div>
-            <div *ngIf="password.errors.minlength">{{'LCpassMinChar' | translate}}</div>
-          </div>
-        </div>
+          <mat-error *ngIf="loginFG.controls.username.errors?.['required']">
+            {{'LCpassRequired' | translate}}{{'LCpassMinChar' | translate}}
+          </mat-error>
+        </mat-form-field>
         <div class="form-group">
-          <button class="btn btn-primary btn-block" >
+          <button class="btn btn-primary btn-block" (click)="onSubmit()">
             {{'ToolbarLogin' | translate}}
           </button>
         </div>
-        <div class="form-group">
-          <div
-            class="alert alert-danger"
-            role="alert"
-            *ngIf="f.submitted && isLoginFailed"
-          >
+        <mat-error *ngIf="loginFG.errors && isLoginFailed">
             {{'LCloginFailed' | translate}}{{ errorMessage | translate }}
-          </div>
-        </div>
+        </mat-error>
       </form>
   
       <div class="alert alert-success" *ngIf="isLoggedIn">
@@ -93,12 +65,12 @@
         {{ errorMessage }}
       </div>
       <mat-action-row>
-        <button mat-button color="primary" (click)="onLDAPSubmit()">{{ 'PCsubmit' | translate}}</button>
+        <button mat-button color="primary" (click)="onLDAPSubmit()">{{ 'LCloginLDAP' | translate}}</button>
       </mat-action-row>
 
       <mat-divider></mat-divider>
       <!-- <button mat-button class="menu-button" (click)="vippsLogin()">
-        <img src="assets/log_in_with_vipps_rect_210_NO.png">
+        <img src="assets/log_in_with_vipps_pill_210_NO.png">
       </button> -->
     </div>
   </div>

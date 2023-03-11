@@ -8,6 +8,7 @@
     "SideNavEditRooms": "Edit rooms",
     "SideNavProfile": "Profile",
     "SideNavLogout": "Logout",
+    "SideNavBoardAdmin": "Users",
 
     "LCusername": "Username",
     "LCuserRequired": "Username is required!",
@@ -21,6 +22,7 @@
     "LCsessExpired": "Session expired!",
     "LCsignedOut": "Signed out!",
     "LCwrongUserPass": "Wrong username or password!",
+    "LCloginLDAP": "Login LDAP",
 
     "PCuser": "User ",
     "PCfrom": "from ",
