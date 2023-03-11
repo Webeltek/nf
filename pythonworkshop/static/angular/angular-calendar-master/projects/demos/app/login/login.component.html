@@ -1,74 +1,78 @@
 <div class="col-lg-4 offset-lg-4">
-    <div class="card card-container">
-      <p >{{errorMessage | translate}}</p>
-              <div class="card">
-                <!-- <youtube-player class="card-img-top"
-                    [videoId]= "videos[1].videoId"
-                    [suggestedQuality]="'default'"
-                    [playerVars]="playerVars" 
-                    [height]="350"
-                    [width]="600"
-                    [startSeconds]="0"
-                    [endSeconds]="30" 
-                    >
-                </youtube-player> -->
-                <!-- <video autoplay playsinline muted loop 
-                src="assets/hfjellb.mp4" 
-                style="width: 200px; height: 200px; margin: 0px;">
-                  <source type="video/mp4" src="assets/hfjellb.mp4">
-                  <source type="video/webm" src="assets/hfjellb.mp4">
-                </video> --> 
-                <div class="card-body">
-                  <img src="assets/hovdlogin.jpg" class="profile-img-card mx-auto img-fluid rounded">
-                  <p class="card-text"></p>
-                </div>
-              </div>
-                       
-              <!-- <button mat-button class="menu-button" (click)="vippsLogin()">
-                <img src="assets/log_in_with_vipps_pill_210_NO.png">
-              </button> -->
-    </div>
-    <div class="d-flex flex-column justify-content-center justify-items-center">
-      <form [formGroup] = "loginFG" class="mx-auto"
-      *ngIf="!isLoggedIn"
-      name="form"
-      (click)="f.form.valid && onSubmit()"      
-      #f="ngForm"
-      novalidate
-      >
-        <mat-form-field appearance="fill">
-          <mat-label>{{'LCusername' | translate}}</mat-label>
-          <input matInput formControlName="username" type="text"
-            [errorStateMatcher]="matcher"
-          />
-          <mat-error *ngIf="loginFG.controls.username.errors?.['minlength'] ||
-          loginFG.controls.username.errors?.['required']">
-            {{ 'PCemailTooshort' | translate}}
-          </mat-error>
-        </mat-form-field>
-        <mat-form-field appearance="fill">
-          <mat-label>{{'LCpass' | translate}}</mat-label>
-          <input matInput formControlName="pass" type="password"
-          [errorStateMatcher]="matcher"
-          />
-          <mat-error *ngIf="loginFG.controls.pass.errors?.['required'] ||
-          loginFG.controls.pass.errors?.['minlength']">
-            {{'LCpassRequired' | translate}}{{'LCpassMinChar' | translate}}
-          </mat-error>
-        </mat-form-field>
-      </form>
-      <div class="mt-2rem d-flex flex-column">
-        <button class="btn btn-primary btn-block" (click)="onSubmit()">
-          {{'ToolbarLogin' | translate}}
-        </button>
-        <mat-error *ngIf="loginFG.errors && isLoginFailed">
-          {{'LCloginFailed' | translate}}{{ errorMessage | translate }}
-        </mat-error>
-        <div class="alert alert-success" *ngIf="isLoggedIn">
-          {{'LCloggedInAs' | translate}}{{ role }}.
+        <div class="card card-container">
+          <p >{{errorMessage | translate}}</p>
+                  <div class="card">
+                    <!-- <youtube-player class="card-img-top"
+                        [videoId]= "videos[1].videoId"
+                        [suggestedQuality]="'default'"
+                        [playerVars]="playerVars" 
+                        [height]="350"
+                        [width]="600"
+                        [startSeconds]="0"
+                        [endSeconds]="30" 
+                        >
+                    </youtube-player> -->
+                    <!-- <video autoplay playsinline muted loop 
+                    src="assets/hfjellb.mp4" 
+                    style="width: 200px; height: 200px; margin: 0px;">
+                      <source type="video/mp4" src="assets/hfjellb.mp4">
+                      <source type="video/webm" src="assets/hfjellb.mp4">
+                    </video> --> 
+                    <div class="card-body">
+                      <img src="assets/hovdlogin.jpg" class="profile-img-card mx-auto img-fluid rounded">
+                      <p class="card-text"></p>
+                    </div>
+                  </div>
+                          
+                  <!-- <button mat-button class="menu-button" (click)="vippsLogin()">
+                    <img src="assets/log_in_with_vipps_pill_210_NO.png">
+                  </button> -->
         </div>
-        <button mat-button color="primary" (click)="onLDAPSubmit()">{{ 'LCloginLDAP' | translate}}</button>
-      </div>
-    </div>
+        <div>
+          <form [formGroup] = "loginFG" class="mx-auto"
+          *ngIf="!isLoggedIn"
+          name="form"
+          (click)="f.form.valid && onSubmit()"      
+          #f="ngForm"
+          novalidate
+          >
+            <mat-form-field appearance="fill">
+              <mat-label>{{'LCusername' | translate}}</mat-label>
+              <input matInput formControlName="username" type="text"
+                [errorStateMatcher]="matcher"
+              />
+              <mat-error *ngIf="loginFG.controls.username.errors?.['minlength'] ||
+              loginFG.controls.username.errors?.['required']">
+                {{ 'PCemailTooshort' | translate}}
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>{{'LCpass' | translate}}</mat-label>
+              <input matInput formControlName="pass" type="password"
+              [errorStateMatcher]="matcher"
+              />
+              <mat-error *ngIf="loginFG.controls.pass.errors?.['required'] ||
+              loginFG.controls.pass.errors?.['minlength']">
+                {{'LCpassMinChar' | translate}}
+              </mat-error>
+            </mat-form-field>
+          </form>
+        </div>
+        <div class="row">
+          <button mat-stroked-button color="primary" (click)="onSubmit()">
+            {{'ToolbarLogin' | translate}}
+          </button>
+          <mat-error *ngIf="loginFG.errors && isLoginFailed">
+            {{'LCloginFailed' | translate}}{{ errorMessage | translate }}
+          </mat-error>
+        </div>
+        <div class="alert alert-success" *ngIf="isLoggedIn">
+            {{'LCloggedInAs' | translate}}{{ role }}.
+        </div>
+        <div class="row">
+          <button mat-stroked-button color="primary" (click)="onLDAPSubmit()">
+            {{ 'LCloginLDAP' | translate}}
+          </button>
+        </div>
   </div>
   
