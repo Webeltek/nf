@@ -36,6 +36,7 @@
           #f="ngForm"
           novalidate
           >
+          <p>
             <mat-form-field appearance="fill">
               <mat-label>{{'LCusername' | translate}}</mat-label>
               <input matInput formControlName="username" type="text"
@@ -46,6 +47,8 @@
                 {{ 'PCemailTooshort' | translate}}
               </mat-error>
             </mat-form-field>
+          </p>
+          <p>
             <mat-form-field appearance="fill">
               <mat-label>{{'LCpass' | translate}}</mat-label>
               <input matInput formControlName="pass" type="password"
@@ -56,6 +59,7 @@
                 {{'LCpassMinChar' | translate}}
               </mat-error>
             </mat-form-field>
+          </p>  
           </form>
         </div>
         <div class="row">
