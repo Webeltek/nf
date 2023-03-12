@@ -55,16 +55,26 @@ def login_ldap(usr_email=None, usr_pass=None):
         testusername='testuser'
         tls_configuration = Tls(validate=ssl.CERT_REQUIRED, version=ssl.PROTOCOL_TLSv1)
         tls_configuration.validate = ssl.CERT_NONE #temporary disable certificate validation
-        server = Server('ipar1.int.bitfrost.no', use_ssl=False, get_info=ALL)
+        """ server = Server('ipar1.int.bitfrost.no', use_ssl=False, get_info=ALL)
         conn = Connection(server, 
-                          'uid=bookingapp,cn=sysaccounts,cn=etc,dc=int,dc=bitfrost,dc=no', 'E0aA--coVIkxSDPMKiVolJRxQIBMvdDpq.Fm3gM8!eZ0', auto_bind=True)
+                        'uid=bookingapp,cn=sysaccounts,cn=etc,dc=int,dc=bitfrost,dc=no',
+                        'E0aA--coVIkxSDPMKiVolJRxQIBMvdDpq.Fm3gM8!eZ0', auto_bind=True)
         conn.start_tls()
         conn.search('dc=int,dc=bitfrost,dc=no', 
                     '(&(uid=bookingapp)(memberOf=cn=sysaccounts,cn=etc,dc=int,dc=bitfrost,dc=no))',
-                    attributes=['cn', 'givenName', 'objectclass'])
-        logger.info('ldap conn info: {}'.format(str(conn)))
-        for entry in conn.entries:
-            print(f'ldapConn entry {entry}')
+                    attributes=['cn', 'givenName', 'objectclass']) """
+        
+        server = Server('ipa.demo1.freeipa.org', use_ssl=False, get_info=ALL)
+        conn = Connection(server, 
+                        #'uid=bookingapp,cn=sysaccounts,cn=etc,dc=int,dc=bitfrost,dc=no',
+                        #'Secret123',
+                          auto_bind=True)
+        conn.start_tls()
+        print(f'ldap conn info: {conn}')
+        conn.search('dc=demo1,dc=freeipa,dc=org', 
+                    '(&(objectclass=person)(uid=admin))', attributes=['sn', 'krbLastPwdChange', 'objectclass'])
+
+        print(f'ldap entries[0]: {conn.entries[0]}')
         msg = print(conn)    
     return jsonify({'user':'username','msg':msg})
         
