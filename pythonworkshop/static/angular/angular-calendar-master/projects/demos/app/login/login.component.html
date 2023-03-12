@@ -28,8 +28,8 @@
                     <img src="assets/log_in_with_vipps_pill_210_NO.png">
                   </button> -->
         </div>
-        <div>
-          <form [formGroup] = "loginFG" class="mx-auto"
+        <div class="container">
+          <form [formGroup] = "loginFG"
           *ngIf="!isLoggedIn"
           name="form"
           (click)="f.form.valid && onSubmit()"      
@@ -37,7 +37,7 @@
           novalidate
           >
           <p>
-            <mat-form-field appearance="fill">
+            <mat-form-field appearance="fill" mx-auto>
               <mat-label>{{'LCusername' | translate}}</mat-label>
               <input matInput formControlName="username" type="text"
                 [errorStateMatcher]="matcher"
@@ -49,7 +49,7 @@
             </mat-form-field>
           </p>
           <p>
-            <mat-form-field appearance="fill">
+            <mat-form-field appearance="fill" mx-auto>
               <mat-label>{{'LCpass' | translate}}</mat-label>
               <input matInput formControlName="pass" type="password"
               [errorStateMatcher]="matcher"
