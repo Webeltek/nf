@@ -56,23 +56,25 @@ def login_ldap(usr_email=None, usr_pass=None):
         ldap_pass = request.json['ldap_pass']
         tls_configuration = Tls(validate=ssl.CERT_REQUIRED, version=ssl.PROTOCOL_TLSv1)
         tls_configuration.validate = ssl.CERT_NONE #temporary disable certificate validation
-        server = Server('ipar1.int.bitfrost.no', use_ssl=False, get_info=ALL)
-        """ conn = Connection(server, 
-                        'uid=bookingapp,cn=sysaccounts,cn=etc,dc=int,dc=bitfrost,dc=no',
-                        'E0aA--coVIkxSDPMKiVolJRxQIBMvdDpq.Fm3gM8!eZ0', auto_bind=True) """
-        
-        conn = Connection(server, 
-                        'uid=willy,dc=int,dc=bitfrost,dc=no',
-                        ldap_pass, auto_bind=True)
-        conn.start_tls()
-        """conn.search('dc=int,dc=bitfrost,dc=no', 
-                    '(&(uid=bookingapp)(memberOf=cn=sysaccounts,cn=etc,dc=int,dc=bitfrost,dc=no))')"""
-        
         """ server = Server('ipa.demo1.freeipa.org', use_ssl=False, get_info=ALL)
         conn = Connection(server, 
                         #'uid=bookingapp,cn=sysaccounts,cn=etc,dc=int,dc=bitfrost,dc=no',
                         #'Secret123',
                           auto_bind=True) """
+
+        server = Server('ipar1.int.bitfrost.no', use_ssl=False, get_info=ALL)
+        conn = Connection(server, 
+                        'uid=bookingapp,cn=sysaccounts,cn=etc,dc=int,dc=bitfrost,dc=no',
+                        'E0aA--coVIkxSDPMKiVolJRxQIBMvdDpq.Fm3gM8!eZ0', auto_bind=True)
+        
+        """ conn = Connection(server, 
+                        'uid=willy,dc=int,dc=bitfrost,dc=no',
+                        ldap_pass, auto_bind=True) """
+        
+        """conn.search('dc=int,dc=bitfrost,dc=no', 
+                    '(&(uid=bookingapp)(memberOf=cn=sysaccounts,cn=etc,dc=int,dc=bitfrost,dc=no))')"""
+        
+    
         conn.start_tls()
         if (conn.bound):
             print(f'ldap connection bound!')
