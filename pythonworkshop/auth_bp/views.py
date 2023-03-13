@@ -76,6 +76,7 @@ def login_ldap(usr_email=None, usr_pass=None):
         if (conn.bound):
             print(f'ldap connection bound!')
             print(f'ldap conn.info{server.info}')
+            print(f'ldap entries: {conn.entries}')
             
         #print(f'ldap conn.schema{server.schema}')
 
