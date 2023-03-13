@@ -36,6 +36,7 @@ export class LoginComponent implements OnInit {
   isLoggedIn = false;
   isLoginFailed = false;
   errorMessage = '';
+  ldapMsg = '';
   role: string = '';
 
   videos = [
@@ -203,8 +204,8 @@ export class LoginComponent implements OnInit {
       next: (data) => {
         let dataObj = data as any;
         //console.log("loginComp dataObj.user:",dataObj.user)
-        if (dataObj.user!== 'nonexistent'){
-          this.errorMessage= dataObj.msg;
+        if (dataObj.ldap_conn === 'response' && dataObj.msg){
+          this.ldapMsg= dataObj.msg;
         }
 
       },

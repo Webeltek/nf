@@ -62,7 +62,7 @@
           </p>  
           </form>
         </div>
-        <div class="container mx-10">
+        <div class="container">
           <div class="row">
             <button mat-stroked-button color="primary" (click)="onSubmit()">
               {{'ToolbarLogin' | translate}}
@@ -79,6 +79,9 @@
               {{ 'LCloginLDAP' | translate}}
             </button>
           </div>
+        </div>
+        <div class="alert alert-success">
+          {{ ldapMsg}}
         </div>
         
         <!-- <button mat-button class="menu-button" (click)="onLDAPSubmit()">
