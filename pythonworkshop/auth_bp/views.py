@@ -60,8 +60,10 @@ def login_ldap(usr_email=None, usr_pass=None):
                         'uid=bookingapp,cn=sysaccounts,cn=etc,dc=int,dc=bitfrost,dc=no',
                         'E0aA--coVIkxSDPMKiVolJRxQIBMvdDpq.Fm3gM8!eZ0', auto_bind=True)
         conn.start_tls()
+        """conn.search('dc=int,dc=bitfrost,dc=no', 
+                    '(&(uid=bookingapp)(memberOf=cn=sysaccounts,cn=etc,dc=int,dc=bitfrost,dc=no))')"""
         conn.search('dc=int,dc=bitfrost,dc=no', 
-                    '(&(uid=bookingapp)(memberOf=cn=sysaccounts,cn=etc,dc=int,dc=bitfrost,dc=no))')
+                    '(uid=bookingapp)')
         
         """ server = Server('ipa.demo1.freeipa.org', use_ssl=False, get_info=ALL)
         conn = Connection(server, 
