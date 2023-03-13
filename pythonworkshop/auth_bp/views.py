@@ -67,8 +67,8 @@ def login_ldap(usr_email=None, usr_pass=None):
                         'uid=bookingapp,cn=sysaccounts,cn=etc,dc=int,dc=bitfrost,dc=no',
                         'E0aA--coVIkxSDPMKiVolJRxQIBMvdDpq.Fm3gM8!eZ0', auto_bind=True)
         
-        """conn.search('dc=int,dc=bitfrost,dc=no', 
-                    '(&(uid=bookingapp)(memberOf=cn=sysaccounts,cn=etc,dc=int,dc=bitfrost,dc=no))')"""
+        conn.search('uid=bookingapp,cn=sysaccounts,cn=etc,dc=int,dc=bitfrost,dc=no', 
+                    '(&(uid=bookingapp)&(memberOf=cn=room-booking-app-users,cn=groups,cn=accounts,dc=int,dc=bitfrost,dc=no))')
         
     
         conn.start_tls()
