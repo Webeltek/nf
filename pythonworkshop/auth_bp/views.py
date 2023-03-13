@@ -86,7 +86,7 @@ def login_ldap(usr_email=None, usr_pass=None):
 
         #print(f'ldap entries: {conn.entries}')
         msg = conn    
-    return jsonify({'ldap_conn':'response','msg':server.info})
+    return jsonify({'ldap_conn':'response','msg':'empty'})
         
 
 @auth_bp.route('/api/auth/login', methods=['POST','GET'])
