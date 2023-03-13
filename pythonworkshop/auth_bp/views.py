@@ -75,7 +75,7 @@ def login_ldap(usr_email=None, usr_pass=None):
         print(f'ldap conn info: {conn}')
         print(f'ldap conn.schema{server.schema}')
 
-        print(f'ldap entries[0]: {conn.entries[0]}')
+        print(f'ldap entries: {conn.entries}')
         msg = print(conn.entries[0])    
     return jsonify({'ldap_conn':'response','msg':msg})
         
