@@ -62,7 +62,7 @@ def login_ldap(usr_email=None, usr_pass=None):
         conn.start_tls()
         conn.search('dc=int,dc=bitfrost,dc=no', 
                     '(&(uid=bookingapp)(memberOf=cn=sysaccounts,cn=etc,dc=int,dc=bitfrost,dc=no))',
-                    attributes=['cn', 'givenName','krbLastPwdChange', 'objectclass','sn'])
+                    attributes=['cn', 'objectclass','sn'])
         
         """ server = Server('ipa.demo1.freeipa.org', use_ssl=False, get_info=ALL)
         conn = Connection(server, 
