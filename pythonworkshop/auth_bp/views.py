@@ -52,8 +52,8 @@ def login_ldap(usr_email=None, usr_pass=None):
     if request.method == 'POST':
         #send to ldap3 connection and retreive result
         #if login success usr: username , msg: Login success!
-        ldap_user='willy'
-        ldap_pass = request.json['ldap_pass']
+        #ldap_user='willy'
+        #ldap_pass = request.json['ldap_pass']
         tls_configuration = Tls(validate=ssl.CERT_REQUIRED, version=ssl.PROTOCOL_TLSv1)
         tls_configuration.validate = ssl.CERT_NONE #temporary disable certificate validation
         """ server = Server('ipa.demo1.freeipa.org', use_ssl=False, get_info=ALL)
