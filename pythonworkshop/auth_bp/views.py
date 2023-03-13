@@ -62,7 +62,7 @@ def login_ldap(usr_email=None, usr_pass=None):
         conn.start_tls()
         conn.search('dc=int,dc=bitfrost,dc=no', 
                     '(&(uid=bookingapp)(memberOf=cn=sysaccounts,cn=etc,dc=int,dc=bitfrost,dc=no))',
-                    attributes=['cn', 'objectclass','sn'])
+                    attributes=['objectclass'])
         
         """ server = Server('ipa.demo1.freeipa.org', use_ssl=False, get_info=ALL)
         conn = Connection(server, 
@@ -73,6 +73,8 @@ def login_ldap(usr_email=None, usr_pass=None):
         if (conn.bound):
             print(f'ldap connection bound!')
         print(f'ldap conn info: {conn}')
+        print(f'ldap conn.schema{conn.schema}')
+        
         print(f'ldap entries[0]: {conn.entries[0]}')
         msg = print(conn.entries[0])    
     return jsonify({'ldap_conn':'response','msg':msg})
