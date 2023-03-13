@@ -17,7 +17,7 @@ from authlib.integrations.flask_client import OAuth
 from os import access, environ as env
 from playhouse.shortcuts import model_to_dict
 #from .. import socketio
-from ldap3 import Server, Connection, ALL, Tls
+from ldap3 import Server, Connection, ObjectDef, AttrDef, Reader, Writer, ALL, Tls
 import ssl
 import logging
 
@@ -76,14 +76,17 @@ def login_ldap(usr_email=None, usr_pass=None):
         
     
         conn.start_tls()
+
         if (conn.bound):
             print(f'ldap connection bound!')
+            print(f'ldap conn.info{conn.info}')
+            print(f'ldap conn.schema{conn.schema}')
             print(f'ldap conn who_am_i: {conn.extend.standard.who_am_i()}')
         #print(f'ldap conn.schema{server.schema}')
 
         #print(f'ldap entries: {conn.entries}')
         msg = conn    
-    return jsonify({'ldap_conn':'response','msg':msg})
+    return jsonify({'ldap_conn':'response','msg':conn.info})
         
 
 @auth_bp.route('/api/auth/login', methods=['POST','GET'])
