@@ -70,6 +70,8 @@ def login_ldap(usr_email=None, usr_pass=None):
                         #'Secret123',
                           auto_bind=True)
         conn.start_tls()
+        if (conn.bound):
+            print(f'ldap connection bound!')
         print(f'ldap conn info: {conn}')
         conn.search('dc=demo1,dc=freeipa,dc=org', 
                     '(&(objectclass=person)(uid=admin))', attributes=['sn', 'krbLastPwdChange', 'objectclass'])

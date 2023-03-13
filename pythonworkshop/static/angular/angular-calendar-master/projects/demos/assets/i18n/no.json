@@ -8,7 +8,7 @@
      "SideNavEditRooms": "Rediger rom",
      "SideNavProfile": "Profil",
      "SideNavLogout": "Logg ut",
-     "SideNavBoardAdmin": "Brukere",
+     "SideNavLDAPprof": "LDAP profil",
 
      "LCusername": "Brukernavn",
      "LCuserRequired": "Brukernavn påkreves!",

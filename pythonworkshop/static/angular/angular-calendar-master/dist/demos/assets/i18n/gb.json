@@ -8,7 +8,7 @@
     "SideNavEditRooms": "Edit rooms",
     "SideNavProfile": "Profile",
     "SideNavLogout": "Logout",
-    "SideNavBoardAdmin": "Users",
+    "SideNavLDAPprof": "LDAP profile",
 
     "LCusername": "Username",
     "LCuserRequired": "Username is required!",

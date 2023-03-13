@@ -28,7 +28,7 @@
                     <img src="assets/log_in_with_vipps_pill_210_NO.png">
                   </button> -->
         </div>
-        <div class="container">
+        <div class="container ms-10">
           <form [formGroup] = "loginFG"
           *ngIf="!isLoggedIn"
           name="form"
@@ -62,21 +62,27 @@
           </p>  
           </form>
         </div>
-        <div class="row">
-          <button mat-stroked-button color="primary" (click)="onSubmit()">
-            {{'ToolbarLogin' | translate}}
-          </button>
-          <mat-error *ngIf="loginFG.errors && isLoginFailed">
-            {{'LCloginFailed' | translate}}{{ errorMessage | translate }}
-          </mat-error>
+        <div class="container mx-10">
+          <div class="row">
+            <button mat-stroked-button color="primary" (click)="onSubmit()">
+              {{'ToolbarLogin' | translate}}
+            </button>
+            <mat-error *ngIf="loginFG.errors && isLoginFailed">
+              {{'LCloginFailed' | translate}}{{ errorMessage | translate }}
+            </mat-error>
+          </div>
+          <div class="alert alert-success" *ngIf="isLoggedIn">
+              {{'LCloggedInAs' | translate}}{{ role }}.
+          </div>
+          <div class="row">
+            <button mat-stroked-button color="primary" (click)="onLDAPSubmit()">
+              {{ 'LCloginLDAP' | translate}}
+            </button>
+          </div>
         </div>
-        <div class="alert alert-success" *ngIf="isLoggedIn">
-            {{'LCloggedInAs' | translate}}{{ role }}.
-        </div>
-        <div class="row">
-          <button mat-stroked-button color="primary" (click)="onLDAPSubmit()">
-            {{ 'LCloginLDAP' | translate}}
-          </button>
-        </div>
+        
+        <!-- <button mat-button class="menu-button" (click)="onLDAPSubmit()">
+          <img src="assets/log_in_with_vipps_pill_210_NO.png">
+        </button> -->
   </div>
   
