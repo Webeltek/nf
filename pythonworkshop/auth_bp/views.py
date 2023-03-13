@@ -67,10 +67,6 @@ def login_ldap(usr_email=None, usr_pass=None):
                         'uid=bookingapp,cn=sysaccounts,cn=etc,dc=int,dc=bitfrost,dc=no',
                         'E0aA--coVIkxSDPMKiVolJRxQIBMvdDpq.Fm3gM8!eZ0', auto_bind=True)
         
-        """ conn = Connection(server, 
-                        'uid=willy,dc=int,dc=bitfrost,dc=no',
-                        ldap_pass, auto_bind=True) """
-        
         """conn.search('dc=int,dc=bitfrost,dc=no', 
                     '(&(uid=bookingapp)(memberOf=cn=sysaccounts,cn=etc,dc=int,dc=bitfrost,dc=no))')"""
         
@@ -80,8 +76,7 @@ def login_ldap(usr_email=None, usr_pass=None):
         if (conn.bound):
             print(f'ldap connection bound!')
             print(f'ldap conn.info{server.info}')
-            print(f'ldap conn.schema{server.schema}')
-            print(f'ldap conn who_am_i: {conn.extend.standard.who_am_i()}')
+            
         #print(f'ldap conn.schema{server.schema}')
 
         #print(f'ldap entries: {conn.entries}')
