@@ -52,18 +52,21 @@ def login_ldap(usr_email=None, usr_pass=None):
     if request.method == 'POST':
         #send to ldap3 connection and retreive result
         #if login success usr: username , msg: Login success!
-        testusername='testuser'
+        ldap_user='willy'
+        ldap_pass = request.json['ldap_pass']
         tls_configuration = Tls(validate=ssl.CERT_REQUIRED, version=ssl.PROTOCOL_TLSv1)
         tls_configuration.validate = ssl.CERT_NONE #temporary disable certificate validation
         server = Server('ipar1.int.bitfrost.no', use_ssl=False, get_info=ALL)
-        conn = Connection(server, 
+        """ conn = Connection(server, 
                         'uid=bookingapp,cn=sysaccounts,cn=etc,dc=int,dc=bitfrost,dc=no',
-                        'E0aA--coVIkxSDPMKiVolJRxQIBMvdDpq.Fm3gM8!eZ0', auto_bind=True)
+                        'E0aA--coVIkxSDPMKiVolJRxQIBMvdDpq.Fm3gM8!eZ0', auto_bind=True) """
+        
+        conn = Connection(server, 
+                        'uid=willy,dc=int,dc=bitfrost,dc=no',
+                        ldap_pass, auto_bind=True)
         conn.start_tls()
         """conn.search('dc=int,dc=bitfrost,dc=no', 
                     '(&(uid=bookingapp)(memberOf=cn=sysaccounts,cn=etc,dc=int,dc=bitfrost,dc=no))')"""
-        conn.search('dc=int,dc=bitfrost,dc=no', 
-                    '(uid=bookingapp)')
         
         """ server = Server('ipa.demo1.freeipa.org', use_ssl=False, get_info=ALL)
         conn = Connection(server, 
@@ -73,11 +76,11 @@ def login_ldap(usr_email=None, usr_pass=None):
         conn.start_tls()
         if (conn.bound):
             print(f'ldap connection bound!')
-        print(f'ldap conn info: {conn}')
-        print(f'ldap conn.schema{server.schema}')
+            print(f'ldap conn who_am_i: {conn.extend.standard.who_am_i()}')
+        #print(f'ldap conn.schema{server.schema}')
 
-        print(f'ldap entries: {conn.entries}')
-        msg = print(conn.entries)    
+        #print(f'ldap entries: {conn.entries}')
+        msg = conn    
     return jsonify({'ldap_conn':'response','msg':msg})
         
 
