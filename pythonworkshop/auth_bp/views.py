@@ -76,7 +76,7 @@ def login_ldap(usr_email=None, usr_pass=None):
         if (conn.bound):
             print(f'ldap connection bound!')
             print(f'ldap conn.extend.standard.who_am_i(): {conn.extend.standard.who_am_i()}')
-            print(f'ldap entries: {conn.entries[0]}')
+            print(f'ldap entries: {conn.entries["0"]}')
             #print(f"ldap server.schema.object_classes['person']   :{server.schema.object_classes['person']}")
             #print(f'ldap search result entries[0]: {conn.entries[0]}')
             #get attributes of bookingapp entry and get email
