@@ -89,7 +89,7 @@ def login_ldap(usr_email=None, usr_pass=None):
             print(f'ldap Reader cursor: {r}')
             r.search()
             resp_json = conn.response_to_json()
-            entries = conn.response
+            pyth_obj = conn.response
             #for entry in entries:
                 #print(f'ldap Reader search response entry_dn : {entry} ')
             print(f'ldap Reader search response: {resp_json}')
