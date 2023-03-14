@@ -50,10 +50,10 @@ def login_ldap(usr_email=None, usr_pass=None):
     print('login_ldap call')
     msg = 'awaiting login to ldap'
     if request.method == 'POST':
-        #ldap_user='request.json['ldap_user']
-        #ldap_pass = request.json['ldap_pass']
-        tls_configuration = Tls(validate=ssl.CERT_REQUIRED, version=ssl.PROTOCOL_TLSv1)
-        tls_configuration.validate = ssl.CERT_NONE #temporary disable certificate validation
+        ldap_user=request.json['ldap_user']
+        ldap_pass = request.json['ldap_pass']
+        #tls_configuration = Tls(validate=ssl.CERT_REQUIRED, version=ssl.PROTOCOL_TLSv1)
+        #tls_configuration.validate = ssl.CERT_NONE #temporary disable certificate validation
 
         """ server = Server('ipa.demo1.freeipa.org', get_info=ALL)
         conn = Connection(server, 
@@ -64,7 +64,7 @@ def login_ldap(usr_email=None, usr_pass=None):
 
         server = Server('ipar1.int.bitfrost.no', use_ssl=False, get_info=ALL)
         conn = Connection(server, 
-                        'uid=bookingapp,cn=sysaccounts,cn=etc,dc=int,dc=bitfrost,dc=no',
+                        f'uid=bookingapp,cn=sysaccounts,cn=etc,dc=int,dc=bitfrost,dc=no',
                         'E0aA--coVIkxSDPMKiVolJRxQIBMvdDpq.Fm3gM8!eZ0', auto_bind=True)
         
 
@@ -72,10 +72,20 @@ def login_ldap(usr_email=None, usr_pass=None):
 
         if (conn.bound):
             conn.search('cn=users,cn=accounts,dc=int,dc=bitfrost,dc=no', 
-                    '(&(uid=bookingapp,cn=sysaccounts,cn=etc,dc=int,dc=bitfrost,dc=no)(memberOf=cn=room-booking-app-users,cn=groups,cn=accounts,dc=int,dc=bitfrost,dc=no))')
+                    '(& \
+                        (uid=bookingapp,cn=sysaccounts,cn=etc,dc=int,dc=bitfrost,dc=no)\
+                        (memberOf=cn=room-booking-app-users,cn=groups,cn=accounts,dc=int,dc=bitfrost,dc=no)\
+                    )'
+            
+                )
+            
             print(f'ldap connection bound!')
             print(f'ldap conn.extend.standard.who_am_i(): {conn.extend.standard.who_am_i()}')
-            print(f'ldap entries: {repr(conn.response)}')
+            print(f'ldap after search response : {repr(conn.response)}')
+
+            obj_person = ObjectDef('person', conn)
+            r = Reader(conn, obj_person,'cn=accounts,dc=int,dc=bitfrost,dc=no')
+            print(f'ldap Reader cursor: {r}')
             #print(f"ldap server.schema.object_classes['person']   :{server.schema.object_classes['person']}")
             #print(f'ldap search result entries[0]: {conn.entries[0]}')
             #get attributes of bookingapp entry and get email
@@ -88,7 +98,7 @@ def login_ldap(usr_email=None, usr_pass=None):
                 return ({'is_duplicate': True, 'duplicate_email': ldap_email})
             token = user.gen_ldap_access_token(ldap_email)
             temp_user_id = user.id """
-            msg = 'ldap entry'     
+            msg = conn.response     
     return jsonify({'ldap_conn':'response','msg':msg})
         
 
