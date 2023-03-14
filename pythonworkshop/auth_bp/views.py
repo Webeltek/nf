@@ -52,8 +52,8 @@ def login_ldap(usr_email=None, usr_pass=None):
     if request.method == 'POST':
         #ldap_user='request.json['ldap_user']
         #ldap_pass = request.json['ldap_pass']
-        #tls_configuration = Tls(validate=ssl.CERT_REQUIRED, version=ssl.PROTOCOL_TLSv1)
-        #tls_configuration.validate = ssl.CERT_NONE #temporary disable certificate validation
+        tls_configuration = Tls(validate=ssl.CERT_REQUIRED, version=ssl.PROTOCOL_TLSv1)
+        tls_configuration.validate = ssl.CERT_NONE #temporary disable certificate validation
 
         """ server = Server('ipa.demo1.freeipa.org', get_info=ALL)
         conn = Connection(server, 
@@ -62,19 +62,17 @@ def login_ldap(usr_email=None, usr_pass=None):
                           auto_bind=True)
         conn.search('dc=demo1,dc=freeipa,dc=org', '(objectclass=person)') """
 
-        server = Server('ipar1.int.bitfrost.no', use_ssl=False, get_info=ALL)
-        """ conn = Connection(server, 
+        server = Server('ipar1.int.bitfrost.no', use_ssl=True,tls=tls_configuration, get_info=ALL)
+        conn = Connection(server, 
                         'uid=bookingapp,cn=sysaccounts,cn=etc,dc=int,dc=bitfrost,dc=no',
-                        'E0aA--coVIkxSDPMKiVolJRxQIBMvdDpq.Fm3gM8!eZ0', auto_bind=True) """
-        conn = Connection(server)
-        
-        conn.search('cn=users,cn=accounts,dc=int,dc=bitfrost,dc=no', 
-                    '(uid=bookingapp)')
+                        'E0aA--coVIkxSDPMKiVolJRxQIBMvdDpq.Fm3gM8!eZ0', auto_bind=True)
         
 
-        #conn.start_tls()
+        conn.start_tls()
 
         if (conn.bound):
+            conn.search('cn=users,cn=accounts,dc=int,dc=bitfrost,dc=no', 
+                    '&(uid=bookingapp,cn=sysaccounts,cn=etc,dc=int,dc=bitfrost,dc=no)((memberOf=cn=room-booking-app-users,cn=groups,cn=accounts,dc=int,dc=bitfrost,dc=no))')
             print(f'ldap connection bound!')
             print(f'ldap conn.extend.standard.who_am_i(): {conn.extend.standard.who_am_i()}')
             print(f'ldap entries: {repr(conn.entries)}')
