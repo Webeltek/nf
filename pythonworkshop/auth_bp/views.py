@@ -55,17 +55,17 @@ def login_ldap(usr_email=None, usr_pass=None):
         #tls_configuration = Tls(validate=ssl.CERT_REQUIRED, version=ssl.PROTOCOL_TLSv1)
         #tls_configuration.validate = ssl.CERT_NONE #temporary disable certificate validation
 
-        """ server = Server('ipa.demo1.freeipa.org', get_info=ALL)
+        server = Server('demo1.freeipa.org', get_info=ALL)
         conn = Connection(server, 
-                        'uid=admin,cn=users,cn=accounts,dc=demo1,dc=freeipa,dc=org',
+                        'uid=manager,cn=users,cn=accounts,dc=demo1,dc=freeipa,dc=org',
                         'Secret123',
                           auto_bind=True)
-        conn.search('dc=demo1,dc=freeipa,dc=org', '(objectclass=person)') """
+        #conn.search('dc=demo1,dc=freeipa,dc=org', '(objectclass=person)')
 
-        server = Server('ipar1.int.bitfrost.no', use_ssl=False, get_info=ALL)
+        """ server = Server('ipar1.int.bitfrost.no', use_ssl=False, get_info=ALL)
         conn = Connection(server, 
                         f'uid=bookingapp,cn=sysaccounts,cn=etc,dc=int,dc=bitfrost,dc=no',
-                        'E0aA--coVIkxSDPMKiVolJRxQIBMvdDpq.Fm3gM8!eZ0', auto_bind=True)
+                        'E0aA--coVIkxSDPMKiVolJRxQIBMvdDpq.Fm3gM8!eZ0', auto_bind=True) """
         
 
         #conn.start_tls()
@@ -85,14 +85,14 @@ def login_ldap(usr_email=None, usr_pass=None):
 
             obj_person = ObjectDef('person', conn)
             
-            r = Reader(conn, obj_person,'cn=accounts,dc=int,dc=bitfrost,dc=no')
+            r = Reader(conn, obj_person, 'dc=int,dc=bitfrost,dc=no')
             print(f'ldap Reader cursor: {r}')
             r.search()
             resp_json = conn.response_to_json()
-            pyth_entries = conn.response
-            """ for entry in pyth_entries:
-                child_dn_entry = entry['dn']
-                print(f'ldap Reader search response uid : {child_dn_entry} ') """
+            pyth_entries = r.entries
+            for entry in pyth_entries:
+                entry_dn = entry.entry_dn
+                print(f'ldap Reader r.entries.entry.entry_dn : {entry_dn} ')
             print(f'ldap Reader search response: {resp_json}')
 
             ldap_email =''
