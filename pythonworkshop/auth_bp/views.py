@@ -83,7 +83,7 @@ def login_ldap(usr_email=None, usr_pass=None):
             print(f'ldap conn.extend.standard.who_am_i(): {conn.extend.standard.who_am_i()}')
             print(f'ldap after search response : {repr(conn.response)}')
 
-            obj_person = ObjectDef('person', conn)
+            obj_person = ObjectDef('dn', conn)
             
             r = Reader(conn, obj_person,'cn=accounts,dc=int,dc=bitfrost,dc=no')
             print(f'ldap Reader cursor: {r}')
@@ -91,8 +91,8 @@ def login_ldap(usr_email=None, usr_pass=None):
             resp_json = conn.response_to_json()
             entries = conn.response
             for entry in entries:
-                dn_list = entry.dn
-                print(f'ldap Reader search response {dn_list} ')
+                uid = entry['uid']
+                print(f'ldap Reader search response {uid} ')
             print(f'ldap Reader search response: {resp_json}')
             #print(f"ldap server.schema.object_classes['person']   :{server.schema.object_classes['person']}")
             #print(f'ldap search result entries[0]: {conn.entries[0]}')
