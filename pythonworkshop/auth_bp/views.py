@@ -75,7 +75,7 @@ def login_ldap(usr_email=None, usr_pass=None):
                     '(&(uid=bookingapp,cn=sysaccounts,cn=etc,dc=int,dc=bitfrost,dc=no)(memberOf=cn=room-booking-app-users,cn=groups,cn=accounts,dc=int,dc=bitfrost,dc=no))')
             print(f'ldap connection bound!')
             print(f'ldap conn.extend.standard.who_am_i(): {conn.extend.standard.who_am_i()}')
-            print(f'ldap entries: {repr(conn.entries)}')
+            print(f'ldap entries: {repr(conn.response)}')
             #print(f"ldap server.schema.object_classes['person']   :{server.schema.object_classes['person']}")
             #print(f'ldap search result entries[0]: {conn.entries[0]}')
             #get attributes of bookingapp entry and get email
