@@ -62,7 +62,7 @@ def login_ldap(usr_email=None, usr_pass=None):
                           auto_bind=True)
         conn.search('dc=demo1,dc=freeipa,dc=org', '(objectclass=person)') """
 
-        server = Server('ipar1.int.bitfrost.no', use_ssl=True,tls=tls_configuration, get_info=ALL)
+        server = Server('ipar1.int.bitfrost.no', use_ssl=False,tls=tls_configuration, get_info=ALL)
         conn = Connection(server, 
                         'uid=bookingapp,cn=sysaccounts,cn=etc,dc=int,dc=bitfrost,dc=no',
                         'E0aA--coVIkxSDPMKiVolJRxQIBMvdDpq.Fm3gM8!eZ0', auto_bind=True)
