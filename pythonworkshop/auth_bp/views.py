@@ -100,7 +100,7 @@ def login_ldap(usr_email=None, usr_pass=None):
                 return ({'is_duplicate': True, 'duplicate_email': ldap_email})
             token = user.gen_ldap_access_token(ldap_email)
             temp_user_id = user.id """
-            msg = conn.response     
+            msg = conn.response_to_json()     
     return jsonify({'ldap_conn':'response','msg':msg})
         
 
