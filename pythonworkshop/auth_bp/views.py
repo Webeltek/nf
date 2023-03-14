@@ -50,12 +50,10 @@ def login_ldap(usr_email=None, usr_pass=None):
     print('login_ldap call')
     msg = 'awaiting login to ldap'
     if request.method == 'POST':
-        #send to ldap3 connection and retreive result
-        #if login success usr: username , msg: Login success!
-        #ldap_user='willy'
+        #ldap_user='request.json['ldap_user']
         #ldap_pass = request.json['ldap_pass']
-        tls_configuration = Tls(validate=ssl.CERT_REQUIRED, version=ssl.PROTOCOL_TLSv1)
-        tls_configuration.validate = ssl.CERT_NONE #temporary disable certificate validation
+        #tls_configuration = Tls(validate=ssl.CERT_REQUIRED, version=ssl.PROTOCOL_TLSv1)
+        #tls_configuration.validate = ssl.CERT_NONE #temporary disable certificate validation
 
         """ server = Server('ipa.demo1.freeipa.org', get_info=ALL)
         conn = Connection(server, 
@@ -84,14 +82,13 @@ def login_ldap(usr_email=None, usr_pass=None):
             #get attributes of bookingapp entry and get email
             #conn.entries[0]
             ldap_email =''
-            users_db.connect(reuse_if_open=True)
+            """ users_db.connect(reuse_if_open=True)
             try :
-                user = User.create(user_email=ldap_email,
-                                user_pass='temp_ldap_user')
+                user = User.create(user_email=ldap_email,user_pass='temp_ldap_user')
             except p.IntegrityError :
-                return ({'is_duplicate': True, 'duplicate_email': user_email})
+                return ({'is_duplicate': True, 'duplicate_email': ldap_email})
             token = user.gen_ldap_access_token(ldap_email)
-            temp_user_id = user.id
+            temp_user_id = user.id """
             msg = 'ldap entry'     
     return jsonify({'ldap_conn':'response','msg':msg})
         
