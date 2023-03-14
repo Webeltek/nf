@@ -68,7 +68,7 @@ def login_ldap(usr_email=None, usr_pass=None):
                         'E0aA--coVIkxSDPMKiVolJRxQIBMvdDpq.Fm3gM8!eZ0', auto_bind=True)
         
 
-        conn.start_tls()
+        #conn.start_tls()
 
         if (conn.bound):
             conn.search('cn=users,cn=accounts,dc=int,dc=bitfrost,dc=no', 
