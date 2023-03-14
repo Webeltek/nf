@@ -51,7 +51,7 @@ def login_ldap(usr_email=None, usr_pass=None):
     msg = 'awaiting login to ldap'
     if request.method == 'POST':
         #ldap_user=request.json['ldap_user']
-        #ldap_pass = request.json['ldap_pass']
+        #qldap_pass = request.json['ldap_pass']
         #tls_configuration = Tls(validate=ssl.CERT_REQUIRED, version=ssl.PROTOCOL_TLSv1)
         #tls_configuration.validate = ssl.CERT_NONE #temporary disable certificate validation
 
@@ -71,13 +71,13 @@ def login_ldap(usr_email=None, usr_pass=None):
         #conn.start_tls()
 
         if (conn.bound):
-            conn.search('cn=users,cn=accounts,dc=int,dc=bitfrost,dc=no', 
+            """ conn.search('cn=users,cn=accounts,dc=int,dc=bitfrost,dc=no', 
                     '(& \
                         (uid=bookingapp,cn=sysaccounts,cn=etc,dc=int,dc=bitfrost,dc=no)\
                         (memberOf=cn=room-booking-app-users,cn=groups,cn=accounts,dc=int,dc=bitfrost,dc=no)\
                     )'
             
-                )
+                ) """
             
             print(f'ldap connection bound!')
             print(f'ldap conn.extend.standard.who_am_i(): {conn.extend.standard.who_am_i()}')
@@ -86,6 +86,8 @@ def login_ldap(usr_email=None, usr_pass=None):
             obj_person = ObjectDef('person', conn)
             r = Reader(conn, obj_person,'cn=accounts,dc=int,dc=bitfrost,dc=no')
             print(f'ldap Reader cursor: {r}')
+            r.search()
+            print(f'ldap Reader search result{r.entries}')
             #print(f"ldap server.schema.object_classes['person']   :{server.schema.object_classes['person']}")
             #print(f'ldap search result entries[0]: {conn.entries[0]}')
             #get attributes of bookingapp entry and get email
