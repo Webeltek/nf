@@ -90,12 +90,13 @@ def login_ldap(usr_email=None, usr_pass=None):
             r.search()
             resp_json = conn.response_to_json()
             pyth_entries = conn.response
-            for entry in pyth_entries:
+            """ for entry in pyth_entries:
                 child_dn_entry = entry['dn']
-                print(f'ldap Reader search response uid : {child_dn_entry} ')
+                print(f'ldap Reader search response uid : {child_dn_entry} ') """
             print(f'ldap Reader search response: {resp_json}')
-            #get attributes of bookingapp entry and get email
+
             ldap_email =''
+
             """ users_db.connect(reuse_if_open=True)
             try :
                 user = User.create(user_email=ldap_email,user_pass='temp_ldap_user')
