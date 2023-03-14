@@ -88,7 +88,7 @@ def login_ldap(usr_email=None, usr_pass=None):
             print(f'ldap Reader cursor: {r}')
             r.search()
             resp_json = conn.response_to_json
-            print(f'ldap Reader search response uid {resp_json.dn.uid}')
+            print(f'ldap Reader search response uid {resp_json}')
             print(f'ldap Reader search response: {resp_json}')
             #print(f"ldap server.schema.object_classes['person']   :{server.schema.object_classes['person']}")
             #print(f'ldap search result entries[0]: {conn.entries[0]}')
