@@ -56,11 +56,13 @@ def login_ldap(usr_email=None, usr_pass=None):
         #ldap_pass = request.json['ldap_pass']
         tls_configuration = Tls(validate=ssl.CERT_REQUIRED, version=ssl.PROTOCOL_TLSv1)
         tls_configuration.validate = ssl.CERT_NONE #temporary disable certificate validation
-        """ server = Server('ipa.demo1.freeipa.org', use_ssl=False, get_info=ALL)
+
+        """ server = Server('ipa.demo1.freeipa.org', get_info=ALL)
         conn = Connection(server, 
-                        #'uid=bookingapp,cn=sysaccounts,cn=etc,dc=int,dc=bitfrost,dc=no',
-                        #'Secret123',
-                          auto_bind=True) """
+                        'uid=admin,cn=users,cn=accounts,dc=demo1,dc=freeipa,dc=org',
+                        'Secret123',
+                          auto_bind=True)
+        conn.search('dc=demo1,dc=freeipa,dc=org', '(objectclass=person)') """
 
         server = Server('ipar1.int.bitfrost.no', use_ssl=False, get_info=ALL)
         conn = Connection(server, 
@@ -71,18 +73,27 @@ def login_ldap(usr_email=None, usr_pass=None):
                     '(&(uid=bookingapp)(memberOf=cn=room-booking-app-users,cn=groups,cn=accounts,dc=int,dc=bitfrost,dc=no))')
         
     
-        conn.start_tls()
+        #conn.start_tls()
 
         if (conn.bound):
             print(f'ldap connection bound!')
             print(f'ldap conn.info{server.info}')
             print(f'ldap entries: {conn.entries}')
-            
-        #print(f'ldap conn.schema{server.schema}')
-
-        #print(f'ldap entries: {conn.entries}')
-        msg = conn    
-    return jsonify({'ldap_conn':'response','msg':'empty'})
+            print(f"ldap server.schema.object_classes['person']   :{server.schema.object_classes['person']}")
+            #print(f'ldap search result entries[0]: {conn.entries[0]}')
+            #get attributes of bookingapp entry and get email
+            #conn.entries[0]
+            ldap_email =''
+            users_db.connect(reuse_if_open=True)
+            try :
+                user = User.create(user_email=ldap_email,
+                                user_pass='temp_ldap_user')
+            except p.IntegrityError :
+                return ({'is_duplicate': True, 'duplicate_email': user_email})
+            token = user.gen_ldap_access_token(ldap_email)
+            temp_user_id = user.id
+            msg = 'ldap entry'     
+    return jsonify({'ldap_conn':'response','msg':msg})
         
 
 @auth_bp.route('/api/auth/login', methods=['POST','GET'])
