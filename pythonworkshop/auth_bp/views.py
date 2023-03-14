@@ -50,8 +50,8 @@ def login_ldap(usr_email=None, usr_pass=None):
     print('login_ldap call')
     msg = 'awaiting login to ldap'
     if request.method == 'POST':
-        ldap_user=request.json['ldap_user']
-        ldap_pass = request.json['ldap_pass']
+        #ldap_user=request.json['ldap_user']
+        #ldap_pass = request.json['ldap_pass']
         #tls_configuration = Tls(validate=ssl.CERT_REQUIRED, version=ssl.PROTOCOL_TLSv1)
         #tls_configuration.validate = ssl.CERT_NONE #temporary disable certificate validation
 
