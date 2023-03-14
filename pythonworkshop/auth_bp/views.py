@@ -89,9 +89,11 @@ def login_ldap(usr_email=None, usr_pass=None):
             print(f'ldap Reader cursor: {r}')
             r.search()
             resp_json = conn.response_to_json()
-            pyth_obj = conn.response
-            #for entry in entries:
-                #print(f'ldap Reader search response entry_dn : {entry} ')
+            pyth_entries = conn.response
+            for entry in pyth_entries:
+                child_dn_entry = entry['dn']
+                uid = child_dn_entry['uid'].value
+                print(f'ldap Reader search response uid : {uid} ')
             print(f'ldap Reader search response: {resp_json}')
             #get attributes of bookingapp entry and get email
             ldap_email =''
