@@ -72,7 +72,7 @@ def login_ldap(usr_email=None, usr_pass=None):
 
         if (conn.bound):
             conn.search('cn=users,cn=accounts,dc=int,dc=bitfrost,dc=no', 
-                    '&(uid=bookingapp,cn=sysaccounts,cn=etc,dc=int,dc=bitfrost,dc=no)(memberOf=cn=room-booking-app-users,cn=groups,cn=accounts,dc=int,dc=bitfrost,dc=no))')
+                    '&((uid=bookingapp,cn=sysaccounts,cn=etc,dc=int,dc=bitfrost,dc=no)(memberOf=cn=room-booking-app-users,cn=groups,cn=accounts,dc=int,dc=bitfrost,dc=no))')
             print(f'ldap connection bound!')
             print(f'ldap conn.extend.standard.who_am_i(): {conn.extend.standard.who_am_i()}')
             print(f'ldap entries: {repr(conn.entries)}')
