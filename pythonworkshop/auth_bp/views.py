@@ -71,7 +71,7 @@ def login_ldap(usr_email=None, usr_pass=None):
         #conn.start_tls()
 
         if (conn.bound):
-            """ conn.search('cn=users,cn=accounts,dc=int,dc=bitfrost,dc=no', 
+            """ conn.search(cn=sysaccounts,cn=etc,dc=int,dc=bitfrost,dc=no', 
                     '(& \
                         (uid=bookingapp,cn=sysaccounts,cn=etc,dc=int,dc=bitfrost,dc=no)\
                         (memberOf=cn=room-booking-app-users,cn=groups,cn=accounts,dc=int,dc=bitfrost,dc=no)\
@@ -82,11 +82,11 @@ def login_ldap(usr_email=None, usr_pass=None):
             print(f'ldap connection bound!')
             print(f'ldap conn.extend.standard.who_am_i(): {conn.extend.standard.who_am_i()}')
 
-            obj_person = ObjectDef('person', conn)
+            obj_person = ObjectDef('top', conn)
             obj_person+='uid'
             
             r = Reader(conn, obj_person, 
-                       'cn=users,cn=accounts,dc=int,dc=bitfrost,dc=no',
+                       'cn=sysaccounts,cn=etc,dc=int,dc=bitfrost,dc=no',
                        f'uid : {ldap_user}')
             print(f'ldap Reader cursor: {r}')
             r.search()
