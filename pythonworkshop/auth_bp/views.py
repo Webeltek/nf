@@ -82,12 +82,13 @@ def login_ldap(usr_email=None, usr_pass=None):
             print(f'ldap connection bound!')
             print(f'ldap conn.extend.standard.who_am_i(): {conn.extend.standard.who_am_i()}')
 
+
             obj_person = ObjectDef('top', conn)
             obj_person+='uid'
             obj_person+='memberOf'
             
             r = Reader(conn, obj_person, 
-                       'cn=accounts,cn=users,dc=int,dc=bitfrost,dc=no',
+                       'dc=int,dc=bitfrost,dc=no',
                        f'(uid={ldap_user})(memberOf=cn=room-booking-app-users,cn=groups,cn=accounts,dc=int,dc=bitfrost,dc=no)')
             print(f'ldap Reader cursor: {r}')
             r.search()
