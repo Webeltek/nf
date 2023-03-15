@@ -50,8 +50,8 @@ def login_ldap(usr_email=None, usr_pass=None):
     print('login_ldap call')
     msg = 'awaiting login to ldap'
     if request.method == 'POST':
-        #ldap_user=request.json['ldap_user']
-        #qldap_pass = request.json['ldap_pass']
+        ldap_user=request.json['ldap_user']
+        ldap_pass = request.json['ldap_pass']
         #tls_configuration = Tls(validate=ssl.CERT_REQUIRED, version=ssl.PROTOCOL_TLSv1)
         #tls_configuration.validate = ssl.CERT_NONE #temporary disable certificate validation
 
@@ -83,15 +83,19 @@ def login_ldap(usr_email=None, usr_pass=None):
             print(f'ldap conn.extend.standard.who_am_i(): {conn.extend.standard.who_am_i()}')
 
             obj_person = ObjectDef('person', conn)
+            obj_person+='uid'
             
-            r = Reader(conn, obj_person, 'dc=int,dc=bitfrost,dc=no')
+            r = Reader(conn, obj_person, 
+                       'cn=users,cn=accounts,dc=int,dc=bitfrost,dc=no',
+                       f'uid : {ldap_user}')
             print(f'ldap Reader cursor: {r}')
             r.search()
             resp_json = conn.response_to_json()
             pyth_entries = r.entries
             for entry in pyth_entries:
-                entry_dn = entry.entry_dn
-                print(f'ldap Reader r.entries.entry.entry_dn : {entry_dn} ')
+                if entry.userPassword == ldap_pass: 
+
+                    print(f'ldap Reader logged in user r.entries.entry.uid : {entry.uid} ')
             #print(f'ldap Reader search response: {resp_json}')
 
             ldap_email =''
