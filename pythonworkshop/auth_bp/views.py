@@ -93,8 +93,9 @@ def login_ldap(usr_email=None, usr_pass=None):
             pyth_entries = r.entries
             if pyth_entries.len() > 0:
                 for entry in pyth_entries:
-                    print(f'ldap cursor logged in user entries.entry.uid : {entry.uid}')
-                    print(f'ldap Reader logged in user organization unit r.entries.entry.ou : {entry.ou} ')
+                    print(f'ldap Reader user entry.uid : {entry.uid}')
+                    print(f'ldap Reader cursor user entry.ou : {entry.ou} ')
+                    print(f'ldap Reader cursor user entry.telephoneNumber: {entry.telephoneNumber}')
                     auth_user = ldap_user
                     users_db.connect(reuse_if_open=True)
                     try :
