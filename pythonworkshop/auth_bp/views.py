@@ -92,7 +92,7 @@ def login_ldap(usr_email=None, usr_pass=None):
             for entry in pyth_entries:
                 entry_dn = entry.entry_dn
                 print(f'ldap Reader r.entries.entry.entry_dn : {entry_dn} ')
-            print(f'ldap Reader search response: {resp_json}')
+            #print(f'ldap Reader search response: {resp_json}')
 
             ldap_email =''
 
