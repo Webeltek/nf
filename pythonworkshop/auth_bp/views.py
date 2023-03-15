@@ -55,17 +55,17 @@ def login_ldap(usr_email=None, usr_pass=None):
         #tls_configuration = Tls(validate=ssl.CERT_REQUIRED, version=ssl.PROTOCOL_TLSv1)
         #tls_configuration.validate = ssl.CERT_NONE #temporary disable certificate validation
 
-        server = Server('demo1.freeipa.org', get_info=ALL)
+        """ server = Server('demo1.freeipa.org', get_info=ALL)
         conn = Connection(server, 
                         'uid=manager,cn=users,cn=accounts,dc=demo1,dc=freeipa,dc=org',
                         'Secret123',
                           auto_bind=True)
-        #conn.search('dc=demo1,dc=freeipa,dc=org', '(objectclass=person)')
+        conn.search('dc=demo1,dc=freeipa,dc=org', '(objectclass=person)') """
 
-        """ server = Server('ipar1.int.bitfrost.no', use_ssl=False, get_info=ALL)
+        server = Server('ipar1.int.bitfrost.no', use_ssl=False, get_info=ALL)
         conn = Connection(server, 
                         f'uid=bookingapp,cn=sysaccounts,cn=etc,dc=int,dc=bitfrost,dc=no',
-                        'E0aA--coVIkxSDPMKiVolJRxQIBMvdDpq.Fm3gM8!eZ0', auto_bind=True) """
+                        'E0aA--coVIkxSDPMKiVolJRxQIBMvdDpq.Fm3gM8!eZ0', auto_bind=True)
         
 
         #conn.start_tls()
@@ -81,7 +81,6 @@ def login_ldap(usr_email=None, usr_pass=None):
             
             print(f'ldap connection bound!')
             print(f'ldap conn.extend.standard.who_am_i(): {conn.extend.standard.who_am_i()}')
-            print(f'ldap after search response : {repr(conn.response)}')
 
             obj_person = ObjectDef('person', conn)
             
