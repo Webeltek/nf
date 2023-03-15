@@ -204,8 +204,17 @@ export class LoginComponent implements OnInit {
       next: (data) => {
         let dataObj = data as any;
         //console.log("loginComp dataObj.user:",dataObj.user)
-        if (dataObj.ldap_conn === 'response' && dataObj.msg){
-          this.ldapMsg= dataObj.msg;
+        if (dataObj.user.access_token && dataObj.msg){
+          let accessToken : string= dataObj.user.access_token ;
+          this.tokenStorage.saveToken(accessToken);
+          this.tokenStorage.saveUser(dataObj.user);
+          this.isLoginFailed = false;
+          this.isLoggedIn = true;
+          this.tokenStorage.authenticated$.next(true);
+          this.router.navigate(['calendar'])
+        } else {
+          this.errorMessage = "LCwrongUserPass";
+          this.isLoginFailed = true;
         }
 
       },

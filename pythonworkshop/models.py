@@ -72,10 +72,13 @@ class User(p.Model):
         self.save()
         return encoded
   
-  @staticmethod
-  def gen_ldap_access_token(ldap_email, expiration=3600):
+  def gen_ldap_access_token(self,ldap_email, expiration=3600):
         encoded = jwt.encode({'email': ldap_email, \
         'exp': datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(seconds=expiration)},current_app.config['SECRET_KEY'], algorithm='HS256')
+        self.access_token = encoded
+        self.user_confirmed = True
+        self.user_conf_by_admin = True
+        self.save()
         return encoded
 
   @staticmethod

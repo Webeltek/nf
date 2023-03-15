@@ -102,8 +102,13 @@ def login_ldap(usr_email=None, usr_pass=None):
                         user = User.create(user_email=auth_user,user_pass='temp_ldap_user')
                     except p.IntegrityError :
                         return ({'is_duplicate': True, 'duplicate_ldap_user': auth_user})
+                    msg = entry.uid
                     token = user.gen_ldap_access_token(auth_user)
-                    temp_user_id = user.id 
+                    user.login_user()
+                    user_dict = model_to_dict(user)
+                    temp_user_id = user.id
+                    msg= 'Ldap login success!'
+                    return jsonify({'user':user_dict,'msg':msg}) 
 
             reader_users = Reader(ota_conn, obj_person, 
                     'cn=users,cn=accounts,dc=int,dc=bitfrost,dc=no'
@@ -113,10 +118,9 @@ def login_ldap(usr_email=None, usr_pass=None):
             for entry in group_entries:
                 print(f'ldap user  entry.uid: {entry.uid}')
                 print(f'ldap user entry.ou: {entry.ou}')
+                print(f'ldap user entry.telephoneNumber: {entry.telephoneNumber}')
 
-            msg = resp_json
-   
-    return jsonify({'ldap_conn':'response','msg':msg})
+    return jsonify({'ldap_login':'called','ldap_usr': msg})
         
 
 @auth_bp.route('/api/auth/login', methods=['POST','GET'])
