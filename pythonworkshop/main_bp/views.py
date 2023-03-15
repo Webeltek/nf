@@ -145,7 +145,7 @@ def index_users():
         users_db.connect(reuse_if_open=True)
         saved_users = User.select().order_by(User.id.asc())
         users_db.close()
-        s_users = saved_users.dicts() # returns modelselect with rows as dicts
+        s_users = saved_users.dicts() # returns iterable modelselect with rows as dicts
         #json_users = json.dumps({'users':list(s_users)}) #list() is converting modelselect to list
         return jsonify({'users':list(s_users)})    
        

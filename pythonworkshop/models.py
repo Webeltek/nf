@@ -40,6 +40,7 @@ class User(p.Model):
   access_token = p.CharField(default='empty token')
   last_seen = p.CharField(default='initial date')
   is_admin = p.BooleanField(default=False)
+  ou = p.CharField(default='init ou')
 
   def to_dict(self):
       return self.model_to_dict()
@@ -76,8 +77,6 @@ class User(p.Model):
         encoded = jwt.encode({'email': ldap_email, \
         'exp': datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(seconds=expiration)},current_app.config['SECRET_KEY'], algorithm='HS256')
         self.access_token = encoded
-        self.user_confirmed = True
-        self.user_conf_by_admin = True
         self.save()
         return encoded
 

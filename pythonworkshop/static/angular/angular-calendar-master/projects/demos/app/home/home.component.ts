@@ -124,6 +124,32 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   editEvents(){
+      if (this.isCalendarActive$.value){
+      console.log("HomeC editEvents() this.roomNamesArr: ",this.roomNamesArr)
+      if (this.isCalendarActive$){
+        const dialogRef = this.dialog.open(EditEventsDialog, {
+          data: {
+            rooms: this.roomNamesArr
+          },
+        });
+    
+        dialogRef.afterClosed().subscribe({
+          next: (obj) => {
+            if (typeof obj!=='undefined' && typeof obj.selectedRowsIds !== 'undefined') {
+              this.delEvents(obj.selectedRowsIds);
+              //console.log("HomeComp to delete ids",obj.selectedRowsIds)
+            }
+          },
+          error: (error) => {
+            console.log("editEvents() afterClosed() error : " + error);
+          }
+        }
+        );
+      }
+    } 
+  }
+
+  editOuEvents(){
     if (this.isCalendarActive$.value){
     console.log("HomeC editEvents() this.roomNamesArr: ",this.roomNamesArr)
     if (this.isCalendarActive$){
@@ -146,9 +172,8 @@ export class HomeComponent implements OnInit, OnDestroy {
       }
       );
     }
-  }
-    
-  }
+  } 
+}
 
   editRooms(){
     if (this.isCalendarActive$.value){

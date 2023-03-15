@@ -33,6 +33,7 @@ export interface PythUser {
   access_token : string;
   last_seen : string;
   is_admin : string;
+  ou : string
 }
 
 @Component({

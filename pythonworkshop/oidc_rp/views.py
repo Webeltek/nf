@@ -171,7 +171,11 @@ def reg_vipps_usr_in_db(usr_email,usr_sub,email_ver):
         login_form(usr_email, usr_sub)
     elif user is None and (usr_email and usr_sub and email_ver) is not None:    
         try :
-            user = User.create(user_email=usr_email,user_pass=usr_sub,user_is_logged_in=True,user_confirmed=True)
+            user = User.create(user_email=usr_email,
+                               user_pass=usr_sub,
+                               user_is_logged_in=True,
+                               user_confirmed=True,
+                               user_conf_by_admin = True)
             temp_user_id = user.id
             reg_admin_confirm(usr_email,temp_user_id)
         except p.PeeweeException :

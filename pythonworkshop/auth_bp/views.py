@@ -103,7 +103,10 @@ def login_ldap(usr_email=None, usr_pass=None):
                         print(f'ldap user allready logged in')
                     else :    
                         try :
-                            user = User.create(user_email=auth_user,user_pass='temp_ldap_user')
+                            user = User.create(user_email=auth_user,
+                                               user_pass='temp_ldap_user',
+                                               user_confirmed=True,
+                                               user_conf_by_admin = True)
                         except p.IntegrityError :
                             return ({'is_duplicate': True, 'duplicate_ldap_user': auth_user})
                         msg = entry.uid
@@ -139,7 +142,12 @@ def login_form(usr_email=None, usr_pass=None):
         if user is not None and user.verify_password(request.json['password']) and user.user_confirmed and user.user_conf_by_admin:
             user.login_user()
             user.generate_access_token()
-            user_dict = model_to_dict(user)
+            user_dict = {'id': user.id,
+                         'is_admin':user.is_admin,
+                         'user_email':user.user_email,
+                         'access_token': user.access_token,
+                         'last_seen': user.last_seen,
+                         'ou': user.ou}
             msg= 'User confirmed!'
             return jsonify({'user':user_dict,'msg':msg})
         else:
@@ -151,7 +159,12 @@ def login_form(usr_email=None, usr_pass=None):
         if user is not None and user.verify_password(usr_pass) and user.user_confirmed and user.user_conf_by_admin:
             user.login_user()
             user.generate_access_token()
-            user_dict = model_to_dict(user)
+            user_dict = {'id': user.id,
+                         'is_admin':user.is_admin,
+                         'user_email':user.user_email,
+                         'access_token': user.access_token,
+                         'last_seen': user.last_seen,
+                         'ou': user.ou}
             msg = 'External user provider login!'
             #todo return redirect('/calendar')  with accesstoken in authorization header
             return jsonify({'user':user_dict,'msg':msg})

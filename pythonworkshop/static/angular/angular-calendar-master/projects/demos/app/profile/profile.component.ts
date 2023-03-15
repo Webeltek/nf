@@ -41,7 +41,8 @@ export class ProfileComponent implements OnInit {
   user_confirmed : '',
   access_token: '',
   last_seen : '',
-  is_admin : ''
+  is_admin : '',
+  ou : ''
   };
 
   changeEmailFG = new UntypedFormGroup({

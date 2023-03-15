@@ -93,35 +93,50 @@
           <p class="designation">{{tokenStorage.getUser().is_admin ? "admin" : "user"}}</p>
           <mat-divider></mat-divider>
       <mat-nav-list dense>
-        <mat-list-item *ngIf="!tokenStorage.getUser().is_admin; else adminCalendarView">
-          <button mat-button class="menu-button" routerLink="/calendar">
-            <mat-icon>calendar_month</mat-icon>
-            <span>{{'SideNavCalendar' | translate}}</span>
-          </button>
-        </mat-list-item>
-        <ng-template #adminCalendarView>
-            <mat-expansion-panel [class.mat-elevation-z0]="true" dense>
-              <mat-expansion-panel-header [style.padding-left]="0">
-                <button mat-button class="menu-button" routerLink="/calendar">
-                  <mat-icon>calendar_month</mat-icon>
-                  <span>{{'SideNavCalendar' | translate}}</span>
+        <ng-container *ngIf="!tokenStorage.getUser().is_admin; then userCalendarView else adminCalendarView">
+        </ng-container>
+        <ng-template #userCalendarView>
+          <mat-expansion-panel [class.mat-elevation-z0]="true">
+            <mat-expansion-panel-header [style.padding-left]="0">
+              <button mat-button class="menu-button" routerLink="/calendar">
+                <mat-icon>calendar_month</mat-icon>
+                <span>{{'SideNavCalendar' | translate}}</span>
+              </button>
+            </mat-expansion-panel-header>
+            <mat-nav-list dense>
+              <mat-list-item [style.padding-left]="0" [style.padding-right]="0" (click)="editOuEvents()">
+                <button   mat-button class="menu-button" >
+                  <mat-icon>edit_calendar</mat-icon>
+                  <span>{{'SideNavEditEvents' | translate}}</span>
                 </button>
-              </mat-expansion-panel-header>
-              <mat-nav-list dense>
-                  <mat-list-item [style.padding-left]="0" [style.padding-right]="0" (click)="editEvents()">
-                    <button   mat-button class="menu-button" >
-                      <mat-icon>edit_calendar</mat-icon>
-                      <span>{{'SideNavEditEvents' | translate}}</span>
-                    </button>
-                  </mat-list-item>
-                  <mat-list-item [style.padding-left]="0" [style.padding-right]="0" (click)="editRooms()">
-                    <button mat-button class="menu-button" >
-                      <mat-icon>tune</mat-icon>
-                      <span>{{'SideNavEditRooms' | translate}}</span>
-                    </button>
-                  </mat-list-item>
-              </mat-nav-list>    
-            </mat-expansion-panel>
+              </mat-list-item>
+            </mat-nav-list>
+          </mat-expansion-panel>
+        </ng-template>    
+        <ng-template #adminCalendarView>
+          <mat-expansion-panel [class.mat-elevation-z0]="true">
+            <mat-expansion-panel-header [style.padding-left]="0">
+              <button mat-button class="menu-button" routerLink="/calendar">
+                <mat-icon>calendar_month</mat-icon>
+                <span>{{'SideNavCalendar' | translate}}</span>
+              </button>
+            </mat-expansion-panel-header>
+            <mat-nav-list dense>
+                <mat-list-item [style.padding-left]="0" [style.padding-right]="0" (click)="editEvents()">
+                  <button   mat-button class="menu-button" >
+                    <mat-icon>edit_calendar</mat-icon>
+                    <span>{{'SideNavEditEvents' | translate}}</span>
+                  </button>
+                </mat-list-item>
+                <mat-list-item [style.padding-left]="0" [style.padding-right]="0" (click)="editRooms()">
+                  <button mat-button class="menu-button" >
+                    <mat-icon>tune</mat-icon>
+                    <span>{{'SideNavEditRooms' | translate}}</span>
+                  </button>
+                </mat-list-item>
+            </mat-nav-list> 
+          </mat-expansion-panel>   
+            
         </ng-template>
         
         <mat-list-item [style.padding-left]="0" routerLink="/profile">
