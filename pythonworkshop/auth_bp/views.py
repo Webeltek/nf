@@ -89,8 +89,8 @@ def login_ldap(usr_email=None, usr_pass=None):
             
             r = Reader(conn, obj_person, 
                        'cn=users,cn=accounts,dc=int,dc=bitfrost,dc=no',
-                       f'(memberOf=cn=room-booking-app-users,cn=groups,cn=accounts,dc=int,dc=bitfrost,dc=no),\
-                        (uid={ldap_user}'
+                       f'(memberOf=cn=room-booking-app-users,cn=groups,cn=accounts,dc=int,dc=bitfrost,dc=no)\
+                        (uid={ldap_user})'
                        )
             print(f'ldap Reader cursor: {r}')
             r.search()
