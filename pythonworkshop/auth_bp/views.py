@@ -84,12 +84,12 @@ def login_ldap(usr_email=None, usr_pass=None):
 
 
             obj_person = ObjectDef('top', conn)
-            obj_person+='uid'
+            #obj_person+='uid'
             #obj_person+='memberOf'
             
             r = Reader(conn, obj_person, 
-                       'dc=int,dc=bitfrost,dc=no',
-                       f'(uid={ldap_user})')
+                       'cn=sysaccounts,cn=etc,dc=int,dc=bitfrost,dc=no'
+                       )
             print(f'ldap Reader cursor: {r}')
             r.search()
             resp_json = conn.response_to_json()
