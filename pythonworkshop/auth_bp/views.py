@@ -98,17 +98,21 @@ def login_ldap(usr_email=None, usr_pass=None):
                     print(f'ldap Reader cursor user entry.telephoneNumber: {entry.telephoneNumber}')
                     auth_user = ldap_user
                     users_db.connect(reuse_if_open=True)
-                    try :
-                        user = User.create(user_email=auth_user,user_pass='temp_ldap_user')
-                    except p.IntegrityError :
-                        return ({'is_duplicate': True, 'duplicate_ldap_user': auth_user})
-                    msg = entry.uid
-                    token = user.gen_ldap_access_token(auth_user)
-                    user.login_user()
-                    user_dict = model_to_dict(user)
-                    temp_user_id = user.id
-                    msg= 'Ldap login success!'
-                    return jsonify({'user':user_dict,'msg':msg}) 
+                    user = User.select().where(User.user_email==auth_user).first()
+                    if user is not None:
+                        print(f'ldap user allready logged in')
+                    else :    
+                        try :
+                            user = User.create(user_email=auth_user,user_pass='temp_ldap_user')
+                        except p.IntegrityError :
+                            return ({'is_duplicate': True, 'duplicate_ldap_user': auth_user})
+                        msg = entry.uid
+                        token = user.gen_ldap_access_token(auth_user)
+                        user.login_user()
+                        user_dict = model_to_dict(user)
+                        temp_user_id = user.id
+                        msg= 'Ldap login success!'
+                        return jsonify({'user':user_dict,'msg':msg}) 
 
             reader_users = Reader(ota_conn, obj_person, 
                     'cn=users,cn=accounts,dc=int,dc=bitfrost,dc=no'
