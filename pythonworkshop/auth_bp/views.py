@@ -88,7 +88,7 @@ def login_ldap(usr_email=None, usr_pass=None):
             #obj_person+='memberOf'
             
             r = Reader(conn, obj_person, 
-                       'cn=sysaccounts,cn=etc,dc=int,dc=bitfrost,dc=no'
+                       'cn=groups,cn=accounts,dc=int,dc=bitfrost,dc=no'
                        )
             print(f'ldap Reader cursor: {r}')
             r.search()
@@ -96,7 +96,7 @@ def login_ldap(usr_email=None, usr_pass=None):
             pyth_entries = r.entries
 
             for entry in pyth_entries:
-                print(f'ldap cursor search entries.entry{entry}')
+                print(f'ldap cursor search entries.entry : {entry}')
                 #if entry.userPassword == ldap_pass: 
                     #print(f'ldap Reader logged in user r.entries.entry.uid : {entry.uid} ')
 
