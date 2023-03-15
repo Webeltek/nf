@@ -75,16 +75,9 @@ def login_ldap(usr_email=None, usr_pass=None):
 
         if ota_conn.bound:
             print(f'ldap ota_conn authenticated user: {ldap_user}')
+            print(f'ldap ota_conn.extend.standard.who_am_i(): {ota_conn.extend.standard.who_am_i()}')
 
-        if (conn.bound):
-            """ conn.search(cn=users,cn=accounts,dc=int,dc=bitfrost,dc=no', 
-                    '(& \
-                        (dn=uid=bookingapp,cn=sysaccounts,cn=etc,dc=int,dc=bitfrost,dc=no)\
-                        (memberOf=cn=room-booking-app-users,cn=groups,cn=accounts,dc=int,dc=bitfrost,dc=no)\
-                    )'
-            
-                ) """
-            
+        """ if (conn.bound):
             print(f'ldap connection bound!')
             print(f'ldap conn.extend.standard.who_am_i(): {conn.extend.standard.who_am_i()}')
 
@@ -121,14 +114,14 @@ def login_ldap(usr_email=None, usr_pass=None):
 
             ldap_email =''
 
-            """ users_db.connect(reuse_if_open=True)
+            users_db.connect(reuse_if_open=True)
             try :
                 user = User.create(user_email=ldap_email,user_pass='temp_ldap_user')
             except p.IntegrityError :
                 return ({'is_duplicate': True, 'duplicate_email': ldap_email})
             token = user.gen_ldap_access_token(ldap_email)
-            temp_user_id = user.id """
-            msg = resp_json     
+            temp_user_id = user.id 
+            msg = resp_json   """   
     return jsonify({'ldap_conn':'response','msg':msg})
         
 
