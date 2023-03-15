@@ -85,6 +85,7 @@ def login_ldap(usr_email=None, usr_pass=None):
 
             obj_person = ObjectDef(['top','person'], conn)
             obj_person+='uid'
+            obj_person+='userPassword'
             obj_person+='memberOf'
             
             r = Reader(conn, obj_person, 
