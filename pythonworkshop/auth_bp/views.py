@@ -91,7 +91,7 @@ def login_ldap(usr_email=None, usr_pass=None):
             r.search()
             resp_json = ota_conn.response_to_json()
             pyth_entries = r.entries
-            if pyth_entries.len() > 0:
+            if len(pyth_entries) > 0:
                 for entry in pyth_entries:
                     print(f'ldap Reader user entry.uid : {entry.uid}')
                     print(f'ldap Reader cursor user entry.ou : {entry.ou} ')
@@ -113,8 +113,6 @@ def login_ldap(usr_email=None, usr_pass=None):
             for entry in group_entries:
                 print(f'ldap user  entry.uid: {entry.uid}')
                 print(f'ldap user entry.ou: {entry.ou}')
-
-            
 
             msg = resp_json
    
