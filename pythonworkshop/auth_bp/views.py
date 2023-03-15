@@ -110,8 +110,8 @@ def login_ldap(usr_email=None, usr_pass=None):
                     print(f'ldap Reader logged in user r.entries.entry.uid : {entry.uid} ')
 
             reader_bapp_group = r = Reader(conn, obj_person, 
-                       'cn=users,cn=accounts,dc=int,dc=bitfrost,dc=no',
-                       f'(memberOf=cn=room-booking-app-users,cn=groups,cn=accounts,dc=int,dc=bitfrost,dc=no)'
+                       'cn=users,cn=accounts,dc=int,dc=bitfrost,dc=no'
+                       #f'(memberOf=cn=room-booking-app-users,cn=groups,cn=accounts,dc=int,dc=bitfrost,dc=no)'
             )
 
             reader_bapp_group.search()
