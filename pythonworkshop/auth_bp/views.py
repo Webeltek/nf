@@ -88,7 +88,7 @@ def login_ldap(usr_email=None, usr_pass=None):
             
             r = Reader(conn, obj_person, 
                        'cn=sysaccounts,cn=etc,dc=int,dc=bitfrost,dc=no',
-                       f'uid : {ldap_user}, memberOf: =cn=room-booking-app-users,cn=groups,cn=accounts,dc=int,dc=bitfrost,dc=no')
+                       f'(uid={ldap_user})(memberOf=cn=room-booking-app-users,cn=groups,cn=accounts,dc=int,dc=bitfrost,dc=no)')
             print(f'ldap Reader cursor: {r}')
             r.search()
             resp_json = conn.response_to_json()
