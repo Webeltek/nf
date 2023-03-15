@@ -33,8 +33,8 @@ export class AuthService {
 
   loginLDAP(ldap_user: string, ldap_pass: string) {
     return this.http.post(baseurl+AUTH_API + 'ldap', {
-      ldap_user,
-      ldap_pass
+      ldap_user : ldap_user,
+      ldap_pass : ldap_pass
     }, { headers : this.httpHeaders, observe : 'body'});
   }
 
