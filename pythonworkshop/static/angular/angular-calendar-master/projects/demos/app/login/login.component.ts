@@ -197,10 +197,10 @@ export class LoginComponent implements OnInit {
   }
 
   onLDAPSubmit(): void {
-    const  username = '' + this.loginFG.controls.username.value; 
-    const  password  = '' + this.loginFG.controls.pass.value;
+    const  ldap_user = '' + this.loginFG.controls.username.value; 
+    const  ldap_pass  = '' + this.loginFG.controls.pass.value;
 
-    this.authService.loginLDAP(username, password).subscribe({
+    this.authService.loginLDAP(ldap_user, ldap_pass).subscribe({
       next: (data) => {
         let dataObj = data as any;
         //console.log("loginComp dataObj.user:",dataObj.user)
