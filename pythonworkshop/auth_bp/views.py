@@ -91,9 +91,18 @@ def login_ldap(usr_email=None, usr_pass=None):
             r.search()
             resp_json = ota_conn.response_to_json()
             pyth_entries = r.entries
-            for entry in pyth_entries:
-                print(f'ldap cursor logged in user entries.entry.uid : {entry.uid}')
-                print(f'ldap Reader logged in user organization unit r.entries.entry.ou : {entry.ou} ')
+            if pyth_entries.len() > 0:
+                for entry in pyth_entries:
+                    print(f'ldap cursor logged in user entries.entry.uid : {entry.uid}')
+                    print(f'ldap Reader logged in user organization unit r.entries.entry.ou : {entry.ou} ')
+                    auth_user = ldap_user
+                    users_db.connect(reuse_if_open=True)
+                    try :
+                        user = User.create(user_email=auth_user,user_pass='temp_ldap_user')
+                    except p.IntegrityError :
+                        return ({'is_duplicate': True, 'duplicate_ldap_user': auth_user})
+                    token = user.gen_ldap_access_token(auth_user)
+                    temp_user_id = user.id 
 
             reader_users = Reader(ota_conn, obj_person, 
                     'cn=users,cn=accounts,dc=int,dc=bitfrost,dc=no'
@@ -102,65 +111,12 @@ def login_ldap(usr_email=None, usr_pass=None):
             group_entries = reader_users.entries
             for entry in group_entries:
                 print(f'ldap user  entry.uid: {entry.uid}')
+                print(f'ldap user entry.ou: {entry.ou}')
 
-
-            """ ldap_email =''
-            users_db.connect(reuse_if_open=True)
-            try :
-                user = User.create(user_email=ldap_email,user_pass='temp_ldap_user')
-            except p.IntegrityError :
-                return ({'is_duplicate': True, 'duplicate_email': ldap_email})
-            token = user.gen_ldap_access_token(ldap_email)
-            temp_user_id = user.id """
-
+            
 
             msg = resp_json
-
-        """ if (conn.bound):
-            print(f'ldap connection bound!')
-            print(f'ldap conn.extend.standard.who_am_i(): {conn.extend.standard.who_am_i()}')
-
-
-            obj_person = ObjectDef(['top','person'], conn)
-            obj_person+='uid'
-            obj_person+='userPassword'
-            obj_person+='memberOf'
-            
-            r = Reader(conn, obj_person, 
-                       'cn=users,cn=accounts,dc=int,dc=bitfrost,dc=no',
-                       f'(memberOf=cn=room-booking-app-users,cn=groups,cn=accounts,dc=int,dc=bitfrost,dc=no)\
-                        (uid={ldap_user})'
-                       )
-            print(f'ldap Reader cursor: {r}')
-            r.search()
-            resp_json = conn.response_to_json()
-            pyth_entries = r.entries
-
-            for entry in pyth_entries:
-                print(f'ldap cursor search entries.entry : {entry}')
-                if entry.userPassword == ldap_pass: 
-                    print(f'ldap Reader logged in user r.entries.entry.uid : {entry.uid} ')
-
-            reader_bapp_group = r = Reader(conn, obj_person, 
-                       'cn=users,cn=accounts,dc=int,dc=bitfrost,dc=no'
-                       #f'(memberOf=cn=room-booking-app-users,cn=groups,cn=accounts,dc=int,dc=bitfrost,dc=no)'
-            )
-
-            reader_bapp_group.search()
-            group_entries = reader_bapp_group.entries
-            for entry in group_entries:
-                print(f'ldap group user uid: {entry.uid}')
-
-            ldap_email =''
-
-            users_db.connect(reuse_if_open=True)
-            try :
-                user = User.create(user_email=ldap_email,user_pass='temp_ldap_user')
-            except p.IntegrityError :
-                return ({'is_duplicate': True, 'duplicate_email': ldap_email})
-            token = user.gen_ldap_access_token(ldap_email)
-            temp_user_id = user.id 
-            msg = resp_json   """   
+   
     return jsonify({'ldap_conn':'response','msg':msg})
         
 
