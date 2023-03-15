@@ -97,9 +97,9 @@ def login_ldap(usr_email=None, usr_pass=None):
 
             for entry in pyth_entries:
                 print(f'ldap cursor search entries.entry{entry}')
-                if entry.userPassword == ldap_pass: 
+                #if entry.userPassword == ldap_pass: 
+                    #print(f'ldap Reader logged in user r.entries.entry.uid : {entry.uid} ')
 
-                    print(f'ldap Reader logged in user r.entries.entry.uid : {entry.uid} ')
             #print(f'ldap Reader search response: {resp_json}')
 
             ldap_email =''
