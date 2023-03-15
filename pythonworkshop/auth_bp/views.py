@@ -68,7 +68,13 @@ def login_ldap(usr_email=None, usr_pass=None):
                         'E0aA--coVIkxSDPMKiVolJRxQIBMvdDpq.Fm3gM8!eZ0', auto_bind=True)
         
 
+        ota_conn = Connection(server, 
+                        f'uid={ldap_user},cn=users,cn=accounts,dc=int,dc=bitfrost,dc=no',
+                        f'{ldap_pass}', auto_bind=True)
         #conn.start_tls()
+
+        if ota_conn.bound:
+            print(f'ldap ota_conn authenticated user: {ldap_user}')
 
         if (conn.bound):
             """ conn.search(cn=users,cn=accounts,dc=int,dc=bitfrost,dc=no', 
@@ -103,7 +109,15 @@ def login_ldap(usr_email=None, usr_pass=None):
                 if entry.userPassword == ldap_pass: 
                     print(f'ldap Reader logged in user r.entries.entry.uid : {entry.uid} ')
 
-            #print(f'ldap Reader search response: {resp_json}')
+            reader_bapp_group = r = Reader(conn, obj_person, 
+                       'cn=users,cn=accounts,dc=int,dc=bitfrost,dc=no',
+                       f'(memberOf=cn=room-booking-app-users,cn=groups,cn=accounts,dc=int,dc=bitfrost,dc=no)'
+            )
+
+            reader_bapp_group.search()
+            group_entries = reader_bapp_group.entries
+            for entry in group_entries:
+                print(f'ldap group user uid: {entry.uid}')
 
             ldap_email =''
 
