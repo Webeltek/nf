@@ -149,8 +149,119 @@
           }
         }
       }
+    },
+    "byklebreiband": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        },
+        "@schematics/angular:application": {
+          "strict": true
+        }
+      },
+      "root": "projects/byklebreiband",
+      "sourceRoot": "projects/byklebreiband/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/byklebreiband",
+            "index": "projects/byklebreiband/src/index.html",
+            "main": "projects/byklebreiband/src/main.ts",
+            "polyfills": "projects/byklebreiband/src/polyfills.ts",
+            "tsConfig": "projects/byklebreiband/tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              "projects/byklebreiband/src/favicon.ico",
+              "projects/byklebreiband/src/assets"
+            ],
+            "styles": [
+              "projects/byklebreiband/src/styles.scss"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "500kb",
+                  "maximumError": "1mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
+              "fileReplacements": [
+                {
+                  "replace": "projects/byklebreiband/src/environments/environment.ts",
+                  "with": "projects/byklebreiband/src/environments/environment.prod.ts"
+                }
+              ],
+              "outputHashing": "all"
+            },
+            "development": {
+              "buildOptimizer": false,
+              "optimization": false,
+              "vendorChunk": true,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {
+              "browserTarget": "byklebreiband:build:production"
+            },
+            "development": {
+              "browserTarget": "byklebreiband:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "byklebreiband:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/byklebreiband/src/test.ts",
+            "polyfills": "projects/byklebreiband/src/polyfills.ts",
+            "tsConfig": "projects/byklebreiband/tsconfig.spec.json",
+            "karmaConfig": "projects/byklebreiband/karma.conf.js",
+            "inlineStyleLanguage": "scss",
+            "assets": [
+              "projects/byklebreiband/src/favicon.ico",
+              "projects/byklebreiband/src/assets"
+            ],
+            "styles": [
+              "projects/byklebreiband/src/styles.scss"
+            ],
+            "scripts": []
+          }
+        },
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "lintFilePatterns": [
+              "projects/byklebreiband/**/*.ts",
+              "projects/byklebreiband/**/*.html"
+            ]
+          }
+        }
+      }
     }
-    
   },
   "cli": {
     "schematicCollections": [
