@@ -9,6 +9,7 @@ import { LoggedInGuardService } from './_helpers/logged-in-guard.service';
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { ChangePassComponent } from './change-pass/change-pass.component';
 import { BoardAdminComponent } from './board-admin/board-admin.component';
+import { HjemComponent } from 'projects/byklebreiband/src/app/hjem/hjem.component';
 
 export const ROUTES: Routes = [  
         { path: 'login', component: LoginComponent },
@@ -22,5 +23,6 @@ export const ROUTES: Routes = [
         { path: 'logout' , canActivate: [LoggedInGuardService], component: LoginComponent},
         { path: 'board_admin', canActivate : [LoggedInGuardService], component: BoardAdminComponent},
         { path: '', redirectTo: 'landing' , pathMatch : 'full' },
+        { path: 'bb', component: HjemComponent},
         { path: '**', component: LandingPageComponent }
     ];
