@@ -1,0 +1,147 @@
+mat-toolbar {
+    background: #ff8800;
+    color: white;
+    display: flex;
+    justify-content: flex-start;  
+  }
+
+  .left-spacer {
+    flex-grow: 3;
+  }
+
+  .lang-select{
+    width: 3em;
+  }
+  
+  mat-sidenav {
+    margin: 8px;
+    width: 16em;
+    border-right: none;
+    background: #007bff;
+    color: white;
+    border-radius: 5px;
+    padding: 8px;
+    text-align: center;
+  }
+  
+  .content {
+    height: calc(100vh - 65px);
+    border-radius: 5px;
+    margin: 8px;
+    margin-left: 16px;
+    padding: 8px;
+  
+    overflow: auto;
+  }
+  
+  mat-sidenav-container {
+    height: calc(100vh - 65px);
+  }
+
+  mat-expansion-panel {
+    background: #007bff;
+  }
+  
+  .menu-button {
+    
+    display: flex;
+    align-items: center;
+    font-size: 0.8rem;
+    color: #eff !important;
+  
+    mat-icon {
+      margin-right: 8px;
+    }
+  }
+
+  .menu-button {
+    
+    display: flex;
+    align-items: center;
+    font-size: 0.8rem;
+    color: #eff !important;
+  
+    mat-icon {
+      margin-right: 8px;
+    }
+  }
+  
+  .avatar {
+    margin-top: 8px;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+  }
+  
+  .name {
+    margin-top: 8px;
+    font-weight: normal;
+  }
+  
+  .designation {
+    margin-top: 2px;
+    font-size: 0.7rem;
+    color: lightgrey;
+  }
+  
+  mat-divider {
+    margin-top: 8px;
+    margin-bottom: 8px;
+    background-color: rgba(255, 255, 255, 0.5);
+  }
+
+  /* Structure table */
+table {
+  width: 100%;
+}
+
+.mat-mdc-form-field {
+  font-size: 14px;
+  width: 100%;
+}
+
+.demo-table {
+  width: 100%;
+}
+
+.demo-button-container {
+  padding-bottom: 16px;
+}
+
+.demo-button + .demo-button {
+  margin-left: 8px;
+}
+
+.hint-warn-color{
+  color :orangered
+}
+
+// hover gradient background underline
+.link, .link.dark-blue-gradient-bg{
+  background-size: 0% 3px;
+  background-repeat: no-repeat;
+  background-position: bottom left;
+  transition: background-size 300ms ease;
+  }
+  .link:hover, .link.dark-blue-gradient-bg:hover{
+  background-size: 100% 3px;
+  }
+  .link:focused, .link.dark-blue-gradient-bg:focused{
+  background-size: 100% 3px;
+  }
+  .nav-link-dropdown{
+  background-size: 0% 3px;
+  background-repeat: no-repeat;
+  background-position: bottom left;
+  transition: background-size 300ms ease;
+   }
+   .nav-link-dropdown:hover{
+   background-size: 100% 3px;
+   }
+   .nav-link-dropdown:focused{
+     background-size: 100% 3px;
+    }
+    
+   .dropdown-active {
+   background-color:red; 
+    }

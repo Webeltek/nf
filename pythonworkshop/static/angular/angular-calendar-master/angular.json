@@ -178,7 +178,8 @@
               "projects/byklebreiband/src/assets"
             ],
             "styles": [
-              "projects/byklebreiband/src/styles.scss"
+              "projects/byklebreiband/src/styles.scss",
+              "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css"
             ],
             "scripts": []
           },

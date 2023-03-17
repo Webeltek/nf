@@ -29,6 +29,8 @@ import { NgbCarouselModule } from '@ng-bootstrap/ng-bootstrap';
 import { MatExpansionModule} from '@angular/material/expansion';
 import { MatCardModule } from '@angular/material/card';
 import { MatListModule } from '@angular/material/list';
+import { RouterModule } from '@angular/router';
+import { BB_ROUTES } from './app.routes';
 
 import { AppComponent } from './app.component';
 import { HjemComponent } from './hjem/hjem.component';
@@ -41,6 +43,7 @@ import { HomeComponent } from './home/home.component';
     HomeComponent
   ],
   imports: [
+    RouterModule.forRoot(BB_ROUTES),
     BrowserModule,
     BrowserAnimationsModule,
     FormsModule,
@@ -74,7 +77,7 @@ import { HomeComponent } from './home/home.component';
     MatListModule,
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [HomeComponent]
 })
 export class AppModule { 
   constructor(){

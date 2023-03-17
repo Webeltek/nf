@@ -23,6 +23,5 @@ export const ROUTES: Routes = [
         { path: 'logout' , canActivate: [LoggedInGuardService], component: LoginComponent},
         { path: 'board_admin', canActivate : [LoggedInGuardService], component: BoardAdminComponent},
         { path: '', redirectTo: 'landing' , pathMatch : 'full' },
-        { path: 'bb', component: HjemComponent},
         { path: '**', component: LandingPageComponent }
     ];
