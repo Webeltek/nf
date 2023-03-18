@@ -44,10 +44,10 @@
         padding-top: 20px;
     }
 </style>
-<div id="g1-section-1" class="g1-section px-10">
+<div id="g1-section-1" class="g1-section" [style.padding.rem]="2">
     <div class="g1-layout-inner">
         <div class="row">
-            <div class="col-lg-6 p-8">
+            <div class="col-lg-6">
                 <h2><span style="color: #ffffff;">Velkommen til Bykle Breiband</span></h2>
                 <p><span style="color: #ffffff;">Vår fiberkabel gjev deg over 150 TV-kanalar, filmleige med
                         fjernkontrollen,</span><br>
@@ -68,9 +68,9 @@
                         background-color: #ffffff;
                         border-color: #ffffff;
                     }
-                </style><a id="g1-button-1" class="g1-button g1-button--medium g1-button--solid g1-button--standard "
-                    href="http://minside.byklebreiband.no/AddCustomer" title="Les mer"><i
-                        class="icon-step-forward"></i>Fastboende? Bestill fiber her</a>
+                </style><button  mat-raised-button
+                    href="http://minside.byklebreiband.no/AddCustomer" title="Les mer">
+                    <mat-icon>not_started</mat-icon>Fastboende? Bestill fiber her</button>
                 <h3 style="text-align: left;"></h3>
                 <style type="text/css" scoped="scoped">
                     #g1-button-2.g1-button {
@@ -78,9 +78,11 @@
                         background-color: #ffffff;
                         border-color: #ffffff;
                     }
-                </style><a id="g1-button-2" class="g1-button g1-button--medium g1-button--solid g1-button--standard "
-                    href="http://minside.byklebreiband.no/AddCustomer" title="Les mer"><i
-                        class="icon-step-forward"></i>Hytte? Bestill fiber her</a>
+                </style><button  mat-raised-button
+                    href="http://minside.byklebreiband.no/AddCustomer" title="Les mer">
+                    <mat-icon>
+                        not_started
+                    </mat-icon>Hytte? Bestill fiber her</button>
             </div><!-- -->
         </div>
     </div>
