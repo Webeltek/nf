@@ -29,6 +29,8 @@ import { NgbCarouselModule } from '@ng-bootstrap/ng-bootstrap';
 import { MatExpansionModule} from '@angular/material/expansion';
 import { MatCardModule } from '@angular/material/card';
 import { MatListModule } from '@angular/material/list';
+import {MatMenuModule} from '@angular/material/menu';
+
 import { RouterModule } from '@angular/router';
 import { BB_ROUTES } from './app.routes';
 
@@ -75,6 +77,7 @@ import { HomeBBComponent } from './home/home.component';
     MatExpansionModule,
     MatCardModule,
     MatListModule,
+    MatMenuModule
   ],
   providers: [],
   bootstrap: [HomeBBComponent]

@@ -1,6 +1,6 @@
 <div class="row mb-4">
     <div class="col-lg-12 d-flex flex-row bp-10 bg-light">
-      <h2 class="mx-auto display-1 block text-center" [style.color]="'orange'">Bykle Breiband </h2>
+      <h2 class="mx-auto display-1 block text-left" [style.color]="'orange'">Bykle Breiband </h2>
     </div>
 </div>
 
@@ -20,8 +20,16 @@
   
   <ng-template #loggedOutToolbarTempl>
     <mat-toolbar class="mat-elevation-z8">
-      <span class="left-spacer"></span>
-      <span class="left-spacer"></span>
+      <button mat-button class="menu-button">Hjem</button>
+      <button mat-button [matMenuTriggerFor]="bestill_fiber">Bestill fiber</button>
+      <mat-menu #bestill_fiber="matMenu">
+        <button mat-menu-item [matMenuTriggerFor]="abon_type">Abonnement fastbuande</button>
+        <button mat-menu-item [matMenuTriggerFor]="abon_type">Abonnement hytte</button>
+      </mat-menu>
+      <mat-menu #abon_type >
+        <button mat-menu-item>Ikkje tilkobla fiber</button>
+        <button mat-menu-item>Tilkobla fiber</button>
+      </mat-menu>
       <button mat-button class="menu-button link link.dark-blue-gradient-bg" routerLink="/login">
         <mat-icon>login</mat-icon>
         <span>LOGG INN</span>
