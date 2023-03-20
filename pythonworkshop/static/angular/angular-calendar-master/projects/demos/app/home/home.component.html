@@ -32,7 +32,7 @@
   </div>
 </div>
 
-<mat-toolbar class="mat-elevation-z8" *ngIf="(tokenStorage.authenticated$ | async) ===true; else loggedOutToolbarTempl">
+<mat-toolbar class="mat-elevation-z8" [style.color]="'orange'" *ngIf="(tokenStorage.authenticated$ | async) ===true; else loggedOutToolbarTempl">
   <button
     mat-icon-button
     *ngIf="sidenav.mode === 'over'"

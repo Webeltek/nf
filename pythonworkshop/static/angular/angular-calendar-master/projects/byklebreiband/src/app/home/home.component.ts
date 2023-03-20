@@ -6,7 +6,7 @@ import { TokenStorageService } from '../_services/token-storage.service';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit {
+export class HomeBBComponent implements OnInit {
 
   constructor(public tokenStorage: TokenStorageService,) { }
 

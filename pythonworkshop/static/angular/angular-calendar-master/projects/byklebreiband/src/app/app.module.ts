@@ -1,6 +1,6 @@
 import { registerLocaleData } from '@angular/common';
 import localeNo from '@angular/common/locales/nb';
-import { NgModule , LOCALE_ID} from '@angular/core';
+import { NgModule , LOCALE_ID, ModuleWithProviders} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -34,13 +34,13 @@ import { BB_ROUTES } from './app.routes';
 
 import { AppComponent } from './app.component';
 import { HjemComponent } from './hjem/hjem.component';
-import { HomeComponent } from './home/home.component';
+import { HomeBBComponent } from './home/home.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HjemComponent,
-    HomeComponent
+    HomeBBComponent
   ],
   imports: [
     RouterModule.forRoot(BB_ROUTES),
@@ -77,9 +77,9 @@ import { HomeComponent } from './home/home.component';
     MatListModule,
   ],
   providers: [],
-  bootstrap: [HomeComponent]
+  bootstrap: [HomeBBComponent]
 })
-export class AppModule { 
+export class BBModule { 
   constructor(){
     registerLocaleData(localeNo);
   }
@@ -88,5 +88,15 @@ export class AppModule {
 // AOT compilation support
 export function httpTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http);
+}
+
+@NgModule({})
+export class BBSharedModule{
+  static forRoot(): ModuleWithProviders<BBModule> {
+    return {
+      ngModule: BBModule,
+      providers: []
+    }
+  }
 }
 

@@ -7,6 +7,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { DemoAppComponent } from './demo-app.component';
 
 import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { BBSharedModule } from 'projects/byklebreiband/src/app/app.module';
+import { HomeBBComponent } from 'projects/byklebreiband/src/app/home/home.component';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
@@ -76,7 +78,7 @@ import { MatListModule } from '@angular/material/list';
       provide: DateAdapter,
       useFactory: adapterFactory,
     }),
-
+    BBSharedModule.forRoot(),
     BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
@@ -113,7 +115,7 @@ import { MatListModule } from '@angular/material/list';
      authInterceptorProviders,
     { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: true}}
   ],
-    bootstrap: [HomeComponent]
+    bootstrap: [HomeBBComponent]
 })
 export class DemoAppModule { 
   constructor(){

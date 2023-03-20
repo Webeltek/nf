@@ -42,7 +42,12 @@
             "assets": [
               "projects/demos/favicon.ico",
               "projects/demos/sw.js",
-              "projects/demos/assets"
+              "projects/demos/assets",
+              {
+                "glob": "**/*",
+                "input": "projects/byklebreiband/src/assets",
+                "output": "./assets/bb"
+              }
             ],
             "styles": [
               "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",

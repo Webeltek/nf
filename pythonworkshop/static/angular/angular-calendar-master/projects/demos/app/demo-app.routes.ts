@@ -22,6 +22,7 @@ export const ROUTES: Routes = [
         { path: 'profile' , canActivate: [LoggedInGuardService], component : ProfileComponent},
         { path: 'logout' , canActivate: [LoggedInGuardService], component: LoginComponent},
         { path: 'board_admin', canActivate : [LoggedInGuardService], component: BoardAdminComponent},
+        { path: 'bb', loadChildren: ()=> import('../../byklebreiband/src/app/app.module').then(m=>m.BBSharedModule)},
         { path: '', redirectTo: 'landing' , pathMatch : 'full' },
-        { path: '**', component: LandingPageComponent }
+        { path: '**', component: LandingPageComponent },
     ];
