@@ -1,0 +1,30 @@
+<h1 mat-dialog-title>Edit rooms 
+</h1>
+<div mat-dialog-content>
+  <form [formGroup]="roomsFormGroup">
+    <div formArrayName="roomsArr" *ngFor="let currRoom of roomsArr.controls; index as idx;last as isLast">
+        <mat-form-field appearance="fill">
+          <mat-label>{{currRoom.value}}</mat-label>
+          <input matInput placeholder="Placeholder" #roomName 
+            (keyup)="updateInput(roomName.value,idx)">
+          <mat-icon matSuffix>meeting_room</mat-icon>
+          <mat-hint class="hint-warn-color"  
+            *ngIf="currRoom.invalid">{{objErrValStr}}</mat-hint>
+        </mat-form-field>
+        <button mat-icon-button color="warn" (click)="markedRoomsToDel[idx].markedToDel=true">
+          <mat-icon>remove_circle</mat-icon>
+        </button>
+        <button mat-raised-button color="warn" *ngIf="markedRoomsToDel[idx]?.markedToDel" 
+          (click)="removeRoom(idx)">Delete events?</button>
+        <button mat-icon-button color="primary" *ngIf="isLast" (click)="addRoom(roomName.value)">
+          <mat-icon>add_circle</mat-icon>
+        </button>    
+    </div>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button 
+  color="primary" 
+  type="submit"
+  (click)="onSubmit()">Save rooms</button>
+</div>  
