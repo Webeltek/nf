@@ -260,7 +260,9 @@ export class DemoAppComponent implements OnInit, OnDestroy{
   }) {
 
     if ((clickedWeekViewEvent.event.userId==this.tokenStorage.getUser().id
-     && !this.tokenStorage.getUser().is_admin) || this.tokenStorage.getUser().is_admin) {
+     && !this.tokenStorage.getUser().is_admin) 
+     || this.tokenStorage.getUser().is_admin 
+     || this.tokenStorage.getUser().ou===clickedWeekViewEvent.event.ou) {
       var hourContainedEvTitle = "";
       this.httpService.getEvents().subscribe((response) => {
         if(response.hasOwnProperty('events')) {
@@ -281,16 +283,17 @@ export class DemoAppComponent implements OnInit, OnDestroy{
               toBeDeletedPythEvt : this.toBeDeletedPythEvt
             },
           });
-          dialogRef.afterClosed().subscribe(
-            (result) => {
+          dialogRef.afterClosed().subscribe({
+            next: (result) => {
               if (typeof result !== 'undefined') {
                 //console.log("result object",result)
                 this.deleteEvent([result.toBeDeletedPythEvt.id]);
               }
             },
-            (error) => {
+            error: (error) => {
               console.log("afterClosed() error : " + error);
             }
+          }
           );
         }
         

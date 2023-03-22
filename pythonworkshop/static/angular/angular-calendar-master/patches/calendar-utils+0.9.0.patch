@@ -1,8 +1,8 @@
 diff --git a/node_modules/calendar-utils/calendar-utils.d.ts b/node_modules/calendar-utils/calendar-utils.d.ts
-index 13e9c53..c2fdd57 100644
+index 13e9c53..a628e9b 100644
 --- a/node_modules/calendar-utils/calendar-utils.d.ts
 +++ b/node_modules/calendar-utils/calendar-utils.d.ts
-@@ -34,6 +34,7 @@ export interface EventAction {
+@@ -34,9 +34,11 @@ export interface EventAction {
  }
  export interface CalendarEvent<MetaType = any> {
      id?: string | number;
@@ -10,7 +10,11 @@ index 13e9c53..c2fdd57 100644
      start: Date;
      end?: Date;
      title: string;
-@@ -133,9 +134,12 @@ export interface GetWeekViewArgs {
++    ou? : string;
+     color?: EventColor;
+     actions?: EventAction[];
+     allDay?: boolean;
+@@ -133,9 +135,12 @@ export interface GetWeekViewArgs {
      dayEnd: Time;
      weekendDays?: number[];
      segmentHeight: number;

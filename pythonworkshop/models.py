@@ -41,6 +41,7 @@ class User(p.Model):
   last_seen = p.CharField(default='initial date')
   is_admin = p.BooleanField(default=False)
   ou = p.CharField(default='init ou')
+  address = p.CharField(default='init address')
 
   def to_dict(self):
       return self.model_to_dict()
@@ -203,6 +204,7 @@ class Event(p.Model):
   userId = p.ForeignKeyField(User, backref='events', lazy_load=False)
   rowname = p.CharField()
   title = p.CharField()
+  ou = p.CharField()
   start = p.CharField()
   end = p.CharField()
   color = p.CharField()

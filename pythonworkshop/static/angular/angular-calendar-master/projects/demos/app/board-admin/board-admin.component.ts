@@ -6,9 +6,11 @@ import { TokenStorageService } from '../_services/token-storage.service';
 import { PythUser } from '../demo-app.component';
 
 export interface LDAPprofRow{
-  username: string;
+  user_email: string;
   address: string;
   ou : string;
+  user_is_logged_in: string;
+  last_seen: string;
 }
 
 const ELEMENT_DATA : LDAPprofRow[] = [];
@@ -43,12 +45,12 @@ export class BoardAdminComponent implements OnInit {
     private httpService: HttpEventService,
     public tokenStorage: TokenStorageService) { }
 
-  displayedColumns: string[] = ['username','address','ou'];
+  displayedColumns: string[] = ['user_email','address','ou','is_logged_in','last_seen'];
   dataToDisplay = [...ELEMENT_DATA];
   dataSourceEx = new ExampleDataSource(this.dataToDisplay);
-  userToDisplay : PythUser= <PythUser>{};
 
   ngOnInit(): void {
+    this.getDbUsers();
   }
 
   getDbUsers(){
@@ -59,11 +61,18 @@ export class BoardAdminComponent implements OnInit {
             //console.log("getDBUsers()  storageUsrObj.user_email", storageUsrObj.user_email);
           
             let respObj  = response as any ;
-            for (let pythUser of respObj.users){
-              if (pythUser.id == storageUsrObj.id){
-                this.userToDisplay = pythUser;
-              }
+            for (let usrObj of respObj.users){
+                let LDAPprofRow = {
+                  user_email: usrObj.user_email,
+                  address: usrObj.address,
+                  ou : usrObj.ou,
+                  user_is_logged_in: usrObj.user_is_logged_in ? "Loged in" : "Loged out",
+                  last_seen: usrObj.last_seen
+                }  
+                this.dataToDisplay.push(LDAPprofRow)
             }
+            this.dataToDisplay = [...this.dataToDisplay];
+            this.dataSourceEx.setData(this.dataToDisplay);
             //console.log("getDBUsers() this.users",this.users)
           } else {
             console.log("getDbUsers() string response msg:",response);

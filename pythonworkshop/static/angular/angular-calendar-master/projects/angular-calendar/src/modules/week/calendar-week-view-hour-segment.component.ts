@@ -24,6 +24,7 @@ export interface PythEvent {
   userId? : number;
   rowname : string;
   title : string;
+  ou? : string;
   start : string;
   end : string;
   color : string;
