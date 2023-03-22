@@ -37,6 +37,7 @@ import { BB_ROUTES } from './app.routes';
 import { AppComponent } from './app.component';
 import { HjemComponent } from './hjem/hjem.component';
 import { EditEventsDialog, EditRoomsDialog, HomeBBComponent } from './home/home.component';
+import { FastbuandeComponent } from './fastbuande/fastbuande.component';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { EditEventsDialog, EditRoomsDialog, HomeBBComponent } from './home/home.
     HjemComponent,
     HomeBBComponent,
     EditEventsDialog,
-    EditRoomsDialog
+    EditRoomsDialog,
+    FastbuandeComponent
   ],
   imports: [
     RouterModule.forRoot(BB_ROUTES),
