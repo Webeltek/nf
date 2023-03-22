@@ -46,6 +46,7 @@ import { MatExpansionModule} from '@angular/material/expansion';
 import { MatCardModule } from '@angular/material/card';
 import { ChangePassComponent } from './change-pass/change-pass.component';
 import { MatListModule } from '@angular/material/list';
+import { MatMenuModule } from '@angular/material/menu';
 //import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 
 /* const config: SocketIoConfig = {
@@ -109,13 +110,14 @@ import { MatListModule } from '@angular/material/list';
     MatExpansionModule,
     MatCardModule,
     MatListModule,
+    MatMenuModule
   ],
   providers : [
     { provide: LOCALE_ID, useValue: 'nb' },
      authInterceptorProviders,
     { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: true}}
   ],
-    bootstrap: [HomeBBComponent]
+    bootstrap: [HomeComponent]
 })
 export class DemoAppModule { 
   constructor(){

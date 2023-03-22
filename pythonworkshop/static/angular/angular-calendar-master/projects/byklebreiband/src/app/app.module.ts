@@ -29,20 +29,22 @@ import { NgbCarouselModule } from '@ng-bootstrap/ng-bootstrap';
 import { MatExpansionModule} from '@angular/material/expansion';
 import { MatCardModule } from '@angular/material/card';
 import { MatListModule } from '@angular/material/list';
-import {MatMenuModule} from '@angular/material/menu';
+import { MatMenuModule } from '@angular/material/menu';
 
 import { RouterModule } from '@angular/router';
 import { BB_ROUTES } from './app.routes';
 
 import { AppComponent } from './app.component';
 import { HjemComponent } from './hjem/hjem.component';
-import { HomeBBComponent } from './home/home.component';
+import { EditEventsDialog, EditRoomsDialog, HomeBBComponent } from './home/home.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HjemComponent,
-    HomeBBComponent
+    HomeBBComponent,
+    EditEventsDialog,
+    EditRoomsDialog
   ],
   imports: [
     RouterModule.forRoot(BB_ROUTES),
