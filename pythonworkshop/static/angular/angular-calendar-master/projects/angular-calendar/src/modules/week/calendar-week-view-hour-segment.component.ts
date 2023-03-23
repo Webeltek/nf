@@ -173,6 +173,7 @@ export class CalendarWeekViewHourSegmentComponent {
 
 
   pythEvt : PythEvent;
+  user_ou : string = 'init ou';
 
   generateUniqueID( digit = 1000 ) {
     return new Date().getTime().toString(16) + Math.floor( digit * Math.random() ).toString(16)
@@ -233,6 +234,9 @@ export class CalendarWeekViewHourSegmentComponent {
       this.currentRoomIndex = this.currentRoomNum;
       //console.log("HourSegmComp  roomNamesArr$.subscribe:",this.segmRoomNames);
     });
+
+    this.user_ou = this.tokenStorage.getUser().ou;
+    console.log("HourSegm user_ou: ",this.user_ou)
   }
 
   private events : CalendarEvent[] = [];
@@ -298,8 +302,8 @@ export class CalendarWeekViewHourSegmentComponent {
           },
         });
 
-        dialogRef.afterClosed().subscribe(
-          (result) => {
+        dialogRef.afterClosed().subscribe({
+          next: (result) => {
             if (typeof result !== 'undefined') {
               let uniqueId = this.generateUniqueID();
               let startEndDate = this.generatePythStartEndDate(result.dayPeriodVal, this.roomInd);
@@ -310,6 +314,7 @@ export class CalendarWeekViewHourSegmentComponent {
                 userId: this.loggedInUserId,
                 rowname: this.segmRoomNames[this.roomInd],
                 title: result.dayPeriodVal,
+                ou : this.user_ou,
                 start: startEndDate.start,
                 end: startEndDate.end,
                 color: "blue"
@@ -318,9 +323,11 @@ export class CalendarWeekViewHourSegmentComponent {
               this.addEvent(this.pythEvt);
             }
           },
-          (error) => {
+          error : (error) => {
             console.log("afterClosed() error : " + error);
           }
+        }
+          
         );
       }
     });

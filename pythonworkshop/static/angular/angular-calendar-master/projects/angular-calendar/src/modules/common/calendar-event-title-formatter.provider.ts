@@ -42,21 +42,21 @@ export class CalendarEventTitleFormatter {
    * The week view event title.
    */
   week(event: CalendarEvent, title: string): string {
-    return event.title;
+    return event.title + ':</br>' + event.ou;
   }
 
   /**
    * The week view event tooltip. Return a falsey value from this to disable the tooltip.
    */
   weekTooltip(event: CalendarEvent, title: string): string {
-    return event.title;
+    return event.title + ':</br>' + event.ou;
   }
 
   /**
    * The day view event title.
    */
   day(event: CalendarEvent, title: string): string {
-    return event.title;
+    return event.title ;
   }
 
   /**

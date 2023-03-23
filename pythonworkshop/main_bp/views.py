@@ -161,10 +161,11 @@ def insert():
         user_id = req_json['userId']
         print('event userId foregnkey is : '+ str(user_id))
         title = req_json['title']
+        ou = req_json['ou']
         start = req_json['start']
         end = req_json['end']
         color = req_json['color']
-        Event.create(uid=uid,userId=user_id, rowname=rowname, title=title,start=start,end=end, color=color)
+        Event.create(uid=uid,userId=user_id, rowname=rowname, title=title,ou=ou,start=start,end=end, color=color)
         users_db.close()
         msg = 'Record added successfully' 
     return jsonify(msg)

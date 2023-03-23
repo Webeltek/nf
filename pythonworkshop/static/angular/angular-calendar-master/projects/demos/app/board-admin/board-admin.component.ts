@@ -66,7 +66,7 @@ export class BoardAdminComponent implements OnInit {
                   user_email: usrObj.user_email,
                   address: usrObj.address,
                   ou : usrObj.ou,
-                  user_is_logged_in: usrObj.user_is_logged_in ? "Loged in" : "Loged out",
+                  user_is_logged_in: usrObj.user_is_logged_in ? "Has logged in" : "Hasn't logged in",
                   last_seen: usrObj.last_seen
                 }  
                 this.dataToDisplay.push(LDAPprofRow)

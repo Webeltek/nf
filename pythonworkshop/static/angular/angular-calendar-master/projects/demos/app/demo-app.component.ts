@@ -226,6 +226,7 @@ export class DemoAppComponent implements OnInit, OnDestroy{
               start : new Date(parseInt(pythEvt.start,10)),
               end : new Date(parseInt(pythEvt.end,10)),
               title : this.getEventTitle(pythEvt),
+              ou: pythEvt.ou,
               color : getColors(pythEvt.userId,this.tokenStorage.getUser().id),
             }
           this.events.push(calEvent);

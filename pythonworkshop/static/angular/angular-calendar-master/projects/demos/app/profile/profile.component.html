@@ -5,9 +5,8 @@
       <!-- <img class="img-rounded profile-thumbnail" src="assets/ufo.jpg"> -->
       <mat-card-content class="profile-header">
           <mat-accordion class="example-headers-align" multi>
-            <div class="m-2 p-5 bg-success text-dark rounded">
-              <h1>{{'PCuser' | translate }}</h1>
-              <h1>{{ user.user_email }}</h1>
+            <div class="p-5 text-dark rounded" [style.background-color]="'#20c997'">
+              <h1>{{'PCuser' | translate }} : {{ user.user_email }}</h1>
               <p *ngIf="user.user_email">
               <br>
                       {{'PCfrom' | translate}}<a class="text-dark" href="http://maps.google.com/?q=">{{'PClocation' | translate}}</a><br>
