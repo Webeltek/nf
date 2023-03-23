@@ -1,0 +1,22 @@
+<form [formGroup]="msgFG" (ngSubmit)="sendMelding()">
+    <p>
+        <mat-form-field>
+            <mat-label>Epost:</mat-label>
+            <input matInput type="text" [errorStateMatcher]="matcher" 
+                formControlName="msg_email" required>
+            <mat-error *ngIf="msgFG.controls.msg_email.errors">Feil format!</mat-error>    
+        </mat-form-field>
+    </p>
+    <p>
+        <mat-form-field [style.width]="'50%'">
+            <mat-label>Melding:</mat-label>
+            <textarea rows="10" cols="60" matInput  [errorStateMatcher]="matcher"
+                formControlName="msg_text" required>
+            </textarea>
+            <mat-error *ngIf="msgFG.controls.msg_email.errors">Feil format!</mat-error>
+        </mat-form-field>
+    </p>
+    <p>
+        <button mat-stroked-button color="primary" type="submit">Send</button>
+    </p>
+</form>
