@@ -1,18 +1,37 @@
 import { Component, OnInit ,ViewChild } from '@angular/core';
 import { NgbCarousel } from '@ng-bootstrap/ng-bootstrap';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { delay, filter } from 'rxjs/operators';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+@UntilDestroy()
 @Component({
   selector: 'mwl-landing-page',
   templateUrl: './landing-page.component.html',
   styleUrls: ['./landing-page.component.scss']
 })
 export class LandingPageComponent implements OnInit {
-  constructor( ){}
+  constructor( private BPobserver: BreakpointObserver){}
+
+  isDesktop = false;
 
   @ViewChild('ngcarousel', { static: true }) ngCarousel!: NgbCarousel;
   ngOnInit() {
     
   }
+
+  ngAfterViewInit(){
+    this.BPobserver
+          .observe(['(max-width: 800px)'])
+          .pipe(delay(1), untilDestroyed(this))
+          .subscribe((res) => {
+              this.isDesktop=false;
+              if (!res.matches){
+                this.isDesktop = true;
+              }
+          });
+  }
+
   // Move to specific slide
   navigateToSlide(item: any) {
     this.ngCarousel.select(item);
