@@ -35,8 +35,8 @@
 <mat-toolbar class="mat-elevation-z8" *ngIf="(tokenStorage.authenticated$ | async) ===true; else loggedOutToolbarTempl">
   <button
     mat-icon-button
-    *ngIf="sidenav.mode === 'over'"
-    (click)="sidenav.toggle()"
+    *ngIf="sidenav?.mode === 'over'"
+    (click)="sidenav?.toggle()"
   >
     <mat-icon *ngIf="!sidenav.opened">menu</mat-icon>
     <mat-icon *ngIf="sidenav.opened">close</mat-icon>
@@ -60,17 +60,21 @@
 <ng-template #loggedOutToolbarTempl>
   <mat-toolbar class="mat-elevation-z8">
     <button mat-button class="menu-button" routerLink="/landing">CoWorx</button>
-    <button mat-button class="menu-button" routerLink="/bb/hjem">Byklebreiband</button>
-    <button mat-button class="menu-button" routerLink="/bb/contact">Kontakt</button>
-    <button mat-button [matMenuTriggerFor]="bestill_fiber">Bestill fiber</button>
-    <mat-menu #bestill_fiber="matMenu">
-      <button mat-menu-item [matMenuTriggerFor]="abon_type">Abonnement fastbuande</button>
-      <button mat-menu-item [matMenuTriggerFor]="abon_type">Abonnement hytte</button>
-    </mat-menu>
-    <mat-menu #abon_type >
-      <button mat-menu-item routerLink="/bb/fastbuande">Ikkje tilkobla fiber</button>
-      <button mat-menu-item routerLink="/bb/fastbuande">Tilkobla fiber</button>
-    </mat-menu>
+    <button mat-button class="menu-button" routerLink="/bb/contact">Contact</button>
+
+    <ng-container *ngIf="isDesktop">
+        <button mat-button class="menu-button" routerLink="/bb/hjem">Byklebreiband</button>
+        <button mat-button [matMenuTriggerFor]="bestill_fiber">Bestill fiber</button>
+        <mat-menu #bestill_fiber="matMenu">
+          <button mat-menu-item [matMenuTriggerFor]="abon_type">Abonnement fastbuande</button>
+          <button mat-menu-item [matMenuTriggerFor]="abon_type">Abonnement hytte</button>
+        </mat-menu>
+        <mat-menu #abon_type >
+          <button mat-menu-item routerLink="/bb/fastbuande">Ikkje tilkobla fiber</button>
+          <button mat-menu-item routerLink="/bb/fastbuande">Tilkobla fiber</button>
+        </mat-menu>
+    </ng-container>
+    
     <button mat-button class="menu-button link link.dark-blue-gradient-bg float-end" routerLink="/login">
       <mat-icon>login</mat-icon>
       <span>{{'ToolbarLogin' | translate}}</span>

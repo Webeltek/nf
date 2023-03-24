@@ -36,7 +36,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   sidenav!: MatSidenav;
 
   constructor( 
-    private observer: BreakpointObserver,
+    private BPobserver: BreakpointObserver,
     public tokenStorage: TokenStorageService,
     private router: Router,
     private actRoute: ActivatedRoute,
@@ -57,6 +57,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   breakPointObsSubscr : Subscription = new Subscription();
   roomNamesArr : string[] = [];
   toDelPythEvts : PythEvent[] = [];
+  isDesktop = false;
 
 
   ngOnInit(): void {
@@ -85,7 +86,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngAfterViewInit() {
     this.loginStateSubscription = this.tokenStorage.authenticated$.subscribe( (loginState : boolean)=>{
-          this.breakPointObsSubscr = this.observer
+          this.breakPointObsSubscr = this.BPobserver
           .observe(['(max-width: 800px)'])
           .pipe(delay(1), untilDestroyed(this))
           .subscribe((res) => {
@@ -99,6 +100,11 @@ export class HomeComponent implements OnInit, OnDestroy {
                 this.sidenav.mode = 'over';
                 this.sidenav.close();
               }
+
+              this.isDesktop=false;
+              if (!res.matches){
+                this.isDesktop = true;
+              }
           });
   
           this.router.events
@@ -107,12 +113,13 @@ export class HomeComponent implements OnInit, OnDestroy {
             filter((e) => e instanceof NavigationEnd)
           )
           .subscribe(() => {
-            if (this.sidenav.mode === 'over') {
-              this.sidenav.close();
+            if (this.sidenav?.mode === 'over') {
+              this.sidenav?.close();
             }
           });
 
       });
+
   } 
 
   logout(): void {
