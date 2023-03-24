@@ -22,12 +22,12 @@ export class LandingPageComponent implements OnInit {
 
   ngAfterViewInit(){
     this.BPobserver
-          .observe(['(max-width: 800px)'])
+          .observe(['(min-width: 992px)'])
           .pipe(delay(1), untilDestroyed(this))
           .subscribe((res) => {
-              this.isDesktop=false;
+              this.isDesktop=true;
               if (!res.matches){
-                this.isDesktop = true;
+                this.isDesktop = false;
               }
           });
   }

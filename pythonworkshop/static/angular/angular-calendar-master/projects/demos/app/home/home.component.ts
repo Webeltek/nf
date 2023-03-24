@@ -87,7 +87,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngAfterViewInit() {
     this.loginStateSubscription = this.tokenStorage.authenticated$.subscribe( (loginState : boolean)=>{
           this.breakPointObsSubscr = this.BPobserver
-          .observe(['(max-width: 800px)'])
+          .observe(['(min-width: 992px)'])
           .pipe(delay(1), untilDestroyed(this))
           .subscribe((res) => {
               if (!loginState) {
@@ -101,9 +101,9 @@ export class HomeComponent implements OnInit, OnDestroy {
                 this.sidenav.close();
               }
 
-              this.isDesktop=false;
+              this.isDesktop=true;
               if (!res.matches){
-                this.isDesktop = true;
+                this.isDesktop = false;
               }
           });
   

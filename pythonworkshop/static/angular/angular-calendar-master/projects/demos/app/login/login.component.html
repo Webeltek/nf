@@ -1,5 +1,4 @@
 <div class="col-lg-4 offset-lg-4">
-        <div class="card card-container">
           <p >{{errorMessage | translate}}</p>
                   <div class="card">
                     <!-- <youtube-player class="card-img-top"
@@ -27,8 +26,7 @@
                   <!-- <button mat-button class="menu-button" (click)="vippsLogin()">
                     <img src="assets/log_in_with_vipps_pill_210_NO.png">
                   </button> -->
-        </div>
-        <div class="container aligncenter">
+        <div class="my-lg-2 d-flex justify-content-center">
           <form [formGroup] = "loginFG"
           *ngIf="!isLoggedIn"
           name="form"
@@ -62,7 +60,7 @@
           </p>  
           </form>
         </div>
-        <div class="container">
+        <div class="d-flex flex-column mx-5 justify-content-center">
           <div class="row">
             <button mat-stroked-button color="primary" (click)="onSubmit()">
               {{'ToolbarLogin' | translate}}
@@ -79,12 +77,12 @@
               {{ 'LCloginLDAP' | translate}}
             </button>
           </div>
-        </div>
-        <div class="alert alert-success">
-          {{ ldapMsg}}
+          <div class="row alert alert-success">
+            {{ ldapMsg}}
+          </div>
         </div>
         
-        <button mat-button class="menu-button" (click)="vippsLogin()">
+        <button mat-button class="row menu-button" (click)="vippsLogin()">
           <img src="assets/log_in_with_vipps_pill_210_NO.png">
         </button>
   </div>

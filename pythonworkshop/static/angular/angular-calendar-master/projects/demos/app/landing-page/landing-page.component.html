@@ -6,10 +6,11 @@
   [keyboard]="true"
   [pauseOnHover]="true"
   [wrap]="true"
-  [activeId]="'secondSlide'">
+  [activeId]="'secondSlide'"
+  [style.max-width]="isDesktop ? '1200px' : '600px'">
     <ng-template ngbSlide id="one">
       <div class="picsum-img-wrapper">
-        <img src="assets/cowxfront.png" [style]="'width:500px; height:200px'" alt="Slide 1">
+        <img src="assets/cowxfront.png" [style]="isDesktop? 'width:900px; height:500px' : 'width:400px; height:200px'" alt="Slide 1">
       </div>
       <div class="carousel-caption">
         <h5>CoWorx Hovden</h5>
@@ -17,7 +18,7 @@
     </ng-template>
     <ng-template ngbSlide id="two">
       <div class="picsum-img-wrapper">
-        <img src="assets/hovdt-1.jpeg" [style]="'width:500px; height:200px'" alt="Slide 2">
+        <img src="assets/hovdt-1.jpeg" [style]="isDesktop? 'width:900px; height:500px' : 'width:400px; height:200px'" alt="Slide 2">
       </div>
       <div class="carousel-caption">
         <h5>CoWorx Hovden</h5>
@@ -32,11 +33,11 @@
     <button (click)="goToNext()">Next</button>
     <button (click)="stopCarousel()">Pause</button>
   </div>
-  <div class="row">
-    <div class="col p-3 d-flex justify-content-center"><img [style.width]="'100px'" src="assets/Drop-In-225x300.jpg"></div>
-    <div class="col p-3 d-flex justify-content-center"><img [style.width]="'100px'" src="assets/FLEX-4-225x300.jpg"></div>
-    <div class="col p-3 d-flex justify-content-center"><img [style.width]="'100px'" src="assets/DESK-1-225x300.jpg"></div>
-    <div class="col p-3 d-flex justify-content-center"><img [style.width]="'100px'" src="assets/EGET-KONTOR-225x300.jpg"></div>
+  <div class="row py-2">
+    <div class="col p-3 d-flex justify-content-center"><img [style.width]="isDesktop? '200px':'100px'" src="assets/Drop-In-225x300.jpg"></div>
+    <div class="col p-3 d-flex justify-content-center"><img [style.width]="isDesktop? '200px':'100px'" src="assets/FLEX-4-225x300.jpg"></div>
+    <div class="col p-3 d-flex justify-content-center"><img [style.width]="isDesktop? '200px':'100px'" src="assets/DESK-1-225x300.jpg"></div>
+    <div class="col p-3 d-flex justify-content-center"><img [style.width]="isDesktop? '200px':'100px'" src="assets/EGET-KONTOR-225x300.jpg"></div>
   </div>
   <mat-divider></mat-divider>
   <div class="row text-center">

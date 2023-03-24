@@ -1,4 +1,8 @@
-    mat-toolbar {
+  *:not(mat-icon){
+    font-family: 'Roboto';
+  }
+
+  mat-toolbar {
     background: #20c997;
     display: flex;
     justify-content: flex-start;  
