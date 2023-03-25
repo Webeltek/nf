@@ -10,7 +10,7 @@
     "SideNavLogout": "Logout",
     "SideNavLDAPprof": "Users",
 
-    "LCusername": "Username",
+    "LCusername": "Username/email",
     "LCuserRequired": "Username is required!",
     "LCuserMinChar": "Username must be at least 6 characters!",
     "LCpass": "Password",
@@ -39,12 +39,15 @@
     "PCchangePassDescr": "type in",
     "PCsubmit": "Submit",
 
-    "RCemail": "Email",
+    "RCemail": "Email *",
+    "RCpass": "Password *",
     "RCemailRequired": "Email is required!",
     "RCemailValid": "Email must be a valid email address!",
     "RCsignup": "Sign Up",
     "RCsignupFailed": "Signup failed!",
     "RCalertSuccess": "A confirmation email has been sent to: ",
+    "RCorgUnit": "Organization/Company",
+    "RCorgRequired": "Organization is required!",
 
     "DCprevious": "Previous",
     "DCtoday": "Today",

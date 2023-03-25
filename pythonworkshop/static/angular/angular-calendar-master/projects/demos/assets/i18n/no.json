@@ -10,7 +10,7 @@
      "SideNavLogout": "Logg ut",
      "SideNavLDAPprof": "Brukere",
 
-     "LCusername": "Brukernavn",
+     "LCusername": "Brukernavn/epost",
      "LCuserRequired": "Brukernavn påkreves!",
      "LCuserMinChar": "Brukernavn må bestå av minst 6 tegn!",
      "LCpass": "Passord",
@@ -39,12 +39,15 @@
      "PCchangePassDescr": "Skriv inn",
      "PCsubmit": "Bekreft",   
 
-     "RCemail": "E-post",
-     "RCemailRequired": "E-post kreves!",
+     "RCemail": "E-post *",
+     "RCpass": "Passord *",
+     "RCemailRequired": "E-post påkrevd!",
      "RCemailValid": "E-post må være en gyldig e-postadresse!",
      "RCsignup": "Registrer deg",
      "RCsignupFailed": "Registrering mislyktes!",
      "RCalertSuccess": "En e-postbekreftelse er sendt til",
+     "RCorgUnit": "Organisasjon/firmanavn",
+     "RCorgRequired": "Organisasjon/firmanavn påkrevd!",
 
      "DCprevious": "Forrige",
      "DCtoday": "I dag",

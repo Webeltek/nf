@@ -21,7 +21,7 @@
                   <div class="d-flex justify-content-center">
                     <img src="assets/hovdlogin.jpg" 
                     class="profile-img-card mx-auto rounded"
-                    [style.max-width]="'600px'"
+                    [style.max-width]="'400px'"
                     >
                     <p class="card-text"></p>
                   </div>
@@ -29,7 +29,7 @@
                 <!-- <button mat-button class="menu-button" (click)="vippsLogin()">
                   <img src="assets/log_in_with_vipps_pill_210_NO.png">
                 </button> -->
-        <div class="my-2 d-flex justify-content-center">
+        <div class="mt-2 d-flex justify-content-center">
           <form [formGroup] = "loginFG"
           *ngIf="!isLoggedIn"
           name="form"
@@ -64,7 +64,7 @@
           </form>
         </div>
         <div>
-          <div class="d-flex  justify-content-center">
+          <div class="d-flex  mt-2 justify-content-center">
             <button [style.width]="'180px'"  mat-stroked-button 
             color="primary" (click)="onSubmit()">
               {{'ToolbarLogin' | translate}}
@@ -76,21 +76,24 @@
             </mat-error>
           </div>
           
-          <div class="d-flex justify-content-center">
+          <!-- <div class="d-flex justify-content-center">
             <button [style.width]="'180px'" 
             mat-stroked-button color="primary" (click)="onLDAPSubmit()">
               {{ 'LCloginLDAP' | translate}}
             </button>
-          </div>
+          </div> 
           <div class="d-flex justify-content-center">
             <span [style]="'width: 180px; height : 15px'" 
             class="bg-success d-flex justify-content-center">
             {{ ldapMsg}}
           </span>
+          </div> -->
+          <div class="my-2 d-flex justify-content-center">
+            <a  routerLink="/register">Create account</a>
           </div>
           
         </div>
-        <div class="d-flex justify-content-center">
+        <div class="my-2 d-flex justify-content-center">
           <button mat-button class="menu-button" (click)="vippsLogin()">
             <img src="assets/log_in_with_vipps_pill_210_NO.png">
           </button>

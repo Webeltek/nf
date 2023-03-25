@@ -38,10 +38,11 @@ export class AuthService {
     }, { headers : this.httpHeaders, observe : 'body'});
   }
 
-  register( email: string, password: string): Observable<any> {
+  register( email: string, password: string, ou: string): Observable<any> {
     return this.http.post(baseurl+AUTH_API + 'register', {
       email : email,
-      password : password
+      password : password,
+      ou : ou
     }, { headers : this.httpHeaders, observe : 'response', responseType : 'json'} );
   }
 

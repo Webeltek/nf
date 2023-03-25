@@ -179,9 +179,10 @@ def register_form():
       msg=''
       user_email=request.json['email']
       user_pass=request.json['password']
+      user_ou = request.json['ou']
       try :
         user = User.create(user_email=user_email,
-                           user_pass=user_pass)
+                           user_pass=user_pass,ou=user_ou)
       except p.IntegrityError :
         return ({'is_duplicate': True, 'duplicate_email': user_email})
       token = user.generate_confirmation_token()

@@ -11,7 +11,8 @@ import { TokenStorageService } from '../_services/token-storage.service';
 export class RegisterComponent implements OnInit {
   form: any = {
     email: null,
-    password: null
+    password: null,
+    ou: "init ou"
   };
   isSuccessful = false;
   isSignUpFailed = false;
@@ -26,9 +27,9 @@ export class RegisterComponent implements OnInit {
   }
 
   onSubmit(): void {
-    const { email, password } = this.form;
+    const { email, password , ou} = this.form;
 
-    this.authService.register( email, password).subscribe({
+    this.authService.register( email, password , ou).subscribe({
       next : (response) => {
         let responseObj = response.body as any;
         let is_duplicate : boolean = responseObj.is_duplicate;
