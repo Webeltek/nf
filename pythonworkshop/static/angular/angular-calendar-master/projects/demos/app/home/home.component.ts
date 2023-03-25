@@ -94,11 +94,11 @@ export class HomeComponent implements OnInit, OnDestroy {
                 this.sidenav.mode = 'over';
                 this.sidenav.close();
               } else if(!res.matches && loginState) {
-                this.sidenav.mode = 'side';
-                this.sidenav.open();
-              } else if(res.matches && loginState) {
                 this.sidenav.mode = 'over';
                 this.sidenav.close();
+              } else if(res.matches && loginState) {
+                this.sidenav.mode = 'side';
+                this.sidenav.open();
               }
 
               this.isDesktop=true;

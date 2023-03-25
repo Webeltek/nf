@@ -6,6 +6,9 @@ import { Observable } from 'rxjs';
 import { HttpEventService } from 'projects/angular-calendar/src/modules/week/http-service.service';
 import { UntypedFormControl,Validators ,FormControl, FormGroupDirective, NgForm, UntypedFormGroup} from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { delay } from 'rxjs/operators';
 
 let apiLoaded = false;
 
@@ -16,6 +19,7 @@ export class LoginErrorStateMatcher implements ErrorStateMatcher {
   }
 }
 
+@UntilDestroy()
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -65,6 +69,7 @@ export class LoginComponent implements OnInit {
     iv_load_policy: 3,
   }
 
+  isDesktop = false;
 
   constructor(
     public httpService: HttpEventService,
@@ -72,6 +77,7 @@ export class LoginComponent implements OnInit {
     private tokenStorage: TokenStorageService,
     private actRoute: ActivatedRoute,
     private router: Router,
+    private BPobserver: BreakpointObserver
     ) {}  
     
   ngOnInit(): void {
@@ -126,6 +132,18 @@ export class LoginComponent implements OnInit {
       this.errorMessage ="LCsignedOut";
       console.log("login signout errorMessage",this.errorMessage)
     }
+  }
+
+  ngAfterViewInit(){
+    this.BPobserver
+          .observe(['(min-width: 992px)'])
+          .pipe(delay(1), untilDestroyed(this))
+          .subscribe((res) => {
+              this.isDesktop=true;
+              if (!res.matches){
+                this.isDesktop = false;
+              }
+          });
   }
 
   vippsLogin() {

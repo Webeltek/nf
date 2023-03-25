@@ -1,7 +1,7 @@
 import { Component, OnInit ,ViewChild } from '@angular/core';
 import { NgbCarousel } from '@ng-bootstrap/ng-bootstrap';
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { delay, filter } from 'rxjs/operators';
+import { delay } from 'rxjs/operators';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 @UntilDestroy()
