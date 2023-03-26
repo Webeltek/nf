@@ -1,4 +1,4 @@
-<form [formGroup]="msgFG" (ngSubmit)="sendMelding()">
+<form [formGroup]="msgFG">
     <p>
         <mat-form-field>
             <mat-label>Epost:</mat-label>
@@ -10,13 +10,13 @@
     <p>
         <mat-form-field [style.width]="'50%'">
             <mat-label>Melding:</mat-label>
-            <textarea rows="10" cols="60" matInput  [errorStateMatcher]="matcher"
+            <textarea rows="10" cols="80" matInput  [errorStateMatcher]="matcher"
                 formControlName="msg_text" required>
             </textarea>
             <mat-error *ngIf="msgFG.controls.msg_email.errors">Feil format!</mat-error>
         </mat-form-field>
     </p>
     <p>
-        <button mat-stroked-button color="primary" type="submit">Send</button>
+        <button mat-stroked-button color="primary" (click)="sendMelding()">Send</button>
     </p>
 </form>

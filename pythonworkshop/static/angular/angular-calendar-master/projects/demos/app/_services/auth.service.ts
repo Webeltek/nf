@@ -68,11 +68,19 @@ export class AuthService {
   }
 
   inputChangePass( email: string, oldpass: string,newpass: string): Observable<any> {
-    return this.http.post(baseurl+AUTH_API + 'input_change_pass', {
+    return this.http.post(baseurl + AUTH_API + 'input_change_pass', {
       email : email,
       oldpass : oldpass,
       newpass: newpass
     }, { headers : this.httpHeaders, observe : 'response', responseType : 'json'} );
+  }
+
+  sendMsg(msg_email: string, msg_text: string){
+    console.log("authService sendMsg msg_email, msg_text",msg_email,msg_text);
+    return this.http.post(baseurl+AUTH_API + 'send_msg', {
+      msg_email : msg_email,
+      msg_text : msg_text
+    }, { headers : this.httpHeaders, observe : 'body', responseType : 'json'} );
   }
 
   /* getMessage() {

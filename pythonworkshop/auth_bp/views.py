@@ -7,7 +7,7 @@ from .forms import LoginForm, RegistrationForm, ChangePasswordForm,\
     PasswordResetRequestForm, PasswordResetForm, ChangeEmailForm
 import jinja2
 from ..models import *
-from ..email import send_email, send_adm_conf_email
+from ..email import send_email, send_guest_email, send_adm_conf_email
 from .. import executor
 import peewee as p
 from wtforms import ValidationError
@@ -192,6 +192,18 @@ def register_form():
       msg = 'En bekreftelses e-post har blitt sendt til deg på e-post.'
       users_db.close()
   return jsonify({'is_duplicate': False,'sent_token': token, 'temp_user_id': temp_user_id,'msg':msg})
+
+@auth_bp.route('/api/auth/send_msg', methods=['POST'])
+def send_msg(): 
+  if request.method == 'POST':
+      print(f'/api/auth/send_msg called with email: {str(request.json["msg_email"])}') 
+      
+      guest_email=request.json['msg_email']
+      msg_text = request.json['msg_text']
+      send_guest_email('Message from guest', 'auth/email/guest_msg', msg_email=guest_email, msg_text=msg_text)
+      #send_email([user.user_email], 'Confirm Your Account', 'auth/email/confirm', user=user, token=token)
+      msg = 'En bekreftelses e-post har blitt sendt til deg på e-post.'
+  return jsonify({'guest_email_reference': guest_email})
 
 @auth_bp.route('/api/auth/confirm/<token>',methods=['POST','GET'])
 def confirm(token):

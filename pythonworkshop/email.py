@@ -83,18 +83,14 @@ def send_email(to, subject, template, **kwargs):
     #thr.start()
     #return thr 
 
-def send_guest_email(guest_email,subject,template, **kwargs):
+def send_guest_email(subject,template, **kwargs):
     app = current_app._get_current_object()
-    msg = Message(app.config['FLASKY_MAIL_SUBJECT_PREFIX'] + ' ' + subject,
-                  sender=guest_email, recipients=[app.config['FLASKY_CONF_ADMIN']])
+    msg = Message(subject,
+                  sender=app.config['FLASKY_MAIL_SENDER'], 
+                  recipients=[app.config['FLASKY_CONF_ADMIN']])
     msg.body = render_template(template + '.txt', **kwargs)
     msg.html = render_template(template + '.html', **kwargs)
-    mail.send(msg)    
-
-def send_async_email(app, msg):
-    with app.app_context():
-        print('Thread started, inside send_async_email')
-        mail.send(msg)
+    mail.send(msg)  
 
 def send_adm_conf_email(adm_conf_email, subject, template, **kwargs):
     app = current_app._get_current_object()
@@ -102,6 +98,12 @@ def send_adm_conf_email(adm_conf_email, subject, template, **kwargs):
                   sender=app.config['FLASKY_MAIL_SENDER'], recipients=[adm_conf_email])
     msg.body = render_template(template + '.txt', **kwargs)
     msg.html = render_template(template + '.html', **kwargs)
-    mail.send(msg)        
+    mail.send(msg)
+
+""" def send_async_email(app, msg):
+    with app.app_context():
+        print('Thread started, inside send_async_email')
+        mail.send(msg) """    
+            
     
     
