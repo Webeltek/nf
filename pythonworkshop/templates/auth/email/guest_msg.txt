@@ -1,0 +1,2 @@
+<p>Message from: {{msg_email}}</p>
+<p>{{msg_text}}</p>
