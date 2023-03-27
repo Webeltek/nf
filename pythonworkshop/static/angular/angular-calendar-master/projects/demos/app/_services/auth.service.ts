@@ -109,7 +109,7 @@ export class AuthService {
           "phoneNumber": usr_phone  // (NB! MSISDN format)
         },
         "reference": "abcc123",
-        "returnUrl": "https://webeltek.line.pm/vipps_checkout?reference=abcc123",
+        "returnUrl": "https://138.109-247-35.customer.lyse.net/vipps_checkout"+"?reference=abcc123"+"&phone_number="+usr_phone,
         "userFlow": "WEB_REDIRECT",
         "paymentDescription": "A simple payment"
     },  { headers : this.httpVippsHeaders, observe : 'body', responseType : 'json'})
