@@ -18,9 +18,9 @@ export class VippsCheckoutComponent implements OnInit {
   ngOnInit(): void {
     this.actRoute.queryParams.subscribe(params=>{
       if (params['access_token'] && params['usr_phone']){
-        let access_token = params['access_token'];
+        const access_token = params['access_token'];
         const usr_phone = params['usr_phone'];
-        console.log("VCH access_token", access_token);
+        console.log("VCH access_token", access_token, usr_phone);
         this.tokenStorage.saveVippsToken(access_token);
         const amount = 1 // valuta NOK
         this.authService.sendVippsPayment(usr_phone,amount).subscribe((response) => {
