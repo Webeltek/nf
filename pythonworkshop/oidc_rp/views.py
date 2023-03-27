@@ -158,8 +158,9 @@ def finalize(op_identifier, request_args):
         usr_email = res['userinfo']['email']
         usr_sub = res['userinfo']['sub']
         usr_email_ver = res['userinfo']['email_verified']
+        usr_access_tkn = res['access_token']
         reg_vipps_usr_in_db(usr_email,usr_sub,usr_email_ver)
-        return jsonify(usr_email)
+        return redirect(f'/vipps_checkout?access_token={usr_access_tkn}')
     else:
         return make_response(res['error'], 400)
     
