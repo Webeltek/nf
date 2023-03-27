@@ -5,6 +5,7 @@ import { Router } from '@angular/router'
 
 const CONFIRM_KEY = 'confirm-token'
 const TOKEN_KEY = 'auth-token';
+const VIPPS_TOKEN_KEY = 'vipps-token';
 const USER_KEY = 'auth-user';
 
 @Injectable({
@@ -42,6 +43,22 @@ export class TokenStorageService {
       this.authenticated$.next(true);
       return window.sessionStorage.getItem(TOKEN_KEY);
     } else if(window.sessionStorage.getItem(TOKEN_KEY)==null){
+      this.authenticated$.next(false);
+      return null;
+    }
+  }
+
+  public saveVippsToken(token: string): void {
+    //console.log("tokenStorage saveToken() token:",token)
+    window.sessionStorage.removeItem(VIPPS_TOKEN_KEY);
+    window.sessionStorage.setItem(VIPPS_TOKEN_KEY, token);
+  }
+
+  public getVippsToken(): string | null {
+    if (window.sessionStorage.getItem(VIPPS_TOKEN_KEY)!==null){
+      this.authenticated$.next(true);
+      return window.sessionStorage.getItem(VIPPS_TOKEN_KEY);
+    } else if(window.sessionStorage.getItem(VIPPS_TOKEN_KEY)==null){
       this.authenticated$.next(false);
       return null;
     }

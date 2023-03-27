@@ -16,8 +16,11 @@ export class AuthInterceptor implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     let authReq = req;
     const token = this.tokenStorage.getToken();
+    const vipps_token = this.tokenStorage.getVippsToken();
     if (token) {
       authReq = req.clone({ headers: req.headers.set(TOKEN_HEADER_KEY, 'Bearer ' + token) });
+    } else if( vipps_token){
+      authReq = req.clone({ headers: req.headers.set(TOKEN_HEADER_KEY, 'Bearer ' + vipps_token) });
     }
     return next.handle(authReq)
      .pipe(

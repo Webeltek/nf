@@ -6,8 +6,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 //import { Socket } from 'ngx-socket-io'; 
 
 const AUTH_API = '/api/auth/';
-const MAIN_API = '/api/services/'
+const MAIN_API = '/api/services/';
 const baseurl = '';
+const VIPPS_PAY_ENDPOINT = 'https://apitest.vipps.no/epayment/v1/payments'
 
 
 @Injectable({
@@ -22,7 +23,19 @@ export class AuthService {
   httpHeaders = new HttpHeaders({
     'Content-Type' : 'application/json; charset=UTF-8',
     'Cache-Control': 'no-cache'
-});
+  });
+
+  httpVippsHeaders = new HttpHeaders({
+    "Authorization": "Bearer <TOKEN>" ,
+    "Ocp-Apim-Subscription-Key": "9dd5c1f9caa248899b507f80935daecc" ,
+    "Content-Type": "application/json" ,
+    "Idempotency-Key": this.generateUniqueID() ,
+    "Merchant-Serial-Number": "297957" 
+  });
+
+  generateUniqueID( digit = 1000 ) {
+    return new Date().getTime().toString(16) + Math.floor( digit * Math.random() ).toString(16)
+  }
 
   login(email: string, password: string) {
     return this.http.post(baseurl+AUTH_API + 'login', {
@@ -81,6 +94,25 @@ export class AuthService {
       msg_email : msg_email,
       msg_text : msg_text
     }, { headers : this.httpHeaders, observe : 'body', responseType : 'json'} );
+  }
+
+  sendVippsPayment( usr_phone : string, amount: number){
+    return this.http.post(VIPPS_PAY_ENDPOINT,{
+        "amount": {
+          "currency": "NOK",
+          "value": amount
+        },
+        "paymentMethod": {
+          "type": "WALLET"
+        },
+        "customer": {
+          "phoneNumber": usr_phone  // (NB! MSISDN format)
+        },
+        "reference": "abcc123",
+        "returnUrl": "https://webeltek.line.pm/vipps_checkout?reference=abcc123",
+        "userFlow": "WEB_REDIRECT",
+        "paymentDescription": "A simple payment"
+    },  { headers : this.httpVippsHeaders, observe : 'body', responseType : 'json'})
   }
 
   /* getMessage() {
