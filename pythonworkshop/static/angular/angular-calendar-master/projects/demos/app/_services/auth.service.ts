@@ -97,6 +97,7 @@ export class AuthService {
   }
 
   sendVippsPayment( usr_phone : string, amount: number){
+    console.log("AuthService sendVippsPayment usr_phone, amount",usr_phone,amount)
     return this.http.post(VIPPS_PAY_ENDPOINT,{
         "amount": {
           "currency": "NOK",
