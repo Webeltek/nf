@@ -8,7 +8,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 const AUTH_API = '/api/auth/';
 const MAIN_API = '/api/services/';
 const baseurl = '';
-const VIPPS_PAY_ENDPOINT = 'https://apitest.vipps.no/epayment/v1/payments'
+const VIPPS_PAY_ENDPOINT = 'https://api.vipps.no/epayment/v1/payments'
 
 
 @Injectable({
