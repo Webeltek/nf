@@ -25,18 +25,6 @@ export class AuthService {
     'Cache-Control': 'no-cache'
   });
 
-  httpVippsHeaders = new HttpHeaders({
-    "Authorization": "Bearer <TOKEN>" ,
-    "Ocp-Apim-Subscription-Key": "9dd5c1f9caa248899b507f80935daecc" ,
-    "Content-Type": "application/json" ,
-    "Idempotency-Key": this.generateUniqueID() ,
-    "Merchant-Serial-Number": "297957" 
-  });
-
-  generateUniqueID( digit = 1000 ) {
-    return new Date().getTime().toString(16) + Math.floor( digit * Math.random() ).toString(16)
-  }
-
   login(email: string, password: string) {
     return this.http.post(baseurl+AUTH_API + 'login', {
       email,
@@ -96,7 +84,21 @@ export class AuthService {
     }, { headers : this.httpHeaders, observe : 'body', responseType : 'json'} );
   }
 
-  sendVippsPayment( usr_phone : string, amount: number){
+  getHttpVippsHeaders(access_tkn : string){
+    return new HttpHeaders({
+      "Authorization": "Bearer "+access_tkn ,
+      "Ocp-Apim-Subscription-Key": "9dd5c1f9caa248899b507f80935daecc" ,
+      "Content-Type": "application/json" ,
+      "Idempotency-Key": this.generateUniqueID() ,
+      "Merchant-Serial-Number": "297957" 
+    });
+  }
+
+  generateUniqueID( digit = 1000 ) {
+    return new Date().getTime().toString(16) + Math.floor( digit * Math.random() ).toString(16)
+  }
+
+  sendVippsPayment( access_tkn: string, usr_phone : string, amount: number){
     console.log("AuthService sendVippsPayment usr_phone, amount",usr_phone,amount)
     return this.http.post(VIPPS_PAY_ENDPOINT,{
         "amount": {
@@ -113,7 +115,7 @@ export class AuthService {
         "returnUrl": "https://138.109-247-35.customer.lyse.net/vipps_checkout"+"?reference=abcc123"+"&phone_number="+usr_phone,
         "userFlow": "WEB_REDIRECT",
         "paymentDescription": "A simple payment"
-    },  { headers : this.httpVippsHeaders, observe : 'body', responseType : 'json'})
+    },  { headers : this.getHttpVippsHeaders(access_tkn), observe : 'body', responseType : 'json'})
   }
 
   /* getMessage() {

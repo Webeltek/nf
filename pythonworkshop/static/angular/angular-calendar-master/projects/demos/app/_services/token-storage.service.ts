@@ -56,10 +56,8 @@ export class TokenStorageService {
 
   public getVippsToken(): string | null {
     if (window.sessionStorage.getItem(VIPPS_TOKEN_KEY)!==null){
-      this.authenticated$.next(true);
       return window.sessionStorage.getItem(VIPPS_TOKEN_KEY);
     } else if(window.sessionStorage.getItem(VIPPS_TOKEN_KEY)==null){
-      this.authenticated$.next(false);
       return null;
     }
   }
