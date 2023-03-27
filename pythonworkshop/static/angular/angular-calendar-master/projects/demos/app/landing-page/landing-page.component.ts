@@ -3,6 +3,8 @@ import { NgbCarousel } from '@ng-bootstrap/ng-bootstrap';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { delay } from 'rxjs/operators';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { HttpEventService } from 'projects/angular-calendar/src/modules/week/http-service.service';
+
 
 @UntilDestroy()
 @Component({
@@ -11,7 +13,8 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
   styleUrls: ['./landing-page.component.scss']
 })
 export class LandingPageComponent implements OnInit {
-  constructor( private BPobserver: BreakpointObserver){}
+  constructor( private BPobserver: BreakpointObserver,
+    public httpService: HttpEventService){}
 
   isDesktop = false;
 
@@ -30,6 +33,10 @@ export class LandingPageComponent implements OnInit {
                 this.isDesktop = false;
               }
           });
+  }
+
+  vippsCheckout(){
+    this.httpService.vippsCheckout()
   }
 
   // Move to specific slide

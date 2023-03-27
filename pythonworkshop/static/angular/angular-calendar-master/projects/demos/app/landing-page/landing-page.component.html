@@ -34,7 +34,12 @@
     <button (click)="stopCarousel()">Pause</button>
   </div>
   <div class="row py-2">
-    <div class="col p-3 d-flex justify-content-center"><img [style.width]="isDesktop? '200px':'100px'" src="assets/Drop-In-225x300.jpg"></div>
+    <div class="col p-3 d-flex justify-content-center">
+      <a (click)="vippsCheckout()">
+        <img [style.width]="isDesktop? '200px':'100px'" 
+          src="assets/Drop-In-225x300.jpg">
+      </a>
+    </div>
     <div class="col p-3 d-flex justify-content-center"><img [style.width]="isDesktop? '200px':'100px'" src="assets/FLEX-4-225x300.jpg"></div>
     <div class="col p-3 d-flex justify-content-center"><img [style.width]="isDesktop? '200px':'100px'" src="assets/DESK-1-225x300.jpg"></div>
     <div class="col p-3 d-flex justify-content-center"><img [style.width]="isDesktop? '200px':'100px'" src="assets/EGET-KONTOR-225x300.jpg"></div>

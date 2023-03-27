@@ -169,6 +169,11 @@ export class HttpEventService{
             }) */
     }
 
+    vippsCheckout(){
+        console.log("HttpS vippsCheckout call");
+        window.location.href = `https://138.109-247-35.customer.lyse.net/api/vipps/rp`
+    }
+
     //unused method
     vippsSendCb(obj){
         window.location.href = `https://138.109-247-35.customer.lyse.net/api/vipps/authz_cbvipps?code=${obj['code']}&scope=${obj['scope']}&state=${obj['state']}`

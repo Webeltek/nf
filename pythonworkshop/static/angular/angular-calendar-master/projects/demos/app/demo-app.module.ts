@@ -47,6 +47,7 @@ import { MatCardModule } from '@angular/material/card';
 import { ChangePassComponent } from './change-pass/change-pass.component';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
+import { VippsCheckoutComponent } from './vipps-checkout/vipps-checkout.component';
 //import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 
 /* const config: SocketIoConfig = {
@@ -70,6 +71,7 @@ import { MatMenuModule } from '@angular/material/menu';
     ProfileComponent,
     LandingPageComponent,
     ChangePassComponent,
+    VippsCheckoutComponent,
   ],
   imports: [
     CommonModule,
