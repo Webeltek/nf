@@ -11,6 +11,6 @@ export class LoggedInGuardService implements CanActivate {
   constructor(private router: Router, private tokenStorage : TokenStorageService) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
-    return !!this.tokenStorage.getToken() || this.router.parseUrl('/login')
+    return !!(this.tokenStorage.getToken() || this.tokenStorage.getVippsToken()) || this.router.parseUrl('/login')
   }
 }
