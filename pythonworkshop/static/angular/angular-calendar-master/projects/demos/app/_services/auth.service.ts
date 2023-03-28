@@ -112,7 +112,7 @@ export class AuthService {
           "phoneNumber": usr_phone  // (NB! MSISDN format)
         },
         "reference": "abcc123",
-        "returnUrl": "https://138.109-247-35.customer.lyse.net/vipps_checkout"+"?reference=abcc123"+"&phone_number="+usr_phone,
+        "returnUrl": "https://138.109-247-35.customer.lyse.net/vipps_checkout"+"?reference=abcc123",
         "userFlow": "WEB_REDIRECT",
         "paymentDescription": "A simple payment"
     },  { headers : this.getHttpVippsHeaders(access_tkn), observe : 'body', responseType : 'json'})

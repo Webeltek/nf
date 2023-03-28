@@ -17,13 +17,18 @@ export class VippsCheckoutComponent implements OnInit {
 
   ngOnInit(): void {
     this.actRoute.queryParams.subscribe(params=>{
-      if (params['access_token'] || params['usr_phone'] || params['reference']){
+      let usr_phone = '';
+      if (params['access_token'] && params['usr_phone']){
         const access_token = params['access_token'];
-        const usr_phone = params['usr_phone'];
+        usr_phone = params['usr_phone'];
         console.log("VCH access_token", access_token, usr_phone);
         this.tokenStorage.saveVippsToken(access_token);
+        
+        
+      } else if (params['reference']){
         const amount = 1 // valuta NOK
-        this.authService.sendVippsPayment(access_token,usr_phone,amount).subscribe({
+        const access_tkn = this.tokenStorage.getVippsToken()
+        this.authService.sendVippsPayment(access_tkn,usr_phone,amount).subscribe({
           next: (response) => {
             if(response){
               const resp = response as any;
@@ -34,9 +39,6 @@ export class VippsCheckoutComponent implements OnInit {
             console.log("Vcheck sendVippsPayment error: ",err)
           }
         });
-        
-      } else if (params['reference']){
-
       }
       
 
