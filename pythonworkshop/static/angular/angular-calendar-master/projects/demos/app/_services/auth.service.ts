@@ -8,7 +8,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 const AUTH_API = '/api/auth/';
 const MAIN_API = '/api/services/';
 const baseurl = '';
-const VIPPS_PAY_ENDPOINT = 'https://apitest.vipps.no/epayment/v1/payments'
+const VIPPS_PAY_ENDPOINT = 'https://api.vipps.no/epayment/v1/payments'
 
 
 @Injectable({
@@ -87,10 +87,10 @@ export class AuthService {
   getHttpVippsHeaders(access_tkn : string){
     return new HttpHeaders({
       "Authorization": "Bearer "+access_tkn ,
-      "Ocp-Apim-Subscription-Key": "9dd5c1f9caa248899b507f80935daecc" ,
+      "Ocp-Apim-Subscription-Key": "6cd6a4e6f05547379afb0fcd9857b7d9" ,
       "Content-Type": "application/json" ,
       "Idempotency-Key": this.generateUniqueID() ,
-      "Merchant-Serial-Number": "297957" 
+      "Merchant-Serial-Number": "798665" 
     });
   }
 

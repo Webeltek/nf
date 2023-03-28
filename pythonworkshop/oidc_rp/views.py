@@ -48,8 +48,8 @@ def index():
 @oidc_rp_views.route('/api/vipps/rp',methods=['GET','POST'])
 def rp():
     print('inside /api/vipps/rp')
-    iss = "https://apitest.vipps.no/access-management-1.0/access/"
-    uid = "1841817a-a76a-464b-ab34-6066a922d826"
+    iss = "https://api.vipps.no/access-management-1.0/access/"
+    uid = "e45b9cd6-2526-43b0-9710-a6a0c2e25534"
     if not iss:
         iss = request.args['static_iss']
     print(f'inside inside /api/vipps/rp iss: {iss}') 
