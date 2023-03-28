@@ -94,9 +94,7 @@ export class AuthService {
   }
 
   sendGetMerchAccTkn(){
-    return this.http.post( VIPPS_MERCH_ACC_TKN_GET,{
-        // empty body
-      },
+    return this.http.post( VIPPS_MERCH_ACC_TKN_GET,'',
       { headers: this.getMerchAccTknHeaders(), observe : 'body', responseType : 'json'}
     )
   }
