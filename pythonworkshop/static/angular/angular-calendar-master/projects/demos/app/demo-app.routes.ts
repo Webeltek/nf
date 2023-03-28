@@ -11,12 +11,14 @@ import { ChangePassComponent } from './change-pass/change-pass.component';
 import { BoardAdminComponent } from './board-admin/board-admin.component';
 import { HjemComponent } from 'projects/byklebreiband/src/app/hjem/hjem.component';
 import { VippsCheckoutComponent } from './vipps-checkout/vipps-checkout.component';
+import { SalgsbetingelserComponent } from './salgsbetingelser/salgsbetingelser.component';
 
 export const ROUTES: Routes = [  
         { path: 'login', component: LoginComponent },
         { path: 'register', component: RegisterComponent },
         { path: 'change_pass', component: ChangePassComponent },
         { path: 'landing', component: LandingPageComponent },
+        { path: 'salgsbetingelser', component: SalgsbetingelserComponent },
         { path: 'vipps_checkout', component: VippsCheckoutComponent},
         { path: 'confirm', component: ConfirmComponent },
         { path: 'calendar' , canActivate: [LoggedInGuardService], component : DemoAppComponent},

@@ -8,9 +8,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 const AUTH_API = '/api/auth/';
 const MAIN_API = '/api/services/';
 const baseurl = '';
-const VIPPS_PAY_ENDPOINT = 'https://api.vipps.no/epayment/v1/payments';
-const VIPPS_MERCH_ACC_TKN_GET = 'https://api.vipps.no/accessToken/get'
-
 
 @Injectable({
   providedIn: 'root'
@@ -95,7 +92,7 @@ export class AuthService {
     return new Date().getTime().toString(16) + Math.floor( digit * Math.random() ).toString(16)
   }
 
-  sendVippsPayment( access_tkn: string, usr_phone : string, amount: number){
+  sendVippsPayment( access_tkn: string, usr_phone : string, amount: string){
     console.log("AuthService sendVippsPayment usr_phone, amount",usr_phone,amount)
     return this.http.post('/api/vipps/send_payment',''
         ,  { headers : this.httpHeaders, 

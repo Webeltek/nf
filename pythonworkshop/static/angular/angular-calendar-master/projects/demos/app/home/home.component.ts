@@ -90,16 +90,17 @@ export class HomeComponent implements OnInit, OnDestroy {
           .observe(['(min-width: 992px)'])
           .pipe(delay(1), untilDestroyed(this))
           .subscribe((res) => {
-              if (!loginState) {
+              if (res.matches && !loginState) {
                 this.sidenav.mode = 'over';
                 this.sidenav.close();
-              } else if(!res.matches && loginState) {
+                
+              } else if(!res.matches) {
                 this.sidenav.mode = 'over';
                 this.sidenav.close();
               } else if(res.matches && loginState) {
                 this.sidenav.mode = 'side';
                 this.sidenav.open();
-              }
+              } 
 
               this.isDesktop=true;
               if (!res.matches){

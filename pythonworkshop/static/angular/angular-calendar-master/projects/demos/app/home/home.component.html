@@ -61,23 +61,40 @@
 </mat-toolbar>
 
 <ng-template #loggedOutToolbarTempl>
-  <mat-toolbar class="mat-elevation-z8">
-    <button mat-button class="menu-button" routerLink="/landing">CoWorx</button>
-    <button mat-button class="menu-button" routerLink="/bb/contact">Contact</button>
+  
+    <mat-toolbar class="mat-elevation-z8">
+      <ng-container *ngIf="isDesktop; then wideToolbar else shrinkToolbar"></ng-container>
+      <ng-template #shrinkToolbar>
+        <button
+          mat-icon-button
+          *ngIf="sidenav?.mode === 'over'"
+          (click)="sidenav?.toggle()"
+        >
+        <mat-icon *ngIf="!sidenav.opened">menu</mat-icon>
+        <mat-icon *ngIf="sidenav.opened">close</mat-icon>
+        </button>  
+        <!-- <ng-container *ngIf="isDesktop">
+            <button mat-button class="menu-button" routerLink="/bb/hjem">Byklebreiband</button>
+            <button mat-button [matMenuTriggerFor]="bestill_fiber">Bestill fiber</button>
+            <mat-menu #bestill_fiber="matMenu">
+              <button mat-menu-item [matMenuTriggerFor]="abon_type">Abonnement fastbuande</button>
+              <button mat-menu-item [matMenuTriggerFor]="abon_type">Abonnement hytte</button>
+            </mat-menu>
+            <mat-menu #abon_type >
+              <button mat-menu-item routerLink="/bb/fastbuande">Ikkje tilkobla fiber</button>
+              <button mat-menu-item routerLink="/bb/fastbuande">Tilkobla fiber</button>
+            </mat-menu>
+        </ng-container> -->
+      
+    </ng-template>
+    <ng-template #wideToolbar>
+        <button mat-button class="menu-button" routerLink="/landing">CoWorx</button>
+        <button mat-button class="menu-button" routerLink="/bb/contact">Contact</button>
+        <button mat-button class="menu-button" routerLink="/salgsbetingelser">Salgsbetingelser</button>
+    </ng-template>
 
-    <ng-container *ngIf="isDesktop">
-        <button mat-button class="menu-button" routerLink="/bb/hjem">Byklebreiband</button>
-        <button mat-button [matMenuTriggerFor]="bestill_fiber">Bestill fiber</button>
-        <mat-menu #bestill_fiber="matMenu">
-          <button mat-menu-item [matMenuTriggerFor]="abon_type">Abonnement fastbuande</button>
-          <button mat-menu-item [matMenuTriggerFor]="abon_type">Abonnement hytte</button>
-        </mat-menu>
-        <mat-menu #abon_type >
-          <button mat-menu-item routerLink="/bb/fastbuande">Ikkje tilkobla fiber</button>
-          <button mat-menu-item routerLink="/bb/fastbuande">Tilkobla fiber</button>
-        </mat-menu>
-    </ng-container>
-    
+    <span class="left-spacer"></span>
+    <span class="left-spacer"></span>
     <button mat-button class="menu-button link link.dark-blue-gradient-bg float-end" routerLink="/login">
       <mat-icon>login</mat-icon>
       <span>{{'ToolbarLogin' | translate}}</span>
@@ -97,12 +114,20 @@
         {{ language==='gb' ? 'en' : language }}
       </mat-option>
     </mat-select>
-  </mat-toolbar>
+    </mat-toolbar>
+  
+  
 </ng-template>
-
 <mat-sidenav-container>
     <mat-sidenav  #sidenav="matSidenav" class="mat-elevation-z8">
-      <img
+      <ng-container *ngIf="(tokenStorage.authenticated$ | async) ===true; then loggedInSidenav  else loggedOutSidenav"></ng-container>
+      <ng-template #loggedOutSidenav>
+        <button mat-button class="menu-button" routerLink="/landing">CoWorx</button>
+        <button mat-button class="menu-button" routerLink="/bb/contact">Contact</button>
+        <button mat-button class="menu-button" routerLink="/salgsbetingelser">Salgsbetingelser</button>
+      </ng-template>
+      <ng-template #loggedInSidenav>
+        <img
         class="avatar mat-elevation-z8"
         src="assets/ufo.jpg"
       />
@@ -172,6 +197,8 @@
         <mat-icon>logout</mat-icon>
         <span>{{'SideNavLogout' | translate}}</span>
       </button>
+      </ng-template>
+      
 
     </mat-sidenav>
 

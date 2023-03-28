@@ -66,7 +66,7 @@ def send_payment():
     idemp_key = request.args.get('idemp_key')
     url= 'https://api.vipps.no/epayment/v1/payments'
     headers = {
-        "Authorization": "Bearer "+access_tkn ,
+        "Authorization": f"Bearer {access_tkn}" ,
         "Ocp-Apim-Subscription-Key": "6cd6a4e6f05547379afb0fcd9857b7d9" ,
         "Content-Type": "application/json" ,
         "Idempotency-Key": idemp_key ,
