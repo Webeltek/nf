@@ -24,25 +24,34 @@ export class VippsCheckoutComponent implements OnInit {
         usr_phone = params['usr_phone'];
         console.log("VCH access_token", access_token, usr_phone);
         this.tokenStorage.saveVippsToken(access_token);
-        const amount = 1 // valuta NOK
-        const access_tkn = this.tokenStorage.getVippsToken()
-        this.authService.sendVippsPayment(access_tkn,usr_phone,amount).subscribe({
-          next: (response) => {
-            if(response){
-              const resp = response as any;
-              console.log("VCheck response: ", resp)
-            }
-          },
-          error: (err) => {
-            console.log("Vcheck sendVippsPayment error: ",err)
+
+        this.authService.sendGetMerchAccTkn().subscribe((response)=>{
+          if (response && response['access_token']){
+            let resp = response as any;
+            let merch_access_tkn = resp.access_token;
+
+            const amount = 1 // valuta NOK
+            const usr_access_tkn = this.tokenStorage.getVippsToken()
+            this.authService.sendVippsPayment(merch_access_tkn,usr_phone,amount).subscribe({
+              next: (response) => {
+                if(response){
+                  const resp = response as any;
+                  console.log("VCheck response: ", resp)
+                }
+              },
+              error: (err) => {
+                console.log("Vcheck sendVippsPayment error: ",err)
+              }
+            });
           }
-        });
+        })
+        
       } else if (params['reference']==='abcc123'){
         this.msg = 'payment success!';
       }
       
 
-    });
+      });
   }
 
 }

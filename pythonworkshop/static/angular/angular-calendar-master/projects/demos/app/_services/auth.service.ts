@@ -8,7 +8,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 const AUTH_API = '/api/auth/';
 const MAIN_API = '/api/services/';
 const baseurl = '';
-const VIPPS_PAY_ENDPOINT = 'https://api.vipps.no/epayment/v1/payments'
+const VIPPS_PAY_ENDPOINT = 'https://api.vipps.no/epayment/v1/payments';
+const VIPPS_MERCH_ACC_TKN_GET = 'https://api.vipps.no/accessToken/get'
 
 
 @Injectable({
@@ -84,7 +85,23 @@ export class AuthService {
     }, { headers : this.httpHeaders, observe : 'body', responseType : 'json'} );
   }
 
-  getHttpVippsHeaders(access_tkn : string){
+  getMerchAccTknHeaders(){
+    return new HttpHeaders({
+      "client_id" : "e45b9cd6-2526-43b0-9710-a6a0c2e25534",
+      "client_secret" : "VRnJnWPH7dfp4CbbCIViVAttgw8=",
+      "Ocp-Apim-Subscription-Key": "6cd6a4e6f05547379afb0fcd9857b7d9"
+    })
+  }
+
+  sendGetMerchAccTkn(){
+    return this.http.post( VIPPS_MERCH_ACC_TKN_GET,{
+        // empty body
+      },
+      { headers: this.getMerchAccTknHeaders(), observe : 'body', responseType : 'json'}
+    )
+  }
+
+  getPaymentVippsHeaders(access_tkn : string){
     return new HttpHeaders({
       "Authorization": "Bearer "+access_tkn ,
       "Ocp-Apim-Subscription-Key": "6cd6a4e6f05547379afb0fcd9857b7d9" ,
@@ -115,7 +132,7 @@ export class AuthService {
         "returnUrl": "https://138.109-247-35.customer.lyse.net/vipps_checkout"+"?reference=abcc123",
         "userFlow": "WEB_REDIRECT",
         "paymentDescription": "A simple payment"
-    },  { headers : this.getHttpVippsHeaders(access_tkn), observe : 'body', responseType : 'json'})
+    },  { headers : this.getPaymentVippsHeaders(access_tkn), observe : 'body', responseType : 'json'})
   }
 
   /* getMessage() {
