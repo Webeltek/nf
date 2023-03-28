@@ -9,6 +9,7 @@ import { AuthService } from '../_services/auth.service';
   styleUrls: ['./vipps-checkout.component.scss']
 })
 export class VippsCheckoutComponent implements OnInit {
+  msg = 'awaiting payment start';
 
   constructor(private actRoute: ActivatedRoute,
     private router: Router,
@@ -23,9 +24,6 @@ export class VippsCheckoutComponent implements OnInit {
         usr_phone = params['usr_phone'];
         console.log("VCH access_token", access_token, usr_phone);
         this.tokenStorage.saveVippsToken(access_token);
-        
-        
-      } else if (params['reference']){
         const amount = 1 // valuta NOK
         const access_tkn = this.tokenStorage.getVippsToken()
         this.authService.sendVippsPayment(access_tkn,usr_phone,amount).subscribe({
@@ -39,6 +37,8 @@ export class VippsCheckoutComponent implements OnInit {
             console.log("Vcheck sendVippsPayment error: ",err)
           }
         });
+      } else if (params['reference']==='abcc123'){
+        this.msg = 'payment success!';
       }
       
 
