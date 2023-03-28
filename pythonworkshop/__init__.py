@@ -99,7 +99,8 @@ def oidc_provider_init_app(config, name=None, **kwargs):
     "https://webeltek.line.pm"
     ]},
     r'/*': {"origins":[
-        'https://api.vipps.no/epayment/v1/payments'
+        'https://api.vipps.no/epayment/v1/payments',
+        "https://api.vipps.no/access-management-1.0/access/"
         ]}},supports_credentials=True  )
     
     app.rp_config = config
