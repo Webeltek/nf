@@ -96,7 +96,7 @@ def oidc_provider_init_app(config, name=None, **kwargs):
     "https://138.109-247-35.customer.lyse.net",
     "http://localhost",
     "https://webeltek.line.pm"
-    ]}},supports_credentials=True  )
+    ]},r'/*': {"origins":['https://api.vipps.no/epayment/v1/payments']}},supports_credentials=True  )
     
     app.rp_config = config
 
