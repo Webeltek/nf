@@ -85,28 +85,10 @@ export class AuthService {
     }, { headers : this.httpHeaders, observe : 'body', responseType : 'json'} );
   }
 
-  getMerchAccTknHeaders(){
-    return new HttpHeaders({
-      "client_id" : "e45b9cd6-2526-43b0-9710-a6a0c2e25534",
-      "client_secret" : "VRnJnWPH7dfp4CbbCIViVAttgw8=",
-      "Ocp-Apim-Subscription-Key": "6cd6a4e6f05547379afb0fcd9857b7d9"
-    })
-  }
-
   sendGetMerchAccTkn(){
-    return this.http.post( VIPPS_MERCH_ACC_TKN_GET,'',
-      { headers: this.getMerchAccTknHeaders(), observe : 'body', responseType : 'json'}
+    return this.http.post( '/api/vipps/get_merch_tkn','',
+      { headers: this.httpHeaders, observe : 'body', responseType : 'json'}
     )
-  }
-
-  getPaymentVippsHeaders(access_tkn : string){
-    return new HttpHeaders({
-      "Authorization": "Bearer "+access_tkn ,
-      "Ocp-Apim-Subscription-Key": "6cd6a4e6f05547379afb0fcd9857b7d9" ,
-      "Content-Type": "application/json" ,
-      "Idempotency-Key": this.generateUniqueID() ,
-      "Merchant-Serial-Number": "798665" 
-    });
   }
 
   generateUniqueID( digit = 1000 ) {
@@ -115,22 +97,16 @@ export class AuthService {
 
   sendVippsPayment( access_tkn: string, usr_phone : string, amount: number){
     console.log("AuthService sendVippsPayment usr_phone, amount",usr_phone,amount)
-    return this.http.post(VIPPS_PAY_ENDPOINT,{
-        "amount": {
-          "currency": "NOK",
-          "value": amount
-        },
-        "paymentMethod": {
-          "type": "WALLET"
-        },
-        "customer": {
-          "phoneNumber": usr_phone  // (NB! MSISDN format)
-        },
-        "reference": "abcc123",
-        "returnUrl": "https://138.109-247-35.customer.lyse.net/vipps_checkout"+"?reference=abcc123",
-        "userFlow": "WEB_REDIRECT",
-        "paymentDescription": "A simple payment"
-    },  { headers : this.getPaymentVippsHeaders(access_tkn), observe : 'body', responseType : 'json'})
+    return this.http.post('/api/vipps/send_payment',''
+        ,  { headers : this.httpHeaders, 
+              observe : 'body', 
+              params: {
+                'access_tkn' : access_tkn,
+                'usr_phone': usr_phone,
+                'amount': amount,
+                'idemp_key': this.generateUniqueID()
+              },
+              responseType : 'json'})
   }
 
   /* getMessage() {

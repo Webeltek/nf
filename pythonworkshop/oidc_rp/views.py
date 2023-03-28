@@ -18,6 +18,7 @@ from ..models import *
 from ..auth_bp.views import reg_admin_confirm, login_form
 
 from ..email import send_email, send_adm_conf_email
+import requests
 
 logger = logging.getLogger(__name__)
 
@@ -44,6 +45,53 @@ def index():
     _providers = current_app.rp_config.clients.keys()
     return render_template('opbyuid.html', providers=_providers)
 
+
+@oidc_rp_views.route('/api/vipps/get_merch_tkn',methods=['GET','POST'])
+def get_merch_tkn():
+    headers = {
+      "client_id" : "e45b9cd6-2526-43b0-9710-a6a0c2e25534",
+      "client_secret" : "VRnJnWPH7dfp4CbbCIViVAttgw8=",
+      "Ocp-Apim-Subscription-Key": "6cd6a4e6f05547379afb0fcd9857b7d9",
+    }
+    url = 'https://api.vipps.no/accessToken/get'
+    data = ''
+    response = requests.post(url, headers=headers,json=data)
+    return make_response(response.json())
+
+@oidc_rp_views.route('/api/vipps/send_payment',methods=['GET','POST'])
+def send_payment():
+    access_tkn = request.args.get('access_tkn')
+    usr_phone = request.args.get('usr_phone')
+    amount = request.args.get('amount')
+    idemp_key = request.args.get('idemp_key')
+    url= 'https://api.vipps.no/epayment/v1/payments'
+    headers = {
+        "Authorization": "Bearer "+access_tkn ,
+        "Ocp-Apim-Subscription-Key": "6cd6a4e6f05547379afb0fcd9857b7d9" ,
+        "Content-Type": "application/json" ,
+        "Idempotency-Key": idemp_key ,
+        "Merchant-Serial-Number": "798665" 
+    }
+    data={
+        "amount": {
+          "currency": "NOK",
+          "value": amount
+        },
+        "paymentMethod": {
+          "type": "WALLET"
+        },
+        "customer": {
+          "phoneNumber": usr_phone  
+        },
+        "reference": "abcc123",
+        "returnUrl": "https://138.109-247-35.customer.lyse.net/vipps_checkout"+"?reference=abcc123",
+        "userFlow": "WEB_REDIRECT",
+        "paymentDescription": "A simple payment"
+        }
+    response = requests.post(url, headers=headers,json=data)
+    print(f'/api/vipps/send_payment response: {response.json()}')
+    return make_response(response.json())
+        
 
 @oidc_rp_views.route('/api/vipps/rp',methods=['GET','POST'])
 def rp():
