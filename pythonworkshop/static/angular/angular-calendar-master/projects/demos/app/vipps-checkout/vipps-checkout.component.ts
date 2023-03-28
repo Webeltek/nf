@@ -23,7 +23,7 @@ export class VippsCheckoutComponent implements OnInit {
         const access_token = params['access_token'];
         usr_phone = params['usr_phone'];
         console.log("VCH access_token", access_token, usr_phone);
-        this.tokenStorage.saveVippsToken(access_token);
+        this.tokenStorage.saveVippsUsrToken(access_token);
 
         this.authService.sendGetMerchAccTkn().subscribe((response)=>{
           if (response && response['access_token']){
@@ -31,7 +31,6 @@ export class VippsCheckoutComponent implements OnInit {
             let merch_access_tkn = resp.access_token;
 
             const amount = 1 // valuta NOK
-            const usr_access_tkn = this.tokenStorage.getVippsToken()
             this.authService.sendVippsPayment(merch_access_tkn,usr_phone,amount).subscribe({
               next: (response) => {
                 if(response){

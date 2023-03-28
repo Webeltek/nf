@@ -92,7 +92,7 @@ def init_oidc_rp_handler(app):
 def oidc_provider_init_app(config, name=None, **kwargs):
     name = name or __name__
     app = Flask(__name__ , static_folder=static_dir, **kwargs)
-    cors = CORS(app,resources={
+    """ cors = CORS(app,resources={
         r"/api/*/*": {"origins": [
     "https://138.109-247-35.customer.lyse.net",
     "http://localhost",
@@ -101,7 +101,9 @@ def oidc_provider_init_app(config, name=None, **kwargs):
     r'/*': {"origins":[
         'https://api.vipps.no/epayment/v1/payments',
         "https://api.vipps.no/access-management-1.0/access/"
-        ]}},supports_credentials=True  )
+        ]}},supports_credentials=True  ) """
+    
+    CORS(app)
     
     app.rp_config = config
 

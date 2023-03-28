@@ -5,7 +5,8 @@ import { Router } from '@angular/router'
 
 const CONFIRM_KEY = 'confirm-token'
 const TOKEN_KEY = 'auth-token';
-const VIPPS_TOKEN_KEY = 'vipps-token';
+const VIPPS_USR_TOKEN_KEY = 'vipps-usr-token';
+const VIPPS_MERCH_TOKEN_KEY = 'vipps-merch-token';
 const USER_KEY = 'auth-user';
 
 @Injectable({
@@ -48,16 +49,29 @@ export class TokenStorageService {
     }
   }
 
-  public saveVippsToken(token: string): void {
+  public saveVippsUsrToken(token: string): void {
     //console.log("tokenStorage saveToken() token:",token)
-    window.sessionStorage.removeItem(VIPPS_TOKEN_KEY);
-    window.sessionStorage.setItem(VIPPS_TOKEN_KEY, token);
+    window.sessionStorage.removeItem(VIPPS_USR_TOKEN_KEY);
+    window.sessionStorage.setItem(VIPPS_USR_TOKEN_KEY, token);
   }
 
-  public getVippsToken(): string | null {
-    if (window.sessionStorage.getItem(VIPPS_TOKEN_KEY)!==null){
-      return window.sessionStorage.getItem(VIPPS_TOKEN_KEY);
-    } else if(window.sessionStorage.getItem(VIPPS_TOKEN_KEY)==null){
+  public getVippsUsrToken(): string | null {
+    if (window.sessionStorage.getItem(VIPPS_USR_TOKEN_KEY)!==null){
+      return window.sessionStorage.getItem(VIPPS_USR_TOKEN_KEY);
+    } else if(window.sessionStorage.getItem(VIPPS_USR_TOKEN_KEY)==null){
+      return null;
+    }
+  }
+
+  public saveVippsMerchToken(token: string): void {
+    window.sessionStorage.removeItem(VIPPS_MERCH_TOKEN_KEY);
+    window.sessionStorage.setItem(VIPPS_MERCH_TOKEN_KEY, token);
+  }
+
+  public getVippsMerchToken(): string | null {
+    if (window.sessionStorage.getItem(VIPPS_MERCH_TOKEN_KEY)!==null){
+      return window.sessionStorage.getItem(VIPPS_MERCH_TOKEN_KEY);
+    } else if(window.sessionStorage.getItem(VIPPS_MERCH_TOKEN_KEY)==null){
       return null;
     }
   }
