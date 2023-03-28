@@ -112,9 +112,7 @@
       "client_id": "e45b9cd6-2526-43b0-9710-a6a0c2e25534",
       "client_secret": "VRnJnWPH7dfp4CbbCIViVAttgw8=",
       "redirect_uris": [
-        "https://138.109-247-35.customer.lyse.net/api/vipps/authz_cb/vipps_provider",
-        "https://138.109-247-35.customer.lyse.net/login",
-        "https://138.109-247-35.customer.lyse.net/vipps_checkout"
+        "https://138.109-247-35.customer.lyse.net/api/vipps/authz_cb/vipps_provider"
       ],
       "services": {
         "discovery": {
