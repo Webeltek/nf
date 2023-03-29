@@ -149,7 +149,7 @@ def get_rp(op_identifier):
     return rp
 
 
-def finalize(op_identifier, request_args):
+def finalize(op_identifier, request_args,isCheckout):
     rp = get_rp(op_identifier)
 
     if hasattr(rp, 'status_code') and rp.status_code != 200:
@@ -208,8 +208,14 @@ def finalize(op_identifier, request_args):
         usr_email_ver = res['userinfo']['email_verified']
         usr_access_tkn = res['token']
         usr_phone = res['userinfo']['phone_number']
-        reg_vipps_usr_in_db(usr_email,usr_sub,usr_email_ver)
-        return redirect(f'/vipps_checkout?access_token={usr_access_tkn}&usr_phone={usr_phone}')
+        db_user = reg_vipps_usr_in_db(usr_email,usr_sub,usr_email_ver)
+        user_email = db_user.user_email
+        user_pass = usr_sub
+        user_conf_by_admin = db_user.user_conf_by_admin
+        if isCheckout:
+            return redirect(f'/vipps_checkout?access_token={usr_access_tkn}&usr_phone={usr_phone}')
+        elif isCheckout is False: 
+            return redirect(f'/login?username={user_email}&password={user_pass}')
     else:
         return make_response(res['error'], 400)
     
@@ -225,11 +231,13 @@ def reg_vipps_usr_in_db(usr_email,usr_sub,email_ver):
                                user_pass=usr_sub,
                                user_is_logged_in=True,
                                user_confirmed=True,
-                               user_conf_by_admin = True)
+                               user_conf_by_admin = False)
             temp_user_id = user.id
             reg_admin_confirm(usr_email,temp_user_id)
         except p.PeeweeException :
             return ({'PeeweeExeption': True, 'email': usr_email})
+    users_db.close()
+    return user    
         
 """ def vipps_usr_adm_confirm(usr_email=None,temp_usr_id=None):
     if (usr_email and temp_usr_id) is not None:
@@ -262,7 +270,8 @@ def get_op_identifier_by_cb_uri(url: str):
 def authz_cb(op_identifier):
     op_identifier = get_op_identifier_by_cb_uri(request.url)
     print(f'authz_cb op_identifier: {op_identifier}')
-    return finalize(op_identifier, request.args)
+    isCheckout = False
+    return finalize(op_identifier, request.args, isCheckout)
 
 """unused method"""
 @oidc_rp_views.route('/api/vipps/authz_cbvipps')

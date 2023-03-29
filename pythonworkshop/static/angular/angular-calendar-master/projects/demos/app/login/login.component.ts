@@ -109,8 +109,38 @@ export class LoginComponent implements OnInit {
             scope: params['scope'],
             state : params['state']
           }
-          this.httpService.vippsSendCb(obj)
+          //this.httpService.vippsSendCb(obj)
       }
+      if (params['username'] && params['password']){
+        const username = params['username'];
+        const password = params['password']
+        this.authService.login(username, password).subscribe({
+          next: (data) => {
+            let dataObj = data as any;
+            //console.log("loginComp dataObj.user:",dataObj.user)
+            if (dataObj.user!== 'nonexistent'){
+              let accessToken : string= dataObj.user.access_token ;
+              this.tokenStorage.saveToken(accessToken);
+              this.tokenStorage.saveUser(dataObj.user);
+              this.isLoginFailed = false;
+              this.isLoggedIn = true;
+              this.tokenStorage.authenticated$.next(true);
+              this.router.navigate(['calendar'])
+            } else if(dataObj.user === 'nonexistent'){
+              this.errorMessage = "LCwrongUserPass";
+              this.isLoginFailed = true;
+            }
+    
+          },
+          error: err => {
+            this.errorMessage = err.error.message;
+            this.isLoginFailed = true;
+          }
+        }
+        );
+      }
+
+
     }) 
      
 
