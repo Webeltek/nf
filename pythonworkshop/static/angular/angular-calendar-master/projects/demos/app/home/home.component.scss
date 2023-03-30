@@ -1,9 +1,10 @@
   *:not(mat-icon){
-    font-family: 'Roboto';
+    font-family: 'HKGrotesk medium';
   }
 
   mat-toolbar {
-    background: #20c997;
+    color: rgb(255, 81, 81);
+    background: #f8f9fa;
     display: flex;
     justify-content: flex-start;  
   }
@@ -20,7 +21,7 @@
     margin: 8px;
     width: 16em;
     border-right: none;
-    background: #20c997;
+    background: #f8f9fa;
     border-radius: 5px;
     padding: 8px;
     text-align: center;
@@ -41,11 +42,11 @@
   }
 
   mat-expansion-panel {
-    background: #20c997;
+    background: #f8f9fa;
   }
   
   .menu-button {
-    
+    color: rgb(255, 81, 81) !important;
     display: flex;
     align-items: center;
     font-size: 0.8rem;
@@ -63,11 +64,13 @@
   }
   
   .name {
+    color: rgb(255, 81, 81) !important;
     margin-top: 8px;
     font-weight: normal;
   }
   
   .designation {
+    color: rgb(255, 81, 81) !important;
     margin-top: 2px;
     font-size: 0.7rem;
   }
@@ -75,7 +78,7 @@
   mat-divider {
     margin-top: 8px;
     margin-bottom: 8px;
-    background-color: rgba(255, 255, 255, 0.5);
+    background-color: #abb8c3;
   }
 
   /* Structure table */

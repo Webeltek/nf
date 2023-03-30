@@ -1,5 +1,5 @@
 {
-    "MainTitle": "CoWorx Hovden",
+    "MainTitle": "Fleksible arbeidsplasser og møterom til leie",
      "ToolbarTitle": "Bestillingskalender",
      "ToolbarLogin": "Logg på",
      "ToolbarRegister": "Registrer deg",
@@ -45,7 +45,7 @@
      "RCemailValid": "E-post må være en gyldig e-postadresse!",
      "RCsignup": "Registrer deg",
      "RCsignupFailed": "Registrering mislyktes!",
-     "RCalertSuccess": "En e-postbekreftelse er sendt til",
+     "RCalertSuccess": "En e-postbekreftelse er sendt til: ",
      "RCorgUnit": "Organisasjon/firmanavn",
      "RCorgRequired": "Organisasjon/firmanavn påkrevd!",
 
