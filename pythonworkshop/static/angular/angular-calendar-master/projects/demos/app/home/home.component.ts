@@ -44,7 +44,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     private httpService: HttpEventService,
     public translate: TranslateService) {
       translate.addLangs(['gb', 'no']);
-      translate.setDefaultLang('gb');
+      translate.setDefaultLang('no');
     }
 
   switchLang(lang: string) {

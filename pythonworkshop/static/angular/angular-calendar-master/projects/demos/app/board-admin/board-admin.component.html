@@ -23,7 +23,7 @@
 
       <ng-container matColumnDef="last_seen">
         <th mat-header-cell *matHeaderCellDef>  Last seen </th>
-        <td mat-cell *matCellDef="let element"> {{ element.last_seen | date:'shortDate'}} </td>
+        <td mat-cell *matCellDef="let element"> {{ element.last_seen==='initial date'? 'initial date' : element.last_seen | date:'shortDate'}} </td>
       </ng-container>
     
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

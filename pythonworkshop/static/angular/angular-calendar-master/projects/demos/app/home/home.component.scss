@@ -3,8 +3,8 @@
   }
 
   mat-toolbar {
-    color: rgb(255, 81, 81);
-    background: #f8f9fa;
+    color: #f8f9fa;
+    background: rgb(255, 81, 81);
     display: flex;
     justify-content: flex-start;  
   }
@@ -35,6 +35,18 @@
     padding: 8px;
   
     overflow: auto;
+  }
+
+  .toolbar-button {
+    color: #f8f9fa;
+    background: rgb(255, 81, 81);
+    display: flex;
+    align-items: center;
+    font-size: 0.8rem;
+  
+    mat-icon {
+      margin-right: 8px;
+    }
   }
   
   mat-sidenav-container {
