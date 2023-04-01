@@ -1,4 +1,3 @@
-<div class="row">
   <ngb-carousel #ngcarousel
   [showNavigationArrows]="true" 
   [showNavigationIndicators]="true"
@@ -7,25 +6,24 @@
   [pauseOnHover]="true"
   [wrap]="true"
   [activeId]="'secondSlide'"
-  [style.max-width]="isDesktop ? '1200px' : '600px'">
+  [style.max-width]="isDesktop ? '1200px' : '400px'">
     <ng-template ngbSlide id="one">
       <div class="picsum-img-wrapper">
-        <img class="rounded" src="assets/fileakv1-768x576.jpg" [style]="isDesktop? 'width:900px; height:500px' : 'width:400px; height:200px'" alt="Slide 1">
+        <img class="rounded" src="assets/fileakv1-768x576.jpg" [style]="isDesktop? 'width:1200px; height:500px' : 'width:400px; height:200px'" alt="Slide 1">
       </div>
-      <div class="carousel-caption">
-        <h5>{{ 'MainTitle' | translate}} </h5>
+      <div class="carousel-caption2">
+        <h1>{{ 'MainTitle' | translate}} </h1>
       </div>
     </ng-template>
     <ng-template ngbSlide id="two">
       <div class="picsum-img-wrapper">
-        <img class="rounded" src="assets/filesittegrupper_6-704x528.jpg" [style]="isDesktop? 'width:900px; height:500px' : 'width:400px; height:200px'" alt="Slide 2">
+        <img class="rounded" src="assets/filesittegrupper_6-704x528.jpg" [style]="isDesktop? 'width:1200px; height:500px' : 'width:400px; height:200px'" alt="Slide 2">
       </div>
-      <div class="carousel-caption">
-        <h5>{{ 'MainTitle' | translate}} </h5>
+      <div class="carousel-caption2">
+        <h1>{{ 'MainTitle' | translate}} </h1>
       </div>
     </ng-template>
   </ngb-carousel>
-</div>
 
   <div class="text-center" *ngIf="false">
     <button (click)="navigateToSlide('four')">Go to Slide Four</button>
@@ -36,13 +34,19 @@
   <div class="row py-2">
     <div class="col p-3 d-flex justify-content-center">
       <a (click)="vippsCheckout()">
-        <img [style.width]="isDesktop? '200px':'100px'" 
+        <img class="rounded" [style.width]="isDesktop? '200px':'100px'" 
           src="assets/Drop-In-225x300.jpg">
       </a>
     </div>
-    <div class="col p-3 d-flex justify-content-center"><img [style.width]="isDesktop? '200px':'100px'" src="assets/FLEX-4-225x300.jpg"></div>
-    <div class="col p-3 d-flex justify-content-center"><img [style.width]="isDesktop? '200px':'100px'" src="assets/DESK-1-225x300.jpg"></div>
-    <div class="col p-3 d-flex justify-content-center"><img [style.width]="isDesktop? '200px':'100px'" src="assets/EGET-KONTOR-225x300.jpg"></div>
+    <div class="col p-3 d-flex justify-content-center">
+      <img class="rounded" [style.width]="isDesktop? '200px':'100px'" src="assets/FLEX-4-225x300.jpg">
+    </div>
+    <div class="col p-3 d-flex justify-content-center">
+      <img class="rounded" [style.width]="isDesktop? '200px':'100px'" src="assets/DESK-1-225x300.jpg">
+    </div>
+    <div  class="col p-3 d-flex justify-content-center">
+      <img class="rounded" [style.width]="isDesktop? '200px':'100px'" src="assets/EGET-KONTOR-225x300.jpg">
+    </div>
   </div>
   <mat-divider></mat-divider>
   <div class="row text-center">

@@ -139,7 +139,7 @@ def login_form(usr_email=None, usr_pass=None):
         user = User.select().where(User.user_email==request.json['email']).first()
         if user is not None:
             print(f'auth_bp.login_form() user email to login:{user.user_email}')
-        if user is not None and user.verify_password(request.json['password']) and user.user_confirmed and user.user_conf_by_admin:
+        if user is not None and user.verify_password(request.json['password']) and user.user_confirmed:
             user.login_user()
             user.generate_access_token()
             user_dict = {'id': user.id,
@@ -156,7 +156,7 @@ def login_form(usr_email=None, usr_pass=None):
     if (usr_email and usr_pass) is not None:
         users_db.connect(reuse_if_open=True)
         user = User.select().where(User.user_email==usr_email).first()
-        if user is not None and user.verify_password(usr_pass) and user.user_confirmed and user.user_conf_by_admin:
+        if user is not None and user.verify_password(usr_pass) and user.user_confirmed:
             user.login_user()
             user.generate_access_token()
             user_dict = {'id': user.id,

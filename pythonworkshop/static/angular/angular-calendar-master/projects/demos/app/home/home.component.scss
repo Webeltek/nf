@@ -3,6 +3,7 @@
   }
 
   mat-toolbar {
+    font-family: "HKGrotesk Bold" !important;
     color: #f8f9fa;
     background: rgb(255, 81, 81);
     display: flex;
@@ -10,7 +11,7 @@
   }
 
   .left-spacer {
-    flex-grow: 3;
+    flex-grow: 2;
   }
 
   .lang-select{
