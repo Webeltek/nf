@@ -1,12 +1,16 @@
-* {
+*:not(.carousel-caption2){
     font-family: 'Open Sans';
 }
 
 .carousel-caption2 {
     font-family: "DM Serif Text Regular" !important;
+    font-weight: bold;
     position: absolute;
+    display: flex;
+    justify-content: center;
     right: 15%;
     bottom: 30%;
+    top: 30%;
     left: 15%;
     z-index: 10;
     padding-top: 20px;
