@@ -16,7 +16,7 @@
      "LCpass": "Passord",
      "LCpassRequired": "Passord påkreves!",
      "LCpassMinChar": "Passordet må bestå av minst 6 tegn!",
-     "LCloginFailed " :"Pålogging mislyktes: ",
+     "LCloginFailed" : "Pålogging mislyktes: ",
      "LCloggedInAs": "Logget på som: ",
      "LCforgotEmail": "Glemt epost?",
      "LCsessExpired": "Sesjon utløpt!",

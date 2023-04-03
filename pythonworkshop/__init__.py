@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-
+import logging
 from flask import Flask, render_template, request,session
 from flask_session import Session
 import jinja2
@@ -92,17 +92,22 @@ def init_oidc_rp_handler(app):
 def oidc_provider_init_app(config, name=None, **kwargs):
     name = name or __name__
     app = Flask(__name__ , static_folder=static_dir, **kwargs)
+    
     cors = CORS(app,resources={
         r"/api/*/*": {"origins": [
     "https://138.109-247-35.customer.lyse.net",
     "http://localhost",
-    "https://webeltek.line.pm"
+    "https://webeltek.line.pm",
+    "https://webeltek.org"
     ]},
     r'/*': {"origins":[
-        'https://api.vipps.no/epayment/v1/payments',
+        "http://localhost",
+        "https://api.vipps.no/epayment/v1/payments",
         "https://api.vipps.no/access-management-1.0/access/"
         ]}},supports_credentials=True  )
     
+    
+    logging.getLogger('flask_cors').level = logging.DEBUG
     
     app.rp_config = config
 
