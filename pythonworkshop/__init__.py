@@ -95,16 +95,19 @@ def oidc_provider_init_app(config, name=None, **kwargs):
     
     cors = CORS(app,resources={
         r"/api/*/*": {"origins": [
-    "https://138.109-247-35.customer.lyse.net",
-    "http://localhost",
-    "https://webeltek.line.pm",
-    "https://webeltek.org"
-    ]},
-    r'/*': {"origins":[
+        "https://138.109-247-35.customer.lyse.net",
         "http://localhost",
-        "https://api.vipps.no/epayment/v1/payments",
-        "https://api.vipps.no/access-management-1.0/access/"
-        ]}},supports_credentials=True  )
+        "https://webeltek.line.pm",
+        "https://webeltek.org"
+        ]},
+        r'/*': {"origins":[
+            "https://138.109-247-35.customer.lyse.net",
+            "http://localhost",
+            "https://webeltek.line.pm",
+            "https://webeltek.org"
+            "https://api.vipps.no/epayment/v1/payments",
+            "https://api.vipps.no/access-management-1.0/access/"
+            ]}},supports_credentials=True  )
     
     
     logging.getLogger('flask_cors').level = logging.DEBUG

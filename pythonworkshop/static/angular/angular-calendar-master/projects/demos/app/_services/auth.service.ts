@@ -30,6 +30,12 @@ export class AuthService {
     }, { headers : this.httpHeaders, observe : 'body'});
   }
 
+  testLogin() {
+    return this.http.post(baseurl+AUTH_API + 'login', {
+      test_usr : "testing usr"
+    }, { headers : this.httpHeaders, observe : 'body'});
+  }
+
   loginLDAP(ldap_user: string, ldap_pass: string) {
     return this.http.post(baseurl+AUTH_API + 'ldap', {
       ldap_user : ldap_user,

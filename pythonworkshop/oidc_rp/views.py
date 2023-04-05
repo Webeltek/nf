@@ -45,6 +45,17 @@ def index():
     _providers = current_app.rp_config.clients.keys()
     return render_template('opbyuid.html', providers=_providers)
 
+@oidc_rp_views.route('/api/test', methods=['GET','POST'])
+def oidctest():
+    test_usr = request.json['test_usr']
+    headers = {
+        "Content-Type": "application/json"
+    }
+    data = {
+        "test_usr": test_usr
+    }
+    return jsonify({"test_usr":test_usr})   
+
 
 @oidc_rp_views.route('/api/vipps/get_merch_tkn',methods=['GET','POST'])
 def get_merch_tkn():

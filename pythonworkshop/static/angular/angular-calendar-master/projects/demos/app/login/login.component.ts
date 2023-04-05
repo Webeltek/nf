@@ -214,6 +214,21 @@ export class LoginComponent implements OnInit {
     oauthSignIn()
   }
 
+  onTestSubmit(){
+    this.authService.testLogin().subscribe({
+      next: (data) =>{
+        let dataObj = data as any;
+        if (dataObj){
+          console.log("LC onTestSubmit return object: ", dataObj);
+        }
+      },
+      error : (err) =>{
+        console.log(" LC onTestSubmit error: ", err)
+      }
+      
+    })
+  }
+
   onSubmit(): void {
     const  username = this.loginFG.controls.username.value; 
     const  password  = this.loginFG.controls.pass.value;
