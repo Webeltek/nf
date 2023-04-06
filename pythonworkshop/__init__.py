@@ -39,9 +39,7 @@ executor = Executor()
 
 def create_app(config_name):
   conf = os.path.abspath('pythonworkshop')+"/oidc_rp/conf.json"
-  _config = create_from_config_file(Configuration,
-                                    entity_conf=[{"class": RPConfiguration, "attr": "rp"}],
-                                    filename=conf)
+  _config = create_from_config_file(Configuration, entity_conf=[{"class": RPConfiguration, "attr": "rp"}],filename=conf)
   app=oidc_provider_init_app(_config.rp,template_folder=templ_dir)
 
   print('config_name : ' + str(config[config_name]) )
@@ -99,7 +97,7 @@ def oidc_provider_init_app(config, name=None, **kwargs):
         "http://localhost",
         "https://webeltek.line.pm",
         "https://webeltek.org"
-        ]},
+        ], "allow_headers":"*"},
         r'/*': {"origins":[
             "https://138.109-247-35.customer.lyse.net",
             "http://localhost",
@@ -107,7 +105,8 @@ def oidc_provider_init_app(config, name=None, **kwargs):
             "https://webeltek.org"
             "https://api.vipps.no/epayment/v1/payments",
             "https://api.vipps.no/access-management-1.0/access/"
-            ]}},supports_credentials=True  )
+            ],"allow_headers":"*"}
+        },supports_credentials=True  )
     
     
     logging.getLogger('flask_cors').level = logging.DEBUG
