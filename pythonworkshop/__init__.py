@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-import logging
 from flask import Flask, render_template, request,session
 from flask_session import Session
 import jinja2
@@ -109,7 +108,6 @@ def oidc_provider_init_app(config, name=None, **kwargs):
         },supports_credentials=True  )
     
     
-    logging.getLogger('flask_cors').level = logging.DEBUG
     
     app.rp_config = config
 

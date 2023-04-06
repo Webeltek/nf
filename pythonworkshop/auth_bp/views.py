@@ -19,9 +19,7 @@ from playhouse.shortcuts import model_to_dict
 #from .. import socketio
 from ldap3 import Server, Connection, ObjectDef, AttrDef, Reader, Writer, ALL, Tls
 import ssl
-import logging
 
-logger = logging.getLogger(__name__)
 
 templateLoader = jinja2.PackageLoader('pythonworkshop','templates')
 templateEnv = jinja2.Environment(loader=templateLoader)
