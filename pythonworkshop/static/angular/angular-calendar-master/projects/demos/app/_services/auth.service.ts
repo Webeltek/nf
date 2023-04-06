@@ -7,7 +7,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 const AUTH_API = '/api/auth/';
 const MAIN_API = '/api/services/';
-const baseurl = 'https://webeltek.org';
+const baseurl = 'https://138.109-247-35.customer.lyse.net';
 
 @Injectable({
   providedIn: 'root'
@@ -30,7 +30,7 @@ export class AuthService {
   }
 
   testLogin() {
-    return this.http.post(baseurl+AUTH_API + 'login', {
+    return this.http.post(baseurl+ '/api/test', {
       test_usr : "testing usr"
     }, { headers : this.httpHeaders, observe : 'body'});
   }
