@@ -86,7 +86,7 @@ export class DemoAppComponent implements OnInit, OnDestroy{
     private kvDiffers: KeyValueDiffers,
     private itDiffers: IterableDiffers) {
       translate.addLangs(['gb', 'no']);
-      translate.setDefaultLang('gb');
+      translate.setDefaultLang('no');
     }
 
     getLocaleFromTranslate(translateLang:string){
