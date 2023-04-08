@@ -21,7 +21,7 @@ export class HttpEventService{
     private deleteRoomUrl = "/api/services/deleteroom";
     private updateRoomsUrl = "/api/services/updaterooms";
 
-    private baseurl = 'https://138.109-247-35.customer.lyse.net';
+    private baseurl = '';
 
     @Output() addedEvent: EventEmitter<any> = new EventEmitter();
 

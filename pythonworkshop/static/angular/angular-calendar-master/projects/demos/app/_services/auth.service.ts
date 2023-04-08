@@ -7,7 +7,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 const AUTH_API = '/api/auth/';
 const MAIN_API = '/api/services/';
-const baseurl = 'https://138.109-247-35.customer.lyse.net';
+const baseurl = 'https://api.webeltek.org';
 
 @Injectable({
   providedIn: 'root'
