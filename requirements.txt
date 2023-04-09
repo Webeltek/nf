@@ -26,6 +26,7 @@ Flask-Mail==0.9.1
 Flask-Moment==1.0.2
 Flask-Session==0.4.0
 Flask-SocketIO==5.3.2
+Flask-SQLAlchemy==3.0.3
 Flask-WTF==1.0.0
 future==0.18.3
 google-api-core==2.10.1
@@ -52,6 +53,7 @@ packaging==23.0
 passlib==1.7.4
 peewee==3.14.8
 pip-tools==6.12.3
+pkg_resources==0.0.0
 protobuf==4.21.6
 psycopg2-binary==2.9.3
 pyaml==15.3.1

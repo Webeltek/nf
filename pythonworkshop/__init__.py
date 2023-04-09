@@ -25,6 +25,8 @@ from flask.app import Flask
 from flask import current_app
 from oidcrp.rp_handler import RPHandler
 
+from flask_sqlalchemy import SQLAlchemy
+
 templ_dir = os.path.abspath('pythonworkshop/templates')
 static_dir = os.path.abspath('pythonworkshop/static')
 print('Static folder : ' + str(static_dir))
@@ -52,6 +54,12 @@ def create_app(config_name):
   mail.init_app(app)
   moment.init_app(app)
   executor.init_app(app)
+
+  username = 'nf_user'
+  password = 'nfvinter2022'
+  database = 'nf_users_db'
+  app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://{username}:{password}@localhost:5432/{database}"
+  db = SQLAlchemy(app)
 
   #login_manager.init_app(app)
   print('mail server: ' + app.config['MAIL_SERVER'])
@@ -107,11 +115,9 @@ def oidc_provider_init_app(config, name=None, **kwargs):
             ],"allow_headers":"*"}
         },supports_credentials=True  )
     
-    
-    
     app.rp_config = config
-
     app.config.from_envvar('DOTENV_FILE')
+
     # Session key for the application session
     #app.config['SECRET_KEY'] = os.urandom(12).hex()
     app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')

@@ -1,6 +1,4 @@
 import datetime
-from enum import unique
-from flask import Flask, request
 from passlib.hash import bcrypt_sha256
 import peewee as p
 

@@ -21,6 +21,7 @@ from ..email import send_email, send_adm_conf_email
 import requests
 
 logger = logging.getLogger(__name__)
+logger.disabled = True
 
 oidc_rp_views = Blueprint('oidc_rp', __name__, url_prefix='')
 
