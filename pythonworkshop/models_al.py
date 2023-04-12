@@ -40,20 +40,20 @@ class User(db.Model):
   def login_user(self):
     self.user_is_logged_in = True
     self.last_seen = datetime.datetime.now(tz=datetime.timezone.utc)
-    self.save()
+    db.session.add(self)
   
   def generate_access_token(self, expiration=3600):
         encoded = jwt.encode({'email': self.user_email, \
         'exp': datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(seconds=expiration)},current_app.config['SECRET_KEY'], algorithm='HS256')
         self.access_token = encoded
-        self.save()
+        db.session.add(self)
         return encoded
   
   def gen_ldap_access_token(self,ldap_email, expiration=3600):
         encoded = jwt.encode({'email': ldap_email, \
         'exp': datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(seconds=expiration)},current_app.config['SECRET_KEY'], algorithm='HS256')
         self.access_token = encoded
-        self.save()
+        db.session.add(self)
         return encoded
 
   @staticmethod
@@ -105,7 +105,7 @@ class User(db.Model):
         return False
     if self.user_confirmed == False:
         self.user_confirmed = True
-        self.save()
+        db.session.add(self)
     print('User confirmed in User.confirm(')
     return True
   
@@ -124,7 +124,7 @@ class User(db.Model):
         print('User.conf_by_adm(...) data.get("confirm"): ' + str(data.get('confirm')) + 'is not = self.id: '+str(self.id)) 
         return False
     self.user_conf_by_admin = True
-    self.save()
+    db.session.add(self)
     print('User confirmed in User.confirm(')
     return True
   
@@ -139,7 +139,7 @@ class User(db.Model):
             return False
         if newpass is not None:
           self.user_pass = newpass
-          self.save()
+          db.session.add(self)
           return True
         
         return False
@@ -177,7 +177,7 @@ class Event(db.Model):
   __tablename__ = "nf_event"
   id = db.Column(db.Integer, primary_key=True)
   uid = db.Column(db.String)
-  userId = db.Column(db.Integer, db.ForeignKey('user.id'))
+  userId_id = db.Column(db.Integer, db.ForeignKey('nf_user.id'))
   rowname = db.Column(db.String)
   title = db.Column(db.String)
   ou = db.Column(db.String)

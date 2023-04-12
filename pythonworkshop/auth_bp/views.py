@@ -96,8 +96,7 @@ def login_ldap(usr_email=None, usr_pass=None):
                     print(f'ldap Reader cursor user entry.ou : {entry.ou} ')
                     print(f'ldap Reader cursor user entry.telephoneNumber: {entry.telephoneNumber}')
                     auth_user = ldap_user
-                    users_db.connect(reuse_if_open=True)
-                    user = User.select().where(User.user_email==auth_user).first()
+                    user = db.session.execute(db.select(User).where(User.user_email==auth_user)).scalars_one()
                     if user is not None:
                         print(f'ldap user allready logged in')
                     else :    
@@ -232,7 +231,6 @@ def reg_admin_confirm(usr_email=None,temp_usr_id=None):
                              'auth/email/reg_admin_confirm', user=temp_user, adm_conf_token=adm_conf_token)
         msg = 'En bekreftelses e-post har blitt sendt til admin på e-post.'
     if (usr_email and temp_usr_id) is not None:
-        users_db.connect(reuse_if_open=True)
         msg=''
         adm_conf_token = User.generate_admin_conf_token(temp_usr_id)
         temp_user = db.session.execute(db.select(User).where(User.id==temp_usr_id)).scalar_one()

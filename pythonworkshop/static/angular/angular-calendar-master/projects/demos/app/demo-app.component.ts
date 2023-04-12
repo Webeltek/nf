@@ -201,7 +201,7 @@ export class DemoAppComponent implements OnInit, OnDestroy{
         //console.log("getEventTitle() pythEv.userId",pythEv.userId);
         let eventUser =  this.users.filter((user)=> {
           //console.log("getEventTitle() user.id == pythEv.userId",user.id == pythEv.userId)
-          return user.id == pythEv.userId
+          return user.id == pythEv.userId_id
         });
         //console.log("getEventTitle() eventUser array",eventUser );
         return typeof eventUser[0]=='undefined' ? '' : eventUser[0].user_email;
