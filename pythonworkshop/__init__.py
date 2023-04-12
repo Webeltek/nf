@@ -31,6 +31,7 @@ templ_dir = os.path.abspath('pythonworkshop/templates')
 static_dir = os.path.abspath('pythonworkshop/static')
 print('Static folder : ' + str(static_dir))
 
+db = SQLAlchemy()
 mail = Mail()
 moment = Moment()
 executor = Executor()
@@ -59,7 +60,7 @@ def create_app(config_name):
   password = 'nfvinter2022'
   database = 'nf_users_db'
   app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://{username}:{password}@localhost:5432/{database}"
-  SQLAlchemy(app)
+  db.init_app(app)
 
   #login_manager.init_app(app)
   print('mail server: ' + app.config['MAIL_SERVER'])

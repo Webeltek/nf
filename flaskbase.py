@@ -1,6 +1,6 @@
 import os
 import sys
-from pythonworkshop import create_app
+from pythonworkshop import create_app, db
 from dotenv import load_dotenv
 from pythonworkshop.models import User, users_db
 
@@ -16,5 +16,7 @@ app = create_app(os.getenv('FLASK_CONFIG'))
 
 
 if __name__== "__main__":
-    app.run()
+    with app.app_context():
+        db.create_all()    
+        app.run()
 

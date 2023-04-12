@@ -10,6 +10,7 @@ from playhouse.shortcuts import model_to_dict
 from functools import wraps
 import uuid
 from ..email import send_email
+from ..models_al import *
 
 def access_required(f):
     @wraps(f)
@@ -76,15 +77,12 @@ def user_profile(username):
 @main_bp.route("/api/services/rooms", methods= ['GET'])
 @access_required
 def index_rooms():
-        users_db.connect(reuse_if_open=True)
-        rooms = Room.select().order_by(Room.row.asc())
+        rooms = db.session.execute(db.select(Room).order_by(Room.row.asc())).scalars()
         if not rooms.exists():
-            with users_db.atomic():
-                Room.insert_many(rooms_init).execute()
-        users_db.close()
+            db.session.execute(Room.__table__.insert(),rooms_init)
         if rooms.exists():
             print(f'main_bp rooms {rooms}')
-        return jsonify({'rooms':list( rooms.dicts())})
+        return jsonify({'rooms':list( rooms)})
 
 @main_bp.route("/api/services/insertroom",methods=["POST","GET"])
 @access_required
@@ -93,9 +91,8 @@ def insertroom():
     if request.method == 'POST':
         req_json = request.get_json()
         title = req_json['title']
-        Room.create(title=title)
-        new_rooms = Room.select().dicts()
-        users_db.close()
+        db.session.add(Room(title=title)).commit()
+        new_rooms = db.session.execute(db.select(Room)).scalars()
         msg = 'Room added successfully' 
     return jsonify({'mod_rooms': list(new_rooms)})
 
@@ -107,45 +104,38 @@ def deleteroom():
         req_json = request.get_json()
         row = req_json['row']
         title = req_json['title']
-        num_of_rows = Event.delete().where((Event.rowname == title)).execute()
-        Room.delete().where(Room.title==title).execute()
-        new_rooms = Room.select().dicts()
-        users_db.close()
+        db.session.delete(Event).where((Event.rowname == title)).commit()
+        db.session.delete(Room).where(Room.title==title).commit()
+        new_rooms = db.session.execute(db.select(Room)).scalars()
         msg = 'Room deleted successfully' 
     return jsonify({'mod_rooms': list(new_rooms)})    
 
 @main_bp.route("/api/services/updaterooms",methods=["POST","GET"])
 @access_required
 def updaterooms():
-    users_db.connect(reuse_if_open=True)
     if request.method == 'POST':
         req_rooms = request.get_json()
-        db_rooms = Room.select()
+        db_rooms = db.session.execute(db.select(Room)).scalars()
         for index,db_room in enumerate(db_rooms):
                 db_room.title = req_rooms[index]
                 print(f'auth_bp updatetrooms index: {index}')
                 print(f'auth_bp updatetrooms row and title: {db_room.row, db_room.title}')  
-                db_room.save()
-        new_rooms = Room.select().dicts()        
-        users_db.close()
+                db.session.add(db_room).commit()
+        new_rooms = db.session.execute(db.select(Room)).scalars()        
         msg = 'Rooms updated successfully' 
     return jsonify({'mod_rooms': list(new_rooms)})                       
   
 @main_bp.route("/api/services/events", methods= ['GET'])
 @access_required
 def index_events():
-        users_db.connect(reuse_if_open=True)
-        events = Event.select().order_by(Event.id.asc())
-        users_db.close()
-        return jsonify({'events':list( events.dicts())})
+        events = db.session.execute(db.select(Event).order_by(Event.id.asc())).scalars()
+        return jsonify({'events':list( events)})
 
 @main_bp.route("/api/services/users", methods= ['GET'])
 @access_required
 def index_users():
-        users_db.connect(reuse_if_open=True)
-        saved_users = User.select().order_by(User.id.asc())
-        users_db.close()
-        s_users = saved_users.dicts() # returns iterable modelselect with rows as dicts
+        saved_users = db.session.execute(db.select(User).order_by(User.id.asc())).scalars()
+        s_users = saved_users # returns iterable modelselect with rows as dicts
         #json_users = json.dumps({'users':list(s_users)}) #list() is converting modelselect to list
         return jsonify({'users':list(s_users)})    
        
@@ -153,7 +143,6 @@ def index_users():
 @main_bp.route("/api/services/insert",methods=["POST","GET"])
 @access_required
 def insert():
-    users_db.connect(reuse_if_open=True)
     if request.method == 'POST':
         req_json = request.get_json()
         uid = req_json['uid']
@@ -165,8 +154,7 @@ def insert():
         start = req_json['start']
         end = req_json['end']
         color = req_json['color']
-        Event.create(uid=uid,userId=user_id, rowname=rowname, title=title,ou=ou,start=start,end=end, color=color)
-        users_db.close()
+        db.session.add(Event(uid=uid,userId=user_id, rowname=rowname, title=title,ou=ou,start=start,end=end, color=color)).commit()
         msg = 'Record added successfully' 
     return jsonify(msg)
   
@@ -181,38 +169,34 @@ def update():
         title = req_json['title']
         start = req_json['start']
         end = req_json['end']
-        event = Event.update(uid=uid,userId=userId, title=title,start=start,end=end).where(Event.uid == uid).execute()       
-        users_db.close()
+        db.session.add(Event(uid=uid,userId=userId, title=title,start=start,end=end)
+                       ).where(Event.uid == uid).commit()       
         msg = 'Record updated successfully' 
     return jsonify(msg)    
   
 @main_bp.route("/api/services/delete",methods=["POST","GET"])
 @access_required
 def ajax_delete():
-    users_db.connect(reuse_if_open=True)
     if request.method == 'POST':
         req_json = request.get_json()
         ids = req_json['numList']
         if ids is not None:
-            with users_db.atomic():
                 for todelid in ids:
                     print(f'To delete id{str(id)}')
-                    Event.delete().where(Event.id == todelid).execute()
-        users_db.close()
+                    db.session.delete(Event().where(Event.id == todelid)).commit()
         msg = 'Record/s deleted successfully' 
     return jsonify(msg)
 
 @main_bp.route('/api/services/change_email', methods=['GET', 'POST'])
 @access_required
 def change_email_request():
-    users_db.connect(reuse_if_open=True)
     msg = ''
     if request.method == 'POST':
         req_json = request.get_json()
         userId = req_json['userId']
         newEmail = req_json['newEmail']
         userPass = req_json['oldpassword']
-        user = User.select().where(User.id==userId).get()
+        user = db.session.execute(db.select(User).where(User.id==userId)).scalar_one()
         if user is not None and user.verify_password(userPass):
             token = user.generate_email_change_token(newEmail)
             send_email(newEmail, 'Confirm change of email address',
@@ -221,18 +205,16 @@ def change_email_request():
             msg='En e-post med instruksjoner for å bekrefte din nye e-post adressen er sendt til deg.'
         else:
             msg='Invalid email or password.'
-    users_db.close()        
     return jsonify({'to_change_email': newEmail, 'msg':msg})
 
 @main_bp.route('/api/services/change_pass', methods=['GET', 'POST'])
 @access_required
 def change_pass_request():
-    users_db.connect(reuse_if_open=True)
     msg = ''
     if request.method == 'POST':
         req_json = request.get_json()
         user_email = req_json['resPassEmail']
-        user = User.get(User.user_email==user_email)
+        user = db.session.execute(db.select(User).where(User.user_email==user_email)).scalar_one()
         print(f'main_bp.change_pass_request selected user email: {user.user_email}') 
         if user is not None :
             token = user.generate_pass_change_token()
@@ -242,6 +224,5 @@ def change_pass_request():
             msg='En e-post med instruksjoner for å innføre ditt nytt passord er sendt til deg.'
         else:
             msg='Invalid email'    
-    users_db.close()
     return jsonify({'user_email': user_email, 'msg':msg})
 
