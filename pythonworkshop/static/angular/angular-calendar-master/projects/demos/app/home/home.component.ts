@@ -305,7 +305,6 @@ export class EditEventsDialog {
     this.httpService.getUsers().subscribe({
         next : (response) => {
           if(response.hasOwnProperty('users')) {
-            let storageUsrObj = this.tokenStorage.getUser();
             //console.log("getDBUsers()  storageUsrObj.user_email", storageUsrObj.user_email);
           
             let respObj  = response as any ;
@@ -313,7 +312,7 @@ export class EditEventsDialog {
               this.users.push(pythUser);
             }
             this.users = [...this.users];
-            //console.log("getDBUsers() this.users",this.users)
+            console.log("getDBUsers() this.users",this.users)
           } else {
             console.log("getDbUsers() string response msg:",response);
           }
@@ -334,7 +333,7 @@ export class EditEventsDialog {
         for (let objEvt of  respObj.events){
           let tableRow : TableRow=  {
               id : objEvt.id,
-              user_email : this.users.filter((user)=>objEvt.userId==user.id)[0].user_email,
+              user_email : this.users.filter((user)=>objEvt.userId_id==user.id)[0].user_email,
               rom : objEvt.rowname,
               start : new Date(parseInt(objEvt.start,10)),
               end : new Date(parseInt(objEvt.end,10)),

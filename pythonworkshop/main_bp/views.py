@@ -69,7 +69,7 @@ def about_us_form():
 @main_bp.route("/user_profile/<string:username>", methods= ['GET','POST'])
 @access_required
 def user_profile(username):
-        user = User.select().where(User.c.user_name==username).get()
+        user = db.session.execute(db.select(User).where(User.user_name==username)).scalar_one()
         about_us = forms.AboutUsForm(request.form)
         if request.method == 'POST' and about_us.validate():
             print(F'I got UFO name is {myform.ufoname.data}')
@@ -118,8 +118,8 @@ def deleteroom():
         req_json = request.get_json()
         row = req_json['row']
         title = req_json['title']
-        db.session.delete(Event).where((Event.c.rowname == title))
-        db.session.delete(Room).where(Room.c.title==title)
+        db.session.execute(db.delete(Event).where(Event.rowname == title))
+        db.session.execute(db.delete(Room).where(Room.title==title))
         db.session.commit()
         new_rooms = db.session.execute(db.select(Room)).scalars().all()
         rooms_list = []    
@@ -229,7 +229,7 @@ def update():
         start = req_json['start']
         end = req_json['end']
         db.session.add(Event(uid=uid,userId_id=userId, title=title,start=start,end=end)
-                       ).where(Event.c.uid == uid)
+                       ).where(Event.uid == uid)
         db.session.commit()       
         msg = 'Record updated successfully' 
     return jsonify(msg)    
@@ -243,7 +243,7 @@ def ajax_delete():
         if ids is not None:
                 for todelid in ids:
                     print(f'To delete id{str(id)}')
-                    db.session.delete(Event).where(Event.c.id == todelid)
+                    db.session.execute(db.delete(Event).where(Event.id == todelid))
                     db.session.commit()
         msg = 'Record/s deleted successfully' 
     return jsonify(msg)
@@ -257,7 +257,7 @@ def change_email_request():
         userId = req_json['userId_id']
         newEmail = req_json['newEmail']
         userPass = req_json['oldpassword']
-        user = db.session.execute(db.select(User).where(User.c.id==userId)).first()
+        user = db.session.execute(db.select(User).where(User.id==userId)).first()
         if user is not None and user.verify_password(userPass):
             token = user.generate_email_change_token(newEmail)
             send_email(newEmail, 'Confirm change of email address',
