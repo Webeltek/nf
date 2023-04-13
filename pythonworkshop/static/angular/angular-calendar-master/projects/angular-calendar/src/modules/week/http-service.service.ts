@@ -21,7 +21,7 @@ export class HttpEventService{
     private deleteRoomUrl = "/api/services/deleteroom";
     private updateRoomsUrl = "/api/services/updaterooms";
 
-    private baseurl = '';
+    private baseurl = 'https://api.webeltek.org';
 
     @Output() addedEvent: EventEmitter<any> = new EventEmitter();
 
