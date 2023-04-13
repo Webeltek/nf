@@ -177,14 +177,16 @@ def register_form():
       user_ou = request.json['ou']
       try :
         user = db.session.add(User(user_email=user_email,
-                           user_pass=user_pass,ou=user_ou)).commit()
+                           user_pass=user_pass,ou=user_ou)).scalar_one()
+        db.session.commit()
       except p.IntegrityError :
         return ({'is_duplicate': True, 'duplicate_email': user_email})
-      token = user.generate_confirmation_token()
-      temp_user_id = user.id
-      send_email(user.user_email, 'Confirm Your Account', 'auth/email/confirm', user=user, token=token)
-      #send_email([user.user_email], 'Confirm Your Account', 'auth/email/confirm', user=user, token=token)
-      msg = 'En bekreftelses e-post har blitt sendt til deg på e-post.'
+      else:
+        token = user.generate_confirmation_token()
+        temp_user_id = user.id
+        send_email(user.user_email, 'Confirm Your Account', 'auth/email/confirm', user=user, token=token)
+        #send_email([user.user_email], 'Confirm Your Account', 'auth/email/confirm', user=user, token=token)
+        msg = 'En bekreftelses e-post har blitt sendt til deg på e-post.'
   return jsonify({'is_duplicate': False,'sent_token': token, 'temp_user_id': temp_user_id,'msg':msg})
 
 @auth_bp.route('/api/auth/send_msg', methods=['POST'])
@@ -210,7 +212,8 @@ def confirm(token):
         msg='Du har bekreftet kontoen din. Takk!'
     elif user is not None and not user.confirm(token):
         userconfirmed=False
-        db.session.delete(User).where(User.id == user.id).commit()
+        db.session.delete(User).where(User.id == user.id)
+        db.session.commit()
         msg = 'Bekreftelseslenken er ugyldig eller har utløpt.'
     print(f'auth_bp.confirm msg:{msg}')    
     return redirect(f'/confirm?=userconfirmed={userconfirmed}')
@@ -252,7 +255,8 @@ def conf_by_adm(token):
         user_conf_by_adm=True
     elif user is not None and not user.confirm_by_adm(token):
         user_conf_by_adm=False
-        db.session.delete(User).where(User.id == user.id).commit()
+        db.session.delete(User).where(User.id == user.id)
+        db.session.commit()
         msg = 'Bekreftelseslenken er ugyldig eller har utløpt.'
     print(f'auth_bp.conf_by_adm msg :{msg}')    
     return redirect(f'/confirm?user_conf_by_adm={user_conf_by_adm}')
