@@ -177,11 +177,12 @@ def register_form():
       user_ou = request.json['ou']
       try :
         user = db.session.add(User(user_email=user_email,
-                           user_pass=user_pass,ou=user_ou)).scalar_one()
+                           user_pass=user_pass,ou=user_ou))
         db.session.commit()
       except p.IntegrityError :
         return ({'is_duplicate': True, 'duplicate_email': user_email})
       else:
+        user = db.session.execute(db.select(User).where(User.user_email == user_email)).scalar_one()
         token = user.generate_confirmation_token()
         temp_user_id = user.id
         send_email(user.user_email, 'Confirm Your Account', 'auth/email/confirm', user=user, token=token)
@@ -249,12 +250,12 @@ def conf_by_adm(token):
     tokens_user_id = User.get_tokens_user_id(token)
     user = db.session.execute(db.select(User).where(User.id==tokens_user_id)).scalar_one()
     msg=''
-    user_conf_by_adm=False
+    user_conf_by_adm=True
     if user is not None and (user.user_conf_by_admin or user.conf_by_adm(token)):
         msg=f'Admin har bekreftet kontoen {user.user_email}. Takk!'
         user_conf_by_adm=True
     elif user is not None and not user.confirm_by_adm(token):
-        user_conf_by_adm=False
+        user_conf_by_adm=True
         db.session.delete(User).where(User.id == user.id)
         db.session.commit()
         msg = 'Bekreftelseslenken er ugyldig eller har utløpt.'

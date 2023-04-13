@@ -28,7 +28,7 @@ export class RegisterComponent implements OnInit {
 
   onSubmit(): void {
     const { email, password , ou} = this.form;
-    console.log("RC onSubmit called");
+    //console.log("RC onSubmit called");
     this.authService.register( email, password , ou).subscribe({
       next : (response) => {
         let responseObj = response.body as any;

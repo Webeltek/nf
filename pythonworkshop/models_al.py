@@ -175,7 +175,7 @@ class User(db.Model):
 
 class Event(db.Model):
   __tablename__ = "nf_event"
-  id = db.Column(db.Integer, primary_key=True)
+  id = db.Column(db.Integer, primary_key=True, autoincrement=True)
   uid = db.Column(db.String)
   userId_id = db.Column(db.Integer, db.ForeignKey('nf_user.id'))
   rowname = db.Column(db.String)
