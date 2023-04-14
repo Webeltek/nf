@@ -148,7 +148,6 @@ def login_form(usr_email=None, usr_pass=None):
             return jsonify({'user':user_dict,'msg':msg})
         else:
             msg='Wrong username or password!'
-        users_db.close()
     if (usr_email and usr_pass) is not None:
         user = db.session.execute(db.select(User).where(User.user_email==usr_email)).scalar_one()
         if user is not None and user.verify_password(usr_pass) and user.user_confirmed:

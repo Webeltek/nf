@@ -41,12 +41,14 @@ class User(db.Model):
     self.user_is_logged_in = True
     self.last_seen = datetime.datetime.now(tz=datetime.timezone.utc)
     db.session.add(self)
+    db.session.commit()
   
   def generate_access_token(self, expiration=3600):
         encoded = jwt.encode({'email': self.user_email, \
         'exp': datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(seconds=expiration)},current_app.config['SECRET_KEY'], algorithm='HS256')
         self.access_token = encoded
         db.session.add(self)
+        db.session.commit()
         return encoded
   
   def gen_ldap_access_token(self,ldap_email, expiration=3600):
@@ -54,6 +56,7 @@ class User(db.Model):
         'exp': datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(seconds=expiration)},current_app.config['SECRET_KEY'], algorithm='HS256')
         self.access_token = encoded
         db.session.add(self)
+        db.session.commit()
         return encoded
 
   @staticmethod
@@ -106,6 +109,7 @@ class User(db.Model):
     if self.user_confirmed == False:
         self.user_confirmed = True
         db.session.add(self)
+        db.session.commit()
     print('User confirmed in User.confirm(')
     return True
   
@@ -125,6 +129,7 @@ class User(db.Model):
         return False
     self.user_conf_by_admin = True
     db.session.add(self)
+    db.session.commit()
     print('User confirmed in User.confirm(')
     return True
   
@@ -140,6 +145,7 @@ class User(db.Model):
         if newpass is not None:
           self.user_pass = newpass
           db.session.add(self)
+          db.session.commit()
           return True
         
         return False
@@ -166,8 +172,8 @@ class User(db.Model):
             return False
         print(f'models change_email() user_id_change_email: {user_id_change_email}')
         print(f'models change_email() new_email : {new_email}')
-        query = (User.update({User.user_email:new_email}).where(User.id == user_id_change_email))
-        query.execute()
+        db.session.execute(db.update(User).where(User.id == user_id_change_email), {User.user_email:new_email})
+        db.session.commit()
         return True
 
   def ping(self):

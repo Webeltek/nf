@@ -254,12 +254,13 @@ def change_email_request():
     msg = ''
     if request.method == 'POST':
         req_json = request.get_json()
-        userId = req_json['userId_id']
+        userId = req_json['userId']
         newEmail = req_json['newEmail']
         userPass = req_json['oldpassword']
-        user = db.session.execute(db.select(User).where(User.id==userId)).first()
+        user = db.session.execute(db.select(User).where(User.id==userId)).scalar_one()
         if user is not None and user.verify_password(userPass):
             token = user.generate_email_change_token(newEmail)
+            print(f'main_bp change email: {newEmail}')
             send_email(newEmail, 'Confirm change of email address',
                        'auth/email/change_email',
                        user=user, token=token)
