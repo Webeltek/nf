@@ -6,7 +6,6 @@ from .. import main_bp
 from .forms import LoginForm, RegistrationForm, ChangePasswordForm,\
     PasswordResetRequestForm, PasswordResetForm, ChangeEmailForm
 import jinja2
-from ..models import *
 from ..models_al import *
 from ..email import send_email, send_guest_email, send_adm_conf_email
 from .. import executor

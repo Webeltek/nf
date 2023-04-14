@@ -1,5 +1,4 @@
 from flask import Flask,redirect, render_template, request, jsonify, url_for
-from ..models import *
 from . import forms
 from . import main_bp
 import jinja2

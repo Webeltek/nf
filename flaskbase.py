@@ -2,7 +2,6 @@ import os
 import sys
 from pythonworkshop import create_app, db
 from dotenv import load_dotenv
-from pythonworkshop.models import User, users_db
 
 
 print(f'flaskbase sys.path {sys.path}')

@@ -14,7 +14,7 @@ import werkzeug
 
 from oidcrp import rp_handler
 from oidcrp.exception import OidcServiceError
-from ..models import *
+from ..models_al import *
 from ..auth_bp.views import reg_admin_confirm, login_form
 
 from ..email import send_email, send_adm_conf_email
@@ -233,22 +233,21 @@ def finalize(op_identifier, request_args,isCheckout):
     
 def reg_vipps_usr_in_db(usr_email,usr_sub,email_ver):
     print(f'reg_vipps_usr_in_db:  {usr_email},{usr_sub},{email_ver}')
-    users_db.connect(reuse_if_open=True)
-    user = User.select().where(User.user_email==usr_email).first()
+    user = db.session.execute(db.select(User).where(User.user_email==usr_email)).first()
     if user is not None:
         login_form(usr_email, usr_sub)
     elif user is None and (usr_email and usr_sub and email_ver) is not None:    
         try :
-            user = User.create(user_email=usr_email,
+            user = db.session.add(User(user_email=usr_email,
                                user_pass=usr_sub,
                                user_is_logged_in=True,
                                user_confirmed=True,
-                               user_conf_by_admin = False)
+                               user_conf_by_admin = False))
+            db.session.commit()
             temp_user_id = user.id
             reg_admin_confirm(usr_email,temp_user_id)
-        except p.PeeweeException :
+        except db.exc.SQLAlchemyError :
             return ({'PeeweeExeption': True, 'email': usr_email})
-    users_db.close()
     return user    
         
 """ def vipps_usr_adm_confirm(usr_email=None,temp_usr_id=None):
