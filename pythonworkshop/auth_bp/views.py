@@ -130,7 +130,7 @@ def login_ldap(usr_email=None, usr_pass=None):
 
 @auth_bp.route('/api/auth/login', methods=['POST','GET'])
 def login_form(usr_email=None, usr_pass=None):
-    print('login_form call')
+    #print('login_form call')
     msg = ''
     if request.method == 'POST':
         user = db.session.execute(db.select(User).where(User.user_email==request.json['email'])).scalar_one()
@@ -217,7 +217,7 @@ def confirm(token):
         db.session.commit()
         msg = 'Bekreftelseslenken er ugyldig eller har utløpt.'
     print(f'auth_bp.confirm msg:{msg}')    
-    return redirect(f'/confirm?=userconfirmed={userconfirmed}')
+    return redirect(f'https://webeltek.org/confirm?=userconfirmed={userconfirmed}')
 
 @auth_bp.route('/api/auth/reg_admin_confirm', methods=['POST'])
 def reg_admin_confirm(usr_email=None,temp_usr_id=None): 

@@ -84,11 +84,12 @@ class roomd:
 @main_bp.route("/api/services/rooms", methods= ['GET'])
 @access_required
 def index_rooms():
-        rooms = db.session.execute(db.select(Room).order_by(Room.row.asc())).scalars().all()
-        if len(rooms)==0:
-            db.session.execute(Room.__table__.insert(),rooms_init)
-        if len(rooms)>0:
-            print(f'main_bp rooms {rooms}')
+        rooms = []
+        rooms = db.session.scalars(db.select(Room).order_by(Room.row.asc())).all()
+        if len(rooms)<=1:
+            db.session.execute(db.insert(Room),rooms_init)
+            db.session.commit()
+        print(f'main_bp rooms {rooms}')    
         rooms_list = []    
         for room in rooms:
             rooms_list.append(jsons.dump(roomd(room.row,room.title)))              
@@ -144,7 +145,7 @@ def updaterooms():
         rooms_list = []    
         for room in new_rooms:
             rooms_list.append(jsons.dump(roomd(room.row,room.title)))        
-        msg = 'Rooms updated successfully' 
+        msg = 'Rooms updated successfully'
     return jsonify({'mod_rooms': rooms_list})                       
 
 @dataclass

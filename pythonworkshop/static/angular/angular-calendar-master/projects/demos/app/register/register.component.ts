@@ -49,7 +49,8 @@ export class RegisterComponent implements OnInit {
         }
 
         if(typeof temp_user_id!=='undefined'){
-          this.authService.sendAdminRegConfirm( email, temp_user_id).subscribe({
+          //send confirm email to admin disabled
+          /* this.authService.sendAdminRegConfirm( email, temp_user_id).subscribe({
             next : (response) => {
               let responseObj = response.body as any;
               let sent_success : boolean = responseObj.is_sent;
@@ -67,7 +68,7 @@ export class RegisterComponent implements OnInit {
               this.isSignUpFailed = true;
             }
           }
-          );
+          ); */
         }
         
       },

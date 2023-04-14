@@ -236,7 +236,7 @@ export class CalendarWeekViewHourSegmentComponent {
     });
 
     this.user_ou = this.tokenStorage.getUser().ou;
-    console.log("HourSegm user_ou: ",this.user_ou)
+    //console.log("HourSegm user_ou: ",this.user_ou)
   }
 
   private events : CalendarEvent[] = [];
