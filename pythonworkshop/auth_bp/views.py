@@ -258,7 +258,7 @@ def conf_by_adm(token):
         db.session.commit()
         msg = 'Bekreftelseslenken er ugyldig eller har utløpt.'
     print(f'auth_bp.conf_by_adm msg :{msg}')    
-    return redirect(f'/confirm?user_conf_by_adm={user_conf_by_adm}')
+    return redirect(f'https://webeltek.org/confirm?user_conf_by_adm={user_conf_by_adm}')
 
 @auth_bp.route('/api/auth/change_email/<token>', methods=['GET', 'POST'])
 def change_email(token):
@@ -272,7 +272,7 @@ def change_email(token):
     else:
         msg='Ugyldig forespørsel.'
     print(f'auth_bp.change_emal msg: {msg}')    
-    return redirect(f'/confirm?emailchanged={emailchanged}')
+    return redirect(f'https://webeltek.org/confirm?emailchanged={emailchanged}')
 
 @auth_bp.route('/api/auth/change_pass/<token>', methods=['GET', 'POST'])
 def change_pass(token):
@@ -286,7 +286,7 @@ def change_pass(token):
     else:
         msg='Invalid email.'
     print(f'auth_bp.change_pass msg: {msg}')    
-    return redirect(f'/change_pass?emailcheck={emailcheck}')
+    return redirect(f'https://webeltek.org/change_pass?emailcheck={emailcheck}')
 
 @auth_bp.route('/api/auth/input_change_pass', methods=['POST','GET'])
 def input_change_pass():
