@@ -25,16 +25,16 @@ export class ConfirmComponent implements OnInit {
     let userChangedEmail = this.actRoute.snapshot.queryParamMap.get('emailchanged');
     console.log("ConfComp userConfirmed",userConfirmed);
       if (userConfirmed==='True'){
-        this.msg = "Email confirmed! Awaiting confirmation by admin!"
+        this.msg = "CCemailConfirmed"
       } else if (userConfirmed!=='True'){
-        this.msg = "User is not confirmed!"
+        this.msg = "CCemailNotConfirmed"
       }
-      if (userConfByAdm==='True'){
+      /* if (userConfByAdm==='True'){
         this.msg= "User is confirmed by admin!"
       } else if(userConfByAdm!=='True') {
         this.msg = "Awaiting confirmation by admin!";
         console.log("ConfComp user not confirmed by admin")
-      }
+      } */
       if (userChangedEmail){
         this.msg = "Successfully changed email!"
       }

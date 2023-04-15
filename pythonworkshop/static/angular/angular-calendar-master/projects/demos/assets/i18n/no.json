@@ -24,6 +24,9 @@
      "LCwrongUserPass": "Feil brukernavn eller passord!",
      "LCloginLDAP": "Logg inn LDAP",
 
+     "CCemailConfirmed": "Eposten din har blitt bekreftet! Du kan logge inn.",
+     "CCemailNotConfirmed": "Eposten din har ikke blitt bekreftet!",
+
      "PCuser": "Bruker",
      "PCfrom": "fra: ",
      "PClocation": "lokasjon",

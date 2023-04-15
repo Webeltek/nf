@@ -229,12 +229,16 @@ export class LoginComponent implements OnInit {
     })
   }
 
+  isSendingLogin = false;
+
   onSubmit(): void {
     const  username = this.loginFG.controls.username.value; 
     const  password  = this.loginFG.controls.pass.value;
+    this.isSendingLogin = true;
 
     this.authService.login(username, password).subscribe({
       next: (data) => {
+        this.isSendingLogin= false;
         let dataObj = data as any;
         //console.log("loginComp dataObj.user:",dataObj.user)
         if (dataObj.user!== 'nonexistent'){

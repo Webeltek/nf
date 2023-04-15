@@ -19,16 +19,23 @@
                   style="width: 200px; height: 200px; margin: 0px;">
                     <source type="video/mp4" src="assets/hfjellb.mp4">
                     <source type="video/webm" src="assets/hfjellb.mp4">
-                  </video> --> 
-                  <div class="d-flex justify-content-center">
-                    <img src="assets/hovdlogin.jpg" 
-                    class="profile-img-card mx-auto rounded"
-                    [style.max-width]="'400px'"
-                    [style.max-height]="'200px'"
-                    >
-                    <p class="card-text"></p>
+                  </video> -->
+                  <ng-container *ngIf="isSendingLogin; then spinnerTempl else imgTempl">
+                  </ng-container>
+                  <ng-template #imgTempl>
+                    <div class="d-flex justify-content-center">
+                      <img src="assets/hovdlogin.jpg" 
+                      class="profile-img-card mx-auto rounded"
+                      [style.max-width]="'400px'"
+                      [style.max-height]="'200px'"
+                      >
+                      <p class="card-text"></p>
                   </div>
-                        
+                  </ng-template>
+                  <ng-template #spinnerTempl>
+                    <mat-spinner [mode]="'indeterminate'"></mat-spinner>
+                  </ng-template>
+                  
                 <!-- <button mat-button class="menu-button" (click)="vippsLogin()">
                   <img src="assets/log_in_with_vipps_pill_210_NO.png">
                 </button> -->
