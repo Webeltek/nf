@@ -133,21 +133,24 @@ def login_form(usr_email=None, usr_pass=None):
     msg = ''
     if request.method == 'POST':
         user = db.session.execute(db.select(User).where(User.user_email==request.json['email'])).scalar_one()
-        if user is not None:
-            print(f'auth_bp.login_form() user email to login:{user.user_email}')
-        if user is not None and user.verify_password(request.json['password']) and user.user_confirmed:
-            user.login_user()
-            user.generate_access_token()
-            user_dict = {'id': user.id,
-                         'is_admin':user.is_admin,
-                         'user_email':user.user_email,
-                         'access_token': user.access_token,
-                         'last_seen': user.last_seen,
-                         'ou': user.ou}
-            msg= 'User confirmed!'
-            return jsonify({'user':user_dict,'msg':msg})
-        else:
-            msg='Wrong username or password!'
+        try :
+            if user is not None:
+                print(f'auth_bp.login_form() user email to login:{user.user_email}')
+            if user is not None and user.verify_password(request.json['password']) and user.user_confirmed:
+                user.login_user()
+                user.generate_access_token()
+                user_dict = {'id': user.id,
+                            'is_admin':user.is_admin,
+                            'user_email':user.user_email,
+                            'access_token': user.access_token,
+                            'last_seen': user.last_seen,
+                            'ou': user.ou}
+                msg= 'User confirmed!'
+                return jsonify({'user':user_dict,'msg':msg})
+            else:
+                msg='Wrong username or password!'
+        except db.exc.NoResultFound:
+            msg='Wrong username or password!'         
     if (usr_email and usr_pass) is not None:
         user = db.session.execute(db.select(User).where(User.user_email==usr_email)).scalar_one()
         if user is not None and user.verify_password(usr_pass) and user.user_confirmed:

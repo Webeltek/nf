@@ -9,6 +9,7 @@ import { ErrorStateMatcher } from '@angular/material/core';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { delay } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
 
 let apiLoaded = false;
 
@@ -229,16 +230,16 @@ export class LoginComponent implements OnInit {
     })
   }
 
-  isSendingLogin = false;
+  isSendingLogin : BehaviorSubject<boolean> = new BehaviorSubject(false);
 
   onSubmit(): void {
     const  username = this.loginFG.controls.username.value; 
     const  password  = this.loginFG.controls.pass.value;
-    this.isSendingLogin = true;
+    this.isSendingLogin.next(true);
 
     this.authService.login(username, password).subscribe({
       next: (data) => {
-        this.isSendingLogin= false;
+        this.isSendingLogin.next(false);
         let dataObj = data as any;
         //console.log("loginComp dataObj.user:",dataObj.user)
         if (dataObj.user!== 'nonexistent'){

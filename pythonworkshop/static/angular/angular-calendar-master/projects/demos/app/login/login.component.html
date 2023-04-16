@@ -20,7 +20,8 @@
                     <source type="video/mp4" src="assets/hfjellb.mp4">
                     <source type="video/webm" src="assets/hfjellb.mp4">
                   </video> -->
-                  <ng-container *ngIf="isSendingLogin; then spinnerTempl else imgTempl">
+                  <ng-container class="d-flex justify-content-center"
+                  *ngIf="(isSendingLogin | async) === true; then spinnerTempl else imgTempl">
                   </ng-container>
                   <ng-template #imgTempl>
                     <div class="d-flex justify-content-center">
