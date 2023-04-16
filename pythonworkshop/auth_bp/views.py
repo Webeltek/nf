@@ -132,8 +132,8 @@ def login_form(usr_email=None, usr_pass=None):
     #print('login_form call')
     msg = ''
     if request.method == 'POST':
-        user = db.session.execute(db.select(User).where(User.user_email==request.json['email'])).scalar_one()
         try :
+            user = db.session.execute(db.select(User).where(User.user_email==request.json['email'])).scalar_one()
             if user is not None:
                 print(f'auth_bp.login_form() user email to login:{user.user_email}')
             if user is not None and user.verify_password(request.json['password']) and user.user_confirmed:
