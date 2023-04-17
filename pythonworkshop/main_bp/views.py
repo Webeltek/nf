@@ -5,8 +5,6 @@ import jinja2
 import os
 import json
 import jsons
-from peewee import *
-from playhouse.shortcuts import model_to_dict
 from functools import wraps
 import uuid
 from ..email import send_email
@@ -97,7 +95,6 @@ def index_rooms():
 @main_bp.route("/api/services/insertroom",methods=["POST","GET"])
 @access_required
 def insertroom():
-    users_db.connect(reuse_if_open=True)
     if request.method == 'POST':
         req_json = request.get_json()
         title = req_json['title']
@@ -113,7 +110,6 @@ def insertroom():
 @main_bp.route("/api/services/deleteroom",methods=["POST","GET"])
 @access_required
 def deleteroom():
-    users_db.connect(reuse_if_open=True)
     if request.method == 'POST':
         req_json = request.get_json()
         row = req_json['row']
@@ -220,7 +216,6 @@ def insert():
 @main_bp.route("/api/services/update",methods=["POST","GET"])
 @access_required
 def update():
-    users_db.connect(reuse_if_open=True)
     if request.method == 'POST':
         req_json = request.get_json()
         uid = req_json['uid']

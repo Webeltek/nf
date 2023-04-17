@@ -9,13 +9,11 @@ import jinja2
 from ..models_al import *
 from ..email import send_email, send_guest_email, send_adm_conf_email
 from .. import executor
-import peewee as p
 from wtforms import ValidationError
 import json
 from urllib.parse import quote_plus, urlencode
 from authlib.integrations.flask_client import OAuth
 from os import access, environ as env
-from playhouse.shortcuts import model_to_dict
 #from .. import socketio
 from ldap3 import Server, Connection, ObjectDef, AttrDef, Reader, Writer, ALL, Tls
 import ssl
@@ -95,16 +93,17 @@ def login_ldap(usr_email=None, usr_pass=None):
                     print(f'ldap Reader cursor user entry.ou : {entry.ou} ')
                     print(f'ldap Reader cursor user entry.telephoneNumber: {entry.telephoneNumber}')
                     auth_user = ldap_user
-                    user = db.session.execute(db.select(User).where(User.user_email==auth_user)).scalars_one()
-                    if user is not None:
-                        print(f'ldap user allready logged in')
-                    else :    
+                    try :
+                        user = db.session.execute(db.select(User).where(User.user_email==auth_user)).scalars_one()
+                        if user is not None:
+                            print(f'ldap user allready logged in')
+                    except db.exc.NoResultFound:    
                         try :
-                            user = User.create(user_email=auth_user,
+                            user = db.session.add(User(user_email=auth_user,
                                                user_pass='temp_ldap_user',
                                                user_confirmed=True,
-                                               user_conf_by_admin = True)
-                        except p.IntegrityError :
+                                               user_conf_by_admin = True))
+                        except db.exc.IntegrityError :
                             return ({'is_duplicate': True, 'duplicate_ldap_user': auth_user})
                         msg = entry.uid
                         token = user.gen_ldap_access_token(auth_user)
@@ -180,7 +179,7 @@ def register_form():
         user = db.session.add(User(user_email=user_email,
                            user_pass=user_pass,ou=user_ou))
         db.session.commit()
-      except p.IntegrityError :
+      except db.exc.IntegrityError :
         return ({'is_duplicate': True, 'duplicate_email': user_email})
       else:
         user = db.session.execute(db.select(User).where(User.user_email == user_email)).scalar_one()
