@@ -8,7 +8,7 @@ import { Component, Input,
   TemplateRef, ElementRef } from '@angular/core';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { 
-  CalendarDateFormatter,
+  CalendarDateFormatter, CalendarEventTimesChangedEvent,
   CalendarView, CalendarEvent, DAYS_OF_WEEK } from 'angular-calendar';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -23,6 +23,7 @@ import { TokenStorageService } from './_services/token-storage.service';
 import { stringify } from 'querystring';
 import { isSameDay,isSameMonth} from 'date-fns';
 import { TranslateService } from '@ngx-translate/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 export interface PythUser {
   id : number; 
@@ -49,6 +50,7 @@ export interface PythUser {
   ],
 })
 export class DemoAppComponent implements OnInit, OnDestroy{
+  @ViewChild('modalContent', { static: true }) modalContent: TemplateRef<any>;
 
   isMobLayout = false;
   viewDate: Date = new Date();
@@ -58,6 +60,10 @@ export class DemoAppComponent implements OnInit, OnDestroy{
   locale : string = "nb";
   weekStartsOn: number = DAYS_OF_WEEK.MONDAY;
   weekendDays: number[] = [DAYS_OF_WEEK.FRIDAY, DAYS_OF_WEEK.SATURDAY];
+  modalData: {
+    action: string;
+    event: CalendarEvent;
+  };
 
   refresh = new Subject<void>();
 
@@ -84,7 +90,8 @@ export class DemoAppComponent implements OnInit, OnDestroy{
     public translate: TranslateService,
     private router: Router,
     private kvDiffers: KeyValueDiffers,
-    private itDiffers: IterableDiffers) {
+    private itDiffers: IterableDiffers,
+    private modal: NgbModal) {
       translate.addLangs(['gb', 'no']);
       translate.setDefaultLang('no');
     }
@@ -317,6 +324,29 @@ export class DemoAppComponent implements OnInit, OnDestroy{
       this.viewDate = date;
       console.log("DemoAppC activeDayIsOpen",this.activeDayIsOpen)
     }
+  }
+
+  eventTimesChanged({
+    event,
+    newStart,
+    newEnd,
+  }: CalendarEventTimesChangedEvent): void {
+    this.events = this.events.map((iEvent) => {
+      if (iEvent === event) {
+        return {
+          ...event,
+          start: newStart,
+          end: newEnd,
+        };
+      }
+      return iEvent;
+    });
+    this.handleEvent('Dropped or resized', event);
+  }
+
+  handleEvent(action: string, event: CalendarEvent): void {
+    this.modalData = { event, action };
+    this.modal.open(this.modalContent, { size: 'lg' });
   }
 
   ngOnDestroy() {

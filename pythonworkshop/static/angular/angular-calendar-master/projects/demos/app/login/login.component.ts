@@ -10,6 +10,7 @@ import { BreakpointObserver } from '@angular/cdk/layout';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { delay } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
+import { ThemePalette } from '@angular/material/core';
 
 let apiLoaded = false;
 
@@ -28,6 +29,8 @@ export class LoginErrorStateMatcher implements ErrorStateMatcher {
 })
 export class LoginComponent implements OnInit {
   matcher = new LoginErrorStateMatcher();
+
+  color : ThemePalette = 'accent'
 
   loginFG = new UntypedFormGroup({
     username: new UntypedFormControl('',[Validators.required,Validators.minLength(5)]),

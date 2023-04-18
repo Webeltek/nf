@@ -34,7 +34,11 @@
                   </div>
                   </ng-template>
                   <ng-template #spinnerTempl>
-                    <mat-spinner [mode]="'indeterminate'"></mat-spinner>
+                    <div class="d-flex justify-content-center">
+                      <mat-spinner 
+                      [mode]="'indeterminate'"
+                      [color]="color"></mat-spinner>
+                    </div>
                   </ng-template>
                   
                 <!-- <button mat-button class="menu-button" (click)="vippsLogin()">

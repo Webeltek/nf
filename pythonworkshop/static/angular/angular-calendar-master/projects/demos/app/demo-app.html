@@ -63,62 +63,108 @@
                   >
                   {{'DCweek' | translate}}
                   </div>
+                  <div
+                    class="btn btn-primary"
+                    (click)="setView(CalendarView.Day)"
+                    [class.active]="view === CalendarView.Day"
+                  >
+                  {{'DCday' | translate}}
+                  </div>
                 </div>
             </div>
         </div>
         <br />
-        <ng-container *ngIf="view === CalendarView.Month; then calMonthTempl else expandWeekTempl">
-        </ng-container>
-        <ng-template #calMonthTempl>
-            <mwl-calendar-month-view
-              [viewDate]="viewDate"
-              [weekStartsOn]=1
-              [events]="events"
-              [refresh]="refresh"
-              [activeDayIsOpen]="activeDayIsOpen"
-              (dayClicked)="dayClicked($event.day)"
-            [rooms]="rooms"
-            [dayStartHour]="0" 
-            [loggedInUserId]="loggedInUserId" 
-            [events]="events"
-            (eventClicked)="openDialog($event)"
-            >
-            </mwl-calendar-month-view>
+        <ng-container [ngSwitch]="view">
+        
+            <ng-template #calMonthTempl
+            *ngSwitchCase="CalendarView.Month">
+                <mwl-calendar-month-view
+                [viewDate]="viewDate"
+                [weekStartsOn]=1
+                [events]="events"
+                [refresh]="refresh"
+                [activeDayIsOpen]="activeDayIsOpen"
+                (dayClicked)="dayClicked($event.day)"
+                [rooms]="rooms"
+                [dayStartHour]="0" 
+                [loggedInUserId]="loggedInUserId" 
+                [events]="events"
+                (eventClicked)="openDialog($event)"
+                >
+                </mwl-calendar-month-view>
+            </ng-template>
+            <ng-template #expandWeekTempl
+            *ngSwitchCase="CalendarView.Week">
+                <ng-container *ngIf="isML; then mobWeekTempl else wideWeekTempl">
+                </ng-container>
+            </ng-template>
+            <ng-template #wideWeekTempl>
+                <mwl-calendar-week-view  
+                        [locale]="locale"
+                        [isOpen]="true"
+                        [roomNames]="rooms"
+                        [dayStartHour]="0" 
+                        [dayEndHour]="rooms.length-1" 
+                        [viewDate]="viewDate"
+                        [weekStartsOn]=1
+                        [loggedInUserId]="loggedInUserId" 
+                        [events]="events"
+                        (eventClicked)="openDialog($event)">
+                </mwl-calendar-week-view>
+            </ng-template>
+            <ng-template #mobWeekTempl >
+                <mwl-calendar-week-view-mob
+                        [locale]="locale"
+                        [roomNames]="rooms"
+                        [dayStartHour]="0" 
+                        [dayEndHour]="rooms.length-1" 
+                        [viewDate]="viewDate" 
+                        [weekStartsOn]=1
+                        [loggedInUserId]="loggedInUserId" 
+                        [events]="events"
+                        (eventClicked)="openDialog($event)">
+                    </mwl-calendar-week-view-mob>
+            </ng-template>
+            <ng-template #dayTempl
+            *ngSwitchCase="CalendarView.Day">
+                <mwl-calendar-day-view
+                    *ngSwitchCase="CalendarView.Day"
+                    [viewDate]="viewDate"
+                    [events]="events"
+                    [refresh]="refresh"
+                    (eventClicked)="handleEvent('Clicked', $event.event)"
+                    (eventTimesChanged)="eventTimesChanged($event)"
+                >
+                </mwl-calendar-day-view>
+            </ng-template>
+        </ng-container>    
+
+        <ng-template #modalContent let-close="close">
+            <div class="modal-header">
+            <h5 class="modal-title">Event action occurred</h5>
+            <button type="button" class="close" (click)="close()">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            </div>
+            <div class="modal-body">
+            <div>
+                Action:
+                <pre>{{ modalData?.action }}</pre>
+            </div>
+            <div>
+                Event:
+                <pre>{{ modalData?.event | json }}</pre>
+            </div>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" (click)="close()">
+                OK
+            </button>
+            </div>
         </ng-template>
-        <ng-template #expandWeekTempl>
-            <ng-container *ngIf="isML; then mobWeekTempl else wideWeekTempl">
-            </ng-container>
-        </ng-template>
-    </ng-template>
          
 </ng-template>
-<ng-template #wideWeekTempl>
-    <mwl-calendar-week-view  
-            [locale]="locale"
-            [isOpen]="true"
-            [roomNames]="rooms"
-            [dayStartHour]="0" 
-            [dayEndHour]="rooms.length-1" 
-            [viewDate]="viewDate"
-            [weekStartsOn]=1
-            [loggedInUserId]="loggedInUserId" 
-            [events]="events"
-            (eventClicked)="openDialog($event)">
-     </mwl-calendar-week-view>
-</ng-template>
-<ng-template #mobWeekTempl >
-    <mwl-calendar-week-view-mob
-            [locale]="locale"
-            [roomNames]="rooms"
-            [dayStartHour]="0" 
-            [dayEndHour]="rooms.length-1" 
-            [viewDate]="viewDate" 
-            [weekStartsOn]=1
-            [loggedInUserId]="loggedInUserId" 
-            [events]="events"
-            (eventClicked)="openDialog($event)">
-        </mwl-calendar-week-view-mob>
-</ng-template>
+
 <ng-template
     [ngTemplateOutlet]="weekTemplate"
     [ngTemplateOutletContext]="{

@@ -57,6 +57,7 @@
      "DCnext": "Neste",
      "DCmonth": "Måned",
      "DCweek": "Uke",
+     "DCday" : "Dag",
 
      "EDdelTtl": "Slett reservasjon av",
      "EDinsertTtl": "Velg reservasjon av",
