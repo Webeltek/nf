@@ -41,6 +41,7 @@
     "PCchangePass": "Change password",
     "PCchangePassDescr": "type in",
     "PCsubmit": "Submit",
+    "PCemail": "Email",
 
     "RCemail": "Email *",
     "RCpass": "Password *",

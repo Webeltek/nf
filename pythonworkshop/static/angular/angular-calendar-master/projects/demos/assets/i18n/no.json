@@ -40,7 +40,8 @@
      "PCemailTooshort": "Epost skal være lenger!",
      "PCchangePass": "Endre passord",
      "PCchangePassDescr": "Skriv inn",
-     "PCsubmit": "Bekreft",   
+     "PCsubmit": "Bekreft",
+     "PCemail": "E-post",   
 
      "RCemail": "E-post *",
      "RCpass": "Passord *",

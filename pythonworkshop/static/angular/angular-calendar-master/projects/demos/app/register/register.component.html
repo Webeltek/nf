@@ -1,6 +1,10 @@
 <div class="container">
   <div class="row">
       <div class="col-lg-4 offset-lg-4">
+        <ng-container class="d-flex justify-content-center"
+                  *ngIf="(isSendingLogin | async) === true; then spinnerTempl else imgTempl">
+                  </ng-container>
+          <ng-template #imgTempl>        
           <div class="d-flex justify-content-center">
               <img
                 id="profile-img"
@@ -9,6 +13,14 @@
                 [style.max-width]="'400px'"
                 >
           </div>
+          </ng-template>
+          <ng-template #spinnerTempl>
+            <div class="d-flex justify-content-center">
+              <mat-spinner 
+              [mode]="'indeterminate'"
+              [color]="color"></mat-spinner>
+            </div>
+          </ng-template>
           <div class="d-flex justify-content-center">
               <form
               *ngIf="!isSuccessful"

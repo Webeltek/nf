@@ -271,9 +271,9 @@ def change_pass_request():
     if request.method == 'POST':
         req_json = request.get_json()
         user_email = req_json['resPassEmail']
-        user = db.session.execute(db.select(User).where(User.c.user_email==user_email)).first()
-        print(f'main_bp.change_pass_request selected user email: {user.user_email}') 
+        user = db.session.execute(db.select(User).where(User.user_email==user_email)).scalar_one_or_none()
         if user is not None :
+            print(f'main_bp.change_pass_request selected user email: {user.user_email}') 
             token = user.generate_pass_change_token()
             send_email(user.user_email, 'Reset Your Password',
                        'auth/email/change_password',
