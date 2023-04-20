@@ -2,17 +2,17 @@
   <div class="row">
       <div class="col-lg-4 offset-lg-4">
         <ng-container class="d-flex justify-content-center"
-                  *ngIf="(isSendingLogin | async) === true; then spinnerTempl else imgTempl">
-                  </ng-container>
+         *ngIf="(isSendingRegister | async) === true; then spinnerTempl else imgTempl">
+        </ng-container>
           <ng-template #imgTempl>        
-          <div class="d-flex justify-content-center">
-              <img
-                id="profile-img"
-                src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
-                class="profile-img-card mx-auto rounded"
-                [style.max-width]="'400px'"
-                >
-          </div>
+            <div class="d-flex justify-content-center">
+                <img
+                  id="profile-img"
+                  src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
+                  class="profile-img-card mx-auto rounded"
+                  [style.max-width]="'400px'"
+                  >
+            </div>
           </ng-template>
           <ng-template #spinnerTempl>
             <div class="d-flex justify-content-center">

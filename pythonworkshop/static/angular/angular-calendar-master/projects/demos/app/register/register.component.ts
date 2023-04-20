@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../_services/auth.service';
 import { TokenStorageService } from '../_services/token-storage.service';
-
+import { BehaviorSubject } from 'rxjs';
+import { ThemePalette } from '@angular/material/core';
 
 @Component({
   selector: 'app-register',
@@ -17,6 +18,7 @@ export class RegisterComponent implements OnInit {
   isSuccessful = false;
   isSignUpFailed = false;
   errorMessage = '';
+  color : ThemePalette = 'accent'
 
   constructor(
     private authService: AuthService, 
@@ -25,6 +27,8 @@ export class RegisterComponent implements OnInit {
   ngOnInit(): void {
     
   }
+
+  isSendingRegister : BehaviorSubject<boolean> = new BehaviorSubject(false);
 
   onSubmit(): void {
     const { email, password , ou} = this.form;

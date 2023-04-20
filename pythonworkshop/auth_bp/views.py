@@ -185,6 +185,8 @@ def register_form():
         if user is not None:
             token = user.generate_confirmation_token()
             temp_user_id = user.id
+            url_for = url_for('auth_bp.confirm',_external=True, token=token)
+            print(f'auth_bp register_form link: {url_for}')
             send_email(user.user_email, 'Confirm Your Account', 'auth/email/confirm', user=user, token=token)
             #send_email([user.user_email], 'Confirm Your Account', 'auth/email/confirm', user=user, token=token)
             msg = 'En bekreftelses e-post har blitt sendt til deg på e-post.'
@@ -217,7 +219,7 @@ def confirm(token):
         db.session.commit()
         msg = 'Bekreftelseslenken er ugyldig eller har utløpt.'
     print(f'auth_bp.confirm msg:{msg}')    
-    return redirect(f'https://webeltek.org/confirm?=userconfirmed={userconfirmed}')
+    return redirect(f'https://webeltek.org/confirm?userconfirmed={userconfirmed}')
 
 @auth_bp.route('/api/auth/reg_admin_confirm', methods=['POST'])
 def reg_admin_confirm(usr_email=None,temp_usr_id=None): 

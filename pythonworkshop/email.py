@@ -79,9 +79,9 @@ def send_email(to, subject, template, **kwargs):
     msg.body = render_template(template + '.txt', **kwargs)
     msg.html = render_template(template + '.html', **kwargs)
     mail.send(msg)
-    #thr = Thread(target=send_async_email, args=[app, msg])
-    #thr.start()
-    #return thr 
+    thr = Thread(target=send_async_email, args=[app, msg])
+    thr.start()
+    return thr 
 
 def send_guest_email(subject,template, **kwargs):
     app = current_app._get_current_object()
@@ -100,10 +100,10 @@ def send_adm_conf_email(adm_conf_email, subject, template, **kwargs):
     msg.html = render_template(template + '.html', **kwargs)
     mail.send(msg)
 
-""" def send_async_email(app, msg):
+def send_async_email(app, msg):
     with app.app_context():
         print('Thread started, inside send_async_email')
-        mail.send(msg) """    
+        mail.send(msg)    
             
     
     
