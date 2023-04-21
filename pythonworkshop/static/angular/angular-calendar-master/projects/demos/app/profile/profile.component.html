@@ -13,7 +13,7 @@
               </p>
               <p *ngIf="user.is_admin"><a class="text-dark" href="mailto:{{ user.user_email }}">{{ user.user_email }}</a></p>
               <p>{{'PClastSeen' | translate }}{{ user.last_seen ? (user.last_seen | date:'short') : "" }}.</p>
-              <p class="text-warning"><b>{{serviceMsg$ | async}}</b></p>
+              <p class="text-danger"><b>{{serviceMsg$ | async}}</b></p>
             </div>
             <mat-expansion-panel>
               <mat-expansion-panel-header>
@@ -28,14 +28,16 @@
               <form [formGroup]="changeEmailFG">
                 <mat-form-field appearance="fill">
                   <mat-label>{{'PCnewEmail' |translate}}</mat-label>
-                  <input matInput formControlName="email" type="email" [errorStateMatcher]="matcher">
+                  <input matInput formControlName="email" type="email" [errorStateMatcher]="matcher"
+                  (keydown.enter)="changeEmail(changeEmailFG.value.email,changeEmailFG.value.pass)">
                   <mat-error *ngIf="changeEmailFG.controls.email.errors?.['email']">
                     {{ 'PCemailTooshort' | translate}}
                   </mat-error>
                 </mat-form-field>
                 <mat-form-field appearance="fill">
                   <mat-label>{{'PColdPass' |translate}}</mat-label>
-                  <input matInput formControlName="pass" type="password" [errorStateMatcher]="matcher">
+                  <input matInput formControlName="pass" type="password" [errorStateMatcher]="matcher"
+                  (keydown.enter)="changeEmail(changeEmailFG.value.email,changeEmailFG.value.pass)">
                     <mat-error *ngIf="changeEmailFG.controls.pass.errors?.['minlength']">
                     {{'LCpassMinChar' | translate}}
                     </mat-error>
@@ -64,7 +66,8 @@
               <form [formGroup]="changePassFG">
                 <mat-form-field appearance="fill">
                   <mat-label>{{'RCemail' |translate}}</mat-label>
-                  <input matInput formControlName="email" type="email">
+                  <input matInput formControlName="email" type="email"
+                  (keydown.enter)="changePass(changePassFG.value.email)">
                     <mat-error *ngIf="changePassFG.controls.email.errors?.['minlength']">
                     {{'PCemailTooshort' | translate}}
                     </mat-error>

@@ -43,6 +43,8 @@
      "PCsubmit": "Bekreft",
      "PCemail": "E-post",
 
+     "CPCpassChangeSuccess" : "Passord endret for e-post : ",
+
      "RCemail": "E-post *",
      "RCpass": "Passord *",
      "RCemailRequired": "E-post påkrevd!",

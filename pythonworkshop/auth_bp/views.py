@@ -305,7 +305,7 @@ def input_change_pass():
         user = db.session.execute(db.select(User).where(User.user_email==email)).scalar_one_or_none()
         if user is not None:
             print(f'auth_bp.input_change_pass user email to change pass:{user.user_email}')
-        if user is not None and user.verify_password(oldpass) and user.user_confirmed and user.user_conf_by_admin:
+        if user is not None and user.verify_password(oldpass) and user.user_confirmed:
             user.change_pass(email,newpass)
             #user.login_user()
             return jsonify({'user_email':email,'msg':'Password changed!'})

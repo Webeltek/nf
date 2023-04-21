@@ -43,6 +43,8 @@
     "PCsubmit": "Submit",
     "PCemail": "Email",
 
+    "CPCpassChangeSuccess" : "Successfully changed pass for: ",
+
     "RCemail": "Email *",
     "RCpass": "Password *",
     "RCemailRequired": "Email is required!",

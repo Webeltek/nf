@@ -13,7 +13,7 @@ export class RegisterComponent implements OnInit {
   form: any = {
     email: null,
     password: null,
-    ou: "init ou"
+    orgunit: ""
   };
   isSuccessful = false;
   isSignUpFailed = false;
@@ -31,10 +31,12 @@ export class RegisterComponent implements OnInit {
   isSendingRegister : BehaviorSubject<boolean> = new BehaviorSubject(false);
 
   onSubmit(): void {
-    const { email, password , ou} = this.form;
-    //console.log("RC onSubmit called");
-    this.authService.register( email, password , ou).subscribe({
+    let { email, password , orgunit} = this.form;
+    this.isSendingRegister.next(true);
+    if (orgunit==="") { orgunit= "init ou"};
+    this.authService.register( email, password , orgunit).subscribe({
       next : (response) => {
+        this.isSendingRegister.next(false);
         let responseObj = response.body as any;
         let is_duplicate : boolean = responseObj.is_duplicate;
         let temp_user_id : number = responseObj.temp_user_id;

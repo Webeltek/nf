@@ -37,11 +37,12 @@
           </mat-error>
       </mat-form-field>
       <mat-action-row>
-        <button mat-button color="primary" (click)="inputChangePass(changePassFG.value.email,changePassFG.value.oldpass,changePassFG.value.newpass)">{{ 'PCsubmit' | translate}}</button>
+        <button mat-button color="primary" 
+        (click)="inputChangePass(changePassFG.value.email,changePassFG.value.oldpass,changePassFG.value.newpass)">{{ 'PCsubmit' | translate}}</button>
       </mat-action-row>
     </form>  
       <div class="alert alert-success" *ngIf="isSuccessful">
-        {{'RCalertSuccess' | translate }}{{changePassFG.value.email}}
+        {{'CPCpassChangeSuccess' | translate }}{{changePassFG.value.email}}
       </div>
     </div>
   </div>
