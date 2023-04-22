@@ -233,7 +233,7 @@ def finalize(op_identifier, request_args,isCheckout):
     
 def reg_vipps_usr_in_db(usr_email,usr_sub,email_ver):
     print(f'reg_vipps_usr_in_db:  {usr_email},{usr_sub},{email_ver}')
-    user = db.session.execute(db.select(User).where(User.user_email==usr_email)).first()
+    user = db.session.execute(db.select(User).where(User.user_email==usr_email)).scalar_one_or_none()
     if user is not None:
         login_form(usr_email, usr_sub)
     elif user is None and (usr_email and usr_sub and email_ver) is not None:    
@@ -247,7 +247,7 @@ def reg_vipps_usr_in_db(usr_email,usr_sub,email_ver):
             temp_user_id = user.id
             reg_admin_confirm(usr_email,temp_user_id)
         except db.exc.SQLAlchemyError :
-            return ({'PeeweeExeption': True, 'email': usr_email})
+            return ({'SQLAlchemyException': True, 'email': usr_email})
     return user    
         
 """ def vipps_usr_adm_confirm(usr_email=None,temp_usr_id=None):

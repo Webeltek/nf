@@ -203,17 +203,17 @@ export class DemoAppComponent implements OnInit, OnDestroy{
   }
 
   getEventTitle(pythEv : PythEvent){
-      if ( this.tokenStorage.getUser().is_admin){
-        //console.log("getEventTitle() this.users",this.users);
-        //console.log("getEventTitle() pythEv.userId",pythEv.userId);
-        let eventUser =  this.users.filter((user)=> {
-          //console.log("getEventTitle() user.id == pythEv.userId",user.id == pythEv.userId)
-          return user.id == pythEv.userId_id
-        });
-        //console.log("getEventTitle() eventUser array",eventUser );
-        return typeof eventUser[0]=='undefined' ? '' : eventUser[0].user_email;
+      let eventUser =  this.users.filter((user)=> {
+        //console.log("getEventTitle() user.id == pythEv.userId",user.id == pythEv.userId)
+        return user.id == pythEv.userId_id
+      });
+      
+      let ouname = pythEv.ou==="init ou" ? "" : pythEv.ou;
+      let userEmail = typeof eventUser[0]=='undefined' ? '' : eventUser[0].user_email;
+      if ( this.tokenStorage.getUser().is_admin || this.tokenStorage.getUser().id==pythEv.userId_id){
+        return `${ouname}</br>${userEmail}`;
       } else {
-        return pythEv.title;
+        return `${ouname}`;
       }
     
   }
@@ -266,12 +266,12 @@ export class DemoAppComponent implements OnInit, OnDestroy{
     event: CalendarEvent;
     sourceEvent: MouseEvent | KeyboardEvent;
   }) {
-
-    if ((clickedWeekViewEvent.event.userId==this.tokenStorage.getUser().id
-     && !this.tokenStorage.getUser().is_admin) 
-     || this.tokenStorage.getUser().is_admin 
-     || this.tokenStorage.getUser().ou===clickedWeekViewEvent.event.ou) {
+    console.log("demo-app openDialog userId id",clickedWeekViewEvent.event.userId,this.tokenStorage.getUser().id );
+    if (clickedWeekViewEvent.event.userId===this.tokenStorage.getUser().id 
+          || (this.tokenStorage.getUser().ou!=="init ou" && this.tokenStorage.getUser().ou===clickedWeekViewEvent.event.ou)
+          || this.tokenStorage.getUser().is_admin) {
       var hourContainedEvTitle = "";
+      
       this.httpService.getEvents().subscribe((response) => {
         if(response.hasOwnProperty('events')) {
           let responseObj = response as any;

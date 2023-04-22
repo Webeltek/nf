@@ -265,6 +265,7 @@ export class CalendarWeekViewHourSegmentComponent {
         for (let pythEvt of responseObj.events) {
           let calEvent: CalendarEvent = {
             id: pythEvt.uid,
+            userId: pythEvt.userId_id,
             start: new Date(parseInt(pythEvt.start, 10)),
             end: new Date(parseInt(pythEvt.end, 10)),
             title: pythEvt.title,

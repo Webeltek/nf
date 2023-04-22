@@ -42,16 +42,14 @@ export class CalendarEventTitleFormatter {
    * The week view event title.
    */
   week(event: CalendarEvent, title: string): string {
-    let ouname = event.ou==="init ou" ? "" : event.ou;
-    return event.title + '</br>' + ouname;
+    return event.title;
   }
 
   /**
    * The week view event tooltip. Return a falsey value from this to disable the tooltip.
    */
   weekTooltip(event: CalendarEvent, title: string): string {
-    let ouname = event.ou==="init ou" ? "" : event.ou;
-    return event.title + '</br>' + ouname;
+    return event.title;
   }
 
   /**

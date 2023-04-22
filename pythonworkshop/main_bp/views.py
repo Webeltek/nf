@@ -162,7 +162,7 @@ def index_events():
         for event in events:
             event_list.append(jsons.dump(eventd(
                  event.id,event.uid,event.userId_id,
-                 event.rowname,event.ou,event.start,
+                 event.rowname,event.title,event.ou,event.start,
                  event.end,event.color))) 
         return jsonify({'events':event_list})
 
@@ -171,12 +171,12 @@ class userd:
     id : int
     user_email:str
     user_pass_hash:str
-    user_is_logged_in:str
-    user_confirmed: str
-    user_conf_by_admin: str
+    user_is_logged_in:bool
+    user_confirmed: bool
+    user_conf_by_admin: bool
     access_token: str
     last_seen: str
-    is_admin : str
+    is_admin : bool
     ou: str
     address: str 
 
