@@ -960,7 +960,7 @@ export class CalendarWeekViewComponent
     for (let column of calUtilsView.hourColumns){
       for (let timeEvent of column.events){
         let calEvent : CalendarEvent = timeEvent.event;
-        //console.log("WeekViewComp timeEvent.width is : ",timeEvent.width)
+        //console.log("WeekViewComp timeEvent.event : ",timeEvent.event)
         let diffInMin = this.dateAdapter.differenceInMinutes(calEvent.end,calEvent.start)
         if( calEvent.start.getMinutes() == 30 && diffInMin==30 ){
            timeEvent.top = timeEvent.top - 30;

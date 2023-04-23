@@ -59,7 +59,6 @@
                     required
                     minlength="6"
                     #password="ngModel"
-                    (keydown.enter)="f.form.valid && onSubmit()"
                   />
                   <div class="alert-danger" *ngIf="password.errors && f.submitted">
                     <div *ngIf="password.errors.required">
@@ -80,7 +79,6 @@
                     
                     minlength="6"
                     #orgunit="ngModel"
-                    (keydown.enter)="f.form.valid && onSubmit()"
                   />
                   <div class="alert-danger" *ngIf="password.errors && f.submitted">
                     <div *ngIf="orgunit.errors.required">

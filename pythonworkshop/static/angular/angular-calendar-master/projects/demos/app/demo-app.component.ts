@@ -240,7 +240,7 @@ export class DemoAppComponent implements OnInit, OnDestroy{
           
         }
         this.events = [...this.events];
-        //console.log("getDbEvents() Follows events : ");  
+        //console.log("getDbEvents() Follows events : ", this.events);  
         //console.log(this.events);
       } else {
         //console.log("getDbEvents() string response msg:",response);

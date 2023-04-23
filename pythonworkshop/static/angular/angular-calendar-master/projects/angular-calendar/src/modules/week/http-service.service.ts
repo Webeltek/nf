@@ -121,7 +121,7 @@ export class HttpEventService{
         { headers : this.httpHeaders, observe: 'body', responseType : 'json'} ) 
         .subscribe({
             next: (response) =>{
-                this.addedEvent.emit(null);
+                this.addedEvent.emit(pythEvent);
                 console.log("addEvent() response: " + JSON.stringify(response));
             },
             error: (error) => { 

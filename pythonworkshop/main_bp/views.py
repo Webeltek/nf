@@ -147,8 +147,9 @@ def updaterooms():
 class eventd:
     id: int
     uid: str
-    userId_id : int
+    userId : int
     rowname : str
+    title: str
     ou : str
     start : str
     end : str
@@ -161,7 +162,7 @@ def index_events():
         event_list = []
         for event in events:
             event_list.append(jsons.dump(eventd(
-                 event.id,event.uid,event.userId_id,
+                 event.id,event.uid,event.user_id,
                  event.rowname,event.title,event.ou,event.start,
                  event.end,event.color))) 
         return jsonify({'events':event_list})
