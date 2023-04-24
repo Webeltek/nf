@@ -21,7 +21,7 @@ export interface DialogData {
 export interface PythEvent {
   id? : number;
   uid : string;
-  userId_id? : number;
+  user_id? : number;
   rowname : string;
   title : string;
   ou? : string;
@@ -265,7 +265,7 @@ export class CalendarWeekViewHourSegmentComponent {
         for (let pythEvt of responseObj.events) {
           let calEvent: CalendarEvent = {
             id: pythEvt.uid,
-            userId: pythEvt.userId_id,
+            userId: pythEvt.user_id,
             start: new Date(parseInt(pythEvt.start, 10)),
             end: new Date(parseInt(pythEvt.end, 10)),
             title: pythEvt.title,
@@ -312,7 +312,7 @@ export class CalendarWeekViewHourSegmentComponent {
               this.pythEvt =
               {
                 uid: uniqueId,
-                userId_id: this.loggedInUserId,
+                user_id: this.loggedInUserId,
                 rowname: this.segmRoomNames[this.roomInd],
                 title: result.dayPeriodVal,
                 ou : this.user_ou,

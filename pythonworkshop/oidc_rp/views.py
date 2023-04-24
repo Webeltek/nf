@@ -225,9 +225,9 @@ def finalize(op_identifier, request_args,isCheckout):
         user_pass = usr_sub
         user_conf_by_admin = db_user.user_conf_by_admin
         if isCheckout:
-            return redirect(f'/vipps_checkout?access_token={usr_access_tkn}&usr_phone={usr_phone}')
+            return redirect(f'https://webeltek.org/vipps_checkout?access_token={usr_access_tkn}&usr_phone={usr_phone}')
         elif isCheckout is False: 
-            return redirect(f'/login?username={user_email}&password={user_pass}')
+            return redirect(f'https://webeltek.org/login?username={user_email}&password={user_pass}')
     else:
         return make_response(res['error'], 400)
     
@@ -245,7 +245,7 @@ def reg_vipps_usr_in_db(usr_email,usr_sub,email_ver):
                                user_conf_by_admin = False))
             db.session.commit()
             temp_user_id = user.id
-            reg_admin_confirm(usr_email,temp_user_id)
+            #reg_admin_confirm(usr_email,temp_user_id)             admin confirmation is disabled!!!!!
         except db.exc.SQLAlchemyError :
             return ({'SQLAlchemyException': True, 'email': usr_email})
     return user    

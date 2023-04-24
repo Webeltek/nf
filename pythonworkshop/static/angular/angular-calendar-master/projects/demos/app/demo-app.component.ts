@@ -205,12 +205,12 @@ export class DemoAppComponent implements OnInit, OnDestroy{
   getEventTitle(pythEv : PythEvent){
       let eventUser =  this.users.filter((user)=> {
         //console.log("getEventTitle() user.id == pythEv.userId",user.id == pythEv.userId)
-        return user.id == pythEv.userId_id
+        return user.id == pythEv.user_id
       });
       
       let ouname = pythEv.ou==="init ou" ? "" : pythEv.ou;
       let userEmail = typeof eventUser[0]=='undefined' ? '' : eventUser[0].user_email;
-      if ( this.tokenStorage.getUser().is_admin || this.tokenStorage.getUser().id==pythEv.userId_id){
+      if ( this.tokenStorage.getUser().is_admin || this.tokenStorage.getUser().id==pythEv.user_id){
         return `${ouname}</br>${userEmail}`;
       } else {
         return `${ouname}`;

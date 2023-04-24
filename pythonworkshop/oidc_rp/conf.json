@@ -1,7 +1,7 @@
 {
   "logging": {
     "version": 1,
-    "disable_existing_loggers": false,
+    "disable_existing_loggers": true,
     "root": {
       "handlers": [
         "console",
@@ -112,7 +112,7 @@
       "client_id": "e45b9cd6-2526-43b0-9710-a6a0c2e25534",
       "client_secret": "VRnJnWPH7dfp4CbbCIViVAttgw8=",
       "redirect_uris": [
-        "https://https://138.109-247-35.customer.lyse.net/api/vipps/authz_cb/vipps_provider"
+        "https://api.webeltek.org/api/vipps/authz_cb/vipps_provider"
       ],
       "services": {
         "discovery": {

@@ -333,7 +333,7 @@ export class EditEventsDialog {
         for (let objEvt of  respObj.events){
           let tableRow : TableRow=  {
               id : objEvt.id,
-              user_email : this.users.filter((user)=>objEvt.userId_id==user.id)[0].user_email,
+              user_email : this.users.filter((user)=>objEvt.user_id==user.id)[0].user_email,
               rom : objEvt.rowname,
               start : new Date(parseInt(objEvt.start,10)),
               end : new Date(parseInt(objEvt.end,10)),

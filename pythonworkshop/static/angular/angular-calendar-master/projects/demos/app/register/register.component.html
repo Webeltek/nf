@@ -41,7 +41,7 @@
                     #email="ngModel"
                   />
                   <div class="alert-danger" *ngIf="email.errors && f.submitted">
-                    <div *ngIf="email.errors.required">
+                    <div *ngIf="email.errors?.required">
                       {{'RCemailRequired' | translate}}
                     </div>
                     <div *ngIf="email.errors.email">
@@ -61,10 +61,10 @@
                     #password="ngModel"
                   />
                   <div class="alert-danger" *ngIf="password.errors && f.submitted">
-                    <div *ngIf="password.errors.required">
+                    <div *ngIf="password.errors?.required">
                       {{'LCpassRequired' | translate}}
                     </div>
-                    <div *ngIf="password.errors.minlength">
+                    <div *ngIf="password.errors?.minlength">
                       {{'LCpassMinChar' | translate}}
                     </div>
                   </div>
@@ -81,11 +81,8 @@
                     #orgunit="ngModel"
                   />
                   <div class="alert-danger" *ngIf="password.errors && f.submitted">
-                    <div *ngIf="orgunit.errors.required">
+                    <div *ngIf="orgunit.errors?.minlength">
                       {{'RCorgRequired' | translate}}
-                    </div>
-                    <div *ngIf="orgunit.errors.minlength">
-                      {{'RCorgMinChar' | translate}}
                     </div>
                   </div>
                 </div>
