@@ -43,12 +43,10 @@ class User(db.Model):
     db.session.add(self)
     db.session.commit()
   
-  def generate_access_token(self, expiration=3600):
-        encoded = jwt.encode({'email': self.user_email, \
+  @staticmethod
+  def generate_access_token(user_email, expiration=3600):
+        encoded = jwt.encode({'email':user_email, \
         'exp': datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(seconds=expiration)},current_app.config['SECRET_KEY'], algorithm='HS256')
-        self.access_token = encoded
-        db.session.add(self)
-        db.session.commit()
         return encoded
   
   def gen_ldap_access_token(self,ldap_email, expiration=3600):

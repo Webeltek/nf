@@ -284,17 +284,6 @@ def authz_cb(op_identifier):
     isCheckout = False
     return finalize(op_identifier, request.args, isCheckout)
 
-"""unused method"""
-@oidc_rp_views.route('/api/vipps/authz_cbvipps')
-def authz_cb_vipps():
-    state_key = request.args['state']
-    print(f'authz_cb_vipps state_key :{state_key}')
-    session_info=current_app.rph.get_session_information(state_key)
-    res = current_app.rph.finalize(session_info['iss'],**session_info)
-    print(f'authz_cb_vipps user_info: {res.user_info}')
-    resp = make_response(jsonify({'userinfo':res.user_info}))
-    return resp
-
 
 @oidc_rp_views.errorhandler(werkzeug.exceptions.BadRequest)
 def handle_bad_request(e):

@@ -10,7 +10,9 @@ from ..models_al import *
 from ..email import send_email, send_guest_email, send_adm_conf_email
 from .. import executor
 from wtforms import ValidationError
-import json
+import jsons
+from dataclasses import dataclass
+from ..main_bp import userd
 from urllib.parse import quote_plus, urlencode
 from authlib.integrations.flask_client import OAuth
 from os import access, environ as env
@@ -164,33 +166,26 @@ def login_form(usr_email=None, usr_pass=None):
             #todo return redirect('/calendar')  with accesstoken in authorization header
             return jsonify({'user':user_dict,'msg':msg})
     return jsonify({'user':'nonexistent','msg':msg})
-           
 
 @auth_bp.route('/api/auth/register', methods=['POST'])
 def register_form(): 
   if request.method == 'POST':
-      print(f'/api/auth/register called with email: {str(request.json["email"])}') 
       msg=''
       user_email=request.json['email']
       user_pass=request.json['password']
       user_ou = request.json['ou']
-      try :
-        user = db.session.add(User(user_email=user_email,
-                           user_pass=user_pass,ou=user_ou))
-        db.session.commit()
-      except db.exc.IntegrityError :
+      to_reg_user = userd(user_email=user_email,user_pass=user_pass,ou=user_ou)
+      if session['to_reg_user'] is not jsons.dumps(to_reg_user):
+        session['to_reg_user'] = jsons.dumps(to_reg_user)
+      else :
         return ({'is_duplicate': True, 'duplicate_email': user_email})
-      else:
-        user = db.session.execute(db.select(User).where(User.user_email == user_email)).scalar_one_or_none()
-        if user is not None:
-            token = user.generate_confirmation_token()
-            temp_user_id = user.id
-            url_for = url_for('auth_bp.confirm',_external=True, token=token)
-            print(f'auth_bp register_form link: {url_for}')
-            send_email(user.user_email, 'Confirm Your Account', 'auth/email/confirm', user=user, token=token)
-            #send_email([user.user_email], 'Confirm Your Account', 'auth/email/confirm', user=user, token=token)
-            msg = 'En bekreftelses e-post har blitt sendt til deg på e-post.'
-  return jsonify({'is_duplicate': False,'sent_token': token, 'temp_user_id': temp_user_id,'msg':msg})
+      token = User.generate_confirmation_token()
+      url_for = url_for('auth_bp.confirm',_external=True, token=token)
+      send_email(to_reg_user.user_email, 'Confirm Your Account',
+                  'auth/email/confirm', user=to_reg_user, token=token)
+      #send_email([user.user_email], 'Confirm Your Account', 'auth/email/confirm', user=user, token=token)
+      msg = 'En bekreftelses e-post har blitt sendt til deg på e-post.'
+  return jsonify({'is_duplicate': False,'sent_token': token, 'user_email': to_reg_user.user_email,'msg':msg})
 
 @auth_bp.route('/api/auth/send_msg', methods=['POST'])
 def send_msg(): 
@@ -199,7 +194,8 @@ def send_msg():
       
       guest_email=request.json['msg_email']
       msg_text = request.json['msg_text']
-      send_guest_email('Message from guest', 'auth/email/guest_msg', msg_email=guest_email, msg_text=msg_text)
+      send_guest_email('Message from guest', 
+                       'auth/email/guest_msg', msg_email=guest_email, msg_text=msg_text)
       #send_email([user.user_email], 'Confirm Your Account', 'auth/email/confirm', user=user, token=token)
       msg = 'En bekreftelses e-post har blitt sendt til deg på e-post.'
   return jsonify({'guest_email_reference': guest_email})
