@@ -23,7 +23,7 @@
           </ng-template>
           <div class="d-flex justify-content-center">
               <form
-              *ngIf="!isSuccessful"
+              
               name="form"
               (ngSubmit)="f.form.valid && onSubmit()"
               #f="ngForm"
@@ -77,7 +77,7 @@
                     name="orgunit"
                     [(ngModel)]="form.orgunit"
                     
-                    minlength="6"
+                    minlength="3"
                     #orgunit="ngModel"
                   />
                   <div class="alert-danger" *ngIf="password.errors && f.submitted">

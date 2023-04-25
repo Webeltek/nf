@@ -12,14 +12,13 @@ from .. import executor
 from wtforms import ValidationError
 import jsons
 from dataclasses import dataclass
-from ..main_bp import userd
 from urllib.parse import quote_plus, urlencode
 from authlib.integrations.flask_client import OAuth
 from os import access, environ as env
 #from .. import socketio
 from ldap3 import Server, Connection, ObjectDef, AttrDef, Reader, Writer, ALL, Tls
 import ssl
-
+import uuid
 
 templateLoader = jinja2.PackageLoader('pythonworkshop','templates')
 templateEnv = jinja2.Environment(loader=templateLoader)
@@ -167,6 +166,13 @@ def login_form(usr_email=None, usr_pass=None):
             return jsonify({'user':user_dict,'msg':msg})
     return jsonify({'user':'nonexistent','msg':msg})
 
+@dataclass
+class userd:
+    uid : hex
+    user_email:str
+    user_pass_hash:str
+    ou: str
+
 @auth_bp.route('/api/auth/register', methods=['POST'])
 def register_form(): 
   if request.method == 'POST':
@@ -174,13 +180,12 @@ def register_form():
       user_email=request.json['email']
       user_pass=request.json['password']
       user_ou = request.json['ou']
-      to_reg_user = userd(user_email=user_email,user_pass=user_pass,ou=user_ou)
-      if session['to_reg_user'] is not jsons.dumps(to_reg_user):
-        session['to_reg_user'] = jsons.dumps(to_reg_user)
-      else :
-        return ({'is_duplicate': True, 'duplicate_email': user_email})
-      token = User.generate_confirmation_token()
-      url_for = url_for('auth_bp.confirm',_external=True, token=token)
+      user_pass_hash = User.hash_user_pass(user_pass)
+      uid = uuid.uuid4().hex
+      to_reg_user = userd(uid=uid,user_email=user_email,
+                          user_pass_hash=user_pass_hash,ou=user_ou)
+      session['to_reg_user'] = jsons.dumps(to_reg_user)
+      token = User.generate_confirmation_token(uid)
       send_email(to_reg_user.user_email, 'Confirm Your Account',
                   'auth/email/confirm', user=to_reg_user, token=token)
       #send_email([user.user_email], 'Confirm Your Account', 'auth/email/confirm', user=user, token=token)
@@ -203,16 +208,18 @@ def send_msg():
 @auth_bp.route('/api/auth/confirm/<token>',methods=['POST','GET'])
 def confirm(token):
     tokens_user_id = User.get_tokens_user_id(token)
-    user = db.session.execute(db.select(User).where(User.id==tokens_user_id)).scalar_one_or_none()
+    des_user = jsons.loads(session['to_reg_user'],userd)
     userconfirmed=False
     msg=''
-    if user is not None and (user.user_confirmed or user.confirm(token)):
+    if token is not None and User.confirm(des_user.uid,token):
+        db.session.add(User(user_email=des_user.user_email,
+                            user_pass_hash=des_user.user_pass_hash,
+                            user_confirmed=True,ou=des_user.ou))
+        db.session.commit()
         userconfirmed=True
         msg='Du har bekreftet kontoen din. Takk!'
-    elif user is not None and not user.confirm(token):
-        userconfirmed=False
-        db.session.delete(User).where(User.id == user.id)
-        db.session.commit()
+    elif token is None or not User.confirm(des_user.uid,token):
+        userconfirmed = False
         msg = 'Bekreftelseslenken er ugyldig eller har utløpt.'
     print(f'auth_bp.confirm msg:{msg}')    
     return redirect(f'https://webeltek.org/confirm?userconfirmed={userconfirmed}')

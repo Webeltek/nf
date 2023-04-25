@@ -34,6 +34,7 @@ export class RegisterComponent implements OnInit {
     let { email, password , orgunit} = this.form;
     this.isSendingRegister.next(true);
     if (orgunit==="") { orgunit= "init ou"};
+    console.log("RC inside onSubmit()")
     this.authService.register( email, password , orgunit).subscribe({
       next : (response) => {
         this.isSendingRegister.next(false);

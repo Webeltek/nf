@@ -29,9 +29,9 @@ class User(db.Model):
   def user_pass(self):
     raise AttributeError('password is not a readable attribute')
 
-  @user_pass.setter
-  def user_pass(self, password):
-    self.user_pass_hash = bcrypt_sha256.hash(password) 
+  @staticmethod
+  def hash_user_pass(password):
+    return bcrypt_sha256.hash(password) 
 
   def verify_password(self, password):
     print(f'models verify_password value: {password}')
@@ -67,9 +67,9 @@ class User(db.Model):
           return False   
         return True
            
-
-  def generate_confirmation_token(self, expiration=3600):
-        encoded = jwt.encode({'confirm': self.id, \
+  @staticmethod
+  def generate_confirmation_token(uid, expiration=3600):
+        encoded = jwt.encode({'confirm': uid, \
         'exp': datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(seconds=expiration)},current_app.config['SECRET_KEY'], algorithm='HS256')
         return encoded
   
@@ -90,19 +90,20 @@ class User(db.Model):
         print(f'exept in models.User.confirm()')
         return False
   
-  def confirm(self, token):
+  @staticmethod
+  def confirm(uid, token):
     print(f'User.confirm() token is: {token}')
-    print(f'User.confirm(...) self.id is: {self.id}')
+    print(f'User.confirm(...) uid is: {uid}')
     try:
         data = jwt.decode(token,current_app.config['SECRET_KEY'],algorithms=["HS256"])
-        confirmed_user_id = data.get('confirm')
-        print(f'User.confirm(...) data.confirm is:{confirmed_user_id}')
+        confirmed_user_uid = data.get('confirm')
+        print(f'User.confirm(...) data.confirm is:{confirmed_user_uid}')
     except:
         print(f'exept in models.User.confirm()')
         return False
-    if data.get('confirm') != self.id:
+    if data.get('confirm') != uid:
         print('User.confirm(...) exception in data.get("confirm")')
-        print('User.confirm(...) data.get("confirm"): ' + str(data.get('confirm')) + 'is not = self.id: '+str(self.id)) 
+        print('User.confirm(...) data.get("confirm"): ' + str(data.get('confirm')) + 'is not = uid: '+str(uid)) 
         return False
     if self.user_confirmed == False:
         self.user_confirmed = True
@@ -110,6 +111,11 @@ class User(db.Model):
         db.session.commit()
     print('User confirmed in User.confirm(')
     return True
+  
+  def add_confirmed_user(user):
+      user.user_confirmed = True
+      db.session.add(user)
+      db.session.commit()
   
   def conf_by_adm(self, token):
     print(f'User.conf_by_adm() token is: {token}')
