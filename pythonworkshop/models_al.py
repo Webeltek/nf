@@ -28,6 +28,10 @@ class User(db.Model):
   @property
   def user_pass(self):
     raise AttributeError('password is not a readable attribute')
+  
+  @user_pass.setter
+  def user_pass(self, password):
+    self.user_pass_hash = bcrypt_sha256.hash(password)
 
   @staticmethod
   def hash_user_pass(password):
@@ -139,7 +143,7 @@ class User(db.Model):
         return encodeed
 
   def change_pass(self,email,newpass):
-        user = User.get(User.user_email == email)
+        user = db.session.execute(db.select(User).where(User.user_email == email)).scalar_one_or_none()
         if user.id!=self.id:
             return False
         if newpass is not None:

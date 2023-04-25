@@ -4,6 +4,8 @@ import { TokenStorageService } from '../_services/token-storage.service';
 import { ActivatedRoute} from '@angular/router';
 import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
 import { MyErrorStateMatcher } from '../profile/profile.component';
+import { ThemePalette } from '@angular/material/core';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'mwl-change-pass',
@@ -20,6 +22,7 @@ export class ChangePassComponent implements OnInit {
   isInputChangePassFailed = false;
   errorMessage = '';
   matcher = new MyErrorStateMatcher();
+  color : ThemePalette = 'accent'
 
   constructor(private authService: AuthService, 
     private tokenStorage: TokenStorageService,
@@ -29,10 +32,14 @@ export class ChangePassComponent implements OnInit {
     let userEmailexists = this.actRoute.snapshot.queryParamMap.get('emailcheck');
   }
 
+  isSendingChangePass : BehaviorSubject<boolean> = new BehaviorSubject(false);
+
   inputChangePass(email: string,oldpass: string,newpass: string): void {
-    console .log("ChPC inputchangePass email, oldpass, newpass: ",email,oldpass,newpass)
+    //console .log("ChPC inputchangePass email, oldpass, newpass: ",email,oldpass,newpass)
+    this.isSendingChangePass.next(true);
     this.authService.inputChangePass( email, oldpass,newpass).subscribe({
       next : (response) => {
+        this.isSendingChangePass.next(false);
         let responseObj = response.body as any;
         let user_id : number = responseObj.temp_user_id;
           let sentToken = response.sent_token;
@@ -41,6 +48,7 @@ export class ChangePassComponent implements OnInit {
           this.isInputChangePassFailed = false;
       },
       error : (err) => {
+        this.isSendingChangePass.next(false);
         this.errorMessage = err.error.message;
         this.isInputChangePassFailed = true;
       }

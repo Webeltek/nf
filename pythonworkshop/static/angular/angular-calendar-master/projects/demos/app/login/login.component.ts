@@ -30,7 +30,7 @@ export class LoginErrorStateMatcher implements ErrorStateMatcher {
 export class LoginComponent implements OnInit {
   matcher = new LoginErrorStateMatcher();
 
-  color : ThemePalette = 'accent'
+  color : ThemePalette = 'accent';
 
   loginFG = new UntypedFormGroup({
     username: new UntypedFormControl('',[Validators.required,Validators.minLength(5)]),
