@@ -1,4 +1,4 @@
-from flask import render_template, redirect,session, request, url_for, flash, \
+from flask import render_template, redirect, request, url_for, flash, \
         current_app, jsonify
 
 from . import auth_bp
@@ -19,6 +19,7 @@ from os import access, environ as env
 from ldap3 import Server, Connection, ObjectDef, AttrDef, Reader, Writer, ALL, Tls
 import ssl
 import uuid
+from .. import cache
 
 templateLoader = jinja2.PackageLoader('pythonworkshop','templates')
 templateEnv = jinja2.Environment(loader=templateLoader)
@@ -137,7 +138,9 @@ def login_form(usr_email=None, usr_pass=None):
                 print(f'auth_bp.login_form() user email to login:{user.user_email}')
             if user is not None and user.verify_password(request.json['password']) and user.user_confirmed:
                 user.login_user()
-                user.generate_access_token()
+                user.access_token = user.generate_access_token(user.user_email)
+                db.session.add(user)
+                db.session.commit()
                 user_dict = {'id': user.id,
                             'is_admin':user.is_admin,
                             'user_email':user.user_email,
@@ -154,7 +157,9 @@ def login_form(usr_email=None, usr_pass=None):
         user = db.session.execute(db.select(User).where(User.user_email==usr_email)).scalar_one_or_none()
         if user is not None and user.verify_password(usr_pass) and user.user_confirmed:
             user.login_user()
-            user.generate_access_token()
+            user.access_token = user.generate_access_token(user.user_email)
+            db.session.add(user)
+            db.session.commit()
             user_dict = {'id': user.id,
                          'is_admin':user.is_admin,
                          'user_email':user.user_email,
@@ -177,14 +182,21 @@ class userd:
 def register_form(): 
   if request.method == 'POST':
       msg=''
+      uid = uuid.uuid4().hex
       user_email=request.json['email']
       user_pass=request.json['password']
-      user_ou = request.json['ou']
       user_pass_hash = User.hash_user_pass(user_pass)
-      uid = uuid.uuid4().hex
+      user_ou = request.json['ou']
       to_reg_user = userd(uid=uid,user_email=user_email,
                           user_pass_hash=user_pass_hash,ou=user_ou)
-      session['to_reg_user'] = jsons.dumps(to_reg_user)
+      ser_user = jsons.dumps(to_reg_user)
+      print(f'register ser_user:  {ser_user}')  
+      cache.set('uid', uid)
+      cache.set('email',user_email)
+      cache.set('pass_hash',user_pass_hash)
+      cache.set('ou',user_ou)
+
+      cache_val = cache.get('uid')
       token = User.generate_confirmation_token(uid)
       send_email(to_reg_user.user_email, 'Confirm Your Account',
                   'auth/email/confirm', user=to_reg_user, token=token)
@@ -207,18 +219,20 @@ def send_msg():
 
 @auth_bp.route('/api/auth/confirm/<token>',methods=['POST','GET'])
 def confirm(token):
-    tokens_user_id = User.get_tokens_user_id(token)
-    des_user = jsons.loads(session['to_reg_user'],userd)
+    cache_uid = cache.get('uid')
+    email = cache.get('email')
+    pass_hash = cache.get('pass_hash')
+    user_ou = cache.get('ou')
     userconfirmed=False
     msg=''
-    if token is not None and User.confirm(des_user.uid,token):
-        db.session.add(User(user_email=des_user.user_email,
-                            user_pass_hash=des_user.user_pass_hash,
-                            user_confirmed=True,ou=des_user.ou))
+    if token is not None and User.confirm(cache_uid,token):
+        db.session.add(User(user_email=email,
+                            user_pass_hash=pass_hash,
+                            user_confirmed=True,ou=user_ou))
         db.session.commit()
         userconfirmed=True
         msg='Du har bekreftet kontoen din. Takk!'
-    elif token is None or not User.confirm(des_user.uid,token):
+    elif token is None or not User.confirm(cache_uid,token):
         userconfirmed = False
         msg = 'Bekreftelseslenken er ugyldig eller har utløpt.'
     print(f'auth_bp.confirm msg:{msg}')    

@@ -13,6 +13,7 @@ from config import config, DevelopmentConfig
 from flask_executor import Executor
 #from flask_socketio import SocketIO
 from flask_cors import CORS, cross_origin
+from flask_caching import Cache
 
 from oidcmsg.configure import create_from_config_file
 from oidcrp.configure import Configuration
@@ -24,7 +25,6 @@ from cryptojwt.key_jar import init_key_jar
 from flask.app import Flask
 from flask import current_app
 from oidcrp.rp_handler import RPHandler
-
 from flask_sqlalchemy import SQLAlchemy
 
 templ_dir = os.path.abspath('pythonworkshop/templates')
@@ -35,6 +35,8 @@ db = SQLAlchemy()
 mail = Mail()
 moment = Moment()
 executor = Executor()
+tmp_dir = os.path.abspath('tmp')
+cache = Cache()
 #socketio = SocketIO(cors_allowed_origins="*")
 
  #- only views that don't use FlaskForm use the provided CSRF extension
@@ -61,6 +63,12 @@ def create_app(config_name):
   database = 'nf_users_db'
   app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://{username}:{password}@localhost:5432/{database}"
   db.init_app(app)
+
+  cache.init_app(app,config={
+    "CACHE_TYPE": "FileSystemCache",  # Flask-Caching related configs
+    "CACHE_DEFAULT_TIMEOUT": 3600,
+    "CACHE_THRESHOLD": 10000,
+    "CACHE_DIR": tmp_dir})
 
   #login_manager.init_app(app)
   print('mail server: ' + app.config['MAIL_SERVER'])

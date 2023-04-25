@@ -260,6 +260,7 @@ export class LoginComponent implements OnInit {
 
       },
       error: err => {
+        this.isSendingLogin.next(false);
         this.errorMessage = err.error.message;
         this.isLoginFailed = true;
       }

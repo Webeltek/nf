@@ -105,10 +105,6 @@ class User(db.Model):
         print('User.confirm(...) exception in data.get("confirm")')
         print('User.confirm(...) data.get("confirm"): ' + str(data.get('confirm')) + 'is not = uid: '+str(uid)) 
         return False
-    if self.user_confirmed == False:
-        self.user_confirmed = True
-        db.session.add(self)
-        db.session.commit()
     print('User confirmed in User.confirm(')
     return True
   

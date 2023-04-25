@@ -23,7 +23,7 @@
           </ng-template>
           <div class="d-flex justify-content-center">
               <form
-              
+              *ngIf="!isSuccessful"
               name="form"
               (ngSubmit)="f.form.valid && onSubmit()"
               #f="ngForm"

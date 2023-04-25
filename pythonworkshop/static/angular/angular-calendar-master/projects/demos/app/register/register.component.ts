@@ -80,6 +80,7 @@ export class RegisterComponent implements OnInit {
         
       },
       error : (err) => {
+        this.isSendingRegister.next(false);
         console.log("RegComp error",err);
         this.errorMessage = err.error.message;
         this.isSignUpFailed = true;
