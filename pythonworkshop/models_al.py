@@ -171,12 +171,13 @@ class User(db.Model):
         user_id_change_email = data.get('confirm')
         if new_email is None:
             return False
-        user =  User.get(User.id==user_id_change_email)        
+        user =  db.session.execute(db.select(User).where(User.id == user_id_change_email)).scalar_one_or_none()        
         if user is None:
             return False
         print(f'models change_email() user_id_change_email: {user_id_change_email}')
         print(f'models change_email() new_email : {new_email}')
-        db.session.execute(db.update(User).where(User.id == user_id_change_email), {User.user_email:new_email})
+        user.user_email=new_email
+        db.session.add(user)
         db.session.commit()
         return True
 
