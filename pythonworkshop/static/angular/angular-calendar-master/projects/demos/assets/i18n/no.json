@@ -51,7 +51,7 @@
      "RCemailValid": "E-post må være en gyldig e-postadresse!",
      "RCsignup": "Registrer deg",
      "RCsignupFailed": "Registrering mislyktes!",
-     "RCalertSuccess": "En e-postbekreftelse er sendt til: ",
+     "RCalertSuccess": "En e-postbekreftelse er sendt til: {{value}}",
      "RCorgUnit": "Organisasjon/firmanavn",
      "RCorgRequired": "Organisasjon/firmanavn påkrevd!",
 

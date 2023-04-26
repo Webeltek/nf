@@ -29,6 +29,7 @@ export class RegisterComponent implements OnInit {
   }
 
   isSendingRegister : BehaviorSubject<boolean> = new BehaviorSubject(false);
+  param = {value: ""};
 
   onSubmit(): void {
     let { email, password , orgunit} = this.form;
@@ -43,6 +44,7 @@ export class RegisterComponent implements OnInit {
         let temp_user_id : number = responseObj.temp_user_id;
         console.log("RegComp is_duplicate value: ",responseObj.is_duplicate)
         if (!is_duplicate){
+          this.param.value = this.form.email;
           //console.log("RegComp not duplicate response",response)
           let sentToken = response.sent_token;
           this.tokenStorage.saveConfirmToken(sentToken)

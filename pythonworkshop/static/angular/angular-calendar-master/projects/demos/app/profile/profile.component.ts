@@ -58,13 +58,19 @@ export class ProfileComponent implements OnInit {
     this.user=this.tokenStorage.getUser();
   }
 
+  param = {value : ""};
+
   changeEmail(newEmail: string, oldPass: string){
     this.authService.changeEmail(this.user.id,newEmail,oldPass).subscribe({
       next: (respObj)=>{
         let respAny  = respObj.body as any;
         if(respAny.hasOwnProperty('to_change_email')){
           console.log("PC changeEmail respAny.changed_email: ",respAny.to_change_email);
-          this.serviceMsg$.next(`A confirmation has been sent to the new email: ${respAny.to_change_email}`);
+          this.param.value = respAny.to_change_email;
+          this.serviceMsg$.next(`RCalertSuccess`);
+        } else if(respAny.hasOwnProperty('duplicate_email')){
+          this.param.value = respAny.duplicate_email;
+          this.serviceMsg$.next('PCduplicateEmail')
         }
       }
     })
@@ -76,7 +82,8 @@ export class ProfileComponent implements OnInit {
         let respAny = data.body as any;
         //console.log("loginComp dataObj.user:",dataObj.user)
         if (respAny.hasOwnProperty('user_email')){
-          this.serviceMsg$.next(`A confirmation has been sent to: ${respAny.user_email}`);
+          this.param.value = respAny.user_email;
+          this.serviceMsg$.next(`RCalertSuccess`);
         } else {
           this.errorMessage = "Wrong username or password!";
         }

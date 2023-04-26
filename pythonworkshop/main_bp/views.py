@@ -252,6 +252,10 @@ def change_email_request():
         req_json = request.get_json()
         userId = req_json['userId']
         newEmail = req_json['newEmail']
+        existing_email = db.session.execute(db.select(User).where(User.user_email==newEmail)).scalar_one_or_none()
+        if existing_email is not None:
+             msg = " Email already exists!"
+             return jsonify({'duplicate_email': newEmail, 'msg':msg}) 
         userPass = req_json['oldpassword']
         user = db.session.execute(db.select(User).where(User.id==userId)).scalar_one_or_none()
         if user is not None and user.verify_password(userPass):
@@ -262,7 +266,7 @@ def change_email_request():
                        user=user, token=token)
             msg='En e-post med instruksjoner for å bekrefte din nye e-post adressen er sendt til deg.'
         else:
-            msg='Invalid email or password.'
+            msg='Invalid password.'
     return jsonify({'to_change_email': newEmail, 'msg':msg})
 
 @main_bp.route('/api/services/change_pass', methods=['GET', 'POST'])

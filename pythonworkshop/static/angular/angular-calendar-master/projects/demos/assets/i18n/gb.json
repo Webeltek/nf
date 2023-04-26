@@ -42,6 +42,7 @@
     "PCchangePassDescr": "type in",
     "PCsubmit": "Submit",
     "PCemail": "Email",
+    "PCduplicateEmail": "Email already exists: {{value}}",
 
     "CPCpassChangeSuccess" : "Successfully changed pass for: ",
 
@@ -51,7 +52,7 @@
     "RCemailValid": "Email must be a valid email address!",
     "RCsignup": "Sign Up",
     "RCsignupFailed": "Signup failed!",
-    "RCalertSuccess": "A confirmation email has been sent to: ",
+    "RCalertSuccess": "A confirmation email has been sent to: {{value}}",
     "RCorgUnit": "Organization/Company",
     "RCorgRequired": "Organization is required!",
 
