@@ -126,6 +126,17 @@ def login_ldap(usr_email=None, usr_pass=None):
 
     return jsonify({'ldap_login':'called','ldap_usr': msg})
         
+@auth_bp.route('/api/auth/logout', methods=['POST','GET'])
+def logout_form():
+    msg = ''
+    if request.method == 'POST':
+        user = db.session.execute(db.select(User).where(User.user_email==request.json['email'])).scalar_one()
+        if user is not None:
+            user.logout_user()
+            msg = 'logout success'
+        else :
+            msg = 'logout error'
+    return jsonify({'logout_msg':msg})        
 
 @auth_bp.route('/api/auth/login', methods=['POST','GET'])
 def login_form(usr_email=None, usr_pass=None):
@@ -133,7 +144,8 @@ def login_form(usr_email=None, usr_pass=None):
     msg = ''
     if request.method == 'POST':
         try :
-            user = db.session.execute(db.select(User).where(User.user_email==request.json['email'])).scalar_one()
+            user = db.session.execute(db.select(User).where(
+                User.user_email==request.json['email'])).scalar_one()
             if user is not None:
                 print(f'auth_bp.login_form() user email to login:{user.user_email}')
             if user is not None and user.verify_password(request.json['password']) and user.user_confirmed:

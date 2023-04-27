@@ -29,6 +29,12 @@ export class AuthService {
     }, { headers : this.httpHeaders, observe : 'body'});
   }
 
+  logout(email: string) {
+    return this.http.post(baseurl+AUTH_API + 'logout', {
+      email
+    }, { headers : this.httpHeaders, observe : 'body'});
+  }
+
   testLogin() {
     return this.http.post(baseurl+ '/api/test', {
       test_usr : "testing usr"

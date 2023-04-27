@@ -42,6 +42,7 @@
      "PCchangePassDescr": "Skriv inn",
      "PCsubmit": "Bekreft",
      "PCemail": "E-post",
+     "PCduplicateEmail": "Epost finnes allerede: {{value}}",
 
      "CPCpassChangeSuccess" : "Passord endret for e-post : ",
 

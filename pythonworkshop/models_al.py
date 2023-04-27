@@ -11,6 +11,7 @@ class User(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   user_email = db.Column(db.String,default='first_email',unique=True)
   user_pass_hash = db.Column(db.String, default='initial hash')
+  user_sub = db.Column(db.String, default='initial sub')
   user_is_logged_in = db.Column(db.Boolean,default=False)
   user_confirmed = db.Column(db.Boolean,default=False)
   user_conf_by_admin = db.Column(db.Boolean,default=False)
@@ -46,6 +47,11 @@ class User(db.Model):
     self.last_seen = datetime.datetime.now(tz=datetime.timezone.utc)
     db.session.add(self)
     db.session.commit()
+
+  def logout_user(self):
+    self.user_is_logged_in = False
+    db.session.add(self)
+    db.session.commit()  
   
   @staticmethod
   def generate_access_token(user_email, expiration=3600):
