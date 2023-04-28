@@ -175,7 +175,7 @@ export class HttpEventService{
     }
 
     googleAuthorize(){
-        window.location.href="https://api.webeltek.org/api/google/rp?static_iss=google_provider"
+        window.location.href="http://localhost/api/google/rp?static_iss=google_provider"
     }
 
 }
