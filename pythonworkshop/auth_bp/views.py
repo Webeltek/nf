@@ -152,7 +152,7 @@ def google_cb():
             # ID token is valid. Get the user's Google Account ID from the decoded token.
             userid = idinfo['sub']
             user_email = idinfo['email']
-            return redirect(f'https://webeltek.org/login?username={user_email}&password={userid}')
+            return redirect(f'https://webeltek.org/login?username={user_email}&google_sub={userid}')
         except ValueError:
             # Invalid token
             pass
@@ -160,7 +160,7 @@ def google_cb():
 
 
 @auth_bp.route('/api/auth/login', methods=['POST','GET'])
-def login_form(usr_email=None, usr_pass=None):
+def login_form(usr_email=None, vipps_sub=None,google_sub=None):
     #print('login_form call')
     msg = ''
     if request.method == 'POST':
@@ -186,13 +186,19 @@ def login_form(usr_email=None, usr_pass=None):
                 msg='Wrong username or password!'
         except db.exc.NoResultFound:
             msg='Wrong username or password!'         
-    if (usr_email and usr_pass) is not None:
+    if usr_email is not None:
+        if vipps_sub is not None:
+            db.session.add(User(user_email=usr_email,
+                            vipps_sub=vipps_sub,user_is_logged_in=True,
+                            user_confirmed=True))
+        elif google_sub is not None:
+            db.session.add(User(user_email=usr_email,
+                            google_sub=google_sub,user_is_logged_in=True,
+                            user_confirmed=True))    
+        db.session.commit()
         user = db.session.execute(db.select(User).where(User.user_email==usr_email)).scalar_one_or_none()
-        if user is not None and user.verify_password(usr_pass) and user.user_confirmed:
-            user.login_user()
-            user.access_token = user.generate_access_token(user.user_email)
-            db.session.add(user)
-            db.session.commit()
+        if user is not None:
+            user.access_token = User.generate_access_token(user.user_email)
             user_dict = {'id': user.id,
                          'is_admin':user.is_admin,
                          'user_email':user.user_email,
