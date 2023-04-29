@@ -102,39 +102,7 @@ def send_payment():
         }
     response = requests.post(url, headers=headers,json=data)
     print(f'/api/vipps/send_payment response: {response.json()}')
-    return make_response(response.json())
-
-@oidc_rp_views.route('/api/google/rp', methods= ['POST','GET'])
-def google_resp():
-    iss = "https://accounts.google.com"
-    uid = "770720313920-4dj3m27dp66d8ejnfmd21rtb50rkg6vm.apps.googleusercontent.com"
-    if not iss:
-        iss = request.args['static_iss']
-    print(f'inside inside /api/google/rp iss: {iss}') 
-    if not iss:
-        uid = request.args['uid']
-    else:
-        uid = ''
-
-    if iss or uid:
-        print('oidc_rp inside iss or uid')
-        args = {
-            'req_args': {
-                "claims": {"id_token": {"acr": {"value": "https://refeds.org/profile/mfa"}}}
-            }
-        }
-
-        if uid:
-            args['user_id'] = uid
-
-        session['op_identifier'] = iss
-        try:
-            result = current_app.rph.begin(iss, **args)
-        except Exception as err:
-            return make_response('Something went wrong:{}'.format(err), 400)
-        else:
-            response = redirect(result['url'], 303)
-            return response        
+    return make_response(response.json())       
 
 @oidc_rp_views.route('/api/vipps/rp',methods=['GET','POST'])
 def rp():
@@ -192,7 +160,7 @@ def get_rp(op_identifier):
     return rp
 
 
-def finalize(op_identifier, request_args,isCheckout,isGoogle):
+def finalize(op_identifier, request_args,isCheckout):
     rp = get_rp(op_identifier)
 
     if hasattr(rp, 'status_code') and rp.status_code != 200:
@@ -308,13 +276,12 @@ def get_op_identifier_by_cb_uri(url: str):
                 return k
 
 
-@oidc_rp_views.route('/api/vipps/authz_cb/<op_identifier>')
+@oidc_rp_views.route('/api/vipps/authz_cb/<op_identifier>',methods=["GET","POST"])
 def authz_cb(op_identifier):
     op_identifier = get_op_identifier_by_cb_uri(request.url)
     print(f'authz_cb op_identifier: {op_identifier}')
     isCheckout = False
-    isGoogle = True
-    return finalize(op_identifier, request.args, isCheckout, isGoogle)
+    return finalize(op_identifier, request.args, isCheckout)
 
 
 @oidc_rp_views.errorhandler(werkzeug.exceptions.BadRequest)

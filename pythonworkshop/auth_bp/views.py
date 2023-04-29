@@ -20,6 +20,8 @@ from ldap3 import Server, Connection, ObjectDef, AttrDef, Reader, Writer, ALL, T
 import ssl
 import uuid
 from .. import cache
+from google.oauth2 import id_token
+from google.auth.transport import requests
 
 templateLoader = jinja2.PackageLoader('pythonworkshop','templates')
 templateEnv = jinja2.Environment(loader=templateLoader)
@@ -136,7 +138,26 @@ def logout_form():
             msg = 'logout success'
         else :
             msg = 'logout error'
-    return jsonify({'logout_msg':msg})        
+    return jsonify({'logout_msg':msg})
+
+@auth_bp.route('/api/auth/google_cb',methods=['POST','GET'])
+def google_cb():
+    msg= ''
+    if request.method == 'POST':
+        token = request.form['credential']
+        CLIENT_ID = "770720313920-4dj3m27dp66d8ejnfmd21rtb50rkg6vm.apps.googleusercontent.com"
+        try:
+            # Specify the CLIENT_ID of the app that accesses the backend:
+            idinfo = id_token.verify_oauth2_token(token, requests.Request(), CLIENT_ID)
+            # ID token is valid. Get the user's Google Account ID from the decoded token.
+            userid = idinfo['sub']
+            user_email = idinfo['email']
+            return redirect(f'https://webeltek.org/login?username={user_email}&password={userid}')
+        except ValueError:
+            # Invalid token
+            pass
+
+
 
 @auth_bp.route('/api/auth/login', methods=['POST','GET'])
 def login_form(usr_email=None, usr_pass=None):
