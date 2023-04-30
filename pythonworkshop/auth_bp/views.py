@@ -22,6 +22,7 @@ import uuid
 from .. import cache
 from google.oauth2 import id_token
 from google.auth.transport import requests
+import requests as package_requests
 
 templateLoader = jinja2.PackageLoader('pythonworkshop','templates')
 templateEnv = jinja2.Environment(loader=templateLoader)
@@ -152,6 +153,7 @@ def google_cb():
             # ID token is valid. Get the user's Google Account ID from the decoded token.
             userid = idinfo['sub']
             user_email = idinfo['email']
+            url = "https://webeltek.org/login"
             return redirect(f'https://webeltek.org/login?username={user_email}&google_sub={userid}')
         except ValueError:
             # Invalid token
@@ -185,8 +187,8 @@ def login_form(usr_email=None, vipps_sub=None,google_sub=None):
             else:
                 msg='Wrong username or password!'
         except db.exc.NoResultFound:
-            msg='Wrong username or password!'         
-    if usr_email is not None:
+            msg='Wrong username or password!'
+    if request.method == 'GET' and user is not None:                 
         if vipps_sub is not None:
             db.session.add(User(user_email=usr_email,
                             vipps_sub=vipps_sub,user_is_logged_in=True,

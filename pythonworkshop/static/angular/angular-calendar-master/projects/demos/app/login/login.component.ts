@@ -151,6 +151,35 @@ export class LoginComponent implements OnInit {
         );
       }
 
+      if (params['username'] && params['google_sub']){
+        const username = params['username'];
+        const google_sub = params['google_sub']
+        this.authService.login(username, google_sub).subscribe({
+          next: (data) => {
+            let dataObj = data as any;
+            //console.log("loginComp dataObj.user:",dataObj.user)
+            if (dataObj.user!== 'nonexistent'){
+              let accessToken : string= dataObj.user.access_token ;
+              this.tokenStorage.saveToken(accessToken);
+              this.tokenStorage.saveUser(dataObj.user);
+              this.isLoginFailed = false;
+              this.isLoggedIn = true;
+              this.tokenStorage.authenticated$.next(true);
+              this.router.navigate(['calendar'])
+            } else if(dataObj.user === 'nonexistent'){
+              this.errorMessage = "LCwrongUserPass";
+              this.isLoginFailed = true;
+            }
+    
+          },
+          error: err => {
+            this.errorMessage = err.error.message;
+            this.isLoginFailed = true;
+          }
+        }
+        );
+      }
+
 
     }) 
      

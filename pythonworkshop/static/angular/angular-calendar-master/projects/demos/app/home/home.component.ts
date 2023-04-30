@@ -66,7 +66,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         if (routerEvent instanceof NavigationEnd){
           const titleVal = routerEvent.url;
           titleVal === "/calendar" ? this.isCalendarActive$.next(true)  : this.isCalendarActive$.next(false);
-          console.log("HC ngOnInit actRoute.title value: ",routerEvent.url)
+          //console.log("HC ngOnInit actRoute.title value: ",routerEvent.url)
         }
       },
       error: (err) => {

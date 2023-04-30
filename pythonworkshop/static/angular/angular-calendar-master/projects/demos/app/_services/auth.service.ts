@@ -22,7 +22,7 @@ export class AuthService {
     'Content-Type' : 'application/json; charset=UTF-8'
   });
 
-  login(email: string, password: string) {
+  login(email: string, password?: string, vipps_sub?: string, google_sub?: string) {
     return this.http.post(baseurl+AUTH_API + 'login', {
       email,
       password
