@@ -40,7 +40,6 @@ class User(db.Model):
     return bcrypt_sha256.hash(password) 
 
   def verify_password(self, password):
-    print(f'models verify_password value: {password}')
     return bcrypt_sha256.verify(password,self.user_pass_hash)
 
   def login_user(self):

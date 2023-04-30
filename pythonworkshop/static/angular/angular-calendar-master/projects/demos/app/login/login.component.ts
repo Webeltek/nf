@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , Renderer2} from '@angular/core';
 import { AuthService } from '../_services/auth.service';
 import { TokenStorageService } from '../_services/token-storage.service';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
@@ -81,7 +81,8 @@ export class LoginComponent implements OnInit {
     private tokenStorage: TokenStorageService,
     private actRoute: ActivatedRoute,
     private router: Router,
-    private BPobserver: BreakpointObserver
+    private BPobserver: BreakpointObserver,
+    private renderer: Renderer2
     ) {}  
     
   ngOnInit(): void {
@@ -104,6 +105,12 @@ export class LoginComponent implements OnInit {
       }
     }) */
 
+    const script = this.renderer.createElement('script');
+    this.renderer.setAttribute(script, 'src', 'https://accounts.google.com/gsi/client');
+    this.renderer.setAttribute(script,'async','true');
+    this.renderer.setAttribute(script,'defer','true');
+    this.renderer.appendChild(document.head, script);
+
     this.actRoute.queryParams.subscribe(params=>{
       let code = params['code'];
       console.log("LC ngOnInit  params[code]", params['code']);
@@ -115,10 +122,10 @@ export class LoginComponent implements OnInit {
           }
           //this.httpService.vippsSendCb(obj)
       }
-      if (params['username'] && params['password']){
+      if (params['username'] && params['vipps_sub']){
         const username = params['username'];
-        const password = params['password']
-        this.authService.login(username, password).subscribe({
+        const vipps_sub = params['vipps_sub']
+        this.authService.login(username, vipps_sub).subscribe({
           next: (data) => {
             let dataObj = data as any;
             //console.log("loginComp dataObj.user:",dataObj.user)

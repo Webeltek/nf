@@ -199,6 +199,8 @@ def login_form(usr_email=None, vipps_sub=None,google_sub=None):
         user = db.session.execute(db.select(User).where(User.user_email==usr_email)).scalar_one_or_none()
         if user is not None:
             user.access_token = User.generate_access_token(user.user_email)
+            db.session.add(user)
+            db.session.commit()
             user_dict = {'id': user.id,
                          'is_admin':user.is_admin,
                          'user_email':user.user_email,
