@@ -24,7 +24,9 @@ export class AuthInterceptor implements HttpInterceptor {
       map((event: HttpEvent<any>)=>{
           if (event instanceof HttpResponse){
             // do something
-            if (event.body === "access token expired") this.router.navigate(["login",{session:"expired"}]);
+            if (event.body === "access token expired") {
+              this.router.navigate(["login",{session:"expired"}]);
+            } 
             return event;
           }
       })

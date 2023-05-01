@@ -179,8 +179,6 @@ export class LoginComponent implements OnInit {
         }
         );
       }
-
-
     }) 
      
 
@@ -218,10 +216,6 @@ export class LoginComponent implements OnInit {
 
   vippsLogin() {
     this.httpService.vippsAuthorize();
-  }
-
-  onGoogleLogin(){
-    this.httpService.googleAuthorize();
   }
 
 

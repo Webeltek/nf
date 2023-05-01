@@ -23,10 +23,25 @@ export class AuthService {
   });
 
   login(email: string, password?: string, vipps_sub?: string, google_sub?: string) {
-    return this.http.post(baseurl+AUTH_API + 'login', {
-      email,
-      password
-    }, { headers : this.httpHeaders, observe : 'body'});
+    let content_body = {}
+    if (typeof password !== 'undefined'){
+      content_body = {
+        email : email,
+        password : password
+      }
+    } else if (typeof vipps_sub!=='undefined'){
+      content_body = {
+        email: email,
+        vipps_sub : vipps_sub
+      }
+    } else if ( typeof google_sub !=='undefined'){
+      content_body = {
+        email : email,
+        google_sub : google_sub
+      }
+    }
+    return this.http.post(baseurl+AUTH_API + 'login', 
+    content_body, { headers : this.httpHeaders, observe : 'body'});
   }
 
   logout(email: string) {

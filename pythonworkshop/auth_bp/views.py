@@ -151,10 +151,9 @@ def google_cb():
             # Specify the CLIENT_ID of the app that accesses the backend:
             idinfo = id_token.verify_oauth2_token(token, requests.Request(), CLIENT_ID)
             # ID token is valid. Get the user's Google Account ID from the decoded token.
-            userid = idinfo['sub']
+            google_sub = idinfo['sub']
             user_email = idinfo['email']
-            url = "https://webeltek.org/login"
-            return redirect(f'https://webeltek.org/login?username={user_email}&google_sub={userid}')
+            redirect(f'https://webeltek.org/login?username=user_email&google_sub=google_sub')
         except ValueError:
             # Invalid token
             pass
@@ -168,7 +167,7 @@ def login_form(usr_email=None, vipps_sub=None,google_sub=None):
     if request.method == 'POST':
         try :
             user = db.session.execute(db.select(User).where(
-                User.user_email==request.json['email'])).scalar_one()
+                User.user_email==request.json['email'])).scalar_one_or_none()
             if user is not None:
                 print(f'auth_bp.login_form() user email to login:{user.user_email}')
             if user is not None and user.verify_password(request.json['password']) and user.user_confirmed:
@@ -188,30 +187,39 @@ def login_form(usr_email=None, vipps_sub=None,google_sub=None):
                 msg='Wrong username or password!'
         except db.exc.NoResultFound:
             msg='Wrong username or password!'
-    if request.method == 'GET' and user is not None:                 
-        if vipps_sub is not None:
-            db.session.add(User(user_email=usr_email,
-                            vipps_sub=vipps_sub,user_is_logged_in=True,
-                            user_confirmed=True))
-        elif google_sub is not None:
-            db.session.add(User(user_email=usr_email,
-                            google_sub=google_sub,user_is_logged_in=True,
-                            user_confirmed=True))    
-        db.session.commit()
-        user = db.session.execute(db.select(User).where(User.user_email==usr_email)).scalar_one_or_none()
-        if user is not None:
-            user.access_token = User.generate_access_token(user.user_email)
-            db.session.add(user)
-            db.session.commit()
-            user_dict = {'id': user.id,
-                         'is_admin':user.is_admin,
-                         'user_email':user.user_email,
-                         'access_token': user.access_token,
-                         'last_seen': user.last_seen,
-                         'ou': user.ou}
-            msg = 'External user provider login!'
-            #todo return redirect('/calendar')  with accesstoken in authorization header
-            return jsonify({'user':user_dict,'msg':msg})
+    if request.method == 'GET':        
+        if usr_email  is not None:                 
+            if vipps_sub is not None:
+                db.session.add(User(user_email=usr_email,
+                                vipps_sub=vipps_sub,user_is_logged_in=True,
+                                user_confirmed=True))   
+                db.session.commit()
+                user = db.session.execute(db.select(User).where(User.user_email==usr_email)).scalar_one_or_none()
+                if user is not None:
+                    user.access_token = User.generate_access_token(user.user_email)
+                    db.session.add(user)
+                    db.session.commit()
+                    user_dict = {'id': user.id,
+                                'is_admin':user.is_admin,
+                                'user_email':user.user_email,
+                                'access_token': user.access_token,
+                                'last_seen': user.last_seen,
+                                'ou': user.ou}
+                    msg = 'External user provider login!'
+                    #todo return redirect('/calendar')  with accesstoken in authorization header
+                    return jsonify({'user':user_dict,'msg':msg})
+            if google_sub is not None:
+                to_add_user = User(user_email=usr_email,
+                                access_token=User.generate_access_token(usr_email),    
+                                google_sub=google_sub,user_is_logged_in=True,
+                                user_confirmed=True)
+                db.session.add(to_add_user)    
+                db.session.commit()
+                user = db.session.execute(db.select(User).where(
+                    User.user_email==usr_email and User.google_sub == google_sub)).scalar_one_or_none()
+                if user is not None:
+                    msg = 'Google user provider login!'
+                    return jsonify({'user':to_add_user,'msg':msg})    
     return jsonify({'user':'nonexistent','msg':msg})
 
 @dataclass
