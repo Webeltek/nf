@@ -21,6 +21,7 @@ export class AuthService {
   httpHeaders = new HttpHeaders({
     'Content-Type' : 'application/json; charset=UTF-8'
   });
+  
 
   login(email: string, password?: string, vipps_sub?: string, google_sub?: string) {
     let content_body = {}

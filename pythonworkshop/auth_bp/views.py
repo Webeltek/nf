@@ -153,7 +153,7 @@ def google_cb():
             # ID token is valid. Get the user's Google Account ID from the decoded token.
             google_sub = idinfo['sub']
             user_email = idinfo['email']
-            redirect(f'https://webeltek.org/login?username=user_email&google_sub=google_sub')
+            return redirect(f'https://webeltek.org/login?username={user_email}&google_sub={google_sub}')
         except ValueError:
             # Invalid token
             pass
@@ -164,7 +164,7 @@ def google_cb():
 def login_form(usr_email=None, vipps_sub=None,google_sub=None):
     #print('login_form call')
     msg = ''
-    if request.method == 'POST':
+    if request.method == 'POST' and request.json['password'] is not None:
         try :
             user = db.session.execute(db.select(User).where(
                 User.user_email==request.json['email'])).scalar_one_or_none()
@@ -187,8 +187,7 @@ def login_form(usr_email=None, vipps_sub=None,google_sub=None):
                 msg='Wrong username or password!'
         except db.exc.NoResultFound:
             msg='Wrong username or password!'
-    if request.method == 'GET':        
-        if usr_email  is not None:                 
+    if request.method == 'POST' and request.json['password'] is None:        
             if vipps_sub is not None:
                 db.session.add(User(user_email=usr_email,
                                 vipps_sub=vipps_sub,user_is_logged_in=True,
@@ -208,15 +207,15 @@ def login_form(usr_email=None, vipps_sub=None,google_sub=None):
                     msg = 'External user provider login!'
                     #todo return redirect('/calendar')  with accesstoken in authorization header
                     return jsonify({'user':user_dict,'msg':msg})
-            if google_sub is not None:
+            if request.json['google_sub'] is not None:
                 to_add_user = User(user_email=usr_email,
                                 access_token=User.generate_access_token(usr_email),    
-                                google_sub=google_sub,user_is_logged_in=True,
+                                google_sub=request.json['google_sub'],user_is_logged_in=True,
                                 user_confirmed=True)
                 db.session.add(to_add_user)    
                 db.session.commit()
                 user = db.session.execute(db.select(User).where(
-                    User.user_email==usr_email and User.google_sub == google_sub)).scalar_one_or_none()
+                    User.user_email==usr_email and User.google_sub == request.json['google_sub'])).scalar_one_or_none()
                 if user is not None:
                     msg = 'Google user provider login!'
                     return jsonify({'user':to_add_user,'msg':msg})    
