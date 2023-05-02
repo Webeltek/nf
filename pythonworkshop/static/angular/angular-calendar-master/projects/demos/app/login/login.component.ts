@@ -21,6 +21,14 @@ export class LoginErrorStateMatcher implements ErrorStateMatcher {
   }
 }
 
+export interface UserIdentity{
+  provider: string;
+  username : string;
+  password? : string;
+  vipps_sub?: string;
+  google_sub?: string;
+}
+
 @UntilDestroy()
 @Component({
   selector: 'app-login',
@@ -125,7 +133,7 @@ export class LoginComponent implements OnInit {
       if (params['username'] && params['vipps_sub']){
         const username = params['username'];
         const vipps_sub = params['vipps_sub']
-        this.authService.login(username, vipps_sub).subscribe({
+        this.authService.login({provider:"vipps",username: username, vipps_sub: vipps_sub}).subscribe({
           next: (data) => {
             let dataObj = data as any;
             //console.log("loginComp dataObj.user:",dataObj.user)
@@ -154,7 +162,7 @@ export class LoginComponent implements OnInit {
       if (params['username'] && params['google_sub']){
         const username = params['username'];
         const google_sub = params['google_sub']
-        this.authService.login(username,google_sub).subscribe({
+        this.authService.login({provider:"google",username: username,google_sub: google_sub}).subscribe({
           next: (data) => {
             let dataObj = data as any;
             //console.log("loginComp dataObj.user:",dataObj.user)
@@ -237,11 +245,11 @@ export class LoginComponent implements OnInit {
   isSendingLogin : BehaviorSubject<boolean> = new BehaviorSubject(false);
 
   onSubmit(): void {
-    const  username = this.loginFG.controls.username.value; 
-    const  password  = this.loginFG.controls.pass.value;
+    const  usern : string = this.loginFG.controls.username.value; 
+    const  passw :string = this.loginFG.controls.pass.value;
     this.isSendingLogin.next(true);
 
-    this.authService.login(username, password).subscribe({
+    this.authService.login({provider:"local",username: usern, password: passw}).subscribe({
       next: (data) => {
         this.isSendingLogin.next(false);
         let dataObj = data as any;

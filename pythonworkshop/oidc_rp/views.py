@@ -234,7 +234,7 @@ def reg_vipps_usr_in_db(usr_email,usr_sub,email_ver):
     print(f'reg_vipps_usr_in_db:  {usr_email},{usr_sub},{email_ver}')
     user = db.session.execute(db.select(User).where(User.user_email==usr_email)).scalar_one_or_none()
     if user is not None:
-        login_form(usr_email, usr_sub)
+        pass
     elif user is None and (usr_email and usr_sub and email_ver) is not None:    
         try :
             user = db.session.add(User(user_email=usr_email,

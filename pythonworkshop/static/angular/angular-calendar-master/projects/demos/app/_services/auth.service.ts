@@ -3,6 +3,7 @@ import { HttpClient, HttpContext, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
+import { UserIdentity } from '../login/login.component';
 //import { Socket } from 'ngx-socket-io'; 
 
 const AUTH_API = '/api/auth/';
@@ -23,21 +24,21 @@ export class AuthService {
   });
   
 
-  login(email: string, password?: string, vipps_sub?: string, google_sub?: string) {
+  login({username, password, vipps_sub, google_sub}: UserIdentity) {
     let content_body = {}
     if (typeof password !== 'undefined'){
       content_body = {
-        email : email,
+        email : username,
         password : password
       }
     } else if (typeof vipps_sub!=='undefined'){
       content_body = {
-        email: email,
+        email: username,
         vipps_sub : vipps_sub
       }
     } else if ( typeof google_sub !=='undefined'){
       content_body = {
-        email : email,
+        email : username,
         google_sub : google_sub
       }
     }
