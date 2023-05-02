@@ -1,5 +1,6 @@
 import { Component, ViewChild, OnInit , Inject, OnDestroy} from '@angular/core';
 import { HttpEventService } from 'projects/angular-calendar/src/modules/week/http-service.service';
+import { AuthService } from '../_services/auth.service';
 import { PythUser } from '../demo-app.component';
 import { TokenStorageService } from '../_services/token-storage.service';
 import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
@@ -42,6 +43,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     private actRoute: ActivatedRoute,
     public dialog: MatDialog,
     private httpService: HttpEventService,
+    private authService: AuthService,
     public translate: TranslateService) {
       translate.addLangs(['gb', 'no']);
       translate.setDefaultLang('no');
@@ -124,6 +126,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   } 
 
   logout(): void {
+    this.authService.logout(this.tokenStorage.getUser().user_email)
     this.tokenStorage.signOut();
   }
 

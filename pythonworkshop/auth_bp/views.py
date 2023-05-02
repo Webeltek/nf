@@ -187,13 +187,14 @@ def login_form():
                 else:
                     msg='Wrong username or password!'
             if request.json['provider']=='vipps':
-                db.session.add(User(user_email=request.json['email'],
-                                vipps_sub=request.json['vipps_sub'],user_is_logged_in=True,
-                                user_confirmed=True))   
-                db.session.commit()
-                user = db.session.execute(db.select(User).where(User.user_email==request.json['email'])).scalar_one_or_none()
+                user_email=request.json['email']
+                vipps_sub=request.json['vipps_sub']
+                access_token=User.generate_access_token(user_email)
+                user_dict = {}
+                user = db.session.execute(db.select(User).where(User.user_email==user_email)).scalar_one_or_none()
                 if user is not None:
-                    user.access_token = User.generate_access_token(user.user_email)
+                    user.access_token = access_token
+                    user.user_is_logged_in = True
                     db.session.add(user)
                     db.session.commit()
                     user_dict = {'id': user.id,
@@ -205,6 +206,20 @@ def login_form():
                     msg = 'Vipps provider login!'
                     #todo return redirect('/calendar')  with accesstoken in authorization header
                     return jsonify({'user':user_dict,'msg':msg})
+                elif user is None:
+                    db.session.add(User(user_email=user_email,
+                                vipps_sub=vipps_sub,user_is_logged_in=True,
+                                user_confirmed=True))   
+                    db.session.commit()
+                    user = db.session.execute(db.select(User).where(User.user_email==user_email)).scalar_one_or_none()
+                    user_dict = {'id': user.id,
+                                'is_admin':user.is_admin,
+                                'user_email':user.user_email,
+                                'access_token': user.access_token,
+                                'last_seen': user.last_seen,
+                                'ou': user.ou}
+                    return jsonify({'user':user_dict,'msg':msg})
+
             if request.json['provider']=='google':
                 prov= request.json['provider']
                 print(f' google json[provider]  {prov}')
@@ -212,7 +227,7 @@ def login_form():
                 google_sub=request.json['google_sub']
                 access_token=User.generate_access_token(request.json['email'])
                 user_dict = {}
-                user = db.session.execute(db.select(User).where(User.user_email==request.json['email'])).scalar_one_or_none()
+                user = db.session.execute(db.select(User).where(User.user_email==user_email)).scalar_one_or_none()
                 if user is not None:
                     user.access_token = access_token
                     user.user_is_logged_in = True
