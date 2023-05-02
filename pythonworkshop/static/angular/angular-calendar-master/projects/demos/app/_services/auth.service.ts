@@ -24,24 +24,34 @@ export class AuthService {
   });
   
 
-  login({username, password, vipps_sub, google_sub}: UserIdentity) {
+  login({provider,username, password, vipps_sub, google_sub}: UserIdentity) {
     let content_body = {}
-    if (typeof password !== 'undefined'){
+    switch (provider ) {
+     case 'local' : { 
       content_body = {
+        provider : 'local',
         email : username,
         password : password
       }
-    } else if (typeof vipps_sub!=='undefined'){
+      break;
+    }
+     case 'vipps' : {
       content_body = {
+        provider : 'vipps',
         email: username,
         vipps_sub : vipps_sub
       }
-    } else if ( typeof google_sub !=='undefined'){
+      break;
+    } 
+    case 'google' : {
       content_body = {
+        provider: 'google',
         email : username,
         google_sub : google_sub
       }
+      break;
     }
+  }
     return this.http.post(baseurl+AUTH_API + 'login', 
     content_body, { headers : this.httpHeaders, observe : 'body'});
   }

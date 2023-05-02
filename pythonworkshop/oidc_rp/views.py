@@ -221,12 +221,11 @@ def finalize(op_identifier, request_args,isCheckout):
         usr_phone = res['userinfo']['phone_number']
         db_user = reg_vipps_usr_in_db(usr_email,usr_sub,usr_email_ver)
         user_email = db_user.user_email
-        user_pass = usr_sub
         user_conf_by_admin = db_user.user_conf_by_admin
         if isCheckout:
             return redirect(f'https://webeltek.org/vipps_checkout?access_token={usr_access_tkn}&usr_phone={usr_phone}')
         elif isCheckout is False: 
-            return redirect(f'https://webeltek.org/login?username={user_email}&password={user_pass}')
+            return redirect(f'https://webeltek.org/login?username={user_email}&vipps_sub={usr_sub}')
     else:
         return make_response(res['error'], 400)
     
