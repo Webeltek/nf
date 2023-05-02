@@ -53,11 +53,9 @@ oidcmsg==1.6.0
 oidcrp==2.1.4
 packaging==23.0
 passlib==1.7.4
-peewee==3.14.8
 pip-tools==6.12.3
-pkg_resources==0.0.0
 protobuf==4.21.6
-psycopg2-binary==2.9.3
+psycopg2-binary==2.8.6
 pyaml==15.3.1
 pyasn1==0.4.8
 pyasn1-modules==0.2.8

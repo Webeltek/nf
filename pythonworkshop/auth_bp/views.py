@@ -167,7 +167,7 @@ def login_form():
     prov= request.json['provider']
     print(f'json[provider]  {prov}')
     if request.method == 'POST':
-        try:
+        
             if request.json['provider']=='local':
                 user = db.session.execute(db.select(User).where(
                     User.user_email==request.json['email'])).scalar_one_or_none()
@@ -208,17 +208,40 @@ def login_form():
             if request.json['provider']=='google':
                 prov= request.json['provider']
                 print(f' google json[provider]  {prov}')
-                to_add_user = User(user_email=request.json['email'],
-                                access_token=User.generate_access_token(request.json['email']),    
-                                google_sub=request.json['google_sub'],user_is_logged_in=True,
+                user_email=request.json['email']
+                google_sub=request.json['google_sub']
+                access_token=User.generate_access_token(request.json['email'])
+                user_dict = {}
+                user = db.session.execute(db.select(User).where(User.user_email==request.json['email'])).scalar_one_or_none()
+                if user is not None:
+                    user.access_token = access_token
+                    user.user_is_logged_in = True
+                    db.session.add(user)    
+                    db.session.commit()
+                    user_dict = {'id': user.id,
+                                'is_admin':user.is_admin,
+                                'user_email':user.user_email,
+                                'access_token': user.access_token,
+                                'last_seen': user.last_seen,
+                                'ou': user.ou}
+                elif user is None:
+                    to_add_user = User(user_email=request.json['email'],
+                                access_token=access_token,    
+                                google_sub=google_sub,user_is_logged_in=True,
                                 user_confirmed=True)
-                db.session.add(to_add_user)    
-                db.session.commit()
+                    db.session.add(to_add_user)    
+                    db.session.commit()
+                    user = db.session.execute(db.select(User).where(User.user_email==request.json['email'])).scalar_one_or_none()
+                    user_dict = {'id': user.id,
+                                'is_admin':user.is_admin,
+                                'user_email':user.user_email,
+                                'access_token': user.access_token,
+                                'last_seen': user.last_seen,
+                                'ou': user.ou}
                 msg = 'Google provider login!'
                 print(f'google login {msg}')
-                return jsonify({'user':msg,'msg':msg})
-        except db.exc.SQLAlchemyError: 
-            msg="SQLAlchemyError!"       
+                return jsonify({'user':user_dict,'msg':msg})
+               
     return jsonify({'user':'nonexistent','msg':msg})
 
 @dataclass
