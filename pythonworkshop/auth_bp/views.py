@@ -136,6 +136,8 @@ def logout_form():
         user = db.session.execute(db.select(User).where(User.user_email==request.json['email'])).scalar_one()
         if user is not None:
             user.logout_user()
+            db.session.add(user)
+            db.session.commit()
             msg = 'logout success'
         else :
             msg = 'logout error'

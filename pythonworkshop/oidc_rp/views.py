@@ -61,9 +61,9 @@ def oidctest():
 @oidc_rp_views.route('/api/vipps/get_merch_tkn',methods=['GET','POST'])
 def get_merch_tkn():
     headers = {
-      "client_id" : "e45b9cd6-2526-43b0-9710-a6a0c2e25534",
-      "client_secret" : "VRnJnWPH7dfp4CbbCIViVAttgw8=",
-      "Ocp-Apim-Subscription-Key": "6cd6a4e6f05547379afb0fcd9857b7d9",
+      "client_id" : "c16aebf0-d913-4b39-bfa8-0ae2a91f8b90",
+      "client_secret" : "SUW5CCh56jRWbeh6GZChzLVFusM=",
+      "Ocp-Apim-Subscription-Key": "a34e0edb11b5407395097294036eb625",
     }
     url = 'https://api.vipps.no/accessToken/get'
     data = ''
@@ -79,10 +79,10 @@ def send_payment():
     url= 'https://api.vipps.no/epayment/v1/payments'
     headers = {
         "Authorization": f"Bearer {access_tkn}" ,
-        "Ocp-Apim-Subscription-Key": "6cd6a4e6f05547379afb0fcd9857b7d9" ,
+        "Ocp-Apim-Subscription-Key": "a34e0edb11b5407395097294036eb625" ,
         "Content-Type": "application/json" ,
         "Idempotency-Key": idemp_key ,
-        "Merchant-Serial-Number": "798665" 
+        "Merchant-Serial-Number": "298345" 
     }
     data={
         "amount": {
@@ -96,7 +96,7 @@ def send_payment():
           "phoneNumber": usr_phone  
         },
         "reference": "abcc123",
-        "returnUrl": "https://138.109-247-35.customer.lyse.net/vipps_checkout"+"?reference=abcc123",
+        "returnUrl": "https://webeltek.org/vipps_checkout"+"?reference=abcc123",
         "userFlow": "WEB_REDIRECT",
         "paymentDescription": "A simple payment"
         }
@@ -107,6 +107,7 @@ def send_payment():
 @oidc_rp_views.route('/api/vipps/rp',methods=['GET','POST'])
 def rp():
     print('inside /api/vipps/rp')
+    is_checkout= request.args['is_checkout']
     iss = "https://api.vipps.no/access-management-1.0/access/"
     uid = "e45b9cd6-2526-43b0-9710-a6a0c2e25534"
     if not iss:
@@ -134,7 +135,7 @@ def rp():
         except Exception as err:
             return make_response('Something went wrong:{}'.format(err), 400)
         else:
-            response = redirect(result['url'], 303)
+            response = redirect(f"{result['url']}?is_checkout={is_checkout}", 303)
             return response
     else:
         _providers = current_app.rp_config.clients.keys()
@@ -160,7 +161,7 @@ def get_rp(op_identifier):
     return rp
 
 
-def finalize(op_identifier, request_args,isCheckout):
+def finalize(op_identifier, request_args,is_checkout):
     rp = get_rp(op_identifier)
 
     if hasattr(rp, 'status_code') and rp.status_code != 200:
@@ -219,9 +220,9 @@ def finalize(op_identifier, request_args,isCheckout):
         usr_email_ver = res['userinfo']['email_verified']
         usr_access_tkn = res['token']
         usr_phone = res['userinfo']['phone_number']
-        if isCheckout:
+        if is_checkout:
             return redirect(f'https://webeltek.org/vipps_checkout?access_token={usr_access_tkn}&usr_phone={usr_phone}')
-        elif isCheckout is False: 
+        elif is_checkout is False: 
             return redirect(f'https://webeltek.org/login?username={usr_email}&vipps_sub={usr_sub}')
     else:
         return make_response(res['error'], 400)   
@@ -257,8 +258,8 @@ def get_op_identifier_by_cb_uri(url: str):
 def authz_cb(op_identifier):
     op_identifier = get_op_identifier_by_cb_uri(request.url)
     print(f'authz_cb op_identifier: {op_identifier}')
-    isCheckout = False
-    return finalize(op_identifier, request.args, isCheckout)
+    is_checkout = request.args['is_checkout']
+    return finalize(op_identifier, request.args, is_checkout)
 
 
 @oidc_rp_views.errorhandler(werkzeug.exceptions.BadRequest)

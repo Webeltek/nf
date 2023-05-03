@@ -171,7 +171,7 @@ export class HttpEventService{
 
     vippsCheckout(){
         console.log("HttpS vippsCheckout call");
-        window.location.href = `https://api.webeltek.org/api/vipps/rp`
+        window.location.href = `https://api.webeltek.org/api/vipps/rp?is_checkout=True`
     }
 
 }
