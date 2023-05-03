@@ -65,7 +65,7 @@ def get_merch_tkn():
       "client_secret" : "SUW5CCh56jRWbeh6GZChzLVFusM=",
       "Ocp-Apim-Subscription-Key": "a34e0edb11b5407395097294036eb625",
     }
-    url = 'https://api.vipps.no/accessToken/get'
+    url = 'https://apitest.vipps.no/accessToken/get'
     data = ''
     response = requests.post(url, headers=headers,json=data)
     return make_response(response.json())
@@ -76,7 +76,7 @@ def send_payment():
     usr_phone = request.args.get('usr_phone')
     amount = request.args.get('amount')
     idemp_key = request.args.get('idemp_key')
-    url= 'https://api.vipps.no/epayment/v1/payments'
+    url= 'https://apitest.vipps.no/epayment/v1/payments'
     headers = {
         "Authorization": f"Bearer {access_tkn}" ,
         "Ocp-Apim-Subscription-Key": "a34e0edb11b5407395097294036eb625" ,
@@ -108,8 +108,8 @@ def send_payment():
 def rp():
     print('inside /api/vipps/rp')
     is_checkout= request.args['is_checkout']
-    iss = "https://api.vipps.no/access-management-1.0/access/"
-    uid = "e45b9cd6-2526-43b0-9710-a6a0c2e25534"
+    iss = "https://apitest.vipps.no/access-management-1.0/access/"
+    uid = "c16aebf0-d913-4b39-bfa8-0ae2a91f8b90"
     if not iss:
         iss = request.args['static_iss']
     print(f'inside inside /api/vipps/rp iss: {iss}') 
@@ -135,7 +135,7 @@ def rp():
         except Exception as err:
             return make_response('Something went wrong:{}'.format(err), 400)
         else:
-            response = redirect(f"{result['url']}?is_checkout={is_checkout}", 303)
+            response = redirect(f"{result['url']}&is_checkout={is_checkout}", 303)
             return response
     else:
         _providers = current_app.rp_config.clients.keys()
