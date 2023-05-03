@@ -167,7 +167,6 @@ def login_form():
     prov= request.json['provider']
     print(f'json[provider]  {prov}')
     if request.method == 'POST':
-        
             if request.json['provider']=='local':
                 user = db.session.execute(db.select(User).where(
                     User.user_email==request.json['email'])).scalar_one_or_none()
@@ -203,9 +202,6 @@ def login_form():
                                 'access_token': user.access_token,
                                 'last_seen': user.last_seen,
                                 'ou': user.ou}
-                    msg = 'Vipps provider login!'
-                    #todo return redirect('/calendar')  with accesstoken in authorization header
-                    return jsonify({'user':user_dict,'msg':msg})
                 elif user is None:
                     db.session.add(User(user_email=user_email,
                                 vipps_sub=vipps_sub,user_is_logged_in=True,
@@ -218,8 +214,8 @@ def login_form():
                                 'access_token': user.access_token,
                                 'last_seen': user.last_seen,
                                 'ou': user.ou}
-                    return jsonify({'user':user_dict,'msg':msg})
-
+                msg = 'Vipps provider login!'
+                return jsonify({'user':user_dict,'msg':msg})
             if request.json['provider']=='google':
                 prov= request.json['provider']
                 print(f' google json[provider]  {prov}')

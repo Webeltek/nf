@@ -219,34 +219,12 @@ def finalize(op_identifier, request_args,isCheckout):
         usr_email_ver = res['userinfo']['email_verified']
         usr_access_tkn = res['token']
         usr_phone = res['userinfo']['phone_number']
-        db_user = reg_vipps_usr_in_db(usr_email,usr_sub,usr_email_ver)
-        user_email = db_user.user_email
-        user_conf_by_admin = db_user.user_conf_by_admin
         if isCheckout:
             return redirect(f'https://webeltek.org/vipps_checkout?access_token={usr_access_tkn}&usr_phone={usr_phone}')
         elif isCheckout is False: 
-            return redirect(f'https://webeltek.org/login?username={user_email}&vipps_sub={usr_sub}')
+            return redirect(f'https://webeltek.org/login?username={usr_email}&vipps_sub={usr_sub}')
     else:
-        return make_response(res['error'], 400)
-    
-def reg_vipps_usr_in_db(usr_email,usr_sub,email_ver):
-    print(f'reg_vipps_usr_in_db:  {usr_email},{usr_sub},{email_ver}')
-    user = db.session.execute(db.select(User).where(User.user_email==usr_email)).scalar_one_or_none()
-    if user is not None:
-        pass
-    elif user is None and (usr_email and usr_sub and email_ver) is not None:    
-        try :
-            user = db.session.add(User(user_email=usr_email,
-                               user_sub=usr_sub,
-                               user_is_logged_in=True,
-                               user_confirmed=True,
-                               user_conf_by_admin = False))
-            db.session.commit()
-            temp_user_id = user.id
-            #reg_admin_confirm(usr_email,temp_user_id)             admin confirmation is disabled!!!!!
-        except db.exc.SQLAlchemyError :
-            return ({'SQLAlchemyException': True, 'email': usr_email})
-    return user    
+        return make_response(res['error'], 400)   
         
 """ def vipps_usr_adm_confirm(usr_email=None,temp_usr_id=None):
     if (usr_email and temp_usr_id) is not None:
