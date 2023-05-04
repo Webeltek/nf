@@ -122,7 +122,9 @@ def oidc_provider_init_app(config, name=None, **kwargs):
             "https://webeltek.line.pm",
             "https://webeltek.org",
             "https://api.vipps.no/epayment/v1/payments",
-            "https://api.vipps.no/access-management-1.0/access/"
+            "https://api.vipps.no/access-management-1.0/access/",
+            "https://apitest.vipps.no/epayment/v1/payments",
+            "https://apitest.vipps.no/access-management-1.0/access/"
             ],"allow_headers":"*"}
         },supports_credentials=True  )
     
