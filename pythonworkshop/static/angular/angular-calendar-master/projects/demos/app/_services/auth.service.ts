@@ -121,7 +121,7 @@ export class AuthService {
   }
 
   sendGetMerchAccTkn(){
-    return this.http.post( '/api/vipps/get_merch_tkn','',
+    return this.http.post(baseurl+ '/api/vipps/get_merch_tkn','',
       { headers: this.httpHeaders, observe : 'body', responseType : 'json'}
     )
   }
@@ -132,7 +132,7 @@ export class AuthService {
 
   sendVippsPayment( access_tkn: string, usr_phone : string, amount: string){
     console.log("AuthService sendVippsPayment usr_phone, amount",usr_phone,amount)
-    return this.http.post('/api/vipps/send_payment',''
+    return this.http.post(baseurl+'/api/vipps/send_payment',''
         ,  { headers : this.httpHeaders, 
               observe : 'body', 
               params: {
