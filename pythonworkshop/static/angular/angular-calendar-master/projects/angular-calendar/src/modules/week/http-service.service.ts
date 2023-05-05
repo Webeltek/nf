@@ -156,7 +156,7 @@ export class HttpEventService{
 
     vippsAuthorize(){
         console.log("HttpS vippsAthorize call")
-        window.location.href = `https://api.webeltek.org/api/vipps/rp`
+        window.location.href = `https://api.webeltek.org/api/vipps/rp?is_checkout=False`
         /* return this.http.get(this.baseurl+this.vippsAuthUrl,
             { headers : this.vippsHeaders, observe: 'body', responseType : 'json'})
             .subscribe({

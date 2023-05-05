@@ -19,6 +19,7 @@ from ..auth_bp.views import reg_admin_confirm, login_form
 
 from ..email import send_email, send_adm_conf_email
 import requests
+from .. import cache
 
 logger = logging.getLogger(__name__)
 logger.disabled = True
@@ -107,8 +108,10 @@ def send_payment():
 @oidc_rp_views.route('/api/vipps/rp',methods=['GET','POST'])
 def rp():
     print('inside /api/vipps/rp')
-    iss = "https://api.vipps.no/access-management-1.0/access/"
-    uid = "e45b9cd6-2526-43b0-9710-a6a0c2e25534"
+    iss = "https://apitest.vipps.no/access-management-1.0/access/"
+    uid = "c16aebf0-d913-4b39-bfa8-0ae2a91f8b90"
+    is_checkout = request.args['is_checkout']
+    cache.set('is_checkout',is_checkout)
     if not iss:
         iss = request.args['static_iss']
     print(f'inside /api/vipps/rp iss: {iss}') 
@@ -160,7 +163,7 @@ def get_rp(op_identifier):
     return rp
 
 
-def finalize(op_identifier, request_args,is_checkout):
+def finalize(op_identifier, request_args):
     rp = get_rp(op_identifier)
 
     if hasattr(rp, 'status_code') and rp.status_code != 200:
@@ -219,6 +222,7 @@ def finalize(op_identifier, request_args,is_checkout):
         usr_email_ver = res['userinfo']['email_verified']
         usr_access_tkn = res['token']
         usr_phone = res['userinfo']['phone_number']
+        is_checkout= cache.get('is_checkout')
         if is_checkout:
             return redirect(f'https://webeltek.org/vipps_checkout?access_token={usr_access_tkn}&usr_phone={usr_phone}')
         elif is_checkout is False: 
@@ -257,8 +261,7 @@ def get_op_identifier_by_cb_uri(url: str):
 def authz_cb(op_identifier):
     op_identifier = get_op_identifier_by_cb_uri(request.url)
     print(f'authz_cb op_identifier: {op_identifier}')
-    is_checkout = True
-    return finalize(op_identifier, request.args, is_checkout)
+    return finalize(op_identifier, request.args)
 
 
 @oidc_rp_views.errorhandler(werkzeug.exceptions.BadRequest)

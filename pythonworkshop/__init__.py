@@ -42,8 +42,6 @@ cache = Cache()
  #- only views that don't use FlaskForm use the provided CSRF extension
 
 def create_app(config_name):
-  arg1=os.path.abspath('pythonworkshop')
-  print(f'__init__ abs path: {arg1}')
   conf = os.path.abspath('pythonworkshop')+"/oidc_rp/conf.json"
   _config = create_from_config_file(Configuration, entity_conf=[{"class": RPConfiguration, "attr": "rp"}],filename=conf)
   app=oidc_provider_init_app(_config.rp,template_folder=templ_dir)
