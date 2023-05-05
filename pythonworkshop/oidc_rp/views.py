@@ -107,8 +107,8 @@ def send_payment():
 @oidc_rp_views.route('/api/vipps/rp',methods=['GET','POST'])
 def rp():
     print('inside /api/vipps/rp')
-    iss = "https://apitest.vipps.no/access-management-1.0/access/"
-    uid = "c16aebf0-d913-4b39-bfa8-0ae2a91f8b90"
+    iss = "https://api.vipps.no/access-management-1.0/access/"
+    uid = "e45b9cd6-2526-43b0-9710-a6a0c2e25534"
     if not iss:
         iss = request.args['static_iss']
     print(f'inside /api/vipps/rp iss: {iss}') 

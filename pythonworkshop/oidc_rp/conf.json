@@ -104,7 +104,7 @@
           "UserInfo": {}
       }
     },
-    "vipps_provider": {
+    "": {
       "client_preferences": {
         "application_name": "rphandler",
         "application_type": "web",
@@ -126,9 +126,9 @@
           "client_secret_post"
         ]
       },
-      "issuer": "https://apitest.vipps.no/access-management-1.0/access/",
-      "client_id": "c16aebf0-d913-4b39-bfa8-0ae2a91f8b90",
-      "client_secret": "SUW5CCh56jRWbeh6GZChzLVFusM=",
+      "issuer": "https://api.vipps.no/access-management-1.0/access/",
+      "client_id": "e45b9cd6-2526-43b0-9710-a6a0c2e25534",
+      "client_secret": "VRnJnWPH7dfp4CbbCIViVAttgw8=",
       "redirect_uris": [
         "https://api.webeltek.org/api/vipps/authz_cb/vipps_provider"
       ],
