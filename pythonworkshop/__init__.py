@@ -60,9 +60,9 @@ def create_app(config_name):
   moment.init_app(app)
   executor.init_app(app)
 
-  username = 'nf_user'
+  username = 'webekiog_nf_user'
   password = 'nfvinter2022'
-  database = 'nf_users_db'
+  database = 'webekiog_nf_db'
   app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://{username}:{password}@localhost:5432/{database}"
   db.init_app(app)
 

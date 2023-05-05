@@ -107,12 +107,11 @@ def send_payment():
 @oidc_rp_views.route('/api/vipps/rp',methods=['GET','POST'])
 def rp():
     print('inside /api/vipps/rp')
-    is_checkout= request.args['is_checkout']
     iss = "https://apitest.vipps.no/access-management-1.0/access/"
     uid = "c16aebf0-d913-4b39-bfa8-0ae2a91f8b90"
     if not iss:
         iss = request.args['static_iss']
-    print(f'inside inside /api/vipps/rp iss: {iss}') 
+    print(f'inside /api/vipps/rp iss: {iss}') 
     if not iss:
         uid = request.args['uid']
     else:
@@ -135,7 +134,7 @@ def rp():
         except Exception as err:
             return make_response('Something went wrong:{}'.format(err), 400)
         else:
-            response = redirect(f"{result['url']}&is_checkout={is_checkout}", 303)
+            response = redirect(f"{result['url']}", 303)
             return response
     else:
         _providers = current_app.rp_config.clients.keys()
@@ -258,7 +257,7 @@ def get_op_identifier_by_cb_uri(url: str):
 def authz_cb(op_identifier):
     op_identifier = get_op_identifier_by_cb_uri(request.url)
     print(f'authz_cb op_identifier: {op_identifier}')
-    is_checkout = request.args['is_checkout']
+    is_checkout = True
     return finalize(op_identifier, request.args, is_checkout)
 
 
