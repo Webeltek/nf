@@ -75,7 +75,7 @@ def get_merch_tkn():
 def send_payment():
     access_tkn = request.args.get('access_tkn')
     usr_phone = request.args.get('usr_phone')
-    amount = int(request.args.get('amount'))
+    amount = request.args.get('amount')
     idemp_key = request.args.get('idemp_key')
     url= 'https://apitest.vipps.no/epayment/v1/payments'
     headers = {
@@ -88,7 +88,7 @@ def send_payment():
     data={
         "amount": {
           "currency": "NOK",
-          "value": 1
+          "value": amount
         },
         "paymentMethod": {
           "type": "WALLET"

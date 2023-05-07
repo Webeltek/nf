@@ -28,7 +28,7 @@ export class VippsCheckoutComponent implements OnInit {
             let resp = response as any;
             let merch_access_tkn = resp.access_token;
 
-            const amount = "40" // valuta NOK
+            const amount = "4000" // valuta NOK with 00 suffix for øre
             this.authService.sendVippsPayment(merch_access_tkn,usr_phone,amount).subscribe({
               next: (response) => {
                 if(response){
