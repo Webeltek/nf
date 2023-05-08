@@ -107,6 +107,28 @@ def send_payment():
         }
     response = requests.post(url, headers=headers,json=data)
     print(f'/api/vipps/send_payment response: {response.json()}')
+    return make_response(response.json())
+
+@oidc_rp_views.route('/api/vipps/query_payment',methods=['GET','POST'])
+def query_payment():
+    access_tkn = request.args.get('access_tkn')
+    refer = request.args.get('reference')
+    msn = "298345"
+    url= f'https://apitest.vipps.no/epayment/v1/payments/{refer}'
+    timest = str(datetime.datetime.timestamp())
+    reference = msn + timest
+    headers = {
+        "Authorization": f"Bearer {access_tkn}" ,
+        "Ocp-Apim-Subscription-Key": "a34e0edb11b5407395097294036eb625" ,
+        "Content-Type": "application/json" ,
+        "Merchant-Serial-Number": "298345"
+    }
+    data={
+        "reference": reference,
+        "returnUrl": "https://webeltek.org/vipps_checkout"+f"?reference={reference}",
+        }
+    response = requests.post(url, headers=headers,json=data)
+    print(f'/api/vipps/query_payment response: {response.json()}')
     return make_response(response.json())       
 
 @oidc_rp_views.route('/api/vipps/rp',methods=['GET','POST'])
