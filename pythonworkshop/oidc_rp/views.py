@@ -20,6 +20,7 @@ from ..auth_bp.views import reg_admin_confirm, login_form
 from ..email import send_email, send_adm_conf_email
 import requests
 from .. import cache
+import datetime
 
 logger = logging.getLogger(__name__)
 logger.disabled = True
@@ -77,13 +78,16 @@ def send_payment():
     usr_phone = request.args.get('usr_phone')
     amount = request.args.get('amount')
     idemp_key = request.args.get('idemp_key')
+    msn = "298345"
     url= 'https://apitest.vipps.no/epayment/v1/payments'
+    timest = str(datetime.datetime.timestamp())
+    reference = msn + timest
     headers = {
         "Authorization": f"Bearer {access_tkn}" ,
         "Ocp-Apim-Subscription-Key": "a34e0edb11b5407395097294036eb625" ,
         "Content-Type": "application/json" ,
         "Idempotency-Key": idemp_key ,
-        "Merchant-Serial-Number": "298345" 
+        "Merchant-Serial-Number": msn 
     }
     data={
         "amount": {
@@ -96,8 +100,8 @@ def send_payment():
         "customer": {
           "phoneNumber": usr_phone  
         },
-        "reference": "abcc1234",
-        "returnUrl": "https://webeltek.org/vipps_checkout"+"?reference=abcc1234",
+        "reference": reference,
+        "returnUrl": "https://webeltek.org/vipps_checkout"+f"?reference={reference}",
         "userFlow": "WEB_REDIRECT",
         "paymentDescription": "A simple payment"
         }

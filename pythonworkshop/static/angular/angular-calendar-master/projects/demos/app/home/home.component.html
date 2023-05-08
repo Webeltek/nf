@@ -123,9 +123,17 @@
     <mat-sidenav  #sidenav="matSidenav" class="mat-elevation-z8">
       <ng-container *ngIf="(tokenStorage.authenticated$ | async) ===true; then loggedInSidenav  else loggedOutSidenav"></ng-container>
       <ng-template #loggedOutSidenav>
-        <button mat-button class="menu-button" routerLink="/landing">Hjem</button>
-        <button mat-button class="menu-button" routerLink="/bb/contact">Contact</button>
-        <button mat-button class="menu-button" routerLink="/salgsbetingelser">Salgsbetingelser</button>
+        <button mat-button class="menu-button" routerLink="/landing">
+          <mat-icon>home</mat-icon>
+          <span>{{ 'ToolbarHome' | translate }}</span>
+        </button>
+        <button mat-button class="menu-button" routerLink="/bb/contact">
+          <mat-icon>contact</mat-icon>
+          <span>{{ 'ToolbarContact' | translate }}</span></button>
+        <button mat-button class="menu-button" routerLink="/salgsbetingelser">
+          <mat-icon>policy</mat-icon>
+          <span>{{ 'ToolbarPolicy' | translate }}</span>
+        </button>
         <button mat-button class="menu button" routerLink="/register">
           <mat-icon>app_registration</mat-icon>
           <span>{{'ToolbarRegister' | translate}}</span>
