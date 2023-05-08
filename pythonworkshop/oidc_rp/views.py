@@ -115,7 +115,7 @@ def query_payment():
     refer = request.args.get('reference')
     msn = "298345"
     url= f'https://apitest.vipps.no/epayment/v1/payments/{refer}'
-    timest = str(datetime.datetime.timestamp())
+    timest = str(datetime.timestamp(datetime.now()))
     reference = msn + timest
     headers = {
         "Authorization": f"Bearer {access_tkn}" ,
