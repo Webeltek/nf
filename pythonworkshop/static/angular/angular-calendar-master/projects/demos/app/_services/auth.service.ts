@@ -144,6 +144,17 @@ export class AuthService {
               responseType : 'json'})
   }
 
+  queryVippsPayment( reference: string){
+    console.log("AuthService queryVippsPayment reference :",reference)
+    return this.http.post(baseurl+'/api/vipps/query_payment',''
+        ,  { headers : this.httpHeaders, 
+              observe : 'body', 
+              params: {
+                'reference': reference
+              },
+              responseType : 'json'})
+  }
+
   /* getMessage() {
     return this.socket.fromEvent('user_confirmed').pipe(map((data: any) => {
       console.log("AuthServ event user_confirmed received");

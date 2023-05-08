@@ -34,7 +34,15 @@ export class VippsCheckoutComponent implements OnInit {
                 if(response){
                   const resp = response as any;
                   console.log("VCheck response: ", resp)
-                }
+                  this.authService.queryVippsPayment(resp.reference).subscribe({
+                    next : (queryResponse) =>{
+                      console.log("VCheck queryResp: ",queryResponse);
+                    },
+                    error: (err) => {
+                      console.log("Vcheck sendVippsPayment error: ",err)
+                    }  
+                  });
+                };
               },
               error: (err) => {
                 console.log("Vcheck sendVippsPayment error: ",err)
