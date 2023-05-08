@@ -80,7 +80,7 @@ def send_payment():
     idemp_key = request.args.get('idemp_key')
     msn = "298345"
     url= 'https://apitest.vipps.no/epayment/v1/payments'
-    timest = str(datetime.datetime.timestamp())
+    timest = str(datetime.timestamp(datetime.now()))
     reference = msn + timest
     headers = {
         "Authorization": f"Bearer {access_tkn}" ,
@@ -115,8 +115,6 @@ def query_payment():
     refer = request.args.get('reference')
     msn = "298345"
     url= f'https://apitest.vipps.no/epayment/v1/payments/{refer}'
-    timest = str(datetime.timestamp(datetime.now()))
-    reference = msn + timest
     headers = {
         "Authorization": f"Bearer {access_tkn}" ,
         "Ocp-Apim-Subscription-Key": "a34e0edb11b5407395097294036eb625" ,
@@ -124,8 +122,8 @@ def query_payment():
         "Merchant-Serial-Number": "298345"
     }
     data={
-        "reference": reference,
-        "returnUrl": "https://webeltek.org/vipps_checkout"+f"?reference={reference}",
+        "reference": refer,
+        "returnUrl": "https://webeltek.org/vipps_checkout"+f"?reference={refer}",
         }
     response = requests.post(url, headers=headers,json=data)
     print(f'/api/vipps/query_payment response: {response.json()}')
