@@ -117,6 +117,7 @@ def send_payment():
 @oidc_rp_views.route('/api/vipps/query_payment',methods=['GET','POST'])
 def query_payment():
     access_tkn = cache.get('access_tkn')
+    print(f'query vipps payment access token: {access_tkn}')
     refer = request.args.get('reference')
     msn = "298345"
     url= f'https://apitest.vipps.no/epayment/v1/payments/{refer}'
