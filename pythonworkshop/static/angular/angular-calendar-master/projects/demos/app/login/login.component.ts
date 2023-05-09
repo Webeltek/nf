@@ -223,7 +223,7 @@ export class LoginComponent implements OnInit {
   }
 
   vippsLogin() {
-    this.httpService.vippsAuthorize();
+    this.authService.vippsAuthorize();
   }
 
 

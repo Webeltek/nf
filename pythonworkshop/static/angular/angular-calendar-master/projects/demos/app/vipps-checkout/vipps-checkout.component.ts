@@ -12,7 +12,8 @@ export class VippsCheckoutComponent implements OnInit {
   msg = 'awaiting payment start';
   paymentAmount = "";
   paymentState = "";
-  personName = "";
+  customerEmail = "";
+
 
   constructor(private actRoute: ActivatedRoute,
     private router: Router,
@@ -36,21 +37,12 @@ export class VippsCheckoutComponent implements OnInit {
               next: (response) => {
                 if(response){
                   const resp = response as any;
+                  const redirectUrl = resp.redirectUrl
+                  if (redirectUrl){
+                    window.location.href = redirectUrl;
+                  }
                   console.log("VCheck response: ", resp)
-                  this.authService.queryVippsPayment(merch_access_tkn,resp.reference).subscribe({
-                    next : (queryResponse) =>{
-                      const queryResp = queryResponse as any
-                      console.log("VCheck queryResp: ",queryResponse);
-                      if (queryResp.state === "AUTHORIZED"){
-                          this.paymentState = "AUTHORIZED";
-                          this.paymentAmount = queryResp.amount.value;
-                          this.personName = queryResp.sub.name;
-                      }
-                    },
-                    error: (err) => {
-                      console.log("Vcheck sendVippsPayment error: ",err)
-                    }  
-                  });
+                  
                 };
               },
               error: (err) => {
@@ -60,8 +52,25 @@ export class VippsCheckoutComponent implements OnInit {
           }
         })
         
-      } else {
-        this.msg = this.paymentAmount + "is" + this.paymentState;
+      } else if(params['redirectUrl']) {
+        const redirectUrl = params['redirectUrl']
+        this.authService.sendVippsRedirect(redirectUrl);
+      } else if(params['reference']){
+        this.authService.queryVippsPayment(params['reference']).subscribe({
+          next : (queryResponse) =>{
+            const queryResp = queryResponse as any;
+            console.log("VCheck queryResp: ",queryResponse);
+            if (queryResp.state === "AUTHORIZED"){
+                this.paymentState = "AUTHORIZED";
+                this.paymentAmount = queryResp.amount.value;
+                this.customerEmail = queryResp.sub.email;
+                this.msg = this.paymentAmount + " is " + this.paymentState + this.customerEmail;
+            }
+          },
+          error: (err) => {
+            console.log("Vcheck sendVippsPayment error: ",err)
+          }  
+        });
       }
       
 

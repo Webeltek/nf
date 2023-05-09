@@ -120,6 +120,37 @@ export class AuthService {
     }, { headers : this.httpHeaders, observe : 'body', responseType : 'json'} );
   }
 
+  private vippsAuthUrl = "/api/vipps/rp";
+    private vippsAuthCbUrl = "/api/vipps/authz_cbvipps"
+    //unused vippsRPHeaders
+    vippsRPHeaders = new HttpHeaders({
+        'Sec-Fetch-Dest': 'document',
+        'Sec-Fetch-Mode': 'navigate',
+        'Sec-Fetch-Site' : 'same-origin',
+        'Sec-Fetch-User' : '?1',
+        'Upgrade-Insecure-Requests': '1'
+    })
+
+  vippsAuthorize(){
+      console.log("HttpS vippsAthorize call")
+      window.location.href = `https://api.webeltek.org/api/vipps/rp?is_checkout=False`
+      /* return this.http.get(this.baseurl+this.vippsAuthUrl,
+          { headers : this.vippsHeaders, observe: 'body', responseType : 'json'})
+          .subscribe({
+              next: (response)=>{
+                  console.log("HttpS vippsAuthorize response",response);
+              },
+              error: (error) => { 
+                  console.log("vippsAuthorize() error : " + JSON.stringify(error)) ; 
+              }
+          }) */
+  }
+
+  vippsCheckout(){
+      console.log("HttpS vippsCheckout call");
+      window.location.href = `https://api.webeltek.org/api/vipps/rp?is_checkout=True`
+  }
+
   sendGetMerchAccTkn(){
     return this.http.post(baseurl+ '/api/vipps/get_merch_tkn','',
       { headers: this.httpHeaders, observe : 'body', responseType : 'json'}
@@ -144,13 +175,16 @@ export class AuthService {
               responseType : 'json'})
   }
 
-  queryVippsPayment(access_tkn: string, reference: string){
+  sendVippsRedirect(redirectUrl: string){
+    window.location.href = redirectUrl;
+  }
+
+  queryVippsPayment(reference: string){
     console.log("AuthService queryVippsPayment reference :",reference)
     return this.http.post(baseurl+'/api/vipps/query_payment',''
         ,  { headers : this.httpHeaders, 
               observe : 'body', 
               params: {
-                'access_tkn' : access_tkn,
                 'reference': reference
               },
               responseType : 'json'})

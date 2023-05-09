@@ -143,35 +143,4 @@ export class HttpEventService{
             })
     }
 
-    private vippsAuthUrl = "/api/vipps/rp";
-    private vippsAuthCbUrl = "/api/vipps/authz_cbvipps"
-    //unused vippsRPHeaders
-    vippsRPHeaders = new HttpHeaders({
-        'Sec-Fetch-Dest': 'document',
-        'Sec-Fetch-Mode': 'navigate',
-        'Sec-Fetch-Site' : 'same-origin',
-        'Sec-Fetch-User' : '?1',
-        'Upgrade-Insecure-Requests': '1'
-    })
-
-    vippsAuthorize(){
-        console.log("HttpS vippsAthorize call")
-        window.location.href = `https://api.webeltek.org/api/vipps/rp?is_checkout=False`
-        /* return this.http.get(this.baseurl+this.vippsAuthUrl,
-            { headers : this.vippsHeaders, observe: 'body', responseType : 'json'})
-            .subscribe({
-                next: (response)=>{
-                    console.log("HttpS vippsAuthorize response",response);
-                },
-                error: (error) => { 
-                    console.log("vippsAuthorize() error : " + JSON.stringify(error)) ; 
-                }
-            }) */
-    }
-
-    vippsCheckout(){
-        console.log("HttpS vippsCheckout call");
-        window.location.href = `https://api.webeltek.org/api/vipps/rp?is_checkout=True`
-    }
-
 }

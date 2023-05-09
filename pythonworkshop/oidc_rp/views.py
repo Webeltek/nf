@@ -75,16 +75,18 @@ def get_merch_tkn():
 @oidc_rp_views.route('/api/vipps/send_payment',methods=['GET','POST'])
 def send_payment():
     access_tkn = request.args.get('access_tkn')
+    cache.set('access_tkn',access_tkn)
     usr_phone = request.args.get('usr_phone')
     amount = request.args.get('amount')
     idemp_key = request.args.get('idemp_key')
     msn = "298345"
     url= 'https://apitest.vipps.no/epayment/v1/payments'
-    timest = str(datetime.timestamp(datetime.now()))
+    timest = str(int(datetime.datetime.timestamp(datetime.datetime.now())))
+    print(f'timest : {timest}')
     reference = msn + timest
     headers = {
         "Authorization": f"Bearer {access_tkn}" ,
-        "Ocp-Apim-Subscription-Key": "a34e0edb11b5407395097294036eb625" ,
+        "Ocp-Apim-Subscription-Key": "842be21742444dba9a0be01260df369a" ,
         "Content-Type": "application/json" ,
         "Idempotency-Key": idemp_key ,
         "Merchant-Serial-Number": msn 
@@ -100,6 +102,9 @@ def send_payment():
         "customer": {
           "phoneNumber": usr_phone  
         },
+        "profile" : {
+            "scope": "email"
+        },
         "reference": reference,
         "returnUrl": "https://webeltek.org/vipps_checkout",
         "userFlow": "WEB_REDIRECT",
@@ -111,7 +116,7 @@ def send_payment():
 
 @oidc_rp_views.route('/api/vipps/query_payment',methods=['GET','POST'])
 def query_payment():
-    access_tkn = request.args.get('access_tkn')
+    access_tkn = cache.get('access_tkn')
     refer = request.args.get('reference')
     msn = "298345"
     url= f'https://apitest.vipps.no/epayment/v1/payments/{refer}'
