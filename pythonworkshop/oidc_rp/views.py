@@ -122,7 +122,7 @@ def query_payment():
     url= f'https://apitest.vipps.no/epayment/v1/payments/{refer}'
     headers = {
         "Authorization": f"Bearer {access_tkn}" ,
-        "Ocp-Apim-Subscription-Key": "a34e0edb11b5407395097294036eb625" ,
+        "Ocp-Apim-Subscription-Key": "842be21742444dba9a0be01260df369a" ,
         "Content-Type": "application/json" ,
         "Merchant-Serial-Number": "298345"
     }
