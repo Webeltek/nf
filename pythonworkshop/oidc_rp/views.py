@@ -101,7 +101,7 @@ def send_payment():
           "phoneNumber": usr_phone  
         },
         "reference": reference,
-        "returnUrl": "https://webeltek.org/vipps_checkout"+f"?reference={reference}",
+        "returnUrl": "https://webeltek.org/vipps_checkout",
         "userFlow": "WEB_REDIRECT",
         "paymentDescription": "A simple payment"
         }
@@ -123,7 +123,7 @@ def query_payment():
     }
     data={
         "reference": refer,
-        "returnUrl": "https://webeltek.org/vipps_checkout"+f"?reference={refer}",
+        "returnUrl": "https://webeltek.org/vipps_checkout",
         }
     response = requests.post(url, headers=headers,json=data)
     print(f'/api/vipps/query_payment response: {response.json()}')

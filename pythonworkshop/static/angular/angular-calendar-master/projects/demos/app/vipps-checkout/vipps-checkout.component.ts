@@ -10,6 +10,9 @@ import { AuthService } from '../_services/auth.service';
 })
 export class VippsCheckoutComponent implements OnInit {
   msg = 'awaiting payment start';
+  paymentAmount = "";
+  paymentState = "";
+  personName = "";
 
   constructor(private actRoute: ActivatedRoute,
     private router: Router,
@@ -39,7 +42,9 @@ export class VippsCheckoutComponent implements OnInit {
                       const queryResp = queryResponse as any
                       console.log("VCheck queryResp: ",queryResponse);
                       if (queryResp.state === "AUTHORIZED"){
-                          const amount = queryResp.amount.value;
+                          this.paymentState = "AUTHORIZED";
+                          this.paymentAmount = queryResp.amount.value;
+                          this.personName = queryResp.sub.name;
                       }
                     },
                     error: (err) => {
@@ -55,8 +60,8 @@ export class VippsCheckoutComponent implements OnInit {
           }
         })
         
-      } else if (params['reference']==='abcc123'){
-        this.msg = 'payment success!';
+      } else {
+        this.msg = this.paymentAmount + "is" + this.paymentState;
       }
       
 
