@@ -51,10 +51,6 @@ export class VippsCheckoutComponent implements OnInit {
             });
           }
         })
-        
-      } else if(params['redirectUrl']) {
-        const redirectUrl = params['redirectUrl']
-        this.authService.sendVippsRedirect(redirectUrl);
       } else if(params['reference']){
         this.authService.queryVippsPayment(params['reference']).subscribe({
           next : (queryResponse) =>{

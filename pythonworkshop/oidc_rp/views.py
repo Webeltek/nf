@@ -106,7 +106,7 @@ def send_payment():
             "scope": "email"
         },
         "reference": reference,
-        "returnUrl": "https://webeltek.org/vipps_checkout",
+        "returnUrl": f"https://webeltek.org/vipps_checkout?reference={reference}",
         "userFlow": "WEB_REDIRECT",
         "paymentDescription": "A simple payment"
         }
