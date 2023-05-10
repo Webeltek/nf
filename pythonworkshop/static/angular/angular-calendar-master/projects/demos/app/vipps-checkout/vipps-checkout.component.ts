@@ -12,7 +12,7 @@ export class VippsCheckoutComponent implements OnInit {
   msg = 'awaiting payment start';
   paymentAmount = "";
   paymentState = "";
-  customerEmail = "";
+  customerPhone = "";
 
 
   constructor(private actRoute: ActivatedRoute,
@@ -22,10 +22,8 @@ export class VippsCheckoutComponent implements OnInit {
 
   ngOnInit(): void {
     this.actRoute.queryParams.subscribe(params=>{
-      let usr_phone = '';
       if (params['usr_phone']){
-        usr_phone = params['usr_phone'];
-        console.log("VCH usr_phone", usr_phone);
+        this.customerPhone = params['usr_phone'];
 
         this.authService.sendGetMerchAccTkn().subscribe((response)=>{
           if (response && response['access_token']){
@@ -33,7 +31,7 @@ export class VippsCheckoutComponent implements OnInit {
             let merch_access_tkn = resp.access_token;
 
             const amount = "4000" // valuta NOK with 00 suffix for øre
-            this.authService.sendVippsPayment(merch_access_tkn,usr_phone,amount).subscribe({
+            this.authService.sendVippsPayment(merch_access_tkn,this.customerPhone,amount).subscribe({
               next: (response) => {
                 if(response){
                   const resp = response as any;
@@ -59,8 +57,8 @@ export class VippsCheckoutComponent implements OnInit {
             if (queryResp.state === "AUTHORIZED"){
                 this.paymentState = "AUTHORIZED";
                 this.paymentAmount = queryResp.amount.value;
-                this.customerEmail = queryResp.sub.email;
-                this.msg = this.paymentAmount + " is " + this.paymentState + this.customerEmail;
+                const sub  = queryResp.profile.sub;
+                this.msg = this.paymentAmount + " is " + this.paymentState + "to user with phoneNum:"+this.customerPhone;
             }
           },
           error: (err) => {

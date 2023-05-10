@@ -86,7 +86,7 @@ def send_payment():
     reference = msn + timest
     headers = {
         "Authorization": f"Bearer {access_tkn}" ,
-        "Ocp-Apim-Subscription-Key": "842be21742444dba9a0be01260df369a" ,
+        "Ocp-Apim-Subscription-Key": "a34e0edb11b5407395097294036eb625" ,
         "Content-Type": "application/json" ,
         "Idempotency-Key": idemp_key ,
         "Merchant-Serial-Number": msn 
@@ -111,27 +111,22 @@ def send_payment():
         "paymentDescription": "A simple payment"
         }
     response = requests.post(url, headers=headers,json=data)
-    print(f'/api/vipps/send_payment response: {response.json()}')
     return make_response(response.json())
 
 @oidc_rp_views.route('/api/vipps/query_payment',methods=['GET','POST'])
 def query_payment():
     access_tkn = cache.get('access_tkn')
-    print(f'query vipps payment access token: {access_tkn}')
     refer = request.args.get('reference')
     msn = "298345"
-    url= f'https://apitest.vipps.no/epayment/v1/payments/{refer}'
+    url= f'https://apitest.vipps.no/epayment/v1/payments/'
     headers = {
         "Authorization": f"Bearer {access_tkn}" ,
-        "Ocp-Apim-Subscription-Key": "842be21742444dba9a0be01260df369a" ,
+        "Ocp-Apim-Subscription-Key": "a34e0edb11b5407395097294036eb625" ,
         "Content-Type": "application/json" ,
         "Merchant-Serial-Number": "298345"
     }
-    data={
-        "reference": refer,
-        "returnUrl": "https://webeltek.org/vipps_checkout",
-        }
-    response = requests.post(url, headers=headers,json=data)
+    
+    response = requests.get(url, params={'reference':refer}, headers=headers)
     print(f'/api/vipps/query_payment response: {response.json()}')
     return make_response(response.json())       
 
