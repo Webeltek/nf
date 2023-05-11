@@ -82,7 +82,6 @@ def send_payment():
     msn = "298345"
     url= 'https://apitest.vipps.no/epayment/v1/payments'
     timest = str(int(datetime.datetime.timestamp(datetime.datetime.now())))
-    print(f'timest : {timest}')
     reference = msn + timest
     headers = {
         "Authorization": f"Bearer {access_tkn}" ,
@@ -117,6 +116,7 @@ def send_payment():
 def query_payment():
     access_tkn = cache.get('access_tkn')
     refer = request.args.get('reference')
+
     msn = "298345"
     url= f'https://apitest.vipps.no/epayment/v1/payments/'
     headers = {
@@ -126,8 +126,8 @@ def query_payment():
         "Merchant-Serial-Number": "298345"
     }
     
+    print(f'query payment headers: {headers}')
     response = requests.get(url, params={'reference':refer}, headers=headers)
-    print(f'/api/vipps/query_payment response: {response.json()}')
     return make_response(response.json())       
 
 @oidc_rp_views.route('/api/vipps/rp',methods=['GET','POST'])
