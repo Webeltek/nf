@@ -19,6 +19,7 @@ from ..auth_bp.views import reg_admin_confirm, login_form
 
 from ..email import send_email, send_adm_conf_email
 import requests
+from requests.auth import AuthBase
 from .. import cache
 import datetime
 
@@ -72,6 +73,17 @@ def get_merch_tkn():
     response = requests.post(url, headers=headers,json=data)
     return make_response(response.json())
 
+class VippsAuth(AuthBase):
+    """Attaches HTTP Pizza Authentication to the given Request object."""
+    def __init__(self, access_tkn):
+        # setup any auth-related data here
+        self.access_tkn = access_tkn
+
+    def __call__(self, r):
+        # modify and return the request
+        r.headers['Authorization'] = f"Bearer {self.access_tkn}"
+        return r
+
 @oidc_rp_views.route('/api/vipps/send_payment',methods=['GET','POST'])
 def send_payment():
     access_tkn = request.args.get('access_tkn')
@@ -83,8 +95,8 @@ def send_payment():
     url= 'https://apitest.vipps.no/epayment/v1/payments'
     timest = str(int(datetime.datetime.timestamp(datetime.datetime.now())))
     reference = msn + timest
+    auth = VippsAuth(access_tkn=access_tkn)
     headers = {
-        "Authorization": f"Bearer {access_tkn}" ,
         "Ocp-Apim-Subscription-Key": "a34e0edb11b5407395097294036eb625" ,
         "Content-Type": "application/json" ,
         "Idempotency-Key": idemp_key ,
@@ -109,25 +121,24 @@ def send_payment():
         "userFlow": "WEB_REDIRECT",
         "paymentDescription": "A simple payment"
         }
-    response = requests.post(url, headers=headers,json=data)
+    response = requests.post(url, headers=headers,json=data,auth=auth)
     return make_response(response.json())
 
 @oidc_rp_views.route('/api/vipps/query_payment',methods=['GET','POST'])
 def query_payment():
     access_tkn = cache.get('access_tkn')
+    auth = VippsAuth(access_tkn=access_tkn)
     refer = request.args.get('reference')
-
     msn = "298345"
     url= f'https://apitest.vipps.no/epayment/v1/payments/'
     headers = {
-        "Authorization": f"Bearer {access_tkn}" ,
         "Ocp-Apim-Subscription-Key": "a34e0edb11b5407395097294036eb625" ,
-        "Content-Type": "application/json" ,
+        "Accept": "application/json" ,
         "Merchant-Serial-Number": "298345"
     }
-    
     print(f'query payment headers: {headers}')
-    response = requests.get(url, params={'reference':refer}, headers=headers)
+    response = requests.get(url, params={'reference':refer}, headers=headers,auth=auth)
+
     return make_response(response.json())       
 
 @oidc_rp_views.route('/api/vipps/rp',methods=['GET','POST'])

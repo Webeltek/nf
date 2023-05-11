@@ -181,13 +181,11 @@ export class AuthService {
 
   queryVippsPayment(reference: string){
     console.log("AuthService queryVippsPayment reference :",reference)
-    return this.http.post(baseurl+'/api/vipps/query_payment',''
-        ,  { headers : this.httpHeaders, 
-              observe : 'body', 
-              params: {
-                'reference': reference
-              },
-              responseType : 'json'})
+    return this.http.get(baseurl+'/api/vipps/query_payment',{ 
+      headers : this.httpHeaders, 
+      params: { 'reference': reference }
+      }
+    )
   }
 
   /* getMessage() {

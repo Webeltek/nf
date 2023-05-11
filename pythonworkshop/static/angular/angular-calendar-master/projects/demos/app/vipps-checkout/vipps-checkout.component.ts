@@ -13,6 +13,7 @@ export class VippsCheckoutComponent implements OnInit {
   paymentAmount = "";
   paymentState = "";
   customerPhone = "";
+  access_tkn = "";
 
 
   constructor(private actRoute: ActivatedRoute,
@@ -28,10 +29,10 @@ export class VippsCheckoutComponent implements OnInit {
         this.authService.sendGetMerchAccTkn().subscribe((response)=>{
           if (response && response['access_token']){
             let resp = response as any;
-            let merch_access_tkn = resp.access_token;
+            this.access_tkn = resp.access_token;
 
             const amount = "4000" // valuta NOK with 00 suffix for øre
-            this.authService.sendVippsPayment(merch_access_tkn,this.customerPhone,amount).subscribe({
+            this.authService.sendVippsPayment(this.access_tkn,this.customerPhone,amount).subscribe({
               next: (response) => {
                 if(response){
                   const resp = response as any;
