@@ -130,15 +130,16 @@ def query_payment():
     auth = VippsAuth(access_tkn=access_tkn)
     refer = request.args.get('reference')
     msn = "298345"
-    url= f'https://apitest.vipps.no/epayment/v1/payments/'
+    url= f'https://apitest.vipps.no/epayment/v1/payments/{refer}'
     headers = {
         "Ocp-Apim-Subscription-Key": "a34e0edb11b5407395097294036eb625" ,
         "Accept": "application/json" ,
         "Merchant-Serial-Number": "298345"
     }
-    print(f'query payment headers: {headers}')
-    response = requests.get(url, params={'reference':refer}, headers=headers,auth=auth)
 
+    print(f'query payment headers, token: {headers} , {access_tkn}')
+    response = requests.get(url, headers=headers,auth=auth)
+    print(f'query payment responce: {response}')
     return make_response(response.json())       
 
 @oidc_rp_views.route('/api/vipps/rp',methods=['GET','POST'])
