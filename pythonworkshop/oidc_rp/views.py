@@ -86,8 +86,7 @@ class VippsAuth(AuthBase):
 
 @oidc_rp_views.route('/api/vipps/send_payment',methods=['GET','POST'])
 def send_payment():
-    access_tkn = request.args.get('access_tkn')
-    cache.set('access_tkn',access_tkn)
+    merch_access_tkn = request.args.get('access_tkn')
     usr_phone = request.args.get('usr_phone')
     amount = request.args.get('amount')
     idemp_key = request.args.get('idemp_key')
@@ -95,7 +94,8 @@ def send_payment():
     url= 'https://apitest.vipps.no/epayment/v1/payments'
     timest = str(int(datetime.datetime.timestamp(datetime.datetime.now())))
     reference = msn + timest
-    auth = VippsAuth(access_tkn=access_tkn)
+    cache.set( reference, merch_access_tkn)
+    auth = VippsAuth(access_tkn=merch_access_tkn)
     headers = {
         "Ocp-Apim-Subscription-Key": "a34e0edb11b5407395097294036eb625" ,
         "Content-Type": "application/json" ,
@@ -126,9 +126,11 @@ def send_payment():
 
 @oidc_rp_views.route('/api/vipps/query_payment',methods=['GET','POST'])
 def query_payment():
-    access_tkn = cache.get('access_tkn')
-    auth = VippsAuth(access_tkn=access_tkn)
     refer = request.args.get('reference')
+    access_tkn = cache.get(refer)
+    print(f'query vipps payment session.get(access_tkn) : {access_tkn}')
+    auth = VippsAuth(access_tkn=access_tkn)
+    
     msn = "298345"
     url= f'https://apitest.vipps.no/epayment/v1/payments/{refer}'
     headers = {
@@ -139,7 +141,6 @@ def query_payment():
 
     print(f'query payment headers, token: {headers} , {access_tkn}')
     response = requests.get(url, headers=headers,auth=auth)
-    print(f'query payment responce: {response}')
     return make_response(response.json())       
 
 @oidc_rp_views.route('/api/vipps/rp',methods=['GET','POST'])
@@ -148,7 +149,7 @@ def rp():
     iss = "https://apitest.vipps.no/access-management-1.0/access/"
     uid = "c16aebf0-d913-4b39-bfa8-0ae2a91f8b90"
     is_checkout = request.args['is_checkout']
-    cache.set('is_checkout',is_checkout)
+    session['is_checkout']= is_checkout
     if not iss:
         iss = request.args['static_iss']
     print(f'inside /api/vipps/rp iss: {iss}') 
@@ -259,9 +260,11 @@ def finalize(op_identifier, request_args):
         usr_email_ver = res['userinfo']['email_verified']
         usr_access_tkn = res['token']
         usr_phone = res['userinfo']['phone_number']
-        is_checkout= cache.get('is_checkout')
+
+        is_checkout= session.get('is_checkout')
+        cache.set(usr_phone, [res,is_checkout])
         if is_checkout:
-            return redirect(f'https://webeltek.org/vipps_checkout?access_token={usr_access_tkn}&usr_phone={usr_phone}')
+            return redirect(f'https://webeltek.org/vipps_checkout?usr_phone={usr_phone}')
         elif is_checkout is False: 
             return redirect(f'https://webeltek.org/login?username={usr_email}&vipps_sub={usr_sub}')
     else:

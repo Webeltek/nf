@@ -24,7 +24,7 @@ export class VippsCheckoutComponent implements OnInit {
   ngOnInit(): void {
     this.actRoute.queryParams.subscribe(params=>{
       if (params['usr_phone']){
-        this.customerPhone = params['usr_phone'];
+        const customerPhone = params['usr_phone'];
 
         this.authService.sendGetMerchAccTkn().subscribe((response)=>{
           if (response && response['access_token']){
@@ -32,7 +32,7 @@ export class VippsCheckoutComponent implements OnInit {
             this.access_tkn = resp.access_token;
 
             const amount = "4000" // valuta NOK with 00 suffix for øre
-            this.authService.sendVippsPayment(this.access_tkn,this.customerPhone,amount).subscribe({
+            this.authService.sendVippsPayment(this.access_tkn,customerPhone,amount).subscribe({
               next: (response) => {
                 if(response){
                   const resp = response as any;
@@ -59,7 +59,7 @@ export class VippsCheckoutComponent implements OnInit {
                 this.paymentState = "AUTHORIZED";
                 this.paymentAmount = queryResp.amount.value;
                 const sub  = queryResp.profile.sub;
-                this.msg = this.paymentAmount + " is " + this.paymentState + "to user with phoneNum:"+this.customerPhone;
+                this.msg = this.paymentAmount + " is " + this.paymentState + "to user with phoneNum:";
             }
           },
           error: (err) => {
