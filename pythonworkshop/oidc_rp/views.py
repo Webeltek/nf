@@ -136,12 +136,28 @@ def query_payment():
     headers = {
         "Ocp-Apim-Subscription-Key": "a34e0edb11b5407395097294036eb625" ,
         "Accept": "application/json" ,
-        "Merchant-Serial-Number": "298345"
+        "Merchant-Serial-Number": msn
     }
 
     print(f'query payment headers, token: {headers} , {access_tkn}')
     response = requests.get(url, headers=headers,auth=auth)
-    return make_response(response.json())       
+    return make_response(response.json())
+
+@oidc_rp_views.route('/api/vipps/userinfo',methods=['GET','POST'])
+def get_userinfo():
+    sub = request.args.get('sub')
+    merch_access_tkn = request.args.get("merch_access_tkn")
+    auth = VippsAuth(access_tkn=merch_access_tkn)
+    
+    msn = "298345"
+    url= f'https://apitest.vipps.no//vipps-userinfo-api/userinfo/{sub}'
+    headers = {
+        "Accept": "application/json" ,
+        "Merchant-Serial-Number": msn
+    }
+
+    response = requests.get(url, headers=headers,auth=auth)
+    return make_response(response.json())        
 
 @oidc_rp_views.route('/api/vipps/rp',methods=['GET','POST'])
 def rp():
@@ -262,7 +278,6 @@ def finalize(op_identifier, request_args):
         usr_phone = res['userinfo']['phone_number']
 
         is_checkout= session.get('is_checkout')
-        cache.set(usr_phone, [res,is_checkout])
         if is_checkout:
             return redirect(f'https://webeltek.org/vipps_checkout?usr_phone={usr_phone}')
         elif is_checkout is False: 

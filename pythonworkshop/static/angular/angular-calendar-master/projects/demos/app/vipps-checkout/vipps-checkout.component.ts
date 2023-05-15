@@ -14,6 +14,9 @@ export class VippsCheckoutComponent implements OnInit {
   paymentState = "";
   customerPhone = "";
   access_tkn = "";
+  isLoggedIn = false;
+  isLoginFailed = false;
+  errorMessage = '';
 
 
   constructor(private actRoute: ActivatedRoute,
@@ -59,6 +62,9 @@ export class VippsCheckoutComponent implements OnInit {
                 this.paymentState = "AUTHORIZED";
                 this.paymentAmount = queryResp.amount.value;
                 const sub  = queryResp.profile.sub;
+                if (sub){
+                  this.loginVippsAuthzdUser(sub)
+                }
                 this.msg = this.paymentAmount + " is " + this.paymentState + "to user with phoneNum:";
             }
           },
@@ -70,6 +76,34 @@ export class VippsCheckoutComponent implements OnInit {
       
 
       });
+  }
+
+  loginVippsAuthzdUser(vipps_sub : string){
+      const username = params['username'];
+      this.authService.login({provider:"vipps",username: username, vipps_sub: vipps_sub}).subscribe({
+        next: (data) => {
+          let dataObj = data as any;
+          //console.log("loginComp dataObj.user:",dataObj.user)
+          if (dataObj.user!== 'nonexistent'){
+            let accessToken : string= dataObj.user.access_token ;
+            this.tokenStorage.saveToken(accessToken);
+            this.tokenStorage.saveUser(dataObj.user);
+            this.isLoginFailed = false;
+            this.isLoggedIn = true;
+            this.tokenStorage.authenticated$.next(true);
+            this.router.navigate(['calendar'])
+          } else if(dataObj.user === 'nonexistent'){
+            this.errorMessage = "LCwrongUserPass";
+            this.isLoginFailed = true;
+          }
+  
+        },
+        error: err => {
+          this.errorMessage = err.error.message;
+          this.isLoginFailed = true;
+        }
+      }
+      );
   }
 
 }
