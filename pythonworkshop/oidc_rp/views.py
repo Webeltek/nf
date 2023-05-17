@@ -279,7 +279,7 @@ def finalize(op_identifier, request_args):
 
         is_checkout= session.get('is_checkout')
         if is_checkout:
-            return redirect(f'https://webeltek.org/vipps_checkout?usr_phone={usr_phone}')
+            return redirect(f'https://webeltek.org/vipps_checkout?username={usr_email}&vipps_sub={usr_sub}&usr_phone={usr_phone}')
         elif is_checkout is False: 
             return redirect(f'https://webeltek.org/login?username={usr_email}&vipps_sub={usr_sub}')
     else:

@@ -188,6 +188,15 @@ export class AuthService {
     )
   }
 
+  getVippsUserinfo(sub: string, merch_access_tkn: string){
+    return this.http.post(baseurl+ '/api/vipps/userinfo',{
+      sub : sub,
+      merch_access_tkn : merch_access_tkn
+    },
+      { headers: this.httpHeaders, observe : 'body', responseType : 'json'}
+    )
+  }
+
   /* getMessage() {
     return this.socket.fromEvent('user_confirmed').pipe(map((data: any) => {
       console.log("AuthServ event user_confirmed received");

@@ -13,7 +13,7 @@ export class VippsCheckoutComponent implements OnInit {
   paymentAmount = "";
   paymentState = "";
   customerPhone = "";
-  access_tkn = "";
+  merch_access_tkn = "";
   isLoggedIn = false;
   isLoginFailed = false;
   errorMessage = '';
@@ -26,33 +26,61 @@ export class VippsCheckoutComponent implements OnInit {
 
   ngOnInit(): void {
     this.actRoute.queryParams.subscribe(params=>{
-      if (params['usr_phone']){
+      if (params['username'] && params['vipps_sub'] && params['usr_phone']){
         const customerPhone = params['usr_phone'];
-
-        this.authService.sendGetMerchAccTkn().subscribe((response)=>{
-          if (response && response['access_token']){
-            let resp = response as any;
-            this.access_tkn = resp.access_token;
-
-            const amount = "4000" // valuta NOK with 00 suffix for øre
-            this.authService.sendVippsPayment(this.access_tkn,customerPhone,amount).subscribe({
-              next: (response) => {
-                if(response){
-                  const resp = response as any;
-                  const redirectUrl = resp.redirectUrl
-                  if (redirectUrl){
-                    window.location.href = redirectUrl;
+        this.authService.login({
+          provider:"vipps",
+          username: params['username'], 
+          vipps_sub: params['vipps_sub']
+        }).subscribe({
+                next: (data) => {
+                  let dataObj = data as any;
+                  console.log("VCH dataObj.user:",dataObj.user)
+                  if (dataObj.user!== 'nonexistent'){
+                    let accessToken : string= dataObj.user.access_token ;
+                    this.tokenStorage.saveToken(accessToken);
+                    this.tokenStorage.saveUser(dataObj.user);
+                    this.isLoginFailed = false;
+                    this.isLoggedIn = true;
+                    this.tokenStorage.authenticated$.next(true);
+                    
+                  } else if(dataObj.user === 'nonexistent'){
+                    this.errorMessage = "LCwrongUserPass";
+                    this.isLoginFailed = true;
                   }
-                  console.log("VCheck response: ", resp)
                   
-                };
-              },
-              error: (err) => {
-                console.log("Vcheck sendVippsPayment error: ",err)
-              }
-            });
-          }
-        })
+                  this.authService.sendGetMerchAccTkn().subscribe((response)=>{
+                    if (response && response['access_token']){
+                      let resp = response as any;
+                      this.tokenStorage.saveVippsMerchToken( resp.access_token);
+          
+                      const amount = "4000" // valuta NOK with 00 suffix for øre
+                      this.authService.sendVippsPayment(resp.access_token,customerPhone,amount).subscribe({
+                        next: (response) => {
+                          if(response){
+                            const resp = response as any;
+                            const redirectUrl = resp.redirectUrl
+                            if (redirectUrl){
+                              window.location.href = redirectUrl;
+                            }
+                            console.log("VCheck response: ", resp)
+                            
+                          };
+                        },
+                        error: (err) => {
+                          console.log("Vcheck sendVippsPayment error: ",err)
+                        }
+                      });
+                    }
+                  });
+                },
+                error: err => {
+                  this.errorMessage = err.error.message;
+                  this.isLoginFailed = true;
+                }
+        });
+
+        
       } else if(params['reference']){
         this.authService.queryVippsPayment(params['reference']).subscribe({
           next : (queryResponse) =>{
@@ -63,9 +91,9 @@ export class VippsCheckoutComponent implements OnInit {
                 this.paymentAmount = queryResp.amount.value;
                 const sub  = queryResp.profile.sub;
                 if (sub){
-                  this.loginVippsAuthzdUser(sub)
+                  this.loginVippsAuthzdUser(sub, this.tokenStorage.getVippsMerchToken());
                 }
-                this.msg = this.paymentAmount + " is " + this.paymentState + "to user with phoneNum:";
+                this.msg = this.paymentAmount + " is " + this.paymentState;
             }
           },
           error: (err) => {
@@ -78,32 +106,21 @@ export class VippsCheckoutComponent implements OnInit {
       });
   }
 
-  loginVippsAuthzdUser(vipps_sub : string){
-      const username = params['username'];
-      this.authService.login({provider:"vipps",username: username, vipps_sub: vipps_sub}).subscribe({
-        next: (data) => {
-          let dataObj = data as any;
-          //console.log("loginComp dataObj.user:",dataObj.user)
-          if (dataObj.user!== 'nonexistent'){
-            let accessToken : string= dataObj.user.access_token ;
-            this.tokenStorage.saveToken(accessToken);
-            this.tokenStorage.saveUser(dataObj.user);
-            this.isLoginFailed = false;
-            this.isLoggedIn = true;
-            this.tokenStorage.authenticated$.next(true);
-            this.router.navigate(['calendar'])
-          } else if(dataObj.user === 'nonexistent'){
-            this.errorMessage = "LCwrongUserPass";
-            this.isLoginFailed = true;
+  loginVippsAuthzdUser(vipps_sub : string, merch_access_tkn: string){
+      this.authService.getVippsUserinfo(vipps_sub,merch_access_tkn).subscribe({
+        next : (data) => {
+          if (data){
+            const dataObj = data as any;
+            const username = dataObj.email;
+            const vipps_sub = dataObj.sub;
+            this.router.navigate(['calendar']);
           }
-  
         },
-        error: err => {
+        error : err => {
           this.errorMessage = err.error.message;
-          this.isLoginFailed = true;
         }
-      }
-      );
+      });
+      
   }
 
 }
