@@ -19,10 +19,16 @@ import { Observable, ReplaySubject, BehaviorSubject} from 'rxjs';
 import { DatePipe} from '@angular/common';
 import { SelectionModel } from '@angular/cdk/collections';
 import { TranslateService } from '@ngx-translate/core';
+import { ThemePalette } from '@angular/material/core';
 
 export interface Room {
   row: string,
   title: string
+}
+
+export interface ChipColor {
+  name: string;
+  color: ThemePalette;
 }
 
 @UntilDestroy()
@@ -60,7 +66,12 @@ export class HomeComponent implements OnInit, OnDestroy {
   roomNamesArr : string[] = [];
   toDelPythEvts : PythEvent[] = [];
   isDesktop = false;
-
+  availableColors: ChipColor[] = [
+    /* {name: 'none', color: undefined},
+    {name: 'Primary', color: 'primary'},
+    {name: 'Accent', color: 'accent'}, */
+    {name: 'Warn', color: 'warn'},
+  ];
 
   ngOnInit(): void {
     this.router.events.subscribe({

@@ -140,76 +140,82 @@
         </button>
       </ng-template>
       <ng-template #loggedInSidenav>
+        <mat-chip-listbox class="mat-mdc-chip-set-stacked" aria-label="Color selection">
+          <mat-chip-option *ngFor="let chip of availableColors" selected [color]="chip.color">
+            {{chip.name}}
+          </mat-chip-option>
+        </mat-chip-listbox>
+
         <img
         class="avatar mat-elevation-z8"
         src="assets/ufo.jpg"
-      />
+        />
           <h4 class="name">{{tokenStorage.getUser().user_email}}</h4>
           <p class="designation">{{tokenStorage.getUser().is_admin ? "admin" : "user"}}</p>
           <mat-divider></mat-divider>
-      <mat-nav-list dense>
-        <ng-container *ngIf="!tokenStorage.getUser().is_admin; then userCalendarView else adminCalendarView">
-        </ng-container>
-        <ng-template #userCalendarView>
-          <mat-expansion-panel [class.mat-elevation-z0]="true">
-            <mat-expansion-panel-header [style.padding-left]="0">
-              <button mat-button class="menu-button" routerLink="/calendar">
-                <mat-icon>calendar_month</mat-icon>
-                <span>{{'SideNavCalendar' | translate}}</span>
-              </button>
-            </mat-expansion-panel-header>
-            <mat-nav-list dense>
-              <mat-list-item [style.padding-left]="0" [style.padding-right]="0" (click)="editOuEvents()">
-                <button   mat-button class="menu-button" >
-                  <mat-icon>edit_calendar</mat-icon>
-                  <span>{{'SideNavEditEvents' | translate}}</span>
+          <mat-nav-list dense>
+            <ng-container *ngIf="!tokenStorage.getUser().is_admin; then userCalendarView else adminCalendarView">
+            </ng-container>
+            <ng-template #userCalendarView>
+              <mat-expansion-panel [class.mat-elevation-z0]="true">
+                <mat-expansion-panel-header [style.padding-left]="0">
+                  <button mat-button class="menu-button" routerLink="/calendar">
+                    <mat-icon>calendar_month</mat-icon>
+                    <span>{{'SideNavCalendar' | translate}}</span>
+                  </button>
+                </mat-expansion-panel-header>
+                <mat-nav-list dense>
+                  <mat-list-item [style.padding-left]="0" [style.padding-right]="0" (click)="editOuEvents()">
+                    <button   mat-button class="menu-button" >
+                      <mat-icon>edit_calendar</mat-icon>
+                      <span>{{'SideNavEditEvents' | translate}}</span>
+                    </button>
+                  </mat-list-item>
+                </mat-nav-list>
+              </mat-expansion-panel>
+            </ng-template>    
+            <ng-template #adminCalendarView>
+              <mat-expansion-panel [class.mat-elevation-z0]="true">
+                <mat-expansion-panel-header [style.padding-left]="0">
+                  <button mat-button class="menu-button" routerLink="/calendar">
+                    <mat-icon>calendar_month</mat-icon>
+                    <span>{{'SideNavCalendar' | translate}}</span>
+                  </button>
+                </mat-expansion-panel-header>
+                <mat-nav-list dense>
+                    <mat-list-item [style.padding-left]="0" [style.padding-right]="0" (click)="editEvents()">
+                      <button   mat-button class="menu-button" >
+                        <mat-icon>edit_calendar</mat-icon>
+                        <span>{{'SideNavEditEvents' | translate}}</span>
+                      </button>
+                    </mat-list-item>
+                    <mat-list-item [style.padding-left]="0" [style.padding-right]="0" (click)="editRooms()">
+                      <button mat-button class="menu-button" >
+                        <mat-icon>tune</mat-icon>
+                        <span>{{'SideNavEditRooms' | translate}}</span>
+                      </button>
+                    </mat-list-item>
+                </mat-nav-list> 
+              </mat-expansion-panel>
+
+              <mat-list-item [style.padding-left]="0" routerLink="/board_admin">
+                <button mat-button class="menu-button">
+                  <mat-icon>group</mat-icon>
+                  <span>{{'SideNavLDAPprof' | translate}}</span>
                 </button>
               </mat-list-item>
-            </mat-nav-list>
-          </mat-expansion-panel>
-        </ng-template>    
-        <ng-template #adminCalendarView>
-          <mat-expansion-panel [class.mat-elevation-z0]="true">
-            <mat-expansion-panel-header [style.padding-left]="0">
-              <button mat-button class="menu-button" routerLink="/calendar">
-                <mat-icon>calendar_month</mat-icon>
-                <span>{{'SideNavCalendar' | translate}}</span>
-              </button>
-            </mat-expansion-panel-header>
-            <mat-nav-list dense>
-                <mat-list-item [style.padding-left]="0" [style.padding-right]="0" (click)="editEvents()">
-                  <button   mat-button class="menu-button" >
-                    <mat-icon>edit_calendar</mat-icon>
-                    <span>{{'SideNavEditEvents' | translate}}</span>
-                  </button>
-                </mat-list-item>
-                <mat-list-item [style.padding-left]="0" [style.padding-right]="0" (click)="editRooms()">
-                  <button mat-button class="menu-button" >
-                    <mat-icon>tune</mat-icon>
-                    <span>{{'SideNavEditRooms' | translate}}</span>
-                  </button>
-                </mat-list-item>
-            </mat-nav-list> 
-          </mat-expansion-panel>
+            </ng-template>          
+          </mat-nav-list>
 
-          <mat-list-item [style.padding-left]="0" routerLink="/board_admin">
-            <button mat-button class="menu-button">
-              <mat-icon>group</mat-icon>
-              <span>{{'SideNavLDAPprof' | translate}}</span>
-            </button>
-          </mat-list-item>
-        </ng-template>          
-      </mat-nav-list>
-
-      <button mat-button class="menu-button" routerLink="/profile">
-        <mat-icon>account_box</mat-icon>
-        <span>{{'SideNavProfile' | translate}}</span>
-      </button>
-      <mat-divider></mat-divider>
-      <button mat-button class="menu-button" (click)="logout()">
-        <mat-icon>logout</mat-icon>
-        <span>{{'SideNavLogout' | translate}}</span>
-      </button>
+          <button mat-button class="menu-button" routerLink="/profile">
+            <mat-icon>account_box</mat-icon>
+            <span>{{'SideNavProfile' | translate}}</span>
+          </button>
+          <mat-divider></mat-divider>
+          <button mat-button class="menu-button" (click)="logout()">
+            <mat-icon>logout</mat-icon>
+            <span>{{'SideNavLogout' | translate}}</span>
+          </button>
       </ng-template>
       
 

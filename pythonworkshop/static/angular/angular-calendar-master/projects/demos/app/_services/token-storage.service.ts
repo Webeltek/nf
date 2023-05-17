@@ -5,9 +5,11 @@ import { Router } from '@angular/router'
 
 const CONFIRM_KEY = 'confirm-token'
 const TOKEN_KEY = 'auth-token';
+const USER_KEY = 'auth-user';
+
 const VIPPS_USR_TOKEN_KEY = 'vipps-usr-token';
 const VIPPS_MERCH_TOKEN_KEY = 'vipps-merch-token';
-const USER_KEY = 'auth-user';
+const VIPPS_PAYMNT_KEY = 'vipps-paymnt-key';
 
 @Injectable({
   providedIn: 'root'
@@ -74,6 +76,21 @@ export class TokenStorageService {
     } else if(window.sessionStorage.getItem(VIPPS_MERCH_TOKEN_KEY)==null){
       return null;
     }
+  }
+
+  public saveVippsPaymnt(paymnt: any): void {
+    window.sessionStorage.removeItem(VIPPS_PAYMNT_KEY);
+    window.sessionStorage.setItem(VIPPS_PAYMNT_KEY, JSON.stringify(paymnt));
+    
+  }
+
+  public getVippsPaymnt(): any {
+    const vipps_paymnt = window.sessionStorage.getItem(VIPPS_PAYMNT_KEY);
+    if (vipps_paymnt) {
+      //console.log("tokenStorage getUser():",JSON.parse(user))
+      return JSON.parse(vipps_paymnt);
+    } 
+    return {};
   }
 
   public saveUser(user: any): void {
