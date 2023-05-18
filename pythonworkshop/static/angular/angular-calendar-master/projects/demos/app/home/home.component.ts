@@ -90,7 +90,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.httpService.roomNamesArr$.subscribe((roomNamesArr)=>{
       this.roomNamesArr= roomNamesArr;
       //console.log("HomeComp ngOnInit() roomNamesArr",this.roomNamesArr);
-    })
+    });
+
+    let paymnt = this.tokenStorage.getVippsPaymnt() as any;
+    this.availableColors['name'] = paymnt.paymentAmount;
   }
 
   getUserRole(){
