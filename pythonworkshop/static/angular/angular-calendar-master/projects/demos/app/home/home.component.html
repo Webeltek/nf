@@ -121,7 +121,8 @@
 </ng-template>
 <mat-sidenav-container>
     <mat-sidenav  #sidenav="matSidenav" class="mat-elevation-z8">
-      <ng-container *ngIf="(tokenStorage.authenticated$ | async) ===true; then loggedInSidenav  else loggedOutSidenav"></ng-container>
+      <ng-container 
+      *ngIf="((tokenStorage.authenticated$ | async) && (isVippsCheckoutActive$ | async)) === true; then loggedInSidenav  else loggedOutSidenav"></ng-container>
       <ng-template #loggedOutSidenav>
         <button mat-button class="menu-button" routerLink="/landing">
           <mat-icon>home</mat-icon>
@@ -142,7 +143,7 @@
       <ng-template #loggedInSidenav>
         <mat-chip-listbox class="mat-mdc-chip-set-stacked" aria-label="Color selection">
           <mat-chip-option *ngFor="let chip of availableColors" selected [color]="chip.color">
-            {{chip.name}}
+            {{chip.name}} 
           </mat-chip-option>
         </mat-chip-listbox>
 

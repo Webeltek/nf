@@ -19,6 +19,7 @@ export class TokenStorageService {
 
   authenticated$: BehaviorSubject<boolean> = new BehaviorSubject(false);
   currenLoginState = this.authenticated$.asObservable();
+  vippsPaymntAvailable$: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
   signOut(msg?: string): void {
     window.sessionStorage.clear();
@@ -59,8 +60,10 @@ export class TokenStorageService {
 
   public getVippsUsrToken(): string | null {
     if (window.sessionStorage.getItem(VIPPS_USR_TOKEN_KEY)!==null){
+      this.authenticated$.next(true);
       return window.sessionStorage.getItem(VIPPS_USR_TOKEN_KEY);
     } else if(window.sessionStorage.getItem(VIPPS_USR_TOKEN_KEY)==null){
+      this.authenticated$.next(false);
       return null;
     }
   }
@@ -87,8 +90,11 @@ export class TokenStorageService {
   public getVippsPaymnt(): any {
     const vipps_paymnt = window.sessionStorage.getItem(VIPPS_PAYMNT_KEY);
     if (vipps_paymnt) {
+      this.vippsPaymntAvailable$.next(true);
       //console.log("tokenStorage getUser():",JSON.parse(user))
       return JSON.parse(vipps_paymnt);
+    } else {
+      this.vippsPaymntAvailable$.next(false);
     } 
     return {};
   }

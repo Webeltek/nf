@@ -15,7 +15,7 @@ import { PythEvent } from 'projects/angular-calendar/src/modules/week/calendar-w
 import { MatTableDataSource} from '@angular/material/table';
 import { CalendarEvent } from 'calendar-utils';
 import { DataSource } from '@angular/cdk/collections';
-import { Observable, ReplaySubject, BehaviorSubject} from 'rxjs';
+import { Observable, ReplaySubject, BehaviorSubject, map} from 'rxjs';
 import { DatePipe} from '@angular/common';
 import { SelectionModel } from '@angular/cdk/collections';
 import { TranslateService } from '@ngx-translate/core';
@@ -60,6 +60,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   } 
 
   isCalendarActive$: BehaviorSubject<boolean> = new BehaviorSubject(false);
+  isVippsCheckoutActive$ : BehaviorSubject<boolean> = new BehaviorSubject(false);
 
   loginStateSubscription: Subscription = new Subscription();
   breakPointObsSubscr : Subscription = new Subscription();
@@ -79,6 +80,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         if (routerEvent instanceof NavigationEnd){
           const titleVal = routerEvent.url;
           titleVal === "/calendar" ? this.isCalendarActive$.next(true)  : this.isCalendarActive$.next(false);
+          titleVal === "/vipps_checkout" ? this.isVippsCheckoutActive$.next(true) : this.isVippsCheckoutActive$.next(false);
           //console.log("HC ngOnInit actRoute.title value: ",routerEvent.url)
         }
       },
@@ -92,8 +94,19 @@ export class HomeComponent implements OnInit, OnDestroy {
       //console.log("HomeComp ngOnInit() roomNamesArr",this.roomNamesArr);
     });
 
-    let paymnt = this.tokenStorage.getVippsPaymnt() as any;
-    this.availableColors['name'] = paymnt.paymentAmount;
+    this.tokenStorage.vippsPaymntAvailable$.pipe(
+      map((state) =>{
+        if (state){
+          let paymnt = this.tokenStorage.getVippsPaymnt() as any;
+          return paymnt.paymentAmount;
+        }
+      })).subscribe({
+        next : (amount)=>{
+          this.availableColors[0].name = amount;
+        }
+      }) 
+  
+    
   }
 
   getUserRole(){
