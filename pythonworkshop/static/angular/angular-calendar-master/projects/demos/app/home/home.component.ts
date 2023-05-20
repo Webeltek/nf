@@ -8,7 +8,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { MatSidenav } from '@angular/material/sidenav';
 import { delay, filter } from 'rxjs/operators';
-import { Subscription } from 'rxjs';
+import { Subscription, combineLatest } from 'rxjs';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { UntypedFormBuilder, UntypedFormGroup, UntypedFormControl, UntypedFormArray, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
 import { PythEvent } from 'projects/angular-calendar/src/modules/week/calendar-week-view-hour-segment.component';
@@ -61,6 +61,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   isCalendarActive$: BehaviorSubject<boolean> = new BehaviorSubject(false);
   isVippsCheckoutActive$ : BehaviorSubject<boolean> = new BehaviorSubject(false);
+  combAuthIsVippsCheckActive$ : BehaviorSubject<boolean> = new BehaviorSubject(false);
 
   loginStateSubscription: Subscription = new Subscription();
   breakPointObsSubscr : Subscription = new Subscription();
@@ -87,6 +88,13 @@ export class HomeComponent implements OnInit, OnDestroy {
       error: (err) => {
         console.log("HC ngOnInit actRoute.title.subscribe error",err.error.message)
       }
+    });
+
+    combineLatest([this.tokenStorage.authenticated$, this.isVippsCheckoutActive$], (auth,isVippsCheck)=>{
+      return auth && !isVippsCheck;
+    }).subscribe( (combValue)=>{
+        this.combAuthIsVippsCheckActive$.next(combValue)
+      
     })
 
     this.httpService.roomNamesArr$.subscribe((roomNamesArr)=>{
@@ -105,9 +113,9 @@ export class HomeComponent implements OnInit, OnDestroy {
           this.availableColors[0].name = amount;
         }
       }) 
-  
-    
   }
+
+
 
   getUserRole(){
     return this.tokenStorage.getUser().is_admin ? "admin" : "user";
@@ -189,7 +197,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   editOuEvents(){
     if (this.isCalendarActive$.value){
-    console.log("HomeC editEvents() this.roomNamesArr: ",this.roomNamesArr)
+    console.log("HomeC editOuEvents() this.roomNamesArr: ",this.roomNamesArr)
     if (this.isCalendarActive$){
       const dialogRef = this.dialog.open(EditEventsDialog, {
         data: {
@@ -205,7 +213,7 @@ export class HomeComponent implements OnInit, OnDestroy {
           }
         },
         error: (error) => {
-          console.log("editEvents() afterClosed() error : " + error);
+          console.log("editOuEvents() afterClosed() error : " + error);
         }
       }
       );
