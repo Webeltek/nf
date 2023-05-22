@@ -8,14 +8,13 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { MatSidenav } from '@angular/material/sidenav';
 import { delay, filter } from 'rxjs/operators';
-import { Subscription, combineLatest } from 'rxjs';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { UntypedFormBuilder, UntypedFormGroup, UntypedFormControl, UntypedFormArray, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
 import { PythEvent } from 'projects/angular-calendar/src/modules/week/calendar-week-view-hour-segment.component';
 import { MatTableDataSource} from '@angular/material/table';
 import { CalendarEvent } from 'calendar-utils';
 import { DataSource } from '@angular/cdk/collections';
-import { Observable, ReplaySubject, BehaviorSubject, map} from 'rxjs';
+import { Observable, ReplaySubject, BehaviorSubject, map, Subscription, combineLatestWith} from 'rxjs';
 import { DatePipe} from '@angular/common';
 import { SelectionModel } from '@angular/cdk/collections';
 import { TranslateService } from '@ngx-translate/core';
@@ -90,11 +89,11 @@ export class HomeComponent implements OnInit, OnDestroy {
       }
     });
 
-    combineLatest([this.tokenStorage.authenticated$, this.isVippsCheckoutActive$], (auth,isVippsCheck)=>{
-      return auth && !isVippsCheck;
-    }).subscribe( (combValue)=>{
+    this.tokenStorage.authenticated$.pipe(combineLatestWith(this.isVippsCheckoutActive$) , map(([auth,isVippsCheck])=>{
+      return auth && !isVippsCheck
+    })).subscribe( (combValue)=>{
         this.combAuthIsVippsCheckActive$.next(combValue)
-      
+        console.log("HC combAuthIsVippsCheckActive",combValue)
     })
 
     this.httpService.roomNamesArr$.subscribe((roomNamesArr)=>{
