@@ -4,6 +4,7 @@ import { BreakpointObserver } from '@angular/cdk/layout';
 import { delay } from 'rxjs/operators';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { AuthService } from '../_services/auth.service';
+import { Router, ActivatedRoute, NavigationEnd, UrlSegment } from '@angular/router';
 
 
 @UntilDestroy()
@@ -14,7 +15,9 @@ import { AuthService } from '../_services/auth.service';
 })
 export class LandingPageComponent implements OnInit {
   constructor( private BPobserver: BreakpointObserver,
-    public authService: AuthService){}
+    public authService: AuthService,
+    private router: Router,
+    private actRoute: ActivatedRoute){}
 
   isDesktop = false;
 

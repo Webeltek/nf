@@ -3,7 +3,7 @@ import { HttpEventService } from 'projects/angular-calendar/src/modules/week/htt
 import { AuthService } from '../_services/auth.service';
 import { PythUser } from '../demo-app.component';
 import { TokenStorageService } from '../_services/token-storage.service';
-import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
+import { Router, ActivatedRoute, NavigationEnd, UrlSegment } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { MatSidenav } from '@angular/material/sidenav';
@@ -58,8 +58,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.translate.use(lang);
   } 
 
-  isCalendarActive$: BehaviorSubject<boolean> = new BehaviorSubject(false);
-  isVippsCheckoutActive$ : BehaviorSubject<boolean> = new BehaviorSubject(false);
   combAuthIsVippsCheckActive$ : BehaviorSubject<boolean> = new BehaviorSubject(false);
 
   loginStateSubscription: Subscription = new Subscription();
@@ -75,32 +73,12 @@ export class HomeComponent implements OnInit, OnDestroy {
   ];
 
   ngOnInit(): void {
-    this.router.events.subscribe((routerEvent)=>{
-      if(routerEvent instanceof NavigationEnd){
-        const url = this.router.url;
-        const title = this.router.parseUrl(url).root.toString();
-          console.log("HC ngOnInit actRoute.title value: ",title);
-        
-      }
-    })
-    
-    /* subscribe({
-      next : (title)=>{
-            const titleVal = title
-            console.log("HC ngOnInit actRoute.title value: ",title)
-            titleVal === "calendar" ? this.isCalendarActive$.next(true)  : this.isCalendarActive$.next(false);
-            titleVal === "vipps_checkout" ? this.isVippsCheckoutActive$.next(true) : this.isVippsCheckoutActive$.next(false);
-      },
-      error: (err) => {
-        console.log("HC ngOnInit actRoute.title.subscribe error",err.error.message)
-      }
-    }); */
-
-    this.tokenStorage.authenticated$.pipe(combineLatestWith(this.isVippsCheckoutActive$) , map(([auth,isVippsCheck])=>{
-      return auth && !isVippsCheck
+    this.tokenStorage.authenticated$.pipe(combineLatestWith(this.tokenStorage.isVippsCheckoutActive$) , map(([auth,isVippsCheck])=>{
+      console.log("HC auth, !isVippsCheck",auth,!isVippsCheck);
+      return auth && !isVippsCheck;
     })).subscribe( (combValue)=>{
         this.combAuthIsVippsCheckActive$.next(combValue)
-        console.log("HC combAuthIsVippsCheckActive",combValue)
+        console.log("HC combAuthIsVippsCheckActive",combValue);
     })
 
     this.httpService.roomNamesArr$.subscribe((roomNamesArr)=>{
@@ -176,9 +154,9 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   editEvents(){
-      if (this.isCalendarActive$.value){
+      if (this.tokenStorage.isCalendarActive$.value){
       console.log("HomeC editEvents() this.roomNamesArr: ",this.roomNamesArr)
-      if (this.isCalendarActive$){
+      if (this.tokenStorage.isCalendarActive$){
         const dialogRef = this.dialog.open(EditEventsDialog, {
           data: {
             rooms: this.roomNamesArr
@@ -202,9 +180,9 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   editOuEvents(){
-    if (this.isCalendarActive$.value){
+    if (this.tokenStorage.isCalendarActive$.value){
     console.log("HomeC editOuEvents() this.roomNamesArr: ",this.roomNamesArr)
-    if (this.isCalendarActive$){
+    if (this.tokenStorage.isCalendarActive$){
       const dialogRef = this.dialog.open(EditEventsDialog, {
         data: {
           rooms: this.roomNamesArr
@@ -228,7 +206,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 }
 
   editRooms(){
-    if (this.isCalendarActive$.value){
+    if (this.tokenStorage.isCalendarActive$.value){
       const dialogRef = this.dialog.open(EditRoomsDialog, {
         data: {
           rooms: this.roomNamesArr

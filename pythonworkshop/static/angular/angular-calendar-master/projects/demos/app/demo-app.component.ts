@@ -18,7 +18,7 @@ import { HttpEventService } from 'projects/angular-calendar/src/modules/week/htt
 import { EventDialog, PythEvent, getColors } from 'projects/angular-calendar/src/modules/week/calendar-week-view-hour-segment.component';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { HttpResponse } from '@angular/common/http';
-import { Router, ActivatedRoute, ParamMap  } from '@angular/router';
+import { Router, ActivatedRoute, ParamMap, NavigationEnd  } from '@angular/router';
 import { TokenStorageService } from './_services/token-storage.service';
 import { stringify } from 'querystring';
 import { isSameDay,isSameMonth} from 'date-fns';
@@ -89,6 +89,7 @@ export class DemoAppComponent implements OnInit, OnDestroy{
     private cd: ChangeDetectorRef,
     public translate: TranslateService,
     private router: Router,
+    private actRoute : ActivatedRoute,
     private kvDiffers: KeyValueDiffers,
     private itDiffers: IterableDiffers,
     private modal: NgbModal) {
@@ -117,6 +118,18 @@ export class DemoAppComponent implements OnInit, OnDestroy{
   } */
 
   ngOnInit() {
+    this.router.events.subscribe((routerEvent)=>{
+      if (routerEvent instanceof NavigationEnd){
+        this.actRoute.url.subscribe((urlSegm)=>{
+          const segm = urlSegm[0].path;
+          console.log("DC onInit segm",segm);
+          segm === "calendar" ? 
+            this.tokenStorage.isCalendarActive$.next(true) 
+            : this.tokenStorage.isCalendarActive$.next(false);
+        })
+      }
+    });
+
     this.httpService.getRooms().subscribe(result=>{
       if( typeof result !=='undefined'){
         let roomsArr = result as any;

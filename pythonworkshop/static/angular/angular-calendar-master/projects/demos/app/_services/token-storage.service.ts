@@ -17,6 +17,8 @@ const VIPPS_PAYMNT_KEY = 'vipps-paymnt-key';
 export class TokenStorageService {
   constructor(private router: Router) { }
 
+  isCalendarActive$: BehaviorSubject<boolean> = new BehaviorSubject(false);
+  isVippsCheckoutActive$ : BehaviorSubject<boolean> = new BehaviorSubject(false);
   authenticated$: BehaviorSubject<boolean> = new BehaviorSubject(false);
   currenLoginState = this.authenticated$.asObservable();
   vippsPaymntAvailable$: BehaviorSubject<boolean> = new BehaviorSubject(false);

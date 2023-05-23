@@ -25,6 +25,18 @@ export class VippsCheckoutComponent implements OnInit {
     private authService: AuthService) { }
 
   ngOnInit(): void {
+    this.router.events.subscribe((routerEvent)=>{
+      if (routerEvent instanceof NavigationEnd){
+        this.actRoute.url.subscribe((urlSegm)=>{
+          const segm = urlSegm[0].path;
+          console.log("VCC onInit segm",segm);
+          segm === "vipps_checkout" ? 
+            this.tokenStorage.isVippsCheckoutActive$.next(true) 
+            : this.tokenStorage.isVippsCheckoutActive$.next(false);
+        })
+      }
+    });
+
     this.actRoute.queryParams.subscribe(params=>{
       if (params['username'] && params['vipps_sub'] && params['usr_phone']){
         const customerPhone = params['usr_phone'];
