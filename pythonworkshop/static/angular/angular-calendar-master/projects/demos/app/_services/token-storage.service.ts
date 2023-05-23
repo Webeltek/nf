@@ -1,5 +1,5 @@
 import { Injectable ,  Output, EventEmitter} from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, map } from 'rxjs';
 import { Router } from '@angular/router'
 
 
@@ -17,6 +17,7 @@ const VIPPS_PAYMNT_KEY = 'vipps-paymnt-key';
 export class TokenStorageService {
   constructor(private router: Router) { }
 
+  combAuthProtected$ : BehaviorSubject<boolean> = new BehaviorSubject(false);
   isCalendarActive$: BehaviorSubject<boolean> = new BehaviorSubject(false);
   authenticated$: BehaviorSubject<boolean> = new BehaviorSubject(false);
   vippsPaymntAvailable$: BehaviorSubject<boolean> = new BehaviorSubject(false);
@@ -46,6 +47,14 @@ export class TokenStorageService {
   public getToken(): string | null {
     if (window.sessionStorage.getItem(TOKEN_KEY)!==null){
       this.authenticated$.next(true);
+      this.authenticated$.pipe( map((auth)=>{
+        const isProtectedRoute = 
+          /\/calendar(.*)$|\/profile(.*)$|\/logout(.*)$|\/board_admin(.*)$/.test(this.router.url) ? true : false
+        return auth && isProtectedRoute;
+      })).subscribe( (combValue)=>{
+          this.combAuthProtected$.next(combValue);
+      });
+
       return window.sessionStorage.getItem(TOKEN_KEY);
     } else if(window.sessionStorage.getItem(TOKEN_KEY)==null){
       this.authenticated$.next(false);

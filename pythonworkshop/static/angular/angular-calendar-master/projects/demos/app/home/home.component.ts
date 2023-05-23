@@ -60,8 +60,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.translate.use(lang);
   } 
 
-  combAuthIsVippsCheckoutActive$ : BehaviorSubject<boolean> = new BehaviorSubject(false);
-
   loginStateSubscription: Subscription = new Subscription();
   breakPointObsSubscr : Subscription = new Subscription();
   roomNamesArr : string[] = [];
@@ -79,15 +77,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.roomNamesArr= roomNamesArr;
       //console.log("HomeComp ngOnInit() roomNamesArr",this.roomNamesArr);
     }); 
-  }
 
-
-
-  getUserRole(){
-    return this.tokenStorage.getUser().is_admin ? "admin" : "user";
-  }
-
-  ngAfterViewInit() {
     this.tokenStorage.vippsPaymntAvailable$.pipe(
       map((state) =>{
         if (state){
@@ -99,15 +89,17 @@ export class HomeComponent implements OnInit, OnDestroy {
           this.availableColors[0].name = amount;
         }
       });
-      
-    this.tokenStorage.authenticated$.pipe( map((auth)=>{
-      const isVippsCheck = /\/vipps_checkout(.*)$/.test(this.location.path()) ? true : false
-      return auth && !isVippsCheck;
-    })).subscribe( (combValue)=>{
-        this.combAuthIsVippsCheckoutActive$.next(combValue);
-    });
+  }
 
-    this.loginStateSubscription = this.combAuthIsVippsCheckoutActive$.subscribe( (loginState : boolean)=>{
+
+
+  getUserRole(){
+    return this.tokenStorage.getUser().is_admin ? "admin" : "user";
+  }
+
+  ngAfterViewInit() {
+
+    this.loginStateSubscription = this.tokenStorage.combAuthProtected$.subscribe( (loginState : boolean)=>{
           this.breakPointObsSubscr = this.BPobserver
           .observe(['(min-width: 992px)'])
           .pipe(delay(1), untilDestroyed(this))

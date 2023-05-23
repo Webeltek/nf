@@ -23,7 +23,6 @@ export const ROUTES: Routes = [
         { path: 'confirm', component: ConfirmComponent },
         { path: 'calendar' , canActivate: [LoggedInGuardService], component : DemoAppComponent},
         { path: 'profile' , canActivate: [LoggedInGuardService], component : ProfileComponent},
-        { path: 'profile' , canActivate: [LoggedInGuardService], component : ProfileComponent},
         { path: 'logout' , canActivate: [LoggedInGuardService], component: LoginComponent},
         { path: 'board_admin', canActivate : [LoggedInGuardService], component: BoardAdminComponent},
         { path: 'bb', loadChildren: ()=> import('../../byklebreiband/src/app/app.module').then(m=>m.BBSharedModule)},
