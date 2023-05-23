@@ -75,19 +75,26 @@ export class HomeComponent implements OnInit, OnDestroy {
   ];
 
   ngOnInit(): void {
-    this.router.events.subscribe({
-      next : (routerEvent)=>{
-        if (routerEvent instanceof NavigationEnd){
-          const titleVal = routerEvent.url;
-          titleVal === "/calendar" ? this.isCalendarActive$.next(true)  : this.isCalendarActive$.next(false);
-          titleVal === "/vipps_checkout" ? this.isVippsCheckoutActive$.next(true) : this.isVippsCheckoutActive$.next(false);
-          //console.log("HC ngOnInit actRoute.title value: ",routerEvent.url)
-        }
+    this.router.events.subscribe((routerEvent)=>{
+      if(routerEvent instanceof NavigationEnd){
+        const url = this.router.url;
+        const title = this.router.parseUrl(url).root.toString();
+          console.log("HC ngOnInit actRoute.title value: ",title);
+        
+      }
+    })
+    
+    /* subscribe({
+      next : (title)=>{
+            const titleVal = title
+            console.log("HC ngOnInit actRoute.title value: ",title)
+            titleVal === "calendar" ? this.isCalendarActive$.next(true)  : this.isCalendarActive$.next(false);
+            titleVal === "vipps_checkout" ? this.isVippsCheckoutActive$.next(true) : this.isVippsCheckoutActive$.next(false);
       },
       error: (err) => {
         console.log("HC ngOnInit actRoute.title.subscribe error",err.error.message)
       }
-    });
+    }); */
 
     this.tokenStorage.authenticated$.pipe(combineLatestWith(this.isVippsCheckoutActive$) , map(([auth,isVippsCheck])=>{
       return auth && !isVippsCheck

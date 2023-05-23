@@ -12,7 +12,7 @@
                       {{'PCfrom' | translate}}<a class="text-dark" href="http://maps.google.com/?q=">{{'PClocation' | translate}}</a><br>
               </p>
               <p *ngIf="user.is_admin"><a class="text-dark" href="mailto:{{ user.user_email }}">{{ user.user_email }}</a></p>
-              <p>{{'PClastSeen' | translate }}{{ user.last_seen ? (user.last_seen | date:'short') : "" }}.</p>
+              <p>{{'PClastSeen' | translate }}{{ (user.last_seen && user.last_seen!=="initial date") ? (user.last_seen | date:'short') : "" }}.</p>
               <p class="text-danger"><b>{{serviceMsg$ | async | translate:param}}</b></p>
             </div>
             <mat-expansion-panel>
