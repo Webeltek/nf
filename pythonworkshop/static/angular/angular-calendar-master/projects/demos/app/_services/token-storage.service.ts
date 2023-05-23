@@ -18,10 +18,9 @@ export class TokenStorageService {
   constructor(private router: Router) { }
 
   isCalendarActive$: BehaviorSubject<boolean> = new BehaviorSubject(false);
-  isVippsCheckoutActive$ : BehaviorSubject<boolean> = new BehaviorSubject(false);
   authenticated$: BehaviorSubject<boolean> = new BehaviorSubject(false);
-  currenLoginState = this.authenticated$.asObservable();
   vippsPaymntAvailable$: BehaviorSubject<boolean> = new BehaviorSubject(false);
+  //currenLoginState = this.authenticated$.asObservable();
 
   signOut(msg?: string): void {
     window.sessionStorage.clear();

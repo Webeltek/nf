@@ -19,6 +19,7 @@ import { DatePipe} from '@angular/common';
 import { SelectionModel } from '@angular/cdk/collections';
 import { TranslateService } from '@ngx-translate/core';
 import { ThemePalette } from '@angular/material/core';
+import { Location } from '@angular/common';
 
 export interface Room {
   row: string,
@@ -46,6 +47,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     public tokenStorage: TokenStorageService,
     private router: Router,
     private actRoute: ActivatedRoute,
+    private location : Location,
     public dialog: MatDialog,
     private httpService: HttpEventService,
     private authService: AuthService,
@@ -58,7 +60,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.translate.use(lang);
   } 
 
-  combAuthIsVippsCheckActive$ : BehaviorSubject<boolean> = new BehaviorSubject(false);
+  combAuthIsVippsCheckoutActive$ : BehaviorSubject<boolean> = new BehaviorSubject(false);
 
   loginStateSubscription: Subscription = new Subscription();
   breakPointObsSubscr : Subscription = new Subscription();
@@ -73,12 +75,11 @@ export class HomeComponent implements OnInit, OnDestroy {
   ];
 
   ngOnInit(): void {
-    this.tokenStorage.authenticated$.pipe(combineLatestWith(this.tokenStorage.isVippsCheckoutActive$) , map(([auth,isVippsCheck])=>{
-      console.log("HC auth, !isVippsCheck",auth,!isVippsCheck);
+    this.tokenStorage.authenticated$.pipe( map((auth)=>{
+      const isVippsCheck = /\/vipps_checkout(.*)$/.test(this.location.path()) ? true : false
       return auth && !isVippsCheck;
     })).subscribe( (combValue)=>{
-        this.combAuthIsVippsCheckActive$.next(combValue)
-        console.log("HC combAuthIsVippsCheckActive",combValue);
+        this.combAuthIsVippsCheckoutActive$.next(combValue);
     })
 
     this.httpService.roomNamesArr$.subscribe((roomNamesArr)=>{
@@ -106,7 +107,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    this.loginStateSubscription = this.tokenStorage.authenticated$.subscribe( (loginState : boolean)=>{
+    this.loginStateSubscription = this.combAuthIsVippsCheckoutActive$.subscribe( (loginState : boolean)=>{
           this.breakPointObsSubscr = this.BPobserver
           .observe(['(min-width: 992px)'])
           .pipe(delay(1), untilDestroyed(this))

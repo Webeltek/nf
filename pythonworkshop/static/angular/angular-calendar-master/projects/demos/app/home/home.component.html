@@ -122,7 +122,7 @@
 <mat-sidenav-container>
     <mat-sidenav  #sidenav="matSidenav" class="mat-elevation-z8">
       <ng-container 
-      *ngIf="( combAuthIsVippsCheckActive$ | async) === true; then loggedInSidenav  else loggedOutSidenav"></ng-container>
+      *ngIf="( combAuthIsVippsCheckoutActive$ | async) === true; then loggedInSidenav  else loggedOutSidenav"></ng-container>
       <ng-template #loggedOutSidenav>
         <button mat-button class="menu-button" routerLink="/landing">
           <mat-icon>home</mat-icon>
