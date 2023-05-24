@@ -12,6 +12,7 @@ import { BoardAdminComponent } from './board-admin/board-admin.component';
 import { HjemComponent } from 'projects/byklebreiband/src/app/hjem/hjem.component';
 import { VippsCheckoutComponent } from './vipps-checkout/vipps-checkout.component';
 import { SalgsbetingelserComponent } from './salgsbetingelser/salgsbetingelser.component';
+import { PaymentComponent } from './payment/payment.component';
 
 export const ROUTES: Routes = [  
         { path: 'login', component: LoginComponent },
@@ -22,6 +23,7 @@ export const ROUTES: Routes = [
         { path: 'vipps_checkout', component: VippsCheckoutComponent},
         { path: 'confirm', component: ConfirmComponent },
         { path: 'calendar' , canActivate: [LoggedInGuardService], component : DemoAppComponent},
+        { path: 'payment' , canActivate: [LoggedInGuardService], component : PaymentComponent},
         { path: 'profile' , canActivate: [LoggedInGuardService], component : ProfileComponent},
         { path: 'logout' , canActivate: [LoggedInGuardService], component: LoginComponent},
         { path: 'board_admin', canActivate : [LoggedInGuardService], component: BoardAdminComponent},
