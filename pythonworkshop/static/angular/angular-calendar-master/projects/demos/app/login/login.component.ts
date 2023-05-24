@@ -143,7 +143,6 @@ export class LoginComponent implements OnInit {
               this.tokenStorage.saveUser(dataObj.user);
               this.isLoginFailed = false;
               this.isLoggedIn = true;
-              this.tokenStorage.authenticated$.next(true);
               this.router.navigate(['calendar'])
             } else if(dataObj.user === 'nonexistent'){
               this.errorMessage = "LCwrongUserPass";
@@ -172,7 +171,6 @@ export class LoginComponent implements OnInit {
               this.tokenStorage.saveUser(dataObj.user);
               this.isLoginFailed = false;
               this.isLoggedIn = true;
-              this.tokenStorage.authenticated$.next(true);
               this.router.navigate(['calendar'])
             } else if(dataObj.user === 'nonexistent'){
               this.errorMessage = "LCwrongUserPass";
@@ -260,7 +258,6 @@ export class LoginComponent implements OnInit {
           this.tokenStorage.saveUser(dataObj.user);
           this.isLoginFailed = false;
           this.isLoggedIn = true;
-          this.tokenStorage.authenticated$.next(true);
           this.router.navigate(['calendar'])
         } else if(dataObj.user === 'nonexistent'){
           this.errorMessage = "LCwrongUserPass";
@@ -291,7 +288,6 @@ export class LoginComponent implements OnInit {
           this.tokenStorage.saveUser(dataObj.user);
           this.isLoginFailed = false;
           this.isLoggedIn = true;
-          this.tokenStorage.authenticated$.next(true);
           this.router.navigate(['calendar'])
         } else {
           this.errorMessage = "LCwrongUserPass";

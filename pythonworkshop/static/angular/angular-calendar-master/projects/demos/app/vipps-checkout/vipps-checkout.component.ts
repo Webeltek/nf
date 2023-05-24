@@ -43,7 +43,6 @@ export class VippsCheckoutComponent implements OnInit {
                     this.tokenStorage.saveUser(dataObj.user);
                     this.isLoginFailed = false;
                     this.isLoggedIn = true;
-                    this.tokenStorage.authenticated$.next(true);
                     
                   } else if(dataObj.user === 'nonexistent'){
                     this.errorMessage = "LCwrongUserPass";

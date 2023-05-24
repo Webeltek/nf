@@ -1,6 +1,6 @@
 import { Injectable ,  Output, EventEmitter} from '@angular/core';
 import { BehaviorSubject, map } from 'rxjs';
-import { Router } from '@angular/router'
+import { NavigationEnd, Router } from '@angular/router'
 
 
 const CONFIRM_KEY = 'confirm-token'
@@ -39,7 +39,6 @@ export class TokenStorageService {
   }
   
   public saveToken(token: string): void {
-    //console.log("tokenStorage saveToken() token:",token)
     window.sessionStorage.removeItem(TOKEN_KEY);
     window.sessionStorage.setItem(TOKEN_KEY, token);
   }
@@ -47,14 +46,14 @@ export class TokenStorageService {
   public getToken(): string | null {
     if (window.sessionStorage.getItem(TOKEN_KEY)!==null){
       this.authenticated$.next(true);
-      this.authenticated$.pipe( map((auth)=>{
+    this.router.events.subscribe((routerEvent)=>{
+      if (routerEvent instanceof NavigationEnd){
         const isProtectedRoute = 
-          /\/calendar(.*)$|\/profile(.*)$|\/logout(.*)$|\/board_admin(.*)$/.test(this.router.url) ? true : false
-        return auth && isProtectedRoute;
-      })).subscribe( (combValue)=>{
-          this.combAuthProtected$.next(combValue);
-      });
-
+        /\/calendar(.*)$|\/profile(.*)$|\/logout(.*)$|\/board_admin(.*)$/.test(routerEvent.url) ? true : false;
+        console.log("TS isProtectedRoute, authenticated", isProtectedRoute,this.authenticated$.getValue())
+        this.combAuthProtected$.next(this.authenticated$.getValue() && isProtectedRoute);
+      }
+    });
       return window.sessionStorage.getItem(TOKEN_KEY);
     } else if(window.sessionStorage.getItem(TOKEN_KEY)==null){
       this.authenticated$.next(false);
