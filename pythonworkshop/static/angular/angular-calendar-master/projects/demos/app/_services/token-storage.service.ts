@@ -50,7 +50,7 @@ export class TokenStorageService {
       if (routerEvent instanceof NavigationEnd){
         const isProtectedRoute = 
         /\/calendar(.*)$|\/profile(.*)$|\/logout(.*)$|\/board_admin(.*)$/.test(routerEvent.url) ? true : false;
-        console.log("TS isProtectedRoute, authenticated", isProtectedRoute,this.authenticated$.getValue())
+        //console.log("TS isProtectedRoute, authenticated", isProtectedRoute,this.authenticated$.getValue())
         this.combAuthProtected$.next(this.authenticated$.getValue() && isProtectedRoute);
       }
     });
@@ -93,13 +93,12 @@ export class TokenStorageService {
   public saveVippsPaymnt(paymnt: any): void {
     window.sessionStorage.removeItem(VIPPS_PAYMNT_KEY);
     window.sessionStorage.setItem(VIPPS_PAYMNT_KEY, JSON.stringify(paymnt));
-    
+    this.vippsPaymntAvailable$.next(true);
   }
 
   public getVippsPaymnt(): any {
     const vipps_paymnt = window.sessionStorage.getItem(VIPPS_PAYMNT_KEY);
     if (vipps_paymnt) {
-      this.vippsPaymntAvailable$.next(true);
       //console.log("tokenStorage getUser():",JSON.parse(user))
       return JSON.parse(vipps_paymnt);
     } else {

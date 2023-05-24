@@ -89,15 +89,16 @@ export class VippsCheckoutComponent implements OnInit {
             if (queryResp.state === "AUTHORIZED"){
                 this.paymentState = "AUTHORIZED";
                 this.paymentAmount = queryResp.amount.value;
-                const sub  = queryResp.profile.sub;
-                if (sub){
+                const vipps_sub  = queryResp.profile.sub;
+                if (vipps_sub){
                   const paymnt = {
                     reference : params['reference'],
-                    usr_sub : sub,
+                    vipps_sub : vipps_sub,
                     paymentState : this.paymentState,
                     paymentAmount : this.paymentAmount
                   }
                   this.tokenStorage.saveVippsPaymnt(paymnt);
+                  this.authService.saveVippsPayment(paymnt.reference,paymnt.vipps_sub,paymnt.paymentAmount);
                   //this.loginVippsAuthzdUser(sub, this.tokenStorage.getVippsMerchToken());
                   this.router.navigate(['calendar']);
                 }

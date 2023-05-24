@@ -206,4 +206,12 @@ class Room(db.Model):
   __tablename__ = "nf_room"
   row = db.Column(db.Integer, primary_key=True)
   title = db.Column(db.String,unique=True)
+
+class Payment(db.Model):
+  __tablename__ = "nf_payment"
+  id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+  reference = db.Column(db.String)
+  vipps_sub = db.Column(db.String, db.ForeignKey('nf_user.vipps_sub'))
+  amount = db.Column(db.String)
+  is_consumed = db.Column(db.Boolean,default=False)  
       

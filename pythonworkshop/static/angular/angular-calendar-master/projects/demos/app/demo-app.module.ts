@@ -51,6 +51,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
 import { MatChipsModule } from '@angular/material/chips';
 import { VippsCheckoutComponent } from './vipps-checkout/vipps-checkout.component';
 import { SalgsbetingelserComponent } from './salgsbetingelser/salgsbetingelser.component';
+import { PaymentComponent } from './payment/payment.component';
 //import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 
 /* const config: SocketIoConfig = {
@@ -76,6 +77,7 @@ import { SalgsbetingelserComponent } from './salgsbetingelser/salgsbetingelser.c
     ChangePassComponent,
     VippsCheckoutComponent,
     SalgsbetingelserComponent,
+    PaymentComponent,
   ],
   imports: [
     CommonModule,

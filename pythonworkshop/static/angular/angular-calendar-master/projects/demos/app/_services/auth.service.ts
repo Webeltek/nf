@@ -188,6 +188,15 @@ export class AuthService {
     )
   }
 
+  saveVippsPayment( reference : string,vipps_sub : string,
+      paymentAmount : string): Observable<any> {
+    return this.http.post(baseurl+AUTH_API + 'register', {
+      reference : reference,
+      vipps_sub : vipps_sub,
+      paymentAmount : paymentAmount
+    }, { headers : this.httpHeaders, observe : 'response', responseType : 'json'} );
+  }
+
   getVippsUserinfo(sub: string, merch_access_tkn: string){
     return this.http.post(baseurl+ '/api/vipps/userinfo',{
       sub : sub,

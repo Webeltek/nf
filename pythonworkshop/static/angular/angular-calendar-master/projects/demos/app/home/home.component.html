@@ -140,13 +140,13 @@
           <span>{{'ToolbarRegister' | translate}}</span>
         </button>
       </ng-template>
+      
       <ng-template #loggedInSidenav>
         <mat-chip-listbox class="mat-mdc-chip-set-stacked" aria-label="Color selection">
           <mat-chip-option *ngFor="let chip of availableColors" selected [color]="chip.color">
             {{chip.name}} 
           </mat-chip-option>
         </mat-chip-listbox>
-
         <img
         class="avatar mat-elevation-z8"
         src="assets/ufo.jpg"
