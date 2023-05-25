@@ -301,8 +301,14 @@ def db_save_payment():
 @main_bp.route('/api/services/db_get_payment',methods=['GET','POST'])
 @access_required
 def db_get_payment():
-    refer = request.args['reference']
-    ref_paymnt = db.session.execute(db.select(Payment)
-                                     .where(Payment.reference==refer)).scalar_one_or_none()
-    return jsonify({ "ref_paymnt": ref_paymnt})
+    vipps_sub = request.args['vipps_sub']
+    vipps_sub_paymnts = db.session.execute(db.select(Payment)
+                           .where(Payment.vipps_sub==vipps_sub)).scalars().all()
+    paymnts = []
+    for paymnt in vipps_sub_paymnts:
+         paymnts.append(jsons.dump({
+              "refer" : paymnt.reference,
+              "vipps_sub":paymnt.vipps_sub,
+              "amount": paymnt.amount}))
+    return jsonify({ "vipps_sub_paymnts": paymnts})
 

@@ -201,6 +201,7 @@ def login_form():
                     user_dict = {'id': user.id,
                                 'is_admin':user.is_admin,
                                 'user_email':user.user_email,
+                                'vipps_sub' : user.vipps_sub,
                                 'access_token': user.access_token,
                                 'last_seen': user.last_seen,
                                 'ou': user.ou}
@@ -213,6 +214,7 @@ def login_form():
                     user_dict = {'id': user.id,
                                 'is_admin':user.is_admin,
                                 'user_email':user.user_email,
+                                'vipps_sub' : user.vipps_sub,
                                 'access_token': user.access_token,
                                 'last_seen': user.last_seen,
                                 'ou': user.ou}

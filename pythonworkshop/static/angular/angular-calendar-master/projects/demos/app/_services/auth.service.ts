@@ -19,8 +19,6 @@ export class AuthService {
     //private socket: Socket
     ) { }
 
-  vippsPaymntAvailable$ : BehaviorSubject<boolean>=new BehaviorSubject(false);  
-
   httpHeaders = new HttpHeaders({
     'Content-Type' : 'application/json; charset=UTF-8'
   });
@@ -192,7 +190,6 @@ export class AuthService {
 
   dbSaveVippsPayment( reference : string,vipps_sub : string,
       paymentAmount : string): Observable<any> {
-    this.vippsPaymntAvailable$.next(true);    
     return this.http.post(baseurl+MAIN_API + 'db_save_payment', {
       reference : reference,
       vipps_sub : vipps_sub,
@@ -200,13 +197,12 @@ export class AuthService {
     }, { headers : this.httpHeaders, observe : 'response', responseType : 'json'} );
   }
 
-  dbGetVippsPayment( reference : string,vipps_sub : string): Observable<any> {
-    this.vippsPaymntAvailable$.next(true);    
+  dbGetVippsPayment( vipps_sub : string): Observable<any> {
     return this.http.get(baseurl+MAIN_API + 'db_get_payment', { 
         headers : this.httpHeaders,
         observe : 'response', 
         responseType : 'json', 
-        params : {'reference' : reference }
+        params : {'vipps_sub' : vipps_sub }
       });
   }
 

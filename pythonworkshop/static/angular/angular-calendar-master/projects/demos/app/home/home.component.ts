@@ -26,7 +26,7 @@ export interface Room {
   title: string
 }
 
-export interface ChipColor {
+export interface ChipItem {
   name: string;
   color: ThemePalette;
 }
@@ -65,11 +65,11 @@ export class HomeComponent implements OnInit, OnDestroy {
   roomNamesArr : string[] = [];
   toDelPythEvts : PythEvent[] = [];
   isDesktop = false;
-  availableColors: ChipColor[] = [
+  availableChips: ChipItem[] = [
     /* {name: 'none', color: undefined},
     {name: 'Primary', color: 'primary'},
-    {name: 'Accent', color: 'accent'}, */
-    {name: 'Warn', color: 'warn'},
+    {name: 'Accent', color: 'accent'},
+    {name: 'Warn', color: 'warn'}, */
   ];
 
   ngOnInit(): void {
@@ -77,18 +77,6 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.roomNamesArr= roomNamesArr;
       //console.log("HomeComp ngOnInit() roomNamesArr",this.roomNamesArr);
     }); 
-
-    this.authService.vippsPaymntAvailable$.pipe(
-      map((state) =>{
-        if (state){
-          let paymnt = this.authService.dbGetVippsPayment() as any;
-          return paymnt.paymentAmount;
-        }
-      })).subscribe({
-        next : (amount)=>{
-          this.availableColors[0].name = amount.slice(0,-2);
-        }
-      });
   }
 
 
@@ -100,38 +88,57 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngAfterViewInit() {
 
     this.loginStateSubscription = this.tokenStorage.combAuthProtected$.subscribe( (loginState : boolean)=>{
-          this.breakPointObsSubscr = this.BPobserver
-          .observe(['(min-width: 992px)'])
-          .pipe(delay(1), untilDestroyed(this))
-          .subscribe((res) => {
-              if (res.matches && !loginState) {
-                this.sidenav.mode = 'over';
-                this.sidenav.close();
-                
-              } else if(!res.matches) {
-                this.sidenav.mode = 'over';
-                this.sidenav.close();
-              } else if(res.matches && loginState) {
-                this.sidenav.mode = 'side';
-                this.sidenav.open();
-              } 
-
-              this.isDesktop=true;
-              if (!res.matches){
-                this.isDesktop = false;
+      if(loginState){
+        const currentUsr = this.tokenStorage.getUser();
+        const vipps_sub = currentUsr.vipps_sub;
+        this.authService.dbGetVippsPayment(vipps_sub).subscribe((resp)=>{
+          if (resp){
+            const respObj = resp as any;
+            const paymnts = respObj.vipps_sub_paymnts;
+            for (let paymnt of paymnts ){
+              let chip = {
+                name : paymnt.amount.slice(0,-2),
+                color : "warn"
               }
-          });
-  
-          this.router.events
-          .pipe(
-            untilDestroyed(this),
-            filter((e) => e instanceof NavigationEnd)
-          )
-          .subscribe(() => {
-            if (this.sidenav?.mode === 'over') {
-              this.sidenav?.close();
+              this.availableChips.push(paymnt);
             }
-          });
+            this.availableChips = [...this.availableChips];
+          }
+        });
+      }
+
+      this.breakPointObsSubscr = this.BPobserver
+      .observe(['(min-width: 992px)'])
+      .pipe(delay(1), untilDestroyed(this))
+      .subscribe((res) => {
+          if (res.matches && !loginState) {
+            this.sidenav.mode = 'over';
+            this.sidenav.close();
+            
+          } else if(!res.matches) {
+            this.sidenav.mode = 'over';
+            this.sidenav.close();
+          } else if(res.matches && loginState) {
+            this.sidenav.mode = 'side';
+            this.sidenav.open();
+          } 
+
+          this.isDesktop=true;
+          if (!res.matches){
+            this.isDesktop = false;
+          }
+      });
+
+      this.router.events
+      .pipe(
+        untilDestroyed(this),
+        filter((e) => e instanceof NavigationEnd)
+      )
+      .subscribe(() => {
+        if (this.sidenav?.mode === 'over') {
+          this.sidenav?.close();
+        }
+      });
 
       });
 

@@ -62,7 +62,6 @@
 </mat-toolbar>
 
 <ng-template #loggedOutToolbarTempl>
-  
     <mat-toolbar class="mat-elevation-z8">
       <ng-container *ngIf="isDesktop; then wideToolbar else shrinkToolbar"></ng-container>
       <ng-template #shrinkToolbar>
@@ -116,9 +115,14 @@
       </mat-option>
     </mat-select>
     </mat-toolbar>
-  
-  
 </ng-template>
+<ng-container 
+      *ngIf="( tokenStorage.combAuthProtected$ | async) === true;">
+      <mat-chip-set aria-label="Color selection">
+        <mat-chip cdkDrag *ngFor="let chip of availableChips" selected [color]="chip.color">
+          {{chip.name}} 
+        </mat-chip>
+      </mat-chip-set></ng-container>
 <mat-sidenav-container>
     <mat-sidenav  #sidenav="matSidenav" class="mat-elevation-z8">
       <ng-container 
@@ -142,11 +146,6 @@
       </ng-template>
       
       <ng-template #loggedInSidenav>
-        <mat-chip-listbox class="mat-mdc-chip-set-stacked" aria-label="Color selection">
-          <mat-chip-option *ngFor="let chip of availableColors" selected [color]="chip.color">
-            {{chip.name}} 
-          </mat-chip-option>
-        </mat-chip-listbox>
         <img
         class="avatar mat-elevation-z8"
         src="assets/ufo.jpg"
