@@ -288,3 +288,21 @@ def change_pass_request():
             msg='Invalid email'    
     return jsonify({'user_email': user_email, 'msg':msg})
 
+@main_bp.route('/api/services/db_save_payment',methods=['GET','POST'])
+@access_required
+def db_save_payment():
+    refer = request.json.get('reference')
+    vipps_sub = request.json['vipps_sub']
+    amount = request.json['amount']
+    db.session.add(Payment(reference=refer,vipps_sub=vipps_sub,amount=amount))
+    db.session.commit()
+    return jsonify({ "payment": "saved_in_db"})
+
+@main_bp.route('/api/services/db_get_payment',methods=['GET','POST'])
+@access_required
+def db_get_payment():
+    refer = request.args['reference']
+    ref_paymnt = db.session.execute(db.select(Payment)
+                                     .where(Payment.reference==refer)).scalar_one_or_none()
+    return jsonify({ "ref_paymnt": ref_paymnt})
+

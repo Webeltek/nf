@@ -143,24 +143,6 @@ def query_payment():
     response = requests.get(url, headers=headers,auth=auth)
     return make_response(response.json())
 
-@oidc_rp_views.route('/api/vipps/db_save_payment',methods=['GET','POST'])
-def db_save_payment():
-    refer = request.json.get('reference')
-    vipps_sub = request.json['vipps_sub']
-    amount = request.json['amount']
-    db.session.add(Payment(reference=refer,vipps_sub=vipps_sub,amount=amount))
-    db.session.commit()
-    return jsonify({ "payment": "saved_in_db"})
-
-@oidc_rp_views.route('/api/vipps/db_get_payment',methods=['GET','POST'])
-def db_get_payment():
-    vipps_sub = request.json['vipps_sub']
-    is_consumed = request.json['is_consumed']
-    usr_paymnts = db.session.execute(db.select(Payment)
-                                     .where(Payment.vipps_sub==vipps_sub
-                                            and Payment.is_consumed==False)).scalars().all()
-    return jsonify({ "payments": usr_paymnts})
-
 @oidc_rp_views.route('/api/vipps/userinfo',methods=['GET','POST'])
 def get_userinfo():
     sub = request.args.get('sub')

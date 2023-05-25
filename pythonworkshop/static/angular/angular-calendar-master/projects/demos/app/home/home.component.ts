@@ -78,10 +78,10 @@ export class HomeComponent implements OnInit, OnDestroy {
       //console.log("HomeComp ngOnInit() roomNamesArr",this.roomNamesArr);
     }); 
 
-    this.tokenStorage.vippsPaymntAvailable$.pipe(
+    this.authService.vippsPaymntAvailable$.pipe(
       map((state) =>{
         if (state){
-          let paymnt = this.tokenStorage.getVippsPaymnt() as any;
+          let paymnt = this.authService.dbGetVippsPayment() as any;
           return paymnt.paymentAmount;
         }
       })).subscribe({

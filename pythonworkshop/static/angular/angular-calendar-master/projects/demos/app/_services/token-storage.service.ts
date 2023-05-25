@@ -20,7 +20,6 @@ export class TokenStorageService {
   combAuthProtected$ : BehaviorSubject<boolean> = new BehaviorSubject(false);
   isCalendarActive$: BehaviorSubject<boolean> = new BehaviorSubject(false);
   authenticated$: BehaviorSubject<boolean> = new BehaviorSubject(false);
-  vippsPaymntAvailable$: BehaviorSubject<boolean> = new BehaviorSubject(false);
   //currenLoginState = this.authenticated$.asObservable();
 
   signOut(msg?: string): void {
@@ -88,23 +87,6 @@ export class TokenStorageService {
     } else if(window.sessionStorage.getItem(VIPPS_MERCH_TOKEN_KEY)==null){
       return null;
     }
-  }
-
-  public saveVippsPaymnt(paymnt: any): void {
-    window.sessionStorage.removeItem(VIPPS_PAYMNT_KEY);
-    window.sessionStorage.setItem(VIPPS_PAYMNT_KEY, JSON.stringify(paymnt));
-    this.vippsPaymntAvailable$.next(true);
-  }
-
-  public getVippsPaymnt(): any {
-    const vipps_paymnt = window.sessionStorage.getItem(VIPPS_PAYMNT_KEY);
-    if (vipps_paymnt) {
-      //console.log("tokenStorage getUser():",JSON.parse(user))
-      return JSON.parse(vipps_paymnt);
-    } else {
-      this.vippsPaymntAvailable$.next(false);
-    } 
-    return {};
   }
 
   public saveUser(user: any): void {

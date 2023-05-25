@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpContext, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UserIdentity } from '../login/login.component';
@@ -18,6 +18,8 @@ export class AuthService {
     private router: Router,
     //private socket: Socket
     ) { }
+
+  vippsPaymntAvailable$ : BehaviorSubject<boolean>=new BehaviorSubject(false);  
 
   httpHeaders = new HttpHeaders({
     'Content-Type' : 'application/json; charset=UTF-8'
@@ -188,13 +190,24 @@ export class AuthService {
     )
   }
 
-  saveVippsPayment( reference : string,vipps_sub : string,
+  dbSaveVippsPayment( reference : string,vipps_sub : string,
       paymentAmount : string): Observable<any> {
-    return this.http.post(baseurl+AUTH_API + 'register', {
+    this.vippsPaymntAvailable$.next(true);    
+    return this.http.post(baseurl+MAIN_API + 'db_save_payment', {
       reference : reference,
       vipps_sub : vipps_sub,
       paymentAmount : paymentAmount
     }, { headers : this.httpHeaders, observe : 'response', responseType : 'json'} );
+  }
+
+  dbGetVippsPayment( reference : string,vipps_sub : string): Observable<any> {
+    this.vippsPaymntAvailable$.next(true);    
+    return this.http.get(baseurl+MAIN_API + 'db_get_payment', { 
+        headers : this.httpHeaders,
+        observe : 'response', 
+        responseType : 'json', 
+        params : {'reference' : reference }
+      });
   }
 
   getVippsUserinfo(sub: string, merch_access_tkn: string){
