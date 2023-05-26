@@ -189,18 +189,18 @@ export class AuthService {
   }
 
   dbSaveVippsPayment( reference : string,vipps_sub : string,
-      paymentAmount : string): Observable<any> {
+      amount : string): Observable<any> {
     return this.http.post(baseurl+MAIN_API + 'db_save_payment', {
       reference : reference,
       vipps_sub : vipps_sub,
-      paymentAmount : paymentAmount
-    }, { headers : this.httpHeaders, observe : 'response', responseType : 'json'} );
+      amount : amount
+    }, { headers : this.httpHeaders, observe : 'body', responseType : 'json'} );
   }
 
   dbGetVippsPayment( vipps_sub : string): Observable<any> {
     return this.http.get(baseurl+MAIN_API + 'db_get_payment', { 
         headers : this.httpHeaders,
-        observe : 'response', 
+        observe : 'body', 
         responseType : 'json', 
         params : {'vipps_sub' : vipps_sub }
       });

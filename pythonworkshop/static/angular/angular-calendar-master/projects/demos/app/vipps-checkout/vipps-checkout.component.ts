@@ -97,9 +97,14 @@ export class VippsCheckoutComponent implements OnInit {
                     paymentState : this.paymentState,
                     paymentAmount : this.paymentAmount
                   }
-                  this.authService.dbSaveVippsPayment(paymnt.reference,paymnt.vipps_sub,paymnt.paymentAmount);
-                  //this.loginVippsAuthzdUser(sub, this.tokenStorage.getVippsMerchToken());
-                  this.router.navigate(['calendar']);
+                  this.authService.dbSaveVippsPayment(
+                    paymnt.reference,paymnt.vipps_sub,paymnt.paymentAmount).subscribe((respObj)=>{
+                      if (respObj){
+                        const resp = respObj as any;
+                        console.log("VC save paymnt resp: ",resp);
+                        this.router.navigate(['calendar']);
+                      }
+                    })
                 }
                 this.msg = this.paymentAmount + " is " + this.paymentState;
             }
