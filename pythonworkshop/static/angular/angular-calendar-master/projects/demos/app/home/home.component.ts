@@ -93,6 +93,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         const vipps_sub = currentUsr.vipps_sub;
         this.authService.dbGetVippsPayment(vipps_sub).subscribe((resp)=>{
           if (resp){
+            this.availableChips = [];
             const respObj = resp as any;
             const paymnts = respObj.vipps_sub_paymnts;
             for (let paymnt of paymnts ){
