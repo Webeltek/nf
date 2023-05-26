@@ -92,7 +92,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         const currentUsr = this.tokenStorage.getUser();
         const vipps_sub = currentUsr.vipps_sub;
         this.authService.dbGetVippsPayment(vipps_sub).subscribe((resp)=>{
-          if (resp){
+          if (resp && resp!=="access token expired"){
             this.availableChips = [];
             const respObj = resp as any;
             const paymnts = respObj.vipps_sub_paymnts;
