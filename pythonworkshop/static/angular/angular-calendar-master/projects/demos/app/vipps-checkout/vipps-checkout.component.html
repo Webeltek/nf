@@ -1,1 +1,11 @@
 <p> Vipps checkout message : {{ msg }} </p>
+<ng-container class="d-flex justify-content-center"
+                  *ngIf="true; then spinnerTempl">
+                  </ng-container>
+<ng-template #spinnerTempl>
+    <div class="d-flex justify-content-center">
+      <mat-spinner 
+      [mode]="'indeterminate'"
+      [color]="'accent'"></mat-spinner>
+    </div>
+  </ng-template>
