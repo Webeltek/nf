@@ -97,11 +97,11 @@ export class HomeComponent implements OnInit, OnDestroy {
             const respObj = resp as any;
             const paymnts = respObj.vipps_sub_paymnts;
             for (let paymnt of paymnts ){
-              let chip = {
+              let chip : ChipItem= {
                 name : paymnt.amount.slice(0,-2),
                 color : "warn"
               }
-              this.availableChips.push(paymnt);
+              this.availableChips.push(chip);
             }
             this.availableChips = [...this.availableChips];
           }

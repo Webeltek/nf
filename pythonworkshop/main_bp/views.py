@@ -289,6 +289,7 @@ def change_pass_request():
     return jsonify({'user_email': user_email, 'msg':msg})
 
 @main_bp.route('/api/services/db_save_payment',methods=['GET','POST'])
+@access_required
 def db_save_payment():
     refer = request.json.get('reference')
     vipps_sub = request.json['vipps_sub']
