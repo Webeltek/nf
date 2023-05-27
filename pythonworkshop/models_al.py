@@ -210,8 +210,9 @@ class Room(db.Model):
 class Payment(db.Model):
   __tablename__ = "nf_payment"
   id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+  user_id = db.Column(db.Integer, db.ForeignKey('nf_user.id'))
   reference = db.Column(db.String,unique=True)
-  vipps_sub = db.Column(db.String, db.ForeignKey('nf_user.vipps_sub'))
+  vipps_sub = db.Column(db.String)
   amount = db.Column(db.String)
   is_consumed = db.Column(db.Boolean,default=False)  
       
