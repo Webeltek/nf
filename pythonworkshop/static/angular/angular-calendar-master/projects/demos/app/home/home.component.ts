@@ -14,7 +14,7 @@ import { PythEvent } from 'projects/angular-calendar/src/modules/week/calendar-w
 import { MatTableDataSource} from '@angular/material/table';
 import { CalendarEvent } from 'calendar-utils';
 import { DataSource } from '@angular/cdk/collections';
-import { Observable, ReplaySubject, BehaviorSubject, map, Subscription, combineLatestWith} from 'rxjs';
+import { Observable, ReplaySubject, BehaviorSubject, map, Subscription, distinctUntilChanged, pipe} from 'rxjs';
 import { DatePipe} from '@angular/common';
 import { SelectionModel } from '@angular/cdk/collections';
 import { TranslateService } from '@ngx-translate/core';
@@ -87,39 +87,42 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngAfterViewInit() {
 
-    this.loginStateSubscription = this.tokenStorage.combAuthProtected$.subscribe( (loginState : boolean)=>{
-      if(loginState){
-        const currentUsr = this.tokenStorage.getUser();
-        const vipps_sub = currentUsr.vipps_sub;
-        this.authService.dbGetVippsPayment(vipps_sub).subscribe((resp)=>{
-          if (resp && resp!=="access token expired"){
-            this.availableChips = [];
-            const respObj = resp as any;
-            const paymnts = respObj.vipps_sub_paymnts;
-            for (let paymnt of paymnts ){
-              let chip : ChipItem= {
-                name : paymnt.amount.slice(0,-2),
-                color : "warn"
+    this.loginStateSubscription = this.tokenStorage.combAuthProtected$
+      .pipe(distinctUntilChanged())
+      .subscribe( (authProtState : boolean)=>{
+        if(authProtState){
+          const currentUsr = this.tokenStorage.getUser();
+          const vipps_sub = currentUsr.vipps_sub;
+          this.authService.dbGetVippsPayment(vipps_sub).subscribe((resp)=>{
+            if (resp && resp!=="access token expired"){
+              this.availableChips = [];
+              const respObj = resp as any;
+              const paymnts = respObj.vipps_sub_paymnts;
+              for (let paymnt of paymnts ){
+                console.log("HC paymnt amount slice : ",paymnt.amount.slice(0,-2));
+                let chip : ChipItem= {
+                  name : paymnt.amount.slice(0,-2),
+                  color : "warn"
+                }
+                this.availableChips.push(chip);
               }
-              this.availableChips.push(chip);
+              this.availableChips = [...this.availableChips];
             }
-            this.availableChips = [...this.availableChips];
-          }
-        });
-      }
+          });
+        }
 
       this.breakPointObsSubscr = this.BPobserver
       .observe(['(min-width: 992px)'])
-      .pipe(delay(1), untilDestroyed(this))
+      .pipe(delay(1), untilDestroyed(this),distinctUntilChanged())
       .subscribe((res) => {
-          if (res.matches && !loginState) {
+          if (res.matches && !authProtState) {
             this.sidenav.mode = 'over';
             this.sidenav.close();
             
           } else if(!res.matches) {
             this.sidenav.mode = 'over';
             this.sidenav.close();
-          } else if(res.matches && loginState) {
+          } else if(res.matches && authProtState) {
             this.sidenav.mode = 'side';
             this.sidenav.open();
           } 
@@ -133,7 +136,8 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.router.events
       .pipe(
         untilDestroyed(this),
-        filter((e) => e instanceof NavigationEnd)
+        filter((e) => e instanceof NavigationEnd),
+        distinctUntilChanged()
       )
       .subscribe(() => {
         if (this.sidenav?.mode === 'over') {
