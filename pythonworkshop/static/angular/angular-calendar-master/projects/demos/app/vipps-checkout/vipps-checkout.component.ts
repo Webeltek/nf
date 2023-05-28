@@ -97,8 +97,9 @@ export class VippsCheckoutComponent implements OnInit {
                     paymentState : this.paymentState,
                     paymentAmount : this.paymentAmount
                   }
+                  const user_id = this.tokenStorage.getUser().id;
                   this.authService.dbSaveVippsPayment(
-                    paymnt.reference,paymnt.vipps_sub,paymnt.paymentAmount).subscribe((respObj)=>{
+                    paymnt.reference,user_id,paymnt.vipps_sub,paymnt.paymentAmount).subscribe((respObj)=>{
                       if (respObj){
                         const resp = respObj as any;
                         console.log("VC save paymnt resp: ",resp);

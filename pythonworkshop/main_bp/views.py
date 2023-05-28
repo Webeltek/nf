@@ -292,10 +292,11 @@ def change_pass_request():
 @access_required
 def db_save_payment():
     refer = request.json.get('reference')
+    user_id = request.json['user_id']
     vipps_sub = request.json['vipps_sub']
     amount = request.json['amount']
     print(f'main_bp refer,amount{refer,amount}')
-    db.session.add(Payment(reference=refer,vipps_sub=vipps_sub,amount=amount))
+    db.session.add(Payment(reference=refer,user_id=user_id,vipps_sub=vipps_sub,amount=amount))
     db.session.commit()
     return jsonify({ "payment": "saved_in_db"})
 
