@@ -22,7 +22,7 @@ def access_required(f):
         elif access_token_check == False:
             return jsonify('acces token is wrong')
         elif access_token_check == True:    
-            print("Access ALLOWED")    
+            #print("Access ALLOWED")    
             return f(*args, **kwargs)            
         print("General access ERROR")            
         return jsonify('access not allowed')        
@@ -203,7 +203,7 @@ def insert():
         uid = req_json['uid']
         rowname = req_json['rowname']
         user_id = req_json['user_id']
-        print('event userId foregnkey is : '+ str(user_id))
+        #print('event userId foregnkey is : '+ str(user_id))
         title = req_json['title']
         ou = req_json['ou']
         start = req_json['start']

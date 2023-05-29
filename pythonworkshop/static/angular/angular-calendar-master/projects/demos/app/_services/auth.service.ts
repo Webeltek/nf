@@ -132,22 +132,12 @@ export class AuthService {
     })
 
   vippsAuthorize(){
-      console.log("HttpS vippsAthorize call")
       window.location.href = `https://api.webeltek.org/api/vipps/rp?is_checkout=False`
-      /* return this.http.get(this.baseurl+this.vippsAuthUrl,
-          { headers : this.vippsHeaders, observe: 'body', responseType : 'json'})
-          .subscribe({
-              next: (response)=>{
-                  console.log("HttpS vippsAuthorize response",response);
-              },
-              error: (error) => { 
-                  console.log("vippsAuthorize() error : " + JSON.stringify(error)) ; 
-              }
-          }) */
+      console.log("AS vipps/rp is_checkout=False");
   }
 
   vippsCheckout(){
-      console.log("HttpS vippsCheckout call");
+      console.log("AS vipps/rp is_checkout=True");
       window.location.href = `https://api.webeltek.org/api/vipps/rp?is_checkout=True`
   }
 

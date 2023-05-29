@@ -168,14 +168,13 @@ def rp():
     session['is_checkout']= is_checkout
     if not iss:
         iss = request.args['static_iss']
-    print(f'inside /api/vipps/rp iss: {iss}') 
+    print(f'inside /api/vipps/rp is_checkout: {is_checkout}') 
     if not iss:
         uid = request.args['uid']
     else:
         uid = ''
 
     if iss or uid:
-        print('oidc_rp inside iss or uid')
         args = {
             'req_args': {
                 "claims": {"id_token": {"acr": {"value": "https://refeds.org/profile/mfa"}}}
@@ -278,6 +277,7 @@ def finalize(op_identifier, request_args):
         usr_phone = res['userinfo']['phone_number']
 
         is_checkout= session.get('is_checkout')
+        print(f"oidc_rp finalize is_checkout {is_checkout}")
         if is_checkout:
             return redirect(f'https://webeltek.org/vipps_checkout?username={usr_email}&vipps_sub={usr_sub}&usr_phone={usr_phone}')
         elif is_checkout is False: 
@@ -315,7 +315,7 @@ def get_op_identifier_by_cb_uri(url: str):
 @oidc_rp_views.route('/api/vipps/authz_cb/<op_identifier>',methods=["GET","POST"])
 def authz_cb(op_identifier):
     op_identifier = get_op_identifier_by_cb_uri(request.url)
-    print(f'authz_cb op_identifier: {op_identifier}')
+    #print(f'authz_cb op_identifier: {op_identifier}')
     return finalize(op_identifier, request.args)
 
 
