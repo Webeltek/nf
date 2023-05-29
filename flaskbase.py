@@ -4,7 +4,7 @@ from pythonworkshop import create_app, db
 from dotenv import load_dotenv
 
 
-print(f'flaskbase sys.path {sys.path}')
+#print(f'flaskbase sys.path {sys.path}')
 
 dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
 if os.path.exists(dotenv_path):

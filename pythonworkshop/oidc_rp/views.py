@@ -165,7 +165,7 @@ def rp():
     iss = "https://apitest.vipps.no/access-management-1.0/access/"
     uid = "c16aebf0-d913-4b39-bfa8-0ae2a91f8b90"
     is_checkout = request.args['is_checkout']
-    session['is_checkout']= is_checkout
+    session["is_checkout"]=  is_checkout #is_checkout is string type
     if not iss:
         iss = request.args['static_iss']
     print(f'inside /api/vipps/rp is_checkout: {is_checkout}') 
@@ -276,11 +276,12 @@ def finalize(op_identifier, request_args):
         usr_access_tkn = res['token']
         usr_phone = res['userinfo']['phone_number']
 
-        is_checkout= session.get('is_checkout')
+        is_checkout= session['is_checkout'] #string type
         print(f"oidc_rp finalize is_checkout {is_checkout}")
-        if is_checkout:
+        if is_checkout=="True":
+            print("inside if True condition finalise is checkout = True")
             return redirect(f'https://webeltek.org/vipps_checkout?username={usr_email}&vipps_sub={usr_sub}&usr_phone={usr_phone}')
-        elif is_checkout is False: 
+        elif is_checkout=="False": 
             return redirect(f'https://webeltek.org/login?username={usr_email}&vipps_sub={usr_sub}')
     else:
         return make_response(res['error'], 400)   
@@ -302,7 +303,7 @@ def get_op_identifier_by_cb_uri(url: str):
     uri = splitquery(url)[0]
     print(f'get_op_identifier_by_cb_uri   uri: {uri}')
     for k, v in current_app.rph.issuer2rp.items():
-        print(f'get_op_identifier_by_cb_uri key :{k}')
+        #print(f'get_op_identifier_by_cb_uri key :{k}')
         _cntx = v.get_service_context()
         for endpoint in ("redirect_uris",
                          "post_logout_redirect_uris",
