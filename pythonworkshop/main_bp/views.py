@@ -303,9 +303,9 @@ def db_save_payment():
 @main_bp.route('/api/services/db_get_payment',methods=['GET','POST'])
 @access_required
 def db_get_payment():
-    vipps_sub = request.args['vipps_sub']
+    user_id = request.args['user_id']
     vipps_sub_paymnts = db.session.execute(db.select(Payment)
-                           .where(Payment.vipps_sub==vipps_sub)).scalars().all()
+                           .where(Payment.user_id==user_id)).scalars().all()
     paymnts = []
     for paymnt in vipps_sub_paymnts:
          paymnts.append(jsons.dump({

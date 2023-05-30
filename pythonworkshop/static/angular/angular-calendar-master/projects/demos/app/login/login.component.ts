@@ -121,7 +121,7 @@ export class LoginComponent implements OnInit {
 
     this.actRoute.queryParams.subscribe(params=>{
       let code = params['code'];
-      console.log("LC ngOnInit  params[code]", params['code']);
+      //console.log("LC ngOnInit  params[code]", params['code']);
       if(code){
           let obj = {
             code : params['code'],

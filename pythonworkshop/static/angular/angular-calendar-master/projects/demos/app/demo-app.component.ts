@@ -118,17 +118,6 @@ export class DemoAppComponent implements OnInit, OnDestroy{
   } */
 
   ngOnInit() {
-    this.router.events.subscribe((routerEvent)=>{
-      if (routerEvent instanceof NavigationEnd){
-        this.actRoute.url.subscribe((urlSegm)=>{
-          const segm = urlSegm[0].path;
-          console.log("DC onInit segm",segm);
-          segm === "calendar" ? 
-            this.tokenStorage.isCalendarActive$.next(true) 
-            : this.tokenStorage.isCalendarActive$.next(false);
-        })
-      }
-    });
 
     this.httpService.getRooms().subscribe(result=>{
       if( typeof result !=='undefined'){

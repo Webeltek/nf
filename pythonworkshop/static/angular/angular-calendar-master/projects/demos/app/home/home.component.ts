@@ -93,7 +93,8 @@ export class HomeComponent implements OnInit, OnDestroy {
         if(authProtState){
           const currentUsr = this.tokenStorage.getUser();
           const vipps_sub = currentUsr.vipps_sub;
-          this.authService.dbGetVippsPayment(vipps_sub).subscribe((resp)=>{
+          const user_id = currentUsr.id;
+          this.authService.dbGetVippsPayment(user_id).subscribe((resp)=>{
             if (resp && resp!=="access token expired"){
               this.availableChips = [];
               const respObj = resp as any;
@@ -143,6 +144,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         if (this.sidenav?.mode === 'over') {
           this.sidenav?.close();
         }
+
       });
 
       });
@@ -161,7 +163,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   editEvents(){
       if (this.tokenStorage.isCalendarActive$.value){
       console.log("HomeC editEvents() this.roomNamesArr: ",this.roomNamesArr)
-      if (this.tokenStorage.isCalendarActive$){
         const dialogRef = this.dialog.open(EditEventsDialog, {
           data: {
             rooms: this.roomNamesArr
@@ -181,13 +182,11 @@ export class HomeComponent implements OnInit, OnDestroy {
         }
         );
       }
-    } 
   }
 
   editOuEvents(){
     if (this.tokenStorage.isCalendarActive$.value){
     console.log("HomeC editOuEvents() this.roomNamesArr: ",this.roomNamesArr)
-    if (this.tokenStorage.isCalendarActive$){
       const dialogRef = this.dialog.open(EditEventsDialog, {
         data: {
           rooms: this.roomNamesArr
@@ -207,7 +206,6 @@ export class HomeComponent implements OnInit, OnDestroy {
       }
       );
     }
-  } 
 }
 
   editRooms(){

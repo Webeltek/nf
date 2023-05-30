@@ -188,12 +188,12 @@ export class AuthService {
     }, { headers : this.httpHeaders, observe : 'body', responseType : 'json'} );
   }
 
-  dbGetVippsPayment( vipps_sub : string): Observable<any> {
+  dbGetVippsPayment( user_id : string): Observable<any> {
     return this.http.get(baseurl+MAIN_API + 'db_get_payment', { 
         headers : this.httpHeaders,
         observe : 'body', 
         responseType : 'json', 
-        params : {'vipps_sub' : vipps_sub }
+        params : {'user_id' : user_id }
       });
   }
 

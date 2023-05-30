@@ -118,11 +118,12 @@
 </ng-template>
 <ng-container 
       *ngIf="( tokenStorage.combAuthProtected$ | async) === true;">
-      <mat-chip-set aria-label="Color selection">
-        <mat-chip cdkDrag *ngFor="let chip of availableChips" selected [color]="chip.color">
+      <mat-chip-listbox aria-label="Color selection">
+        <mat-chip-option cdkDrag *ngFor="let chip of availableChips" selected [color]="chip.color">
           {{chip.name}} 
-        </mat-chip>
-      </mat-chip-set></ng-container>
+        </mat-chip-option>
+      </mat-chip-listbox>
+</ng-container>
 <mat-sidenav-container>
     <mat-sidenav  #sidenav="matSidenav" class="mat-elevation-z8">
       <ng-container 

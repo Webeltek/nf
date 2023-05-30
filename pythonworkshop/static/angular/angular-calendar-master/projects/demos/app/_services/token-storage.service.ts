@@ -51,6 +51,10 @@ export class TokenStorageService {
         /\/calendar(.*)$|\/profile(.*)$|\/logout(.*)$|\/board_admin(.*)$/.test(routerEvent.url) ? true : false;
         //console.log("TS isProtectedRoute, authenticated", isProtectedRoute,this.authenticated$.getValue())
         this.combAuthProtected$.next(this.authenticated$.getValue() && isProtectedRoute);
+
+        const isCalendarRoute = 
+            /\/calendar(.*)$/.test(routerEvent.url) ? true : false;
+            this.isCalendarActive$.next(isCalendarRoute);
       }
     });
       return window.sessionStorage.getItem(TOKEN_KEY);
