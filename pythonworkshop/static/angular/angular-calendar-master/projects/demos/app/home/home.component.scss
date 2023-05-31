@@ -150,3 +150,12 @@ table {
    background-color:red; 
     }
 
+  .drag-active {
+    position: relative;
+    z-index: 1;
+    pointer-events: none;
+  }
+  .drag-over {
+    background-color: #eee;
+  }    
+

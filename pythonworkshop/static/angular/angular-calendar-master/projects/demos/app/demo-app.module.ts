@@ -49,7 +49,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
 import { MatChipsModule } from '@angular/material/chips';
-import { DragDropModule } from '@angular/cdk/drag-drop';
+import { DragAndDropModule } from 'angular-draggable-droppable';
 import { VippsCheckoutComponent } from './vipps-checkout/vipps-checkout.component';
 import { SalgsbetingelserComponent } from './salgsbetingelser/salgsbetingelser.component';
 import { PaymentComponent } from './payment/payment.component';
@@ -122,7 +122,7 @@ import { PaymentComponent } from './payment/payment.component';
     MatListModule,
     MatMenuModule,
     MatChipsModule,
-    DragDropModule
+    DragAndDropModule
   ],
   providers : [
     { provide: LOCALE_ID, useValue: 'nb' },

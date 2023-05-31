@@ -20,6 +20,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { TranslateService } from '@ngx-translate/core';
 import { ThemePalette } from '@angular/material/core';
 import { Location } from '@angular/common';
+import { CalendarEventTimesChangedEvent } from 'angular-calendar';
 
 export interface Room {
   row: string,
@@ -29,6 +30,8 @@ export interface Room {
 export interface ChipItem {
   name: string;
   color: ThemePalette;
+  start : Date;
+  dragable : boolean;
 }
 
 @UntilDestroy()
@@ -71,12 +74,48 @@ export class HomeComponent implements OnInit, OnDestroy {
     {name: 'Accent', color: 'accent'},
     {name: 'Warn', color: 'warn'}, */
   ];
+  externalEvents : CalendarEvent[] = [];
+  events : CalendarEvent[] = [];
+  viewDate = new Date();
+  activeDayIsOpen = false;
+
+  eventDropped({
+    event,
+    newStart,
+    newEnd,
+    allDay,
+  }: CalendarEventTimesChangedEvent): void {
+    const externalIndex = this.externalEvents.indexOf(event);
+    if (typeof allDay !== 'undefined') {
+      event.allDay = allDay;
+    }
+    if (externalIndex > -1) {
+      this.externalEvents.splice(externalIndex, 1);
+      this.events.push(event);
+    }
+    event.start = newStart;
+    if (newEnd) {
+      event.end = newEnd;
+    }
+    if (this.view === 'month') {
+      this.viewDate = newStart;
+      this.activeDayIsOpen = true;
+    }
+    this.events = [...this.events];
+  }
+
+  externalDrop(event: ChipItem) {
+    if (this.availableChips.indexOf(event) === -1) {
+      this.availableChips = this.availableChips.filter((iEvent) => iEvent !== event);
+      this.availableChips.push(event);
+    }
+  }
 
   ngOnInit(): void {
     this.httpService.roomNamesArr$.subscribe((roomNamesArr)=>{
       this.roomNamesArr= roomNamesArr;
       //console.log("HomeComp ngOnInit() roomNamesArr",this.roomNamesArr);
-    }); 
+    });
   }
 
 
@@ -86,6 +125,10 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   ngAfterViewInit() {
+    this.tokenStorage.tsEventDropped$.subscribe((chipItem : ChipItem)=>{
+      this.eventDropped(chipItem);
+    }
+  );
 
     this.loginStateSubscription = this.tokenStorage.combAuthProtected$
       .pipe(distinctUntilChanged())
@@ -103,7 +146,9 @@ export class HomeComponent implements OnInit, OnDestroy {
                 console.log("HC paymnt amount slice : ",paymnt.amount.slice(0,-2));
                 let chip : ChipItem= {
                   name : paymnt.amount.slice(0,-2),
-                  color : "warn"
+                  color : "warn",
+                  start : new Date(),
+                  dragable: true
                 }
                 this.availableChips.push(chip);
               }

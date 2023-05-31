@@ -24,6 +24,7 @@ import { stringify } from 'querystring';
 import { isSameDay,isSameMonth} from 'date-fns';
 import { TranslateService } from '@ngx-translate/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ChipItem } from './home/home.component';
 
 export interface PythUser {
   id : number; 
@@ -116,6 +117,10 @@ export class DemoAppComponent implements OnInit, OnDestroy{
       }
     }
   } */
+
+  eventDropped(evt: CalendarEventTimesChangedEvent){
+    this.tokenStorage.tsEventDropped$.next(evt);
+  }
 
   ngOnInit() {
 

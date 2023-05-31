@@ -117,9 +117,17 @@
     </mat-toolbar>
 </ng-template>
 <ng-container 
-      *ngIf="( tokenStorage.combAuthProtected$ | async) === true;">
+      *ngIf="( tokenStorage.combAuthProtected$ | async) === true;"
+      mwlDroppable
+      (drop)="externalDrop($event.dropData.event)"
+      dragOverClass="drag-over">
       <mat-chip-listbox aria-label="Color selection">
-        <mat-chip-option cdkDrag *ngFor="let chip of availableChips" selected [color]="chip.color">
+        <mat-chip-option mwlDragable *ngFor="let chip of availableChips" 
+          selected [color]="chip.color"
+          [dropData]="{event: event}"
+          [touchStartLongPress]="{ delay: 300, delta: 30 }"
+          dragActiveClass="drag-active"
+        >
           {{chip.name}} 
         </mat-chip-option>
       </mat-chip-listbox>
