@@ -49,10 +49,10 @@ import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
 import { MatChipsModule } from '@angular/material/chips';
-import { DragAndDropModule } from 'angular-draggable-droppable';
 import { VippsCheckoutComponent } from './vipps-checkout/vipps-checkout.component';
 import { SalgsbetingelserComponent } from './salgsbetingelser/salgsbetingelser.component';
 import { PaymentComponent } from './payment/payment.component';
+import { DragAndDropModule } from 'angular-draggable-droppable';
 //import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 
 /* const config: SocketIoConfig = {
@@ -121,8 +121,7 @@ import { PaymentComponent } from './payment/payment.component';
     MatCardModule,
     MatListModule,
     MatMenuModule,
-    MatChipsModule,
-    DragAndDropModule
+    MatChipsModule
   ],
   providers : [
     { provide: LOCALE_ID, useValue: 'nb' },

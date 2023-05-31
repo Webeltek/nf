@@ -169,7 +169,7 @@
     "@types/gapi": "0.0.44",
     "angular-auth-oidc-client": "^15.0.3",
     "angular-countries-flags": "0.0.5",
-    "angular-draggable-droppable": "^6.0.0",
+    "angular-draggable-droppable": "^8.0.0",
     "angular-resizable-element": "^5.0.0",
     "bootstrap-css-only": "^4.4.1",
     "calendar-utils": "^0.9.0",

@@ -117,20 +117,24 @@
     </mat-toolbar>
 </ng-template>
 <ng-container 
-      *ngIf="( tokenStorage.combAuthProtected$ | async) === true;"
-      mwlDroppable
-      (drop)="externalDrop($event.dropData.event)"
-      dragOverClass="drag-over">
-      <mat-chip-listbox aria-label="Color selection">
-        <mat-chip-option mwlDragable *ngFor="let chip of availableChips" 
-          selected [color]="chip.color"
-          [dropData]="{event: event}"
-          [touchStartLongPress]="{ delay: 300, delta: 30 }"
-          dragActiveClass="drag-active"
-        >
-          {{chip.name}} 
-        </mat-chip-option>
-      </mat-chip-listbox>
+      *ngIf="( tokenStorage.combAuthProtected$ | async) === true;">
+      <div
+          mwlDroppable
+          (drop)="externalDrop($event.dropData.event)"
+          dragOverClass="drag-over">
+          <ul>
+            <li
+              *ngFor="let event of externalEvents"
+              mwlDraggable 
+              [style.color]="event.color.primary"
+              [dropData]="{event: event}"
+              [touchStartLongPress]="{ delay: 300, delta: 30 }"
+              dragActiveClass="drag-active"
+            >
+              {{event.title}} 
+            </li>
+          </ul>
+        </div>
 </ng-container>
 <mat-sidenav-container>
     <mat-sidenav  #sidenav="matSidenav" class="mat-elevation-z8">
