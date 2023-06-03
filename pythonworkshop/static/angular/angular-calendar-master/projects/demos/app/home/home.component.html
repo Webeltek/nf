@@ -63,67 +63,66 @@
 
 <ng-template #loggedOutToolbarTempl>
     <mat-toolbar class="mat-elevation-z8">
-      <ng-container *ngIf="isDesktop; then wideToolbar else shrinkToolbar"></ng-container>
-      <ng-template #shrinkToolbar>
-        <button
-          mat-icon-button
-          *ngIf="sidenav?.mode === 'over'"
-          (click)="sidenav?.toggle()"
-        >
-        <mat-icon *ngIf="!sidenav.opened">menu</mat-icon>
-        <mat-icon *ngIf="sidenav.opened">close</mat-icon>
-        </button>  
-        <!-- <ng-container *ngIf="isDesktop">
-            <button mat-button class="menu-button" routerLink="/bb/hjem">Byklebreiband</button>
-            <button mat-button [matMenuTriggerFor]="bestill_fiber">Bestill fiber</button>
-            <mat-menu #bestill_fiber="matMenu">
-              <button mat-menu-item [matMenuTriggerFor]="abon_type">Abonnement fastbuande</button>
-              <button mat-menu-item [matMenuTriggerFor]="abon_type">Abonnement hytte</button>
-            </mat-menu>
-            <mat-menu #abon_type >
-              <button mat-menu-item routerLink="/bb/fastbuande">Ikkje tilkobla fiber</button>
-              <button mat-menu-item routerLink="/bb/fastbuande">Tilkobla fiber</button>
-            </mat-menu>
-        </ng-container> -->
-      
-    </ng-template>
-    <ng-template #wideToolbar>
-        <button mat-button class="toolbar-button" routerLink="/landing">Hjem</button>
-        <button mat-button class="toolbar-button" routerLink="/bb/contact">Kontakt</button>
-        <button mat-button class="toolbar-button" routerLink="/salgsbetingelser">Salgsbetingelser</button>
-        <button mat-button class="toolbar-button float-end" routerLink="/register">
-          <mat-icon>app_registration</mat-icon>
-          <span>{{'ToolbarRegister' | translate}}</span>
-        </button>
-    </ng-template>
+      <ng-container *ngIf="isDesktop; then loggedOutWideToolbar else loggedOutShrinkToolbar"></ng-container>
+        <ng-template #loggedOutShrinkToolbar>
+          <button
+            mat-icon-button
+            *ngIf="sidenav?.mode === 'over'"
+            (click)="sidenav?.toggle()"
+          >
+          <mat-icon *ngIf="!sidenav.opened">menu</mat-icon>
+          <mat-icon *ngIf="sidenav.opened">close</mat-icon>
+          </button>  
+          <!-- <ng-container *ngIf="isDesktop">
+              <button mat-button class="menu-button" routerLink="/bb/hjem">Byklebreiband</button>
+              <button mat-button [matMenuTriggerFor]="bestill_fiber">Bestill fiber</button>
+              <mat-menu #bestill_fiber="matMenu">
+                <button mat-menu-item [matMenuTriggerFor]="abon_type">Abonnement fastbuande</button>
+                <button mat-menu-item [matMenuTriggerFor]="abon_type">Abonnement hytte</button>
+              </mat-menu>
+              <mat-menu #abon_type >
+                <button mat-menu-item routerLink="/bb/fastbuande">Ikkje tilkobla fiber</button>
+                <button mat-menu-item routerLink="/bb/fastbuande">Tilkobla fiber</button>
+              </mat-menu>
+          </ng-container> -->
+        
+        </ng-template>
+        <ng-template #loggedOutWideToolbar>
+          <button mat-button class="toolbar-button" routerLink="/landing">Hjem</button>
+          <button mat-button class="toolbar-button" routerLink="/bb/contact">Kontakt</button>
+          <button mat-button class="toolbar-button" routerLink="/salgsbetingelser">Salgsbetingelser</button>
+          <button mat-button class="toolbar-button float-end" routerLink="/register">
+            <mat-icon>app_registration</mat-icon>
+            <span>{{'ToolbarRegister' | translate}}</span>
+          </button>
+        </ng-template>
 
-    <span class="left-spacer"></span>
-    <button mat-button class="toolbar-button link link.dark-blue-gradient-bg float-end" routerLink="/login">
-      <mat-icon>login</mat-icon>
-      <span>{{'ToolbarLogin' | translate}}</span>
-    </button>
-    
-    <flag class="float-end"   [code]="translate.currentLang ? translate.currentLang : translate.getDefaultLang()" 
-          [size]="'md'"  [effect]="'app'" style="margin-right: 0.5em;"></flag>
-    <mat-select class="lang-select float-end"
-        [value]="translate.currentLang ? translate.currentLang : translate.getDefaultLang()"
-        #selectedLang 
-        (selectionChange)="switchLang(selectedLang.value)">
-      <mat-option *ngFor="let language of translate.getLangs()" 
-        [value]="language">
-        {{ language==='gb' ? 'en' : language }}
-      </mat-option>
-    </mat-select>
+      <span class="left-spacer"></span>
+      <button mat-button class="toolbar-button link link.dark-blue-gradient-bg float-end" routerLink="/login">
+        <mat-icon>login</mat-icon>
+        <span>{{'ToolbarLogin' | translate}}</span>
+      </button>
+      
+      <flag class="float-end"   [code]="translate.currentLang ? translate.currentLang : translate.getDefaultLang()" 
+            [size]="'md'"  [effect]="'app'" style="margin-right: 0.5em;"></flag>
+      <mat-select class="lang-select float-end"
+          [value]="translate.currentLang ? translate.currentLang : translate.getDefaultLang()"
+          #selectedLang 
+          (selectionChange)="switchLang(selectedLang.value)">
+        <mat-option *ngFor="let language of translate.getLangs()" 
+          [value]="language">
+          {{ language==='gb' ? 'en' : language }}
+        </mat-option>
+      </mat-select>
     </mat-toolbar>
 </ng-template>
 <ng-container 
       *ngIf="( tokenStorage.combAuthProtected$ | async) === true;">
-      <div
+      <mat-chip-listbox aria-label="Fish selection"
           mwlDroppable
           (drop)="externalDrop($event.dropData.event)"
           dragOverClass="drag-over">
-          <ul>
-            <li
+            <mat-chip-option
               *ngFor="let event of externalEvents"
               mwlDraggable 
               [style.color]="event.color.primary"
@@ -132,9 +131,8 @@
               dragActiveClass="drag-active"
             >
               {{event.title}} 
-            </li>
-          </ul>
-        </div>
+            </mat-chip-option>
+        </mat-chip-listbox>
 </ng-container>
 <mat-sidenav-container>
     <mat-sidenav  #sidenav="matSidenav" class="mat-elevation-z8">

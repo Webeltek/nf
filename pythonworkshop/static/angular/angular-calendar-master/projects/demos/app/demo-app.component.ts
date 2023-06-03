@@ -242,6 +242,7 @@ export class DemoAppComponent implements OnInit, OnDestroy{
               title : this.getEventTitle(pythEvt),
               ou: pythEvt.ou,
               color : getColors(pythEvt.userId,this.tokenStorage.getUser().id),
+              draggable : true
             }
           this.events.push(calEvent);
           
