@@ -1,7 +1,6 @@
 import { Injectable ,  Output, EventEmitter} from '@angular/core';
 import { BehaviorSubject, map } from 'rxjs';
 import { NavigationEnd, Router } from '@angular/router'
-import { ChipItem } from '../home/home.component';
 import { CalendarEventTimesChangedEvent, CalendarEventTimesChangedEventType } from 'angular-calendar';
 
 
@@ -19,12 +18,10 @@ const VIPPS_PAYMNT_KEY = 'vipps-paymnt-key';
 export class TokenStorageService {
   constructor(private router: Router) { }
 
-  eventTChEvt : CalendarEventTimesChangedEvent = {} as any;
 
   combAuthProtected$ : BehaviorSubject<boolean> = new BehaviorSubject(false);
   isCalendarActive$: BehaviorSubject<boolean> = new BehaviorSubject(false);
   authenticated$: BehaviorSubject<boolean> = new BehaviorSubject(false);
-  tsEventDropped$: BehaviorSubject<CalendarEventTimesChangedEvent> = new BehaviorSubject(this.eventTChEvt);
   //currenLoginState = this.authenticated$.asObservable();
 
   signOut(msg?: string): void {

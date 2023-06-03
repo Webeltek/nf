@@ -48,6 +48,24 @@
                 </div>
             </div>
         </div>
+        <ng-container 
+            *ngIf="( tokenStorage.combAuthProtected$ | async) === true;">
+            <mat-chip-listbox aria-label="Fish selection"
+                mwlDroppable
+                (drop)="externalDrop($event.dropData.event)"
+                dragOverClass="drag-over">
+                    <mat-chip-option
+                    *ngFor="let event of externalEvents"
+                    mwlDraggable 
+                    [style.color]="event.color.primary"
+                    [dropData]="{event: event}"
+                    [touchStartLongPress]="{ delay: 300, delta: 30 }"
+                    dragActiveClass="drag-active"
+                    >
+                    {{event.title}} 
+                    </mat-chip-option>
+                </mat-chip-listbox>
+        </ng-container>
         <br />
         <div [ngSwitch]="view">
             <mwl-calendar-month-view

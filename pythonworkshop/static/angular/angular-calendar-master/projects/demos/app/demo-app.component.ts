@@ -10,7 +10,7 @@ import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { 
   CalendarDateFormatter, CalendarEventTimesChangedEvent,
   CalendarView, CalendarEvent, DAYS_OF_WEEK } from 'angular-calendar';
-import { Subject } from 'rxjs';
+import { Subject, Subscription, distinctUntilChanged } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { CustomDateFormatter } from './custom-date-formatter.provider';
@@ -24,7 +24,15 @@ import { stringify } from 'querystring';
 import { isSameDay,isSameMonth} from 'date-fns';
 import { TranslateService } from '@ngx-translate/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { ChipItem } from './home/home.component';
+import { ThemePalette } from '@angular/material/core';
+import { AuthService } from './_services/auth.service';
+
+export interface ChipItem {
+  name: string;
+  color: ThemePalette;
+  start : Date;
+  dragable : boolean;
+}
 
 export interface PythUser {
   id : number; 
@@ -67,6 +75,7 @@ export class DemoAppComponent implements OnInit, OnDestroy{
   };
 
   refresh = new Subject<void>();
+  loginStateSubscription: Subscription = new Subscription();
 
   setView(view: CalendarView) {
     this.view = view;
@@ -76,6 +85,13 @@ export class DemoAppComponent implements OnInit, OnDestroy{
   users : PythUser[] = [];
   loggedInUserId : number;
   toBeDeletedPythEvt : PythEvent;
+  availableChips: ChipItem[] = [
+    /* {name: 'none', color: undefined},
+    {name: 'Primary', color: 'primary'},
+    {name: 'Accent', color: 'accent'},
+    {name: 'Warn', color: 'warn'}, */
+  ];
+  externalEvents : CalendarEvent[] = [];
 
   @Input() rooms : string[] = [];
   roomsArrDiffer : any;
@@ -84,7 +100,8 @@ export class DemoAppComponent implements OnInit, OnDestroy{
 
   constructor(
     public httpService: HttpEventService,
-    private tokenStorage: TokenStorageService,
+    public tokenStorage: TokenStorageService,
+    private authService : AuthService,
     public dialog: MatDialog,
     private breakpointObserver: BreakpointObserver,
     private cd: ChangeDetectorRef,
@@ -118,11 +135,74 @@ export class DemoAppComponent implements OnInit, OnDestroy{
     }
   } */
 
-  eventDropped(evt: CalendarEventTimesChangedEvent){
-    this.tokenStorage.tsEventDropped$.next(evt);
+  eventDropped({
+    event,
+    newStart,
+    newEnd,
+    allDay,
+  }: CalendarEventTimesChangedEvent): void {
+    const externalIndex = this.externalEvents.indexOf(event);
+    if (typeof allDay !== 'undefined') {
+      event.allDay = allDay;
+    }
+    if (externalIndex > -1) {
+      this.externalEvents.splice(externalIndex, 1);
+      this.events.push(event);
+    }
+    event.start = newStart;
+    if (newEnd) {
+      event.end = newEnd;
+    }
+    if (this.view === 'month') {
+      this.viewDate = newStart;
+      this.activeDayIsOpen = true;
+    }
+    this.events = [...this.events];
+  }
+
+  externalDrop(event: CalendarEvent) {
+    if (this.externalEvents.indexOf(event) === -1) {
+      this.events = this.events.filter((iEvent) => iEvent !== event);
+      this.externalEvents.push(event);
+    }
   }
 
   ngOnInit() {
+    this.loginStateSubscription = this.tokenStorage.combAuthProtected$
+      .pipe(distinctUntilChanged())
+      .subscribe( (authProtState : boolean)=>{
+        if(authProtState){
+          const currentUsr = this.tokenStorage.getUser();
+          const vipps_sub = currentUsr.vipps_sub;
+          const user_id = currentUsr.id;
+          this.authService.dbGetVippsPayment(user_id).subscribe((resp)=>{
+            if (resp && resp!=="access token expired"){
+              this.availableChips = [];
+              const respObj = resp as any;
+              const paymnts = respObj.vipps_sub_paymnts;
+              for (let paymnt of paymnts ){
+                console.log("HC paymnt amount slice : ",paymnt.amount.slice(0,-2));
+                let chip : ChipItem= {
+                  name : paymnt.amount.slice(0,-2),
+                  color : "warn",
+                  start : new Date(),
+                  dragable: true
+                }
+                this.availableChips.push(chip);
+                let extEvent : CalendarEvent = {
+                  title : chip.name,
+                  color : {primary: '#ad2121',secondary: '#FAE3E3' },
+                  start : chip.start,
+                  draggable : true
+                }
+                this.externalEvents.push(extEvent);
+              }
+              this.availableChips = [...this.availableChips];
+              this.externalEvents = [...this.externalEvents];
+            }
+          });
+        }
+      });
 
     this.httpService.getRooms().subscribe(result=>{
       if( typeof result !=='undefined'){
@@ -242,7 +322,11 @@ export class DemoAppComponent implements OnInit, OnDestroy{
               title : this.getEventTitle(pythEvt),
               ou: pythEvt.ou,
               color : getColors(pythEvt.userId,this.tokenStorage.getUser().id),
-              draggable : true
+              draggable : true,
+              resizable: {
+                beforeStart: true, // this allows you to configure the sides the event is resizable from
+                afterEnd: true,
+              }
             }
           this.events.push(calEvent);
           

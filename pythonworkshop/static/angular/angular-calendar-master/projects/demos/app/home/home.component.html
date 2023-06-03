@@ -37,7 +37,7 @@
 </div> -->
 
 <mat-toolbar class="mat-elevation-z8"
-  *ngIf="(tokenStorage.authenticated$ | async) ===true; else loggedOutToolbarTempl">
+  *ngIf="(tokenStorage.combAuthProtected$ | async) ===true; else loggedOutToolbarTempl">
   <button
     mat-icon-button
     *ngIf="sidenav?.mode === 'over'"
@@ -116,24 +116,6 @@
       </mat-select>
     </mat-toolbar>
 </ng-template>
-<ng-container 
-      *ngIf="( tokenStorage.combAuthProtected$ | async) === true;">
-      <mat-chip-listbox aria-label="Fish selection"
-          mwlDroppable
-          (drop)="externalDrop($event.dropData.event)"
-          dragOverClass="drag-over">
-            <mat-chip-option
-              *ngFor="let event of externalEvents"
-              mwlDraggable 
-              [style.color]="event.color.primary"
-              [dropData]="{event: event}"
-              [touchStartLongPress]="{ delay: 300, delta: 30 }"
-              dragActiveClass="drag-active"
-            >
-              {{event.title}} 
-            </mat-chip-option>
-        </mat-chip-listbox>
-</ng-container>
 <mat-sidenav-container>
     <mat-sidenav  #sidenav="matSidenav" class="mat-elevation-z8">
       <ng-container 

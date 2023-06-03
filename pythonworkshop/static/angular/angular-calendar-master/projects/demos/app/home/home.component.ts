@@ -18,20 +18,12 @@ import { Observable, ReplaySubject, BehaviorSubject, map, Subscription, distinct
 import { DatePipe} from '@angular/common';
 import { SelectionModel } from '@angular/cdk/collections';
 import { TranslateService } from '@ngx-translate/core';
-import { ThemePalette } from '@angular/material/core';
 import { Location } from '@angular/common';
 import { CalendarEventTimesChangedEvent } from 'angular-calendar';
 
 export interface Room {
   row: string,
   title: string
-}
-
-export interface ChipItem {
-  name: string;
-  color: ThemePalette;
-  start : Date;
-  dragable : boolean;
 }
 
 @UntilDestroy()
@@ -68,23 +60,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   roomNamesArr : string[] = [];
   toDelPythEvts : PythEvent[] = [];
   isDesktop = false;
-  availableChips: ChipItem[] = [
-    /* {name: 'none', color: undefined},
-    {name: 'Primary', color: 'primary'},
-    {name: 'Accent', color: 'accent'},
-    {name: 'Warn', color: 'warn'}, */
-  ];
-  externalEvents : CalendarEvent[] = [];
-  events : CalendarEvent[] = [];
   viewDate = new Date();
   activeDayIsOpen = false;
-
-  externalDrop(event: CalendarEvent) {
-    if (this.externalEvents.indexOf(event) === -1) {
-      this.events = this.events.filter((iEvent) => iEvent !== event);
-      this.externalEvents.push(event);
-    }
-  }
 
   ngOnInit(): void {
     this.httpService.roomNamesArr$.subscribe((roomNamesArr)=>{
@@ -104,72 +81,41 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.loginStateSubscription = this.tokenStorage.combAuthProtected$
       .pipe(distinctUntilChanged())
       .subscribe( (authProtState : boolean)=>{
-        if(authProtState){
-          const currentUsr = this.tokenStorage.getUser();
-          const vipps_sub = currentUsr.vipps_sub;
-          const user_id = currentUsr.id;
-          this.authService.dbGetVippsPayment(user_id).subscribe((resp)=>{
-            if (resp && resp!=="access token expired"){
-              this.availableChips = [];
-              const respObj = resp as any;
-              const paymnts = respObj.vipps_sub_paymnts;
-              for (let paymnt of paymnts ){
-                console.log("HC paymnt amount slice : ",paymnt.amount.slice(0,-2));
-                let chip : ChipItem= {
-                  name : paymnt.amount.slice(0,-2),
-                  color : "warn",
-                  start : new Date(),
-                  dragable: true
-                }
-                this.availableChips.push(chip);
-                let extEvent : CalendarEvent = {
-                  title : chip.name,
-                  color : {primary: '#ad2121',secondary: '#FAE3E3' },
-                  start : chip.start,
-                  draggable : true
-                }
-                this.externalEvents.push(extEvent);
-              }
-              this.availableChips = [...this.availableChips];
-              this.externalEvents = [...this.externalEvents];
+
+        this.breakPointObsSubscr = this.BPobserver
+        .observe(['(min-width: 992px)'])
+        .pipe(delay(1), untilDestroyed(this),distinctUntilChanged())
+        .subscribe((res) => {
+            if (res.matches && !authProtState) {
+              this.sidenav.mode = 'over';
+              this.sidenav.close();
+              
+            } else if(!res.matches) {
+              this.sidenav.mode = 'over';
+              this.sidenav.close();
+            } else if(res.matches && authProtState) {
+              this.sidenav.mode = 'side';
+              this.sidenav.open();
+            } 
+
+            this.isDesktop=true;
+            if (!res.matches){
+              this.isDesktop = false;
             }
-          });
-        }
+        });
 
-      this.breakPointObsSubscr = this.BPobserver
-      .observe(['(min-width: 992px)'])
-      .pipe(delay(1), untilDestroyed(this),distinctUntilChanged())
-      .subscribe((res) => {
-          if (res.matches && !authProtState) {
-            this.sidenav.mode = 'over';
-            this.sidenav.close();
-            
-          } else if(!res.matches) {
-            this.sidenav.mode = 'over';
-            this.sidenav.close();
-          } else if(res.matches && authProtState) {
-            this.sidenav.mode = 'side';
-            this.sidenav.open();
-          } 
-
-          this.isDesktop=true;
-          if (!res.matches){
-            this.isDesktop = false;
+        this.router.events
+        .pipe(
+          untilDestroyed(this),
+          filter((e) => e instanceof NavigationEnd),
+          distinctUntilChanged()
+        )
+        .subscribe(() => {
+          if (this.sidenav?.mode === 'over') {
+            this.sidenav?.close();
           }
-      });
 
-      this.router.events
-      .pipe(
-        untilDestroyed(this),
-        filter((e) => e instanceof NavigationEnd),
-        distinctUntilChanged()
-      )
-      .subscribe(() => {
-        if (this.sidenav?.mode === 'over') {
-          this.sidenav?.close();
-        }
-
-      });
+        });
 
       });
 
