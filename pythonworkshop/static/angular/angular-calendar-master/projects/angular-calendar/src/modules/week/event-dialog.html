@@ -44,6 +44,9 @@
             {{periode}}
         </mat-radio-button>
       </mat-radio-group>
+      <ngb-timepicker [(ngModel)]="startTime"></ngb-timepicker>
+      <hr/>
+      <pre>Selected time: {{ time | json }}</pre>
     </div>
     <div>Ditt valg er: {{valgtPerCtrl.value}} den {{ data.date | date:'dd/MM/yyyy'}}</div>
     <div mat-dialog-actions>

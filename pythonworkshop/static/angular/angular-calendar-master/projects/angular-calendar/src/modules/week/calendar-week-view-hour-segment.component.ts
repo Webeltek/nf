@@ -23,6 +23,7 @@ export interface PythEvent {
   uid : string;
   user_id? : number;
   rowname : string;
+  startTime: string;
   title : string;
   ou? : string;
   start : string;
@@ -314,6 +315,7 @@ export class CalendarWeekViewHourSegmentComponent {
                 uid: uniqueId,
                 user_id: this.loggedInUserId,
                 rowname: this.segmRoomNames[this.roomInd],
+                startTime : result.startTime,
                 title: result.dayPeriodVal,
                 ou : this.user_ou,
                 start: startEndDate.start,
@@ -353,6 +355,8 @@ export class EventDialog {
       rooms: string[] },
      public fb: UntypedFormBuilder) {}
 
+     
+    startTime = { hour: 13, minute: 30};  
     containedEvTitle = this.data.hourContainedEvTitle;
     toBeDeleted = this.data.toBeDeleted;
 
@@ -365,7 +369,8 @@ export class EventDialog {
 
   closeDialog(){
     this.dialogRef.close({
-      clickedDbEvt: this.data.clickedDbEvt, 
+      clickedDbEvt: this.data.clickedDbEvt,
+      startTime: this.startTime, 
       dayPeriodVal : this.valgtPerCtrl.value, 
       toBeDeleted : this.data.toBeDeleted, 
       toBeDeletedPythEvt : this.data.toBeDeletedPythEvt

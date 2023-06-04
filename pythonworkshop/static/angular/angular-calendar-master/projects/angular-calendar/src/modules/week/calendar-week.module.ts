@@ -22,6 +22,8 @@ import { Observable } from 'rxjs';
 import { HttpEventService } from './http-service.service';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { JsonPipe } from '@angular/common';
+import { NgbTimepickerModule } from '@ng-bootstrap/ng-bootstrap';
 
 export {
   CalendarWeekViewComponent,
@@ -53,6 +55,8 @@ export { CalendarWeekViewCurrentTimeMarkerComponent as ɵCalendarWeekViewCurrent
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
+    NgbTimepickerModule,
+    JsonPipe,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
