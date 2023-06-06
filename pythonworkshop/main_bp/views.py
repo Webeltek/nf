@@ -163,7 +163,7 @@ def index_events():
         for event in events:
             event_list.append(jsons.dump(eventd(
                  event.id,event.uid,event.user_id,
-                 event.rowname,event.title,event.ou,event.start,
+                 event.rowname,event.ou,event.start,
                  event.end,event.color))) 
         return jsonify({'events':event_list})
 

@@ -90,7 +90,10 @@ export function getColors( event_userId: number, loggedIn_user_id:number) {
           <div class="cal-time" *ngIf="isTimeLabel"
           >
             {{
-                currentRoom
+              segment.displayDate
+              | calendarDate
+                : (daysInWeek === 1 ? 'dayViewHour' : 'weekViewHour')
+                : locale
             }}
           </div>
         </div>
@@ -365,7 +368,7 @@ export class EventDialog {
   ngOnInit(){} 
 
   get remPerioder() {
-    let perioder = ['Formiddag','Ettermiddag','Heldag'];
+    let perioder = ['Drop-in','Avtale','Kontor'];
     //console.log("containedEvtTitl", this.data.hourContainedEvTitle);
     if (this.containedEvTitle!="") {
       perioder = perioder.filter( (perVal) =>{
