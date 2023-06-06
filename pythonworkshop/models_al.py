@@ -196,7 +196,6 @@ class Event(db.Model):
   uid = db.Column(db.String)
   user_id = db.Column(db.Integer, db.ForeignKey('nf_user.id'))
   rowname = db.Column(db.String)
-  title = db.Column(db.String)
   ou = db.Column(db.String)
   start = db.Column(db.String)
   end = db.Column(db.String)

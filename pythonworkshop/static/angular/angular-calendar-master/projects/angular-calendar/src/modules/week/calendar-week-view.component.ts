@@ -31,6 +31,7 @@ import {
   WeekViewAllDayEventRow,
 } from 'calendar-utils';
 import { ResizeEvent } from 'angular-resizable-element';
+import { ResizeCursors } from 'angular-resizable-element';
 import { CalendarDragHelper } from '../common/calendar-drag-helper.provider';
 import { CalendarResizeHelper } from '../common/calendar-resize-helper.provider';
 import {
@@ -240,7 +241,7 @@ export class CalendarWeekViewComponent
   /**
    * The height in pixels of each hour segment
    */
-  @Input() hourSegmentHeight: number = 60;
+  @Input() hourSegmentHeight: number = 30;
 
 
   /**
@@ -304,6 +305,13 @@ export class CalendarWeekViewComponent
   @Input() validateEventTimesChanged: (
     event: CalendarEventTimesChangedEvent
   ) => boolean;
+
+  /**
+   * Customise the document cursor when dragging to resize an event
+   */
+  @Input() resizeCursors: Partial<
+    Pick<ResizeCursors, 'leftOrRight' | 'topOrBottom'>
+  >;
 
   /**
    * Called when a header week day is clicked. Adding a `cssClass` property on `$event.day` will add that class to the header element
@@ -724,7 +732,10 @@ export class CalendarWeekViewComponent
    * @hidden
    */
   eventDropped(
-    dropEvent: DropEvent<{ event?: CalendarEvent; calendarId?: symbol }>,
+    dropEvent: Pick<
+      DropEvent<{ event?: CalendarEvent; calendarId?: symbol }>,
+      'dropData'
+    >,
     date: Date,
     allDay: boolean
   ): void {
@@ -956,7 +967,7 @@ export class CalendarWeekViewComponent
         this.daysInWeek
       ),
     });
-
+/*
     for (let column of calUtilsView.hourColumns){
       for (let timeEvent of column.events){
         let calEvent : CalendarEvent = timeEvent.event;
@@ -973,6 +984,7 @@ export class CalendarWeekViewComponent
         
       }
     }
+*/
     return calUtilsView;
   }
 

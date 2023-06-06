@@ -6,7 +6,9 @@
       [locale]="locale"
       [customTemplate]="headerTemplate"
       (dayHeaderClicked)="dayHeaderClicked.emit($event)"
-      
+      (eventDropped)="
+        eventDropped({ dropData: $event }, $event.newStart, true)
+      "
       (dragEnter)="dateDragEnter($event.date)"
     >
     </mwl-calendar-week-view-header>
@@ -55,11 +57,10 @@
             rtl ? null : (100 / days.length) * allDayEvent.offset
           "
           [style.marginRight.%]="
-            rtl
-              ? (100 / days.length) * (days.length - allDayEvent.offset) * -1
-              : null
+            rtl ? (100 / days.length) * allDayEvent.offset : null
           "
           mwlResizable
+          [resizeCursors]="resizeCursors"
           [resizeSnapGrid]="{ left: dayColumnWidth, right: dayColumnWidth }"
           [validateResize]="validateResize"
           (resizeStart)="
@@ -186,7 +187,6 @@
             [hourSegments]="hourSegments"
             [hourDuration]="hourDuration"
             [hourSegmentHeight]="hourSegmentHeight"
-            [hourSegmentWidth]="hourSegmentWidth"
             [customTemplate]="currentTimeMarkerTemplate"
           ></mwl-calendar-week-view-current-time-marker>
           <div class="cal-events-container">
@@ -209,6 +209,7 @@
               [style.left.%]="timeEvent.left"
               [style.width.%]="timeEvent.width"
               mwlResizable
+              [resizeCursors]="resizeCursors"
               [resizeSnapGrid]="{
                 left: dayColumnWidth,
                 right: dayColumnWidth,

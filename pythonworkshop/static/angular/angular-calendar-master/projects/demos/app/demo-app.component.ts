@@ -228,12 +228,12 @@ export class DemoAppComponent implements OnInit, OnDestroy{
       small: {
         breakpoint: '(max-width: 576px)',
         daysInWeek: 2,
-        isMobile : true
+        isMobile : false
       },
       medium: {
         breakpoint: '(max-width: 768px)',
         daysInWeek: 3,
-        isMobile : true
+        isMobile : false
       },
       large: {
         breakpoint: '(max-width: 960px)',
@@ -251,13 +251,13 @@ export class DemoAppComponent implements OnInit, OnDestroy{
         const foundBreakpoint = Object.values(CALENDAR_RESPONSIVE).find(
           ({ breakpoint }) => !!state.breakpoints[breakpoint]
         );
-        this.isMobLayout = false;
+        //this.isMobLayout = false;
         if (foundBreakpoint) {
-          //this.daysInWeek = foundBreakpoint.daysInWeek;
-          this.isMobLayout = foundBreakpoint.isMobile;
+          this.daysInWeek = foundBreakpoint.daysInWeek;
+          //this.isMobLayout = foundBreakpoint.isMobile;
           //console.log("is Mob Layout",foundBreakpoint.isMobile);
         } else {
-          //this.daysInWeek = 7;
+          this.daysInWeek = 7;
           //console.log("between Mob Layout state",foundBreakpoint.isMobile)
         }
         this.cd.markForCheck();

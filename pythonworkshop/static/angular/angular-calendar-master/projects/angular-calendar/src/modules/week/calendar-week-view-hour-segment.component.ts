@@ -24,7 +24,7 @@ export interface PythEvent {
   user_id? : number;
   rowname : string;
   startTime: string;
-  title : string;
+  endTime: string;
   ou? : string;
   start : string;
   end : string;
@@ -195,29 +195,12 @@ export class CalendarWeekViewHourSegmentComponent {
       return `${_dt[0]}-${_dt[1] + 1}-${_dt[2]} ${_dt[3]}:${_dt[4]}:${_dt[5]}`
   }
 
-  generatePythStartEndDate(dayPeriod : string, roomInd : number){
+  generatePythStartEndDate(startTime: any,endTime: any,dayPeriod : string, roomInd : number){
     let clickDate = new Date(this.segment.date);
     let startDate: number , endDate : number ;
-    switch (dayPeriod) {
-        case "Formiddag" : {
-          startDate = clickDate.setHours(roomInd,0);
-          endDate = clickDate.setHours(roomInd,30);
-          break;
-        }
-        case "Ettermiddag" : {
-          startDate = clickDate.setHours(roomInd,30);
-          console.log("Etterm start hour " + new Date(startDate) );
-          endDate = clickDate.setMinutes(new Date(startDate).getMinutes()+30);
-          console.log("Etterm end hour " + new Date(endDate));
-          break; 
-        }
-        case "Heldag" : {
-          startDate = clickDate.setHours(roomInd,0);
-          console.log("Heldag sum roomInd +1 = "+ (roomInd+1).toString())
-          endDate = clickDate.setHours(roomInd+1,0);
-          break;   
-        }
-    }
+          startDate = clickDate.setHours(startTime.hour,startTime.minute);
+          endDate = clickDate.setHours(endTime.hour,endTime.minute);
+        
     return { start : startDate.toString(), end : endDate.toString() };
   }
 
@@ -308,7 +291,7 @@ export class CalendarWeekViewHourSegmentComponent {
           next: (result) => {
             if (typeof result !== 'undefined') {
               let uniqueId = this.generateUniqueID();
-              let startEndDate = this.generatePythStartEndDate(result.dayPeriodVal, this.roomInd);
+              let startEndDate = this.generatePythStartEndDate(result.startTime,result.endTime,result.dayPeriodVal, this.roomInd);
               //console.log("hourSegment loggedInUserId : " + this.loggedInUserId);
               this.pythEvt =
               {
@@ -316,7 +299,7 @@ export class CalendarWeekViewHourSegmentComponent {
                 user_id: this.loggedInUserId,
                 rowname: this.segmRoomNames[this.roomInd],
                 startTime : result.startTime,
-                title: result.dayPeriodVal,
+                endTime: result.endTime,
                 ou : this.user_ou,
                 start: startEndDate.start,
                 end: startEndDate.end,
@@ -356,7 +339,8 @@ export class EventDialog {
      public fb: UntypedFormBuilder) {}
 
      
-    startTime = { hour: 13, minute: 30};  
+    startTime = { hour: 8, minute: 30};
+    endTime = { hour: 14, minute: 30};  
     containedEvTitle = this.data.hourContainedEvTitle;
     toBeDeleted = this.data.toBeDeleted;
 
@@ -370,7 +354,8 @@ export class EventDialog {
   closeDialog(){
     this.dialogRef.close({
       clickedDbEvt: this.data.clickedDbEvt,
-      startTime: this.startTime, 
+      startTime: this.startTime,
+      endTime: this.endTime, 
       dayPeriodVal : this.valgtPerCtrl.value, 
       toBeDeleted : this.data.toBeDeleted, 
       toBeDeletedPythEvt : this.data.toBeDeletedPythEvt
