@@ -23,6 +23,7 @@ export interface PythEvent {
   uid : string;
   user_id? : number;
   bookname : string;
+  room? : string;
   startTime: string;
   endTime: string;
   ou? : string;
@@ -127,14 +128,15 @@ export class CalendarWeekViewHourSegmentComponent {
 
   @Input() isTimeLabel: boolean;
 
+  @Input() books : string[];
+
+  @Input() rooms : string[];
+
   @Input() segmentWidth: number;
 
   @Input() daysInWeek: number;
 
   @Input() customTemplate: TemplateRef<any>;
-
-  bookNames : string[]=[''];
-
 
   pythEvt : PythEvent;
   user_ou : string = 'init ou';
@@ -176,9 +178,6 @@ export class CalendarWeekViewHourSegmentComponent {
       this.openDialog();
     });
 
-    this.httpService.bookNamesArr$.subscribe((bookNamesArr)=>{
-      this.bookNames = bookNamesArr;
-    });
 
     this.user_ou = this.tokenStorage.getUser().ou;
     //console.log("HourSegm user_ou: ",this.user_ou)
@@ -242,7 +241,8 @@ export class CalendarWeekViewHourSegmentComponent {
         const dialogRef = this.dialog.open(EventDialog, {
           data: {
             date: this.segment.date,
-            hourContainedEvTitle: hourContainedEvTitle
+            hourContainedBookTitle: hourContainedEvTitle,
+            books : this.books
           },
         });
 
@@ -293,14 +293,16 @@ export class EventDialog {
       toBeDeletedPythEvt : PythEvent,
       date:Date,
       romIndex:number,
-      hourContainedEvTitle: string,
+      hourContainedBookTitle: string,
+      books : string[],
       rooms: string[] },
      public fb: UntypedFormBuilder) {}
 
      
     startTime = { hour: 8, minute: 30};
     endTime = { hour: 14, minute: 30};  
-    containedEvTitle = this.data.hourContainedEvTitle;
+    containedBookTitle = this.data.hourContainedBookTitle;
+    books = this.data.books;
     toBeDeleted = this.data.toBeDeleted;
 
     valgtPerCtrl = this.fb.control("");
@@ -315,29 +317,13 @@ export class EventDialog {
       clickedDbEvt: this.data.clickedDbEvt,
       startTime: this.startTime,
       endTime: this.endTime, 
-      bookName : this.valgtPerCtrl.value, 
+      book : this.valgtPerCtrl.value, 
       toBeDeleted : this.data.toBeDeleted, 
       toBeDeletedPythEvt : this.data.toBeDeletedPythEvt
       } )
   }
   
   ngOnInit(){} 
-
-  get remPerioder() {
-    let perioder = ['Drop-in','Avtale','Kontor'];
-    //console.log("containedEvtTitl", this.data.hourContainedEvTitle);
-    if (this.containedEvTitle!="") {
-      perioder = perioder.filter( (perVal) =>{
-        let containedEvtTitle = this.containedEvTitle;
-        //console.log("remPerCondition :",perVal != containedEvtTitle && perVal !='Heldag');
-           return perVal != containedEvtTitle && perVal !='Heldag';
-         })
-       return perioder;
-    } else {
-      return perioder;
-    }
-    
-  }
   
 
   onSubmit(){

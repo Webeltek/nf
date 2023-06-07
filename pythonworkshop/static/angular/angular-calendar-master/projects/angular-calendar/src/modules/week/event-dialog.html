@@ -21,9 +21,6 @@
 </ng-template>
 <ng-template #insertTempl>
   <h1 mat-dialog-title>{{'EDinsertTtl' | translate}}
-    <br/>
-  {{ data.rooms[data.romIndex]}}
-  <br/>
   </h1>
   <mat-dialog-content class="mat-typography">
   <form
@@ -39,9 +36,9 @@
         class="example-radio-group"
         formControlName="valgtPer">
         <mat-radio-button class="example-radio-button" 
-          *ngFor="let periode of remPerioder"
-            [value]="periode">
-            {{periode}}
+          *ngFor="let book of books"
+            [value]="book">
+            {{book}}
         </mat-radio-button>
       </mat-radio-group>
     </div>

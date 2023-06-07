@@ -2,21 +2,21 @@
 </h1>
 <div mat-dialog-content>
   <form [formGroup]="roomsFormGroup">
-    <div formArrayName="bookNamesArr" *ngFor="let currBookName of bookNamesArr.controls; index as idx;last as isLast">
+    <div formArrayName="roomNamesArr" *ngFor="let currRoomName of roomsArr.controls; index as idx;last as isLast">
         <mat-form-field appearance="fill">
-          <mat-label>{{currBookName.value}}</mat-label>
-          <input matInput placeholder="Placeholder" #bookName 
-            (keyup)="updateInput(bookName.value,idx)">
+          <mat-label>{{currRoomName.value}}</mat-label>
+          <input matInput placeholder="Placeholder" #roomName 
+            (keyup)="updateInput(roomName.value,idx)">
           <mat-icon matSuffix>meeting_room</mat-icon>
           <mat-hint class="hint-warn-color"  
-            *ngIf="currBookName.invalid">{{objErrValStr}}</mat-hint>
+            *ngIf="currRoomName.invalid">{{objErrValStr}}</mat-hint>
         </mat-form-field>
-        <button mat-icon-button color="warn" (click)="markedBookNamesToDel[idx].markedToDel=true">
+        <button mat-icon-button color="warn" (click)="markedRoomsToDel[idx].markedToDel=true">
           <mat-icon>remove_circle</mat-icon>
         </button>
-        <button mat-raised-button color="warn" *ngIf="markedBookNamesToDel[idx]?.markedToDel" 
+        <button mat-raised-button color="warn" *ngIf="markedRoomsToDel[idx]?.markedToDel" 
           (click)="removeRoom(idx)">Delete events?</button>
-        <button mat-icon-button color="primary" *ngIf="isLast" (click)="addBookName(bookName.value)">
+        <button mat-icon-button color="primary" *ngIf="isLast" (click)="addRoom(roomName.value)">
           <mat-icon>add_circle</mat-icon>
         </button>    
     </div>

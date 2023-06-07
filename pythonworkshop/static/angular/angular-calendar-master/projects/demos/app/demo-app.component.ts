@@ -94,6 +94,7 @@ export class DemoAppComponent implements OnInit, OnDestroy{
   externalEvents : CalendarEvent[] = [];
 
   @Input() rooms : string[] = [];
+  books : string[] = [];
   roomsArrDiffer : any;
 
   private destroy$ = new Subject<void>();
@@ -204,19 +205,36 @@ export class DemoAppComponent implements OnInit, OnDestroy{
         }
       });
 
-    this.httpService.getBookNames().subscribe(result=>{
+    this.httpService.getBooks().subscribe(result=>{
       if( typeof result !=='undefined'){
-        let bookNamesArr = result as any;
-        let bookNamesArrVals = typeof bookNamesArr.rooms !== 'undefined'? Object.values(bookNamesArr.rooms):[];
-        let roomNames = bookNamesArrVals.map( (tablerow : {'row':string,'title':string}) => {
+        let booksArr = result as any;
+        let booksArrVals = typeof booksArr.rooms !== 'undefined'? Object.values(booksArr.books):[];
+        let books = booksArrVals.map( (tablerow : {'row':string,'title':string}) => {
         return tablerow.title
       })
       //console.log("DemoApp  getRooms().subscribe typeof roomNames:", roomNames);
-      this.httpService.bookNamesArr$.next(roomNames);
+      this.httpService.booksArr$.next(books);
       } 
       
     })
-    this.httpService.bookNamesArr$.subscribe((roomNamesArr)=>{
+    this.httpService.booksArr$.subscribe((booksArr)=>{
+      //console.log("DemoApp  roomNamesArr$.subscribe typeof roomNamesArr:", roomNamesArr);
+      this.books = booksArr;
+    });
+
+    this.httpService.getRooms().subscribe(result=>{
+      if( typeof result !=='undefined'){
+        let roomsArr = result as any;
+        let roomsArrVals = typeof roomsArr.rooms !== 'undefined'? Object.values(roomsArr.rooms):[];
+        let roomNames = roomsArrVals.map( (tablerow : {'row':string,'title':string}) => {
+        return tablerow.title
+      })
+      //console.log("DemoApp  getRooms().subscribe typeof roomNames:", roomNames);
+      this.httpService.roomsArr$.next(roomNames);
+      } 
+      
+    })
+    this.httpService.roomsArr$.subscribe((roomNamesArr)=>{
       //console.log("DemoApp  roomNamesArr$.subscribe typeof roomNamesArr:", roomNamesArr);
       this.rooms = roomNamesArr;
     });

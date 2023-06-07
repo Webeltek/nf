@@ -26,7 +26,7 @@
         <mat-form-field appearance="fill">
           <mat-label>room</mat-label>
           <mat-select [formControl]="selectedRooms">
-            <mat-option *ngFor="let romName of rooms" [value]="romName">{{romName}}</mat-option>
+            <mat-option *ngFor="let roomName of rooms" [value]="roomName">{{roomName}}</mat-option>
           </mat-select>
         </mat-form-field>
       
@@ -55,9 +55,14 @@
             <td mat-cell *matCellDef="let element"> {{element.id}} </td>
           </ng-container>
 
-          <ng-container matColumnDef="rom">
-            <th mat-header-cell *matHeaderCellDef>  Rom </th>
-            <td mat-cell *matCellDef="let element"> {{element.rom}} </td>
+          <ng-container matColumnDef="book">
+            <th mat-header-cell *matHeaderCellDef>  Book </th>
+            <td mat-cell *matCellDef="let element"> {{element.book}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="room">
+            <th mat-header-cell *matHeaderCellDef>  Room </th>
+            <td mat-cell *matCellDef="let element"> {{element.room}} </td>
           </ng-container>
         
           <!-- Name Column -->

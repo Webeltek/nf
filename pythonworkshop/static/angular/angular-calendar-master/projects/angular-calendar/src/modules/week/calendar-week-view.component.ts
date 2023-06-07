@@ -291,7 +291,8 @@ export class CalendarWeekViewComponent
   @Input() daysInWeek: number;
 
 
-  @Input() roomNames: string[];
+  @Input() rooms: string[];
+  @Input() books: string[];
 
   /**
    * A custom template to use for the current time marker

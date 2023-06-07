@@ -77,6 +77,7 @@
                 [activeDayIsOpen]="activeDayIsOpen"
                 (dayClicked)="dayClicked($event.day)"
                 [rooms]="rooms"
+                [books]="books"
                 [dayStartHour]="0" 
                 [loggedInUserId]="loggedInUserId" 
                 [events]="events"
@@ -94,7 +95,8 @@
                 <mwl-calendar-week-view  
                     [locale]="locale"
                     [isOpen]="true"
-                    [roomNames]="rooms"
+                    [rooms]="rooms"
+                    [books]="books"
                     [daysInWeek]="daysInWeek"
                     [dayStartHour]="0" 
                     [dayEndHour]="24" 

@@ -15,7 +15,7 @@ import { RouterModule } from '@angular/router';
 import { ROUTES } from './demo-app.routes';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
-import { EditEventsDialog, EditRoomsDialog, HomeComponent } from './home/home.component';
+import { EditBooksDialog, EditEventsDialog, EditRoomsDialog, HomeComponent } from './home/home.component';
 import { BoardAdminComponent } from './board-admin/board-admin.component';
 
 import { FormsModule } from '@angular/forms';
@@ -71,6 +71,7 @@ import { DragAndDropModule } from 'angular-draggable-droppable';
     HomeComponent,
     EditEventsDialog,
     EditRoomsDialog,
+    EditBooksDialog,
     BoardAdminComponent,
     ConfirmComponent,
     ProfileComponent,

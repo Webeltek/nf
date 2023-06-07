@@ -143,7 +143,8 @@ export interface CalendarMonthViewEventTimesChangedEvent<
           <mwl-calendar-week-view  
             [locale]="locale"
             [isOpen]="openRowIndex === rowIndex"
-            [roomNames]="rooms"
+            [rooms]="rooms"
+            [books]="books"
             [dayStartHour]="0" 
             [dayEndHour]="rooms.length-1" 
             [viewDate]="viewDate" 
@@ -166,6 +167,7 @@ export class CalendarMonthViewComponent
   implements OnChanges, OnInit, OnDestroy
 {
   @Input() rooms : string[];
+  @Input() books : string[];
   @Input() dayStartHour: number;
   @Input() daysInWeek: number;
   @Input() loggedInUserId: number;

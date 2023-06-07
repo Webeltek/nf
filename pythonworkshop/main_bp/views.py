@@ -37,6 +37,11 @@ persons_templ = templateEnv.get_template('/main/persons.jinja2')
 #services_templ = templateEnv.get_template('/main/services.jinja2')
 about_us_templ = templateEnv.get_template('/main/about_us.jinja2')
 
+books_init = [
+     {"title":"Drop-in"},
+     {"title":"Avtale"},
+     {"title":"Kontor"}]
+
 rooms_init = [
      {"title":"Møterom stort"},
      {"title":"Møterom lite"},
@@ -141,7 +146,77 @@ def updaterooms():
         for room in new_rooms:
             rooms_list.append(jsons.dump(roomd(room.row,room.title)))        
         msg = 'Rooms updated successfully'
-    return jsonify({'mod_rooms': rooms_list})                       
+    return jsonify({'mod_rooms': rooms_list})
+
+@dataclass
+class bookd:
+    row : int
+    title : str   
+
+@main_bp.route("/api/services/books", methods= ['GET'])
+@access_required
+def index_books():
+        books = []
+        books = db.session.scalars(db.select(Book).order_by(Book.row.asc())).all()
+        if len(books)<=1:
+            db.session.execute(db.insert(Book),books_init)
+            db.session.commit()
+        print(f'main_bp books {books}')    
+        books_list = []    
+        for book in books:
+            books_list.append(jsons.dump(bookd(book.row,book.title)))              
+        return jsonify({'books':books_list})
+
+@main_bp.route("/api/services/insertbook",methods=["POST","GET"])
+@access_required
+def insertbook():
+    if request.method == 'POST':
+        req_json = request.get_json()
+        title = req_json['title']
+        db.session.add(Book(title=title))
+        db.session.commit()
+        new_books = db.session.execute(db.select(Book)).scalars().all()
+        books_list = []    
+        for book in new_books:
+            books_list.append(jsons.dump(bookd(book.row,book.title)))
+        msg = 'Book added successfully' 
+    return jsonify({'mod_books': books_list})
+
+@main_bp.route("/api/services/deletebook",methods=["POST","GET"])
+@access_required
+def deletebook():
+    if request.method == 'POST':
+        req_json = request.get_json()
+        row = req_json['row']
+        title = req_json['title']
+        db.session.execute(db.delete(Event).where(Event.rowname == title))
+        db.session.execute(db.delete(Book).where(Book.title==title))
+        db.session.commit()
+        new_books = db.session.execute(db.select(Book)).scalars().all()
+        books_list = []    
+        for book in new_books:
+            books_list.append(jsons.dump(bookd(book.row,book.title)))
+        msg = 'Book deleted successfully' 
+    return jsonify({'mod_books': books_list})    
+
+@main_bp.route("/api/services/updatebooks",methods=["POST","GET"])
+@access_required
+def updatebooks():
+    if request.method == 'POST':
+        req_books = request.get_json()
+        db_books = db.session.execute(db.select(Book)).scalars()
+        for index,db_book in enumerate(db_books):
+                db_book.title = req_books[index]
+                print(f'auth_bp updatetbooks index: {index}')
+                print(f'auth_bp updatetbooks row and title: {db_book.row, db_book.title}')  
+                db.session.add(db_book)
+                db.session.commit()
+        new_books = db.session.execute(db.select(Book)).scalars().all()
+        books_list = []    
+        for book in new_books:
+            books_list.append(jsons.dump(bookd(book.row,book.title)))        
+        msg = 'Books updated successfully'
+    return jsonify({'mod_books': books_list})                       
 
 @dataclass
 class eventd:

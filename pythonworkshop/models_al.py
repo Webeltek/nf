@@ -10,7 +10,7 @@ class User(db.Model):
   __tablename__ = "nf_user"
   id = db.Column(db.Integer, primary_key=True)
   user_email = db.Column(db.String,default='first_email',unique=True)
-  user_pass_hash = db.Column(db.String, default='initial hash')
+  user_pass_hash = db.Column(db.String, default='initialhashinitialhashinitialhash')
   vipps_sub = db.Column(db.String, default='initial vipps_sub')
   google_sub = db.Column(db.String, default='initial google_sub')
   user_is_logged_in = db.Column(db.Boolean,default=False)
@@ -40,7 +40,10 @@ class User(db.Model):
     return bcrypt_sha256.hash(password) 
 
   def verify_password(self, password):
-    return bcrypt_sha256.verify(password,self.user_pass_hash)
+    try:
+      return bcrypt_sha256.verify(password,self.user_pass_hash)
+    except ValueError:
+      return False  
 
   def login_user(self):
     self.user_is_logged_in = True
@@ -201,6 +204,11 @@ class Event(db.Model):
   end = db.Column(db.String)
   color = db.Column(db.String)
     
+class Book(db.Model):
+  __tablename__ = "nf_book"
+  row = db.Column(db.Integer, primary_key=True)
+  title = db.Column(db.String,unique=True)
+
 class Room(db.Model):
   __tablename__ = "nf_room"
   row = db.Column(db.Integer, primary_key=True)
