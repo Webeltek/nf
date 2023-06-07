@@ -55,7 +55,7 @@ export class HomeBBComponent implements OnInit, OnDestroy {
 
   loginStateSubscription: Subscription = new Subscription();
   breakPointObsSubscr : Subscription = new Subscription();
-  roomNamesArr : string[] = [];
+  bookNamesArr : string[] = [];
   toDelPythEvts : PythEvent[] = [];
 
 
@@ -73,9 +73,9 @@ export class HomeBBComponent implements OnInit, OnDestroy {
       }
     })
 
-    this.httpService.roomNamesArr$.subscribe((roomNamesArr)=>{
-      this.roomNamesArr= roomNamesArr;
-      //console.log("HomeComp ngOnInit() roomNamesArr",this.roomNamesArr);
+    this.httpService.bookNamesArr$.subscribe((bookNamesArr)=>{
+      this.bookNamesArr= bookNamesArr;
+      //console.log("HomeComp ngOnInit() bookNamesArr",this.bookNamesArr);
     })
   }
 
@@ -125,11 +125,11 @@ export class HomeBBComponent implements OnInit, OnDestroy {
 
   editEvents(){
       if (this.isCalendarActive$.value){
-      console.log("HomeC editEvents() this.roomNamesArr: ",this.roomNamesArr)
+      console.log("HomeC editEvents() this.bookNamesArr: ",this.bookNamesArr)
       if (this.isCalendarActive$){
         const dialogRef = this.dialog.open(EditEventsDialog, {
           data: {
-            rooms: this.roomNamesArr
+            bookNames: this.bookNamesArr
           },
         });
     
@@ -151,11 +151,11 @@ export class HomeBBComponent implements OnInit, OnDestroy {
 
   editOuEvents(){
     if (this.isCalendarActive$.value){
-    console.log("HomeC editEvents() this.roomNamesArr: ",this.roomNamesArr)
+    console.log("HomeC editEvents() this.bookNamesArr: ",this.bookNamesArr)
     if (this.isCalendarActive$){
       const dialogRef = this.dialog.open(EditEventsDialog, {
         data: {
-          rooms: this.roomNamesArr
+          rooms: this.bookNamesArr
         },
       });
   
@@ -175,32 +175,32 @@ export class HomeBBComponent implements OnInit, OnDestroy {
   } 
 }
 
-  editRooms(){
+  editBookNames(){
     if (this.isCalendarActive$.value){
-      const dialogRef = this.dialog.open(EditRoomsDialog, {
+      const dialogRef = this.dialog.open(EditBookNamesDialog, {
         data: {
-          rooms: this.roomNamesArr
+          bookNames: this.bookNamesArr
         },
       });
   
       dialogRef.afterClosed().subscribe(
         (obj) => {
-          if (typeof obj !== 'undefined' && typeof obj.toEditRooms !== 'undefined') {
-            console.log("HomeComp dial afterClosed() obj.toEditRooms",obj.toEditRooms);
-            let roomTitles: string[] = obj.toEditRooms;
-            this.httpService.updateRooms(roomTitles);
+          if (typeof obj !== 'undefined' && typeof obj.toEditBookNames !== 'undefined') {
+            console.log("HomeComp dial afterClosed() obj.toEditBookNames",obj.toEditBookNames);
+            let roomTitles: string[] = obj.toEditBookNames;
+            this.httpService.updateBookNames(roomTitles);
           } else if(typeof obj == 'undefined'){
             console.log("HomeC dial afterClosed obj is undefined")
           }
         },
         (error) => {
-          console.log("HomeComp editRooms() afterClosed() error : " + error);
+          console.log("HomeComp editBookNames() afterClosed() error : " + error);
         }
       );
   
       dialogRef.backdropClick().subscribe((mouseEvent)=>{
-        let roomTitles: string[] = this.httpService.roomNamesArr$.getValue()
-        console.log("HomeC editRooms() backdropClick() roomTitles:",roomTitles)
+        let roomTitles: string[] = this.httpService.bookNamesArr$.getValue()
+        console.log("HomeC editBookNames() backdropClick() roomTitles:",roomTitles)
       })
     }
     
@@ -231,13 +231,13 @@ const ELEMENT_DATA: TableRow[] = [];
 export class EditEventsDialog {
   constructor( public dialogRef: MatDialogRef<EditEventsDialog>,
       @Inject(MAT_DIALOG_DATA) public data: {
-        rooms : string[]},
+        bookNames : string[]},
         private httpService: HttpEventService,
         private tokenStorage: TokenStorageService,) {
         }
 
 
-  rooms : string[]= this.data.rooms;
+  bookNames : string[]= this.data.bookNames;
   users : PythUser[] = [];
   events : CalendarEvent[] = [];
   pythEvents : PythEvent[] = [];
@@ -251,7 +251,7 @@ export class EditEventsDialog {
     end: new UntypedFormControl(null),
   });
 
-  selectedRooms = new UntypedFormControl('alle rom');
+  selectedBookNames = new UntypedFormControl('alle rom');
 
   displayedColumns: string[] = ['select','user_email','start','title'];
   dataToDisplay = [...ELEMENT_DATA];
@@ -387,7 +387,7 @@ export class EditEventsDialog {
   selectFilteredRows : TableRow[] = [];
 
   subscribeToSelectChange(){
-    this.selectedRooms.valueChanges.subscribe((value)=>{
+    this.selectedBookNames.valueChanges.subscribe((value)=>{
       this.selectFilteredRows= [];
       console.log("HomeC subscribeToSelectChange() selected value: ",value);
       for (let row of this.tableRows){
@@ -450,29 +450,29 @@ export interface MarkedRoomToDel{
   styleUrls: ['./home.component.scss']
 })
 
-export class EditRoomsDialog implements OnInit{
-  constructor( public dialogRef: MatDialogRef<EditRoomsDialog>,
+export class EditBookNamesDialog implements OnInit{
+  constructor( public dialogRef: MatDialogRef<EditBookNamesDialog>,
       @Inject(MAT_DIALOG_DATA) public data: {
-        rooms : string[] },
+        bookNames : string[] },
         private httpService: HttpEventService,
         private tokenStorage: TokenStorageService,
         public fb: UntypedFormBuilder) {
         }
 
-  rooms : string[] = this.data.rooms;
+  bookNames : string[] = this.data.bookNames;
   users : PythUser[] = [];
   events : CalendarEvent[] = [];
   pythEvents : PythEvent[] = [];
-  markedRoomsToDel : MarkedRoomToDel[]=[];
+  markedBookNamesToDel : MarkedRoomToDel[]=[];
   objErrValStr = '';
 
   roomsFormGroup = this.fb.group({
-    roomsArr : this.fb.array([])
+    bookNamesArr : this.fb.array([])
   });
 
   isRoomDuplicate ( atIdxAbsCtrl: AbstractControl, contrIdx: number ): ValidatorFn {
     return ( atIdxAbsCtrl ): Record<string, any> | null => {
-      let names: string[] = this.roomsArr.value;
+      let names: string[] = this.bookNamesArr.value;
   
       //console.log("HomeC isRoomDuplicate() names: ",names);
       const isDuplicate= names?.filter((el,index)=> {
@@ -492,64 +492,64 @@ export class EditRoomsDialog implements OnInit{
   }
 
   updateValidators(){
-    for (let roomInd =0; roomInd < this.roomsArr.length; roomInd++){
-      this.roomsArr.at(roomInd).setValidators([this.isRoomDuplicate(this.roomsArr.at(roomInd),roomInd)])
+    for (let roomInd =0; roomInd < this.bookNamesArr.length; roomInd++){
+      this.bookNamesArr.at(roomInd).setValidators([this.isRoomDuplicate(this.bookNamesArr.at(roomInd),roomInd)])
     }
   }
 
   ngOnInit(): void {
-    for (let roomInd =0; roomInd < this.rooms.length; roomInd++){
-      this.roomsArr.push(this.fb.control(this.rooms[roomInd]));
+    for (let roomInd =0; roomInd < this.bookNames.length; roomInd++){
+      this.bookNamesArr.push(this.fb.control(this.bookNames[roomInd]));
     }
     this.updateValidators();
-    for (let roomInd =0; roomInd < this.roomsArr.length; roomInd++){
-        this.markedRoomsToDel.push({idx:roomInd,markedToDel:false});
+    for (let roomInd =0; roomInd < this.bookNamesArr.length; roomInd++){
+        this.markedBookNamesToDel.push({idx:roomInd,markedToDel:false});
     }
   }
 
-  get roomsArr(){
-    return this.roomsFormGroup.get('roomsArr') as UntypedFormArray;
+  get bookNamesArr(){
+    return this.roomsFormGroup.get('bookNamesArr') as UntypedFormArray;
   }
 
   updateInput(roomName:string,idx:number){
-    this.roomsArr.at(idx).setValue(roomName);
-    this.roomsArr.at(idx).updateValueAndValidity();
-    this.objErrValStr = this.roomsArr.at(idx).errors? this.roomsArr.at(idx).errors.error : "";
-    // console.log("HomeC updateInput() this.roomsArr.value ", this.roomsArr.value);
-    // console.log("HomeComp roomsDialog updateInput() errors",this.roomsArr.at(idx).errors)
-    // console.log("HomeComp roomsDialog updateInput() is invalid",this.roomsArr.at(idx).invalid); 
-    // console.log("HomeComp roomsDialog updateInput() status",this.roomsArr.at(idx).status); 
+    this.bookNamesArr.at(idx).setValue(roomName);
+    this.bookNamesArr.at(idx).updateValueAndValidity();
+    this.objErrValStr = this.bookNamesArr.at(idx).errors? this.bookNamesArr.at(idx).errors.error : "";
+    // console.log("HomeC updateInput() this.bookNamesArr.value ", this.bookNamesArr.value);
+    // console.log("HomeComp roomsDialog updateInput() errors",this.bookNamesArr.at(idx).errors)
+    // console.log("HomeComp roomsDialog updateInput() is invalid",this.bookNamesArr.at(idx).invalid); 
+    // console.log("HomeComp roomsDialog updateInput() status",this.bookNamesArr.at(idx).status); 
   }
 
-  addRoom(newRoomName: string){
-    this.httpService.insertRoom({row:'',title:newRoomName})
-    this.roomsArr.push(this.fb.control(newRoomName));
+  addBookName(newBookName: string){
+    this.httpService.insertBookName({row:'',title:newBookName})
+    this.bookNamesArr.push(this.fb.control(newBookName));
     this.updateValidators();
   }
 
   removeRoom(idx: number){
-    console.log("HomeC roomsArr room to delete: ",this.roomsArr.value[idx])
-    this.httpService.deleteRoom({row:idx.toString(),title:this.roomsArr.value[idx]});
-    this.roomsArr.removeAt(idx);
-    this.markedRoomsToDel = [];
-    for (let roomInd =0; roomInd < this.roomsArr.value.length; roomInd++){
-      this.markedRoomsToDel.push({idx:roomInd,markedToDel:false});
+    console.log("HomeC bookNamesArr room to delete: ",this.bookNamesArr.value[idx])
+    this.httpService.deleteBookName({row:idx.toString(),title:this.bookNamesArr.value[idx]});
+    this.bookNamesArr.removeAt(idx);
+    this.markedBookNamesToDel = [];
+    for (let roomInd =0; roomInd < this.bookNamesArr.value.length; roomInd++){
+      this.markedBookNamesToDel.push({idx:roomInd,markedToDel:false});
     }
     this.updateValidators();
-    console.log("HomeC markedRoomsToDel:",this.markedRoomsToDel)
+    console.log("HomeC markedBookNamesToDel:",this.markedBookNamesToDel)
   }
 
   onSubmit(){
     let roomNames : string[]= [];
-    let controls = this.roomsArr.controls;
+    let controls = this.bookNamesArr.controls;
     for (let control of controls){
       control.updateValueAndValidity();
       console.log("HomeComp roomsDialog onSubmit() control.errors: ",control.errors); 
-      console.log("HomeComp roomsDialog onSubmit() valid",this.roomsArr.valid); 
+      console.log("HomeComp roomsDialog onSubmit() valid",this.bookNamesArr.valid); 
     }
-    if(this.roomsArr.valid) {
+    if(this.bookNamesArr.valid) {
       this.dialogRef.close({
-        toEditRooms: this.roomsArr.value,
+        toEditBookNames: this.bookNamesArr.value,
         })
   
     }

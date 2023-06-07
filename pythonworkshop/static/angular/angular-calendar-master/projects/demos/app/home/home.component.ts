@@ -191,7 +191,7 @@ export class HomeComponent implements OnInit, OnDestroy {
           if (typeof obj !== 'undefined' && typeof obj.toEditRooms !== 'undefined') {
             console.log("HomeComp dial afterClosed() obj.toEditRooms",obj.toEditRooms);
             let roomTitles: string[] = obj.toEditRooms;
-            this.httpService.updateRooms(roomTitles);
+            this.httpService.updateBookNames(roomTitles);
           } else if(typeof obj == 'undefined'){
             console.log("HomeC dial afterClosed obj is undefined")
           }
@@ -524,14 +524,14 @@ export class EditRoomsDialog implements OnInit{
   }
 
   addRoom(newRoomName: string){
-    this.httpService.insertRoom({row:'',title:newRoomName})
+    this.httpService.insertBookName({row:'',title:newRoomName})
     this.roomsArr.push(this.fb.control(newRoomName));
     this.updateValidators();
   }
 
   removeRoom(idx: number){
     console.log("HomeC roomsArr room to delete: ",this.roomsArr.value[idx])
-    this.httpService.deleteRoom({row:idx.toString(),title:this.roomsArr.value[idx]});
+    this.httpService.deleteBookName({row:idx.toString(),title:this.roomsArr.value[idx]});
     this.roomsArr.removeAt(idx);
     this.markedRoomsToDel = [];
     for (let roomInd =0; roomInd < this.roomsArr.value.length; roomInd++){

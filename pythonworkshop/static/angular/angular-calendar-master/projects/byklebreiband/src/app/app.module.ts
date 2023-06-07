@@ -36,7 +36,7 @@ import { BB_ROUTES } from './app.routes';
 
 import { AppComponent } from './app.component';
 import { HjemComponent } from './hjem/hjem.component';
-import { EditEventsDialog, EditRoomsDialog, HomeBBComponent } from './home/home.component';
+import { EditEventsDialog, EditBookNamesDialog, HomeBBComponent } from './home/home.component';
 import { FastbuandeComponent } from './fastbuande/fastbuande.component';
 import { ContactFormComponent } from './contact-form/contact-form.component';
 
@@ -46,7 +46,7 @@ import { ContactFormComponent } from './contact-form/contact-form.component';
     HjemComponent,
     HomeBBComponent,
     EditEventsDialog,
-    EditRoomsDialog,
+    EditBookNamesDialog,
     FastbuandeComponent,
     ContactFormComponent
   ],

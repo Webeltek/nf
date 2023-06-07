@@ -65,11 +65,7 @@ export function getColors( event_userId: number, loggedIn_user_id:number) {
       let-segmentWidth="segmentWidth"
       let-isTimeLabel="isTimeLabel"
       let-daysInWeek="daysInWeek"
-    >
-      <ng-container *ngIf="isTimeLabel; then hourTemplate else eventTemplate">
-      </ng-container>  
-    </ng-template>
-    <ng-template #hourTemplate>
+    > 
         <div
           [attr.aria-hidden]="
             {}
@@ -97,32 +93,7 @@ export function getColors( event_userId: number, loggedIn_user_id:number) {
             }}
           </div>
         </div>
-    </ng-template>
-    <ng-template #eventTemplate>
-        <div #divEventTempl
-          [attr.aria-hidden]="
-            {}
-              | calendarA11y
-                : (daysInWeek === 1
-                    ? 'hideDayHourSegment'
-                    : 'hideWeekHourSegment')
-          "
-          class="cal-hour-segment"
-          [style.height.px]="segmentHeight"
-          [style.width.px]="segmentWidth"
-          [class.cal-hour-start]="segment.isStart"
-          [class.cal-after-hour-start]="!segment.isStart"
-          [ngClass]="segment.cssClass"
-          (click) = "!isTimeLabel ? openDialog() : null"
-        >
-          <div class="cal-time" *ngIf="isTimeLabel"
-          >
-            {{
-              "'undefined'"
-            }}
-          </div>
-        </div>
-    </ng-template>
+    </ng-template>    
     <ng-template
       [ngTemplateOutlet]="customTemplate || defaultTemplate"
       [ngTemplateOutletContext]="{

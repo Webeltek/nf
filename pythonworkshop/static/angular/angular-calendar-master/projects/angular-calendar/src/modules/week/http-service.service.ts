@@ -45,7 +45,7 @@ export class HttpEventService{
             { headers : this.httpHeaders, observe: 'body', responseType : 'json'})
     }
 
-    insertRoom(bookName: BookName ){
+    insertBookName(bookName: BookName ){
         this.http.post(this.baseurl+this.insertRoomUrl, bookName, 
             { headers : this.httpHeaders, observe: 'body', responseType : 'json'} ) 
             .subscribe({
@@ -65,7 +65,7 @@ export class HttpEventService{
             )
     }
 
-    deleteRoom(bookName : BookName ){
+    deleteBookName(bookName : BookName ){
         this.http.post(this.baseurl+this.deleteRoomUrl, bookName,
             { headers : this.httpHeaders, observe: 'body', responseType : 'json'} ) 
             .subscribe({
@@ -85,7 +85,7 @@ export class HttpEventService{
             )
     }
 
-    updateRooms(roomTitles: string[] ){
+    updateBookNames(roomTitles: string[] ){
         this.http.post(this.baseurl+this.updateRoomsUrl, roomTitles, 
             { headers : this.httpHeaders, observe: 'body', responseType : 'json'} ) 
             .subscribe({
