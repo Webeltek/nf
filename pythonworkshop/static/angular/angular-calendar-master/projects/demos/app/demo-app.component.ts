@@ -208,7 +208,7 @@ export class DemoAppComponent implements OnInit, OnDestroy{
     this.httpService.getBooks().subscribe(result=>{
       if( typeof result !=='undefined'){
         let booksArr = result as any;
-        let booksArrVals = typeof booksArr.rooms !== 'undefined'? Object.values(booksArr.books):[];
+        let booksArrVals = typeof booksArr.books !== 'undefined'? Object.values(booksArr.books):[];
         let books = booksArrVals.map( (tablerow : {'row':string,'title':string}) => {
         return tablerow.title
       })

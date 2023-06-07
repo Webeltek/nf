@@ -23,7 +23,7 @@ export interface PythEvent {
   uid : string;
   user_id? : number;
   bookname : string;
-  room? : string;
+  roomname? : string;
   startTime: string;
   endTime: string;
   ou? : string;
@@ -256,7 +256,8 @@ export class CalendarWeekViewHourSegmentComponent {
               {
                 uid: uniqueId,
                 user_id: this.loggedInUserId,
-                bookname: result.bookName,
+                bookname: result.bookname,
+                roomname: result.roomname,
                 startTime : result.startTime,
                 endTime: result.endTime,
                 ou : this.user_ou,
@@ -305,9 +306,9 @@ export class EventDialog {
     books = this.data.books;
     toBeDeleted = this.data.toBeDeleted;
 
-    valgtPerCtrl = this.fb.control("");
+    valgtBookCtrl = this.fb.control("");
     userForm  = this.fb.group({
-        valgtPer : this.valgtPerCtrl
+        valgtBook : this.valgtBookCtrl
       });
       
   
@@ -317,7 +318,7 @@ export class EventDialog {
       clickedDbEvt: this.data.clickedDbEvt,
       startTime: this.startTime,
       endTime: this.endTime, 
-      book : this.valgtPerCtrl.value, 
+      bookname : this.valgtBookCtrl.value, 
       toBeDeleted : this.data.toBeDeleted, 
       toBeDeletedPythEvt : this.data.toBeDeletedPythEvt
       } )

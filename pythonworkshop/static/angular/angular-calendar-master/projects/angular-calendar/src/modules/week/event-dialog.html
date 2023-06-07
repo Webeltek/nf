@@ -34,7 +34,7 @@
       <mat-radio-group 
         aria-labelledby="example-radio-group-label"
         class="example-radio-group"
-        formControlName="valgtPer">
+        formControlName="valgtBook">
         <mat-radio-button class="example-radio-button" 
           *ngFor="let book of books"
             [value]="book">
@@ -42,7 +42,7 @@
         </mat-radio-button>
       </mat-radio-group>
     </div>
-    <div>Ditt valg er: {{valgtPerCtrl.value}} den {{ data.date | date:'dd/MM/yyyy'}}</div>
+    <div>Ditt valg er: {{valgtBookCtrl.value}} den {{ data.date | date:'dd/MM/yyyy'}}</div>
     <div mat-dialog-actions>
       <button mat-button 
       mat-dialog-close

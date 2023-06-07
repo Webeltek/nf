@@ -70,8 +70,12 @@ export class HomeComponent implements OnInit, OnDestroy {
   activeDayIsOpen = false;
 
   ngOnInit(): void {
-    this.httpService.booksArr$.subscribe((roomNamesArr)=>{
-      this.booksArr= roomNamesArr;
+    this.httpService.booksArr$.subscribe((bookNamesArr)=>{
+      this.booksArr= bookNamesArr;
+      //console.log("HomeComp ngOnInit() roomNamesArr",this.roomNamesArr);
+    });
+    this.httpService.roomsArr$.subscribe((roomNamesArr)=>{
+      this.roomNamesArr= roomNamesArr;
       //console.log("HomeComp ngOnInit() roomNamesArr",this.roomNamesArr);
     });
   }
@@ -163,7 +167,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   editOuEvents(){
     if (this.tokenStorage.isCalendarActive$.value){
-    console.log("HomeC editOuEvents() this.roomNamesArr: ",this.booksArr)
+    console.log("HomeC editOuEvents() this.bookNamesArr: ",this.booksArr)
       const dialogRef = this.dialog.open(EditEventsDialog, {
         data: {
           rooms: this.roomNamesArr,

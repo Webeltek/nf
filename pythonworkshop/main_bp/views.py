@@ -275,14 +275,16 @@ def insert():
     if request.method == 'POST':
         req_json = request.get_json()
         uid = req_json['uid']
-        rowname = req_json['rowname']
+        bookname = req_json['bookname']
+        roomname = req_json['roomname']
         user_id = req_json['user_id']
         #print('event userId foregnkey is : '+ str(user_id))
         ou = req_json['ou']
         start = req_json['start']
         end = req_json['end']
         color = req_json['color']
-        db.session.add(Event(uid=uid,user_id=user_id, rowname=rowname,ou=ou,start=start,end=end, color=color))
+        db.session.add(Event(uid=uid,user_id=user_id, 
+                             bookname=bookname,roomname=roomname,ou=ou,start=start,end=end, color=color))
         db.session.commit()
         msg = 'Record added successfully' 
     return jsonify(msg)

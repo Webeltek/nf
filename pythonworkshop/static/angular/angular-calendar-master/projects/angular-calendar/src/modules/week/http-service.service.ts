@@ -21,6 +21,11 @@ export class HttpEventService{
     private deleteRoomUrl = "/api/services/deleteroom";
     private updateRoomsUrl = "/api/services/updaterooms";
 
+    private booksUrl = "/api/services/books";
+    private insertBookUrl = "/api/services/insertbook";
+    private deleteBookUrl = "/api/services/deletebook";
+    private updateBooksUrl = "/api/services/updatebooks";
+
     private baseurl = 'https://api.webeltek.org';
 
     @Output() addedEvent: EventEmitter<any> = new EventEmitter();
@@ -107,37 +112,37 @@ export class HttpEventService{
     }
 
     getBooks(){
-        return this.http.get(this.baseurl+this.roomsUrl,
+        return this.http.get(this.baseurl+this.booksUrl,
             { headers : this.httpHeaders, observe: 'body', responseType : 'json'})
     }
 
     insertBook(book: Book ){
-        this.http.post(this.baseurl+this.insertRoomUrl, book, 
+        this.http.post(this.baseurl+this.insertBookUrl, book, 
             { headers : this.httpHeaders, observe: 'body', responseType : 'json'} ) 
             .subscribe({
                 next: (response) =>{
                 let books : string[]=[];
-                let mod_books=(response as any).mod_rooms;
+                let mod_books=(response as any).mod_books;
                 for (let book of mod_books){
                     books.push(book.title);
                 }
                 this.booksArr$.next(books);
                 this.addedEvent.emit(null);
-                console.log("HttpServ insertRoom() response: " + JSON.stringify(response));
+                console.log("HttpServ insertBook() response: " + JSON.stringify(response));
                 },
                 error: (error) => { 
-                    console.log("HttpServ insertRoom() error : " + JSON.stringify(error)) ; }
+                    console.log("HttpServ insertBook() error : " + JSON.stringify(error)) ; }
                 }
             )
     }
 
     deleteBook(book : Book ){
-        this.http.post(this.baseurl+this.deleteRoomUrl, book,
+        this.http.post(this.baseurl+this.deleteBookUrl, book,
             { headers : this.httpHeaders, observe: 'body', responseType : 'json'} ) 
             .subscribe({
                 next: (response) =>{
                     let books : string[]=[];
-                    let mod_books=(response as any).mod_rooms;
+                    let mod_books=(response as any).mod_books;
                     for (let book of mod_books){
                         books.push(book.title);
                     }
@@ -146,26 +151,26 @@ export class HttpEventService{
                     console.log("deleteEvent() response: " + JSON.stringify(response));
                 },
                 error: (error) => { 
-                    console.log("deleteRoom() error : " + JSON.stringify(error)) ; }
+                    console.log("deleteBook() error : " + JSON.stringify(error)) ; }
             }
             )
     }
 
-    updateBooks(roomTitles: string[] ){
-        this.http.post(this.baseurl+this.updateRoomsUrl, roomTitles, 
+    updateBooks(bookTitles: string[] ){
+        this.http.post(this.baseurl+this.updateBooksUrl, bookTitles, 
             { headers : this.httpHeaders, observe: 'body', responseType : 'json'} ) 
             .subscribe({
                 next: (response) =>{
                     let books : string[]=[];
-                    let mod_books=(response as any).mod_rooms;
+                    let mod_books=(response as any).mod_books;
                     for (let book of mod_books){
                         books.push(book.title);
                     }
                     this.booksArr$.next(books);
-                    console.log("HttpServ updateRooms() response: " + JSON.stringify(response));
+                    console.log("HttpServ updateBooks() response: " + JSON.stringify(response));
                 },
                 error: (error) => { 
-                    console.log("HttpServ updateRooms() error : " + JSON.stringify(error)) ; }
+                    console.log("HttpServ updateBooks() error : " + JSON.stringify(error)) ; }
             }
             )
     }
