@@ -22,7 +22,7 @@ export interface PythEvent {
   id? : number;
   uid : string;
   user_id? : number;
-  rowname : string;
+  bookname : string;
   startTime: string;
   endTime: string;
   ou? : string;
@@ -118,7 +118,7 @@ export function getColors( event_userId: number, loggedIn_user_id:number) {
           <div class="cal-time" *ngIf="isTimeLabel"
           >
             {{
-                currentRoom
+              "'undefined'"
             }}
           </div>
         </div>
@@ -144,8 +144,6 @@ export class CalendarWeekViewHourSegmentComponent {
     private httpService: HttpEventService,
     private tokenStorage: TokenStorageService) {}
 
-  @Input() roomInd : number;
-
   @Input() loggedInUserId : number;
 
   @Input() segment: WeekViewHourSegment;
@@ -164,16 +162,7 @@ export class CalendarWeekViewHourSegmentComponent {
 
   @Input() customTemplate: TemplateRef<any>;
 
-  segmRoomNames : string[]=[''];
-
-  currentRoom : string;
-  currentRoomNum : number;
-
-  @Input() set currentRoomIndex ( roomNum : number) {
-    //console.log("HourSegmComp segmRoomNames",this.segmRoomNames);
-    this.currentRoomNum = roomNum;
-    this.currentRoom = this.segmRoomNames[roomNum]
-  }
+  bookNames : string[]=[''];
 
 
   pythEvt : PythEvent;
@@ -198,7 +187,7 @@ export class CalendarWeekViewHourSegmentComponent {
       return `${_dt[0]}-${_dt[1] + 1}-${_dt[2]} ${_dt[3]}:${_dt[4]}:${_dt[5]}`
   }
 
-  generatePythStartEndDate(startTime: any,endTime: any,dayPeriod : string, roomInd : number){
+  generatePythStartEndDate(startTime: any,endTime: any){
     let clickDate = new Date(this.segment.date);
     let startDate: number , endDate : number ;
           startDate = clickDate.setHours(startTime.hour,startTime.minute);
@@ -216,10 +205,8 @@ export class CalendarWeekViewHourSegmentComponent {
       this.openDialog();
     });
 
-    this.httpService.roomNamesArr$.subscribe((roomNamesArr)=>{
-      this.segmRoomNames = roomNamesArr;
-      this.currentRoomIndex = this.currentRoomNum;
-      //console.log("HourSegmComp  roomNamesArr$.subscribe:",this.segmRoomNames);
+    this.httpService.bookNamesArr$.subscribe((bookNamesArr)=>{
+      this.bookNames = bookNamesArr;
     });
 
     this.user_ou = this.tokenStorage.getUser().ou;
@@ -284,8 +271,6 @@ export class CalendarWeekViewHourSegmentComponent {
         const dialogRef = this.dialog.open(EventDialog, {
           data: {
             date: this.segment.date,
-            rooms: this.segmRoomNames,
-            romIndex: this.roomInd,
             hourContainedEvTitle: hourContainedEvTitle
           },
         });
@@ -294,13 +279,13 @@ export class CalendarWeekViewHourSegmentComponent {
           next: (result) => {
             if (typeof result !== 'undefined') {
               let uniqueId = this.generateUniqueID();
-              let startEndDate = this.generatePythStartEndDate(result.startTime,result.endTime,result.dayPeriodVal, this.roomInd);
+              let startEndDate = this.generatePythStartEndDate(result.startTime,result.endTime);
               //console.log("hourSegment loggedInUserId : " + this.loggedInUserId);
               this.pythEvt =
               {
                 uid: uniqueId,
                 user_id: this.loggedInUserId,
-                rowname: this.segmRoomNames[this.roomInd],
+                bookname: result.bookName,
                 startTime : result.startTime,
                 endTime: result.endTime,
                 ou : this.user_ou,
@@ -359,7 +344,7 @@ export class EventDialog {
       clickedDbEvt: this.data.clickedDbEvt,
       startTime: this.startTime,
       endTime: this.endTime, 
-      dayPeriodVal : this.valgtPerCtrl.value, 
+      bookName : this.valgtPerCtrl.value, 
       toBeDeleted : this.data.toBeDeleted, 
       toBeDeletedPythEvt : this.data.toBeDeletedPythEvt
       } )

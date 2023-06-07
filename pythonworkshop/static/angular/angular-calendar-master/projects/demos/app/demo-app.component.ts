@@ -204,19 +204,19 @@ export class DemoAppComponent implements OnInit, OnDestroy{
         }
       });
 
-    this.httpService.getRooms().subscribe(result=>{
+    this.httpService.getBookNames().subscribe(result=>{
       if( typeof result !=='undefined'){
-        let roomsArr = result as any;
-        let roomsArrVals = typeof roomsArr.rooms !== 'undefined'? Object.values(roomsArr.rooms):[];
-        let roomNames = roomsArrVals.map( (tablerow : {'row':string,'title':string}) => {
+        let bookNamesArr = result as any;
+        let bookNamesArrVals = typeof bookNamesArr.rooms !== 'undefined'? Object.values(bookNamesArr.rooms):[];
+        let roomNames = bookNamesArrVals.map( (tablerow : {'row':string,'title':string}) => {
         return tablerow.title
       })
       //console.log("DemoApp  getRooms().subscribe typeof roomNames:", roomNames);
-      this.httpService.roomNamesArr$.next(roomNames);
+      this.httpService.bookNamesArr$.next(roomNames);
       } 
       
     })
-    this.httpService.roomNamesArr$.subscribe((roomNamesArr)=>{
+    this.httpService.bookNamesArr$.subscribe((roomNamesArr)=>{
       //console.log("DemoApp  roomNamesArr$.subscribe typeof roomNamesArr:", roomNamesArr);
       this.rooms = roomNamesArr;
     });

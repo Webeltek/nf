@@ -6,7 +6,7 @@ import { PythEvent } from './calendar-week-view-hour-segment.component';
 import { BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { PythUser } from 'projects/demos/app/demo-app.component';
-import { Room } from 'projects/demos/app/home/home.component';
+import { BookName } from 'projects/demos/app/home/home.component';
 
 @Injectable({
 providedIn:  'root'
@@ -29,7 +29,7 @@ export class HttpEventService{
 
     @Output() clickedEvent: EventEmitter<any> = new EventEmitter();
 
-    roomNamesArr$ : BehaviorSubject<string[]> = new BehaviorSubject([])
+    bookNamesArr$ : BehaviorSubject<string[]> = new BehaviorSubject([])
 
     constructor(private http: HttpClient) { }
 
@@ -40,22 +40,22 @@ export class HttpEventService{
 
     roptions = { headers : this.httpHeaders, observe: 'body', responseType : 'json'}
 
-    getRooms(){
+    getBookNames(){
         return this.http.get(this.baseurl+this.roomsUrl,
             { headers : this.httpHeaders, observe: 'body', responseType : 'json'})
     }
 
-    insertRoom(room: Room ){
-        this.http.post(this.baseurl+this.insertRoomUrl, room, 
+    insertRoom(bookName: BookName ){
+        this.http.post(this.baseurl+this.insertRoomUrl, bookName, 
             { headers : this.httpHeaders, observe: 'body', responseType : 'json'} ) 
             .subscribe({
                 next: (response) =>{
-                let roomNames : string[]=[];
-                let mod_rooms=(response as any).mod_rooms;
-                for (let room of mod_rooms){
-                    roomNames.push(room.title);
+                let bookNames : string[]=[];
+                let mod_bookNames=(response as any).mod_rooms;
+                for (let bookName of mod_bookNames){
+                    bookNames.push(bookName.title);
                 }
-                this.roomNamesArr$.next(roomNames);
+                this.bookNamesArr$.next(bookNames);
                 this.addedEvent.emit(null);
                 console.log("HttpServ insertRoom() response: " + JSON.stringify(response));
                 },
@@ -65,17 +65,17 @@ export class HttpEventService{
             )
     }
 
-    deleteRoom(room : Room ){
-        this.http.post(this.baseurl+this.deleteRoomUrl, room,
+    deleteRoom(bookName : BookName ){
+        this.http.post(this.baseurl+this.deleteRoomUrl, bookName,
             { headers : this.httpHeaders, observe: 'body', responseType : 'json'} ) 
             .subscribe({
                 next: (response) =>{
-                    let roomNames : string[]=[];
-                    let mod_rooms=(response as any).mod_rooms;
-                    for (let room of mod_rooms){
-                        roomNames.push(room.title);
+                    let bookNames : string[]=[];
+                    let mod_bookNames=(response as any).mod_rooms;
+                    for (let bookName of mod_bookNames){
+                        bookNames.push(bookName.title);
                     }
-                    this.roomNamesArr$.next(roomNames);
+                    this.bookNamesArr$.next(bookNames);
                     this.addedEvent.emit(null);
                     console.log("deleteEvent() response: " + JSON.stringify(response));
                 },
@@ -90,12 +90,12 @@ export class HttpEventService{
             { headers : this.httpHeaders, observe: 'body', responseType : 'json'} ) 
             .subscribe({
                 next: (response) =>{
-                    let roomNames : string[]=[];
-                    let mod_rooms=(response as any).mod_rooms;
-                    for (let room of mod_rooms){
-                        roomNames.push(room.title);
+                    let bookNames : string[]=[];
+                    let mod_bookNames=(response as any).mod_rooms;
+                    for (let bookName of mod_bookNames){
+                        bookNames.push(bookName.title);
                     }
-                    this.roomNamesArr$.next(roomNames);
+                    this.bookNamesArr$.next(bookNames);
                     console.log("HttpServ updateRooms() response: " + JSON.stringify(response));
                 },
                 error: (error) => { 

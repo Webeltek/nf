@@ -149,7 +149,6 @@ class eventd:
     uid: str
     userId : int
     rowname : str
-    title: str
     ou : str
     start : str
     end : str

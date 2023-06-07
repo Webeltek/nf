@@ -21,7 +21,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { Location } from '@angular/common';
 import { CalendarEventTimesChangedEvent } from 'angular-calendar';
 
-export interface Room {
+export interface BookName {
   row: string,
   title: string
 }
@@ -57,15 +57,15 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   loginStateSubscription: Subscription = new Subscription();
   breakPointObsSubscr : Subscription = new Subscription();
-  roomNamesArr : string[] = [];
+  bookNamesArr : string[] = [];
   toDelPythEvts : PythEvent[] = [];
   isDesktop = false;
   viewDate = new Date();
   activeDayIsOpen = false;
 
   ngOnInit(): void {
-    this.httpService.roomNamesArr$.subscribe((roomNamesArr)=>{
-      this.roomNamesArr= roomNamesArr;
+    this.httpService.bookNamesArr$.subscribe((roomNamesArr)=>{
+      this.bookNamesArr= roomNamesArr;
       //console.log("HomeComp ngOnInit() roomNamesArr",this.roomNamesArr);
     });
   }
@@ -132,10 +132,10 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   editEvents(){
       if (this.tokenStorage.isCalendarActive$.value){
-      console.log("HomeC editEvents() this.roomNamesArr: ",this.roomNamesArr)
+      //console.log("HomeC editEvents() this.roomNamesArr: ",this.bookNamesArr)
         const dialogRef = this.dialog.open(EditEventsDialog, {
           data: {
-            rooms: this.roomNamesArr
+            rooms: this.bookNamesArr
           },
         });
     
@@ -156,10 +156,10 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   editOuEvents(){
     if (this.tokenStorage.isCalendarActive$.value){
-    console.log("HomeC editOuEvents() this.roomNamesArr: ",this.roomNamesArr)
+    console.log("HomeC editOuEvents() this.roomNamesArr: ",this.bookNamesArr)
       const dialogRef = this.dialog.open(EditEventsDialog, {
         data: {
-          rooms: this.roomNamesArr
+          rooms: this.bookNamesArr
         },
       });
   
@@ -182,7 +182,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (this.tokenStorage.isCalendarActive$.value){
       const dialogRef = this.dialog.open(EditRoomsDialog, {
         data: {
-          rooms: this.roomNamesArr
+          rooms: this.bookNamesArr
         },
       });
   
@@ -202,7 +202,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       );
   
       dialogRef.backdropClick().subscribe((mouseEvent)=>{
-        let roomTitles: string[] = this.httpService.roomNamesArr$.getValue()
+        let roomTitles: string[] = this.httpService.bookNamesArr$.getValue()
         console.log("HomeC editRooms() backdropClick() roomTitles:",roomTitles)
       })
     }
@@ -234,13 +234,13 @@ const ELEMENT_DATA: TableRow[] = [];
 export class EditEventsDialog {
   constructor( public dialogRef: MatDialogRef<EditEventsDialog>,
       @Inject(MAT_DIALOG_DATA) public data: {
-        rooms : string[]},
+        bookNames : string[]},
         private httpService: HttpEventService,
         private tokenStorage: TokenStorageService,) {
         }
 
 
-  rooms : string[]= this.data.rooms;
+  rooms : string[]= this.data.bookNames;
   users : PythUser[] = [];
   events : CalendarEvent[] = [];
   pythEvents : PythEvent[] = [];

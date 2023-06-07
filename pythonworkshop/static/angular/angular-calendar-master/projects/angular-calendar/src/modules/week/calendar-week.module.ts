@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { ResizableModule } from 'angular-resizable-element';
 import { DragAndDropModule } from 'angular-draggable-droppable';
 import { CalendarWeekViewComponent } from './calendar-week-view.component';
-import { CalendarWeekViewComponentMob } from './calendar-week-view-mob.component';
 import { CalendarWeekViewHeaderComponent } from './calendar-week-view-header.component';
 import { CalendarWeekViewEventComponent } from './calendar-week-view-event.component';
 import { CalendarCommonModule } from '../common/calendar-common.module';
@@ -67,7 +66,6 @@ export { CalendarWeekViewCurrentTimeMarkerComponent as ɵCalendarWeekViewCurrent
   ],
   declarations: [
     CalendarWeekViewComponent,
-    CalendarWeekViewComponentMob,
     CalendarWeekViewHeaderComponent,
     CalendarWeekViewEventComponent,
     CalendarWeekViewHourSegmentComponent,
@@ -79,7 +77,6 @@ export { CalendarWeekViewCurrentTimeMarkerComponent as ɵCalendarWeekViewCurrent
     ResizableModule,
     DragAndDropModule,
     CalendarWeekViewComponent,
-    CalendarWeekViewComponentMob,
     CalendarWeekViewHeaderComponent,
     CalendarWeekViewEventComponent,
     CalendarWeekViewHourSegmentComponent,

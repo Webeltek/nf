@@ -87,7 +87,7 @@
         
             <ng-container 
             *ngSwitchCase="CalendarView.Week">
-                <ng-container *ngIf="isMobLayout; then mobWeekTempl else wideWeekTempl">
+                <ng-container *ngIf="isMobLayout; then wideWeekTempl else wideWeekTempl">
                 </ng-container>
             </ng-container>
             <ng-template #wideWeekTempl>
@@ -107,22 +107,6 @@
                     [snapDraggedEvents]="false"
                     (eventTimesChanged)="eventDropped($event)">
                 </mwl-calendar-week-view>
-            </ng-template>
-            <ng-template #mobWeekTempl >
-                <mwl-calendar-week-view-mob
-                    [locale]="locale"
-                    [roomNames]="rooms"
-                    [dayStartHour]="0" 
-                    [dayEndHour]="rooms.length-1" 
-                    [viewDate]="viewDate" 
-                    [weekStartsOn]=1
-                    [loggedInUserId]="loggedInUserId" 
-                    [events]="events"
-                    (eventClicked)="openDialog($event)"
-                    [refresh]="refresh"
-                    [snapDraggedEvents]="false"
-                    (eventTimesChanged)="eventDropped($event)">
-                </mwl-calendar-week-view-mob>
             </ng-template>
             
             <mwl-calendar-day-view

@@ -144,7 +144,7 @@
             let hour of view.hourColumns[0].hours;
             trackBy: trackByHour;
             let odd = odd;
-            let roomIndex = index;
+            let hourIndex = index;
           "
           class="cal-hour"
           [class.cal-hour-odd]="odd"
@@ -161,7 +161,6 @@
                     [customTemplate]="hourSegmentTemplate"
                     [isTimeLabel]="true"
                     [daysInWeek]="daysInWeek"
-                    [currentRoomIndex]="roomIndex"
                   >
                   </mwl-calendar-week-view-hour-segment>
               </ng-container>
@@ -302,7 +301,6 @@
           <div
             *ngFor="
               let hour of column.hours;
-              let roomIndex = index;
               trackBy: trackByHour;
               let odd = odd
             "
@@ -320,7 +318,6 @@
               [locale]="locale"
               [customTemplate]="hourSegmentTemplate"
               [daysInWeek]="daysInWeek"
-              [roomInd] = "roomIndex"
               [loggedInUserId] = "loggedInUserId"
               (mwlClick)="
                 hourSegmentClicked.emit({
