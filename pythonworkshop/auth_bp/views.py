@@ -314,12 +314,22 @@ def confirm(token):
     userconfirmed=False
     msg=''
     if token is not None and User.confirm(cache_uid,token):
-        db.session.add(User(user_email=email,
+        user = db.session.execute(db.select(User).where(User.user_email==email)).scalar_one_or_none()
+        if user is not None:
+            user.pass_hash = pass_hash
+            user.ou = user_ou
+            user.user_confirmed = True
+            db.session.add(user)
+            db.session.commit()
+            userconfirmed=True
+            msg='Du har bekreftet kontoen din. Takk!'
+        elif user is None and User.confirm(cache_uid,token):
+            db.session.add(User(user_email=email,
                             user_pass_hash=pass_hash,
                             user_confirmed=True,ou=user_ou))
-        db.session.commit()
-        userconfirmed=True
-        msg='Du har bekreftet kontoen din. Takk!'
+            db.session.commit()
+            userconfirmed = True
+            msg='Du har bekreftet kontoen din. Takk!'    
     elif token is None or not User.confirm(cache_uid,token):
         userconfirmed = False
         msg = 'Bekreftelseslenken er ugyldig eller har utløpt.'

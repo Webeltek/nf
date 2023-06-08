@@ -189,7 +189,7 @@ def deletebook():
         req_json = request.get_json()
         row = req_json['row']
         title = req_json['title']
-        db.session.execute(db.delete(Event).where(Event.rowname == title))
+        db.session.execute(db.delete(Event).where(Event.bookname == title))
         db.session.execute(db.delete(Book).where(Book.title==title))
         db.session.commit()
         new_books = db.session.execute(db.select(Book)).scalars().all()

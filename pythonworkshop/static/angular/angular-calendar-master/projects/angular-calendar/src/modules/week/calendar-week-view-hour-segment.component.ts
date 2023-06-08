@@ -299,7 +299,7 @@ export class EventDialog {
       rooms: string[] },
      public fb: UntypedFormBuilder) {}
 
-     
+    roomname = ""; 
     startTime = { hour: 8, minute: 30};
     endTime = { hour: 14, minute: 30};  
     containedBookTitle = this.data.hourContainedBookTitle;
@@ -318,7 +318,8 @@ export class EventDialog {
       clickedDbEvt: this.data.clickedDbEvt,
       startTime: this.startTime,
       endTime: this.endTime, 
-      bookname : this.valgtBookCtrl.value, 
+      bookname : this.valgtBookCtrl.value,
+      roomname : this.roomname,
       toBeDeleted : this.data.toBeDeleted, 
       toBeDeletedPythEvt : this.data.toBeDeletedPythEvt
       } )
