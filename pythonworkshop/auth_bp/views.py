@@ -316,7 +316,7 @@ def confirm(token):
     if token is not None and User.confirm(cache_uid,token):
         user = db.session.execute(db.select(User).where(User.user_email==email)).scalar_one_or_none()
         if user is not None:
-            user.pass_hash = pass_hash
+            user.user_pass_hash = pass_hash
             user.ou = user_ou
             user.user_confirmed = True
             db.session.add(user)
