@@ -220,7 +220,7 @@ export class HomeBBComponent implements OnInit, OnDestroy {
 export interface TableRow {
   id : number;
   user_email: string;
-  rom: string;
+  room: string;
   start: Date;
   end : Date;
   title: string;
@@ -334,7 +334,7 @@ export class EditEventsDialog {
           let tableRow : TableRow=  {
               id : objEvt.id,
               user_email : this.users.filter((user)=>objEvt.userId==user.id)[0].user_email,
-              rom : objEvt.rowname,
+              room : objEvt.roomname,
               start : new Date(parseInt(objEvt.start,10)),
               end : new Date(parseInt(objEvt.end,10)),
               title : String(objEvt.title).substring(0,3),
@@ -398,14 +398,14 @@ export class EditEventsDialog {
       this.selectFilteredRows= [];
       console.log("HomeC subscribeToSelectChange() selected value: ",value);
       for (let row of this.tableRows){
-        if ( row.rom===value){
+        if ( row.room===value){
           this.selectFilteredRows.push(row);
           console.log("HomeComp filterValue in loop",value);
         }
       }
       
       const newArr = this.rangeFilteredRows.filter(rangeFilteredRow=>{
-        return rangeFilteredRow.rom === value;
+        return rangeFilteredRow.room === value;
       })
       console.log("HomeC subscribeToSelectChange() newArr: ",newArr);
       this.dataSourceEx.setData(newArr);

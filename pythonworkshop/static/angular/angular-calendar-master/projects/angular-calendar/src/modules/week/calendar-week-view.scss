@@ -380,9 +380,11 @@ $cal-week-view-vars: map-merge($cal-vars, $cal-week-view-vars);
     background-color: $cal-bg-secondary;
   }
 
+  /*
   .cal-hour {
     display: flex;
   }
+  */
 
   .cal-drag-over .cal-hour-segment {
     background-color: $cal-bg-active;

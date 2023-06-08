@@ -119,7 +119,7 @@ def deleteroom():
         req_json = request.get_json()
         row = req_json['row']
         title = req_json['title']
-        db.session.execute(db.delete(Event).where(Event.rowname == title))
+        db.session.execute(db.delete(Event).where(Event.roomname == title))
         db.session.execute(db.delete(Room).where(Room.title==title))
         db.session.commit()
         new_rooms = db.session.execute(db.select(Room)).scalars().all()
@@ -223,7 +223,8 @@ class eventd:
     id: int
     uid: str
     userId : int
-    rowname : str
+    bookname : str
+    roomname : str
     ou : str
     start : str
     end : str
@@ -237,7 +238,7 @@ def index_events():
         for event in events:
             event_list.append(jsons.dump(eventd(
                  event.id,event.uid,event.user_id,
-                 event.rowname,event.ou,event.start,
+                 event.bookname,event.roomname,event.ou,event.start,
                  event.end,event.color))) 
         return jsonify({'events':event_list})
 

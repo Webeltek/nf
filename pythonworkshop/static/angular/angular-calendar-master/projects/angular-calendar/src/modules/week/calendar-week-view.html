@@ -153,7 +153,7 @@
             <ng-container *ngFor="let segment of hour.segments;
               let index = index; trackBy: trackByHourSegment">   
                   <mwl-calendar-week-view-hour-segment
-                    *ngIf="index == 0"
+                    *ngIf="index == 0 || index == 1"
                     [style.height.px]="hourSegmentHeight"
                     [segment]="segment"
                     [segmentHeight]="hourSegmentHeight"
