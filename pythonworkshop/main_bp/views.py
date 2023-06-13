@@ -226,8 +226,8 @@ class eventd:
     bookname : str
     roomname : str
     ou : str
-    start : str
-    end : str
+    startmills : int
+    endmills : int
     color : str
 
 @main_bp.route("/api/services/events", methods= ['GET'])
@@ -238,8 +238,8 @@ def index_events():
         for event in events:
             event_list.append(jsons.dump(eventd(
                  event.id,event.uid,event.user_id,
-                 event.bookname,event.roomname,event.ou,event.start,
-                 event.end,event.color))) 
+                 event.bookname,event.roomname,event.ou,event.startmills,
+                 event.endmills,event.color))) 
         return jsonify({'events':event_list})
 
 @dataclass
@@ -281,11 +281,13 @@ def insert():
         user_id = req_json['user_id']
         #print('event userId foregnkey is : '+ str(user_id))
         ou = req_json['ou']
-        start = req_json['start']
-        end = req_json['end']
+        startmills = req_json['startmills']
+        endmills = req_json['endmills']
         color = req_json['color']
         db.session.add(Event(uid=uid,user_id=user_id, 
-                             bookname=bookname,roomname=roomname,ou=ou,start=start,end=end, color=color))
+                             bookname=bookname,
+                             roomname=roomname,ou=ou,
+                             startmills=startmills,endmills=endmills, color=color))
         db.session.commit()
         msg = 'Record added successfully' 
     return jsonify(msg)
@@ -298,9 +300,10 @@ def update():
         uid = req_json['uid']
         userId = req_json['user_id']
         title = req_json['title']
-        start = req_json['start']
-        end = req_json['end']
-        db.session.add(Event(uid=uid,user_id=userId, title=title,start=start,end=end)
+        startmills = req_json['startmills']
+        endmills = req_json['endmills']
+        db.session.add(Event(uid=uid,user_id=userId, title=title,
+                             startmills=startmills,endmills=endmills)
                        ).where(Event.uid == uid)
         db.session.commit()       
         msg = 'Record updated successfully' 
@@ -376,10 +379,31 @@ def db_save_payment():
     db.session.commit()
     return jsonify({ "payment": "saved_in_db"})
 
-@main_bp.route('/api/services/db_get_payment',methods=['GET','POST'])
+@main_bp.route('/api/services/db_get_payments',methods=['GET','POST'])
 @access_required
-def db_get_payment():
+def db_get_payments():
     user_id = request.args['user_id']
+    vipps_sub_paymnts = db.session.execute(db.select(Payment)
+                           .where(Payment.user_id==user_id)).scalars().all()
+    paymnts = []
+    for paymnt in vipps_sub_paymnts:
+         paymnts.append(jsons.dump({
+              "refer" : paymnt.reference,
+              "vipps_sub":paymnt.vipps_sub,
+              "amount": paymnt.amount}))
+    return jsonify({ "vipps_sub_paymnts": paymnts})
+
+@main_bp.route('/api/services/db_update_payment',methods=['GET','POST'])
+@access_required
+def db_update_payment():
+    user_id = request.args['user_id']
+    reference = request.args['reference']
+    isconsumed = request.args['isconsumed']
+    vipps_sub_paymnt = db.session.execute(db.select(Payment)
+                           .where(Payment.reference==reference)).scalar_one_or_none()
+    vipps_sub_paymnt.is_consumed = isconsumed
+    db.session.add(vipps_sub_paymnt)
+    db.session.commit()
     vipps_sub_paymnts = db.session.execute(db.select(Payment)
                            .where(Payment.user_id==user_id)).scalars().all()
     paymnts = []

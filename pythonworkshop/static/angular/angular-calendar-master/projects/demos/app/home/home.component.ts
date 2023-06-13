@@ -303,7 +303,7 @@ export class EditEventsDialog {
 
   selectedRooms = new UntypedFormControl('alle rom');
 
-  displayedColumns: string[] = ['select','user_email','start','title'];
+  displayedColumns: string[] = ['select','user_email','start','room','book'];
   dataToDisplay = [...ELEMENT_DATA];
   dataSourceEx = new ExampleDataSource(this.dataToDisplay);
   selection = new SelectionModel<TableRow>(true, []);
@@ -376,14 +376,14 @@ export class EditEventsDialog {
           let tableRow : TableRow=  {
               id : objEvt.id,
               user_email : this.users.filter((user)=>objEvt.user_id==user.id)[0]?.user_email,
-              room : objEvt.rowname,
-              book : objEvt.book,
+              room : objEvt.roomname,
+              book : objEvt.bookname,
               start : new Date(parseInt(objEvt.start,10)),
               end : new Date(parseInt(objEvt.end,10)),
               title : String(objEvt.title).substring(0,3),
             }
           this.tableRows.push(tableRow);
-          //console.log("HomeComp tableRow.user_email ",this.users.filter((user)=>objEvt.userId==user.id)[0].user_email);
+          console.log("HomeComp tableRow.user_email ",this.users.filter((user)=>objEvt.userId==user.id)[0].user_email);
           let calEvent : CalendarEvent=  {
             title : objEvt.title,
             userId : objEvt.userId,

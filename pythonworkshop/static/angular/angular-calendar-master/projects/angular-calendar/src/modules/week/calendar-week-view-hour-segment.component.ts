@@ -24,11 +24,9 @@ export interface PythEvent {
   user_id? : number;
   bookname : string;
   roomname? : string;
-  startTime: string;
-  endTime: string;
   ou? : string;
-  start : string;
-  end : string;
+  startmills : number;
+  endmills : number;
   color : string;
 }
 
@@ -141,9 +139,6 @@ export class CalendarWeekViewHourSegmentComponent {
   pythEvt : PythEvent;
   user_ou : string = 'init ou';
 
-  generateUniqueID( digit = 1000 ) {
-    return new Date().getTime().toString(16) + Math.floor( digit * Math.random() ).toString(16)
-  }
 
   getDateArray( date ) {
       // Helper to get each elements of Date object as an array
@@ -158,19 +153,6 @@ export class CalendarWeekViewHourSegmentComponent {
 
       //return _dt[0] +'-'+ (_dt[1] + 1) +'-'+ _dt[2] +' '+ _dt[3] +':'+ _dt[4] +':'+ _dt[5]
       return `${_dt[0]}-${_dt[1] + 1}-${_dt[2]} ${_dt[3]}:${_dt[4]}:${_dt[5]}`
-  }
-
-  generatePythStartEndDate(startTime: any,endTime: any){
-    let clickDate = new Date(this.segment.date);
-    let startDate: number , endDate : number ;
-          startDate = clickDate.setHours(startTime.hour,startTime.minute);
-          endDate = clickDate.setHours(endTime.hour,endTime.minute);
-        
-    return { start : startDate.toString(), end : endDate.toString() };
-  }
-
-  addEvent(pythEvt : PythEvent) : void {
-    this.httpService.insertEvent(pythEvt);
   }
 
   ngOnInit(){
@@ -227,6 +209,7 @@ export class CalendarWeekViewHourSegmentComponent {
         //console.log("calWVhourSegm isClick",this.isClickedOverEvent());
         for (var dbEvt of this.events) {
           let segmStartHour = this.segment.date.getHours();
+          console.log ("HS segmStartHour", segmStartHour);
           let modifiedSegmentDate = new Date(this.segment.date);
           let segmStartHourDate = new Date(modifiedSegmentDate.setHours(segmStartHour, 0));
           let segmEndHourDate = new Date(modifiedSegmentDate.setHours(segmStartHour + 1, 0));
@@ -249,24 +232,20 @@ export class CalendarWeekViewHourSegmentComponent {
         dialogRef.afterClosed().subscribe({
           next: (result) => {
             if (typeof result !== 'undefined') {
-              let uniqueId = this.generateUniqueID();
-              let startEndDate = this.generatePythStartEndDate(result.startTime,result.endTime);
-              //console.log("hourSegment loggedInUserId : " + this.loggedInUserId);
-              this.pythEvt =
-              {
-                uid: uniqueId,
-                user_id: this.loggedInUserId,
-                bookname: result.bookname,
-                roomname: result.roomname,
-                startTime : result.startTime,
-                endTime: result.endTime,
-                ou : this.user_ou,
-                start: startEndDate.start,
-                end: startEndDate.end,
-                color: "blue"
-              };
+              
+              const startmills = this.segment.date.setHours(result.startTime.hour);
+              const endmills = this.segment.date.setHours(result.endTime.hour);
+              this.httpService.generatePythEvent({
+                  user_id :this.loggedInUserId,
+                  bookname :result.bookname,
+                  roomname : result.roomname,
+                  ou : this.user_ou,
+                  startmills : startmills,
+                  endmills: endmills,
+                  color: "blue"
+                },
+              true);
               //console.log("afterClosed() result:", this.pythEvt);
-              this.addEvent(this.pythEvt);
             }
           },
           error : (error) => {
@@ -301,7 +280,7 @@ export class EventDialog {
 
     roomname = ""; 
     startTime = { hour: 8, minute: 30};
-    endTime = { hour: 14, minute: 30};  
+    endTime = { hour: 10, minute: 30};  
     containedBookTitle = this.data.hourContainedBookTitle;
     books = this.data.books;
     toBeDeleted = this.data.toBeDeleted;

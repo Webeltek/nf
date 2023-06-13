@@ -201,8 +201,8 @@ class Event(db.Model):
   bookname = db.Column(db.String)
   roomname = db.Column(db.String)
   ou = db.Column(db.String)
-  start = db.Column(db.String)
-  end = db.Column(db.String)
+  startmills = db.Column(db.Integer)
+  endmills = db.Column(db.Integer)
   color = db.Column(db.String)
     
 class Book(db.Model):

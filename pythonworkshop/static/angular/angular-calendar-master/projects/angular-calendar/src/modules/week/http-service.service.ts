@@ -187,12 +187,12 @@ export class HttpEventService{
             { headers : this.httpHeaders, observe: 'body', responseType : 'json'})
     }
 
-    insertEvent(pythEvent : PythEvent ){
+    insertEvent(pythEvent : PythEvent ,emitAddedEvent?: boolean){
     this.http.post(this.baseurl+this.insertUrl, pythEvent, 
         { headers : this.httpHeaders, observe: 'body', responseType : 'json'} ) 
         .subscribe({
             next: (response) =>{
-                this.addedEvent.emit(pythEvent);
+                if(emitAddedEvent) this.addedEvent.emit(pythEvent);
                 console.log("addEvent() response: " + JSON.stringify(response));
             },
             error: (error) => { 
@@ -214,4 +214,31 @@ export class HttpEventService{
             })
     }
 
+    generateUniqueID( digit = 1000 ) {
+        return new Date().getTime().toString(16) + Math.floor( digit * Math.random() ).toString(16)
+    }
+
+    generatePythEvent( genPythEvtParams : 
+        {   user_id: number,
+            bookname: string,
+            roomname: string,
+            startmills : number, // object type converted to any
+            endmills: number,    // object type converted to any
+            ou : string,
+            color: "blue"  }
+        , emitAddedEvent?:boolean){       
+        const uniqueId = this.generateUniqueID();
+        //console.log("hourSegment loggedInUserId : " + this.loggedInUserId);
+        const pythEvt : PythEvent={
+            uid: uniqueId,
+            user_id: genPythEvtParams.user_id,
+            bookname: genPythEvtParams.bookname,
+            roomname: genPythEvtParams.roomname,
+            ou : genPythEvtParams.ou,
+            startmills: genPythEvtParams.startmills,
+            endmills: genPythEvtParams.endmills,
+            color: genPythEvtParams.color
+        };
+        return this.insertEvent(pythEvt,emitAddedEvent);
+    }       
 }

@@ -29,6 +29,7 @@ import { AuthService } from './_services/auth.service';
 
 export interface ChipItem {
   name: string;
+  reference : string;
   color: ThemePalette;
   start : Date;
   dragable : boolean;
@@ -74,7 +75,6 @@ export class DemoAppComponent implements OnInit, OnDestroy{
     event: CalendarEvent;
   };
 
-  refresh = new Subject<void>();
   loginStateSubscription: Subscription = new Subscription();
 
   setView(view: CalendarView) {
@@ -136,7 +136,7 @@ export class DemoAppComponent implements OnInit, OnDestroy{
     }
   } */
 
-  eventDropped({
+  eventDropped({      //unused
     event,
     newStart,
     newEnd,
@@ -158,13 +158,110 @@ export class DemoAppComponent implements OnInit, OnDestroy{
       this.viewDate = newStart;
       this.activeDayIsOpen = true;
     }
-    this.events = [...this.events];
-  }
+
+    const genNewEndDateMills = event.start.setHours(event.start.getHours()+1)
+    this.httpService.generatePythEvent({
+        user_id :this.tokenStorage.getUser().id,
+        bookname : "Drop-in",
+        roomname : "initroom",
+        startmills : event.start.getTime(),
+        endmills: genNewEndDateMills,
+        ou : this.tokenStorage.getUser().ou,
+        color: "blue"
+    });
+  } 
 
   externalDrop(event: CalendarEvent) {
     if (this.externalEvents.indexOf(event) === -1) {
       this.events = this.events.filter((iEvent) => iEvent !== event);
       this.externalEvents.push(event);
+    }
+  }
+
+  refresh = new Subject<void>();
+
+  eventTimesChanged({
+    event,
+    newStart,
+    newEnd,
+  }: CalendarEventTimesChangedEvent): void {
+    const externalIndex = this.externalEvents.indexOf(event);
+    console.log("DAC eventTimesChanged params event,newStart,newEnd",event,newStart,newEnd)
+    if (externalIndex > -1) {
+      this.externalEvents.splice(externalIndex, 1);
+      this.authService.dbUpdateVippsPayment(
+        this.tokenStorage.getUser().user_id,
+        this.availableChips[externalIndex].reference,
+        false)
+      .subscribe((resp)=>{
+        this.updateChips(resp);
+      })
+      
+      this.events.push(event);
+    }
+    event.start = newStart;
+    if (newEnd) {
+      event.end = newEnd;
+    } else {
+      const newEventObj = new Date(event.start);
+      event.end = new Date(newEventObj.setHours(event.start.getHours()+1))
+    }
+    if (this.view === 'month') {
+      this.viewDate = newStart;
+      this.activeDayIsOpen = true;
+    }
+    console.log("DAC event changed",event);
+
+    this.events = this.events.map((iEvent) => {
+      if (iEvent === event) {
+        this.httpService.generatePythEvent({
+        user_id :this.tokenStorage.getUser().id,
+        bookname : "Drop-in",
+        roomname : "initroom",
+        startmills : event.start.getTime(),
+        endmills: event.end.getTime(),
+        ou : this.tokenStorage.getUser().ou,
+        color: "blue"
+        });
+        return {
+          ...event,
+          start: newStart,
+          end: newEnd ? newEnd : event.end,
+        };
+      }
+      return iEvent;
+    });
+    this.events = [...this.events];
+  }
+
+  updateChips(resp: any){
+    if (resp && resp!=="access token expired"){
+      this.availableChips = [];
+      const respObj = resp as any;
+      const paymnts = respObj.vipps_sub_paymnts;
+      for (let paymnt of paymnts ){
+        if(!paymnt.is_consumed){
+          console.log("HC paymnt amount slice : ",paymnt.amount.slice(0,-2));
+          const chip : ChipItem= {
+          name : paymnt.amount.slice(0,-2),
+          reference : paymnt.reference,
+          color : "warn",
+          start : new Date(),
+          dragable: true
+        }
+        this.availableChips.push(chip);
+        let extEvent : CalendarEvent = {
+          title : chip.name,
+          color : {primary: '#ad2121',secondary: '#FAE3E3' },
+          start : chip.start,
+          draggable : true
+        }
+        this.externalEvents.push(extEvent);
+        }
+        
+      }
+      this.availableChips = [...this.availableChips];
+      this.externalEvents = [...this.externalEvents];
     }
   }
 
@@ -176,31 +273,8 @@ export class DemoAppComponent implements OnInit, OnDestroy{
           const currentUsr = this.tokenStorage.getUser();
           const vipps_sub = currentUsr.vipps_sub;
           const user_id = currentUsr.id;
-          this.authService.dbGetVippsPayment(user_id).subscribe((resp)=>{
-            if (resp && resp!=="access token expired"){
-              this.availableChips = [];
-              const respObj = resp as any;
-              const paymnts = respObj.vipps_sub_paymnts;
-              for (let paymnt of paymnts ){
-                console.log("HC paymnt amount slice : ",paymnt.amount.slice(0,-2));
-                let chip : ChipItem= {
-                  name : paymnt.amount.slice(0,-2),
-                  color : "warn",
-                  start : new Date(),
-                  dragable: true
-                }
-                this.availableChips.push(chip);
-                let extEvent : CalendarEvent = {
-                  title : chip.name,
-                  color : {primary: '#ad2121',secondary: '#FAE3E3' },
-                  start : chip.start,
-                  draggable : true
-                }
-                this.externalEvents.push(extEvent);
-              }
-              this.availableChips = [...this.availableChips];
-              this.externalEvents = [...this.externalEvents];
-            }
+          this.authService.dbGetVippsPayments(user_id).subscribe((resp)=>{
+            this.updateChips(resp);
           });
         }
       });
@@ -335,8 +409,8 @@ export class DemoAppComponent implements OnInit, OnDestroy{
           let calEvent : CalendarEvent=  {
               id : pythEvt.uid,
               userId : pythEvt.userId,
-              start : new Date(parseInt(pythEvt.start,10)),
-              end : new Date(parseInt(pythEvt.end,10)),
+              start : new Date(pythEvt.startmills),
+              end : new Date(pythEvt.endmills),
               title : this.getEventTitle(pythEvt),
               ou: pythEvt.ou,
               color : getColors(pythEvt.userId,this.tokenStorage.getUser().id),
@@ -385,10 +459,10 @@ export class DemoAppComponent implements OnInit, OnDestroy{
       this.httpService.getEvents().subscribe((response) => {
         if(response.hasOwnProperty('events')) {
           let responseObj = response as any;
-          let clickedPythEvtStart = clickedWeekViewEvent.event.start.getTime().toString();
+          let clickedPythEvtStart = clickedWeekViewEvent.event.start.getTime();
           //console.log("clickedWeekViewEvent.event.start",clickedWeekViewEvent.event.start)
           for (let pythEvt of responseObj.events) {
-            if ( pythEvt.start == clickedPythEvtStart ){
+            if ( pythEvt.startmills == clickedPythEvtStart ){
               this.toBeDeletedPythEvt = pythEvt;
               //console.log("this.toBeDeletedPythEvt",this.toBeDeletedPythEvt)
             }
@@ -434,29 +508,6 @@ export class DemoAppComponent implements OnInit, OnDestroy{
       this.viewDate = date;
       console.log("DemoAppC activeDayIsOpen",this.activeDayIsOpen)
     }
-  }
-
-  eventTimesChanged({
-    event,
-    newStart,
-    newEnd,
-  }: CalendarEventTimesChangedEvent): void {
-    this.events = this.events.map((iEvent) => {
-      if (iEvent === event) {
-        return {
-          ...event,
-          start: newStart,
-          end: newEnd,
-        };
-      }
-      return iEvent;
-    });
-    this.handleEvent('Dropped or resized', event);
-  }
-
-  handleEvent(action: string, event: CalendarEvent): void {
-    this.modalData = { event, action };
-    this.modal.open(this.modalContent, { size: 'lg' });
   }
 
   ngOnDestroy() {

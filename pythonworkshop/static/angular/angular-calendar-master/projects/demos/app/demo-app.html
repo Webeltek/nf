@@ -83,7 +83,7 @@
                 [events]="events"
                 (eventClicked)="openDialog($event)"
                 [refresh]="refresh"
-                (eventTimesChanged)="eventDropped($event)">
+                (eventTimesChanged)="eventTimesChanged($event)">
             </mwl-calendar-month-view>
         
             <ng-container 
@@ -107,7 +107,8 @@
                     (eventClicked)="openDialog($event)"
                     [refresh]="refresh"
                     [snapDraggedEvents]="false"
-                    (eventTimesChanged)="eventDropped($event)">
+                    (eventTimesChanged)="eventTimesChanged($event)"
+                    >
                 </mwl-calendar-week-view>
             </ng-template>
             
@@ -115,11 +116,10 @@
                 *ngSwitchCase="CalendarView.Day"
                 [viewDate]="viewDate"
                 [events]="events"
-                (eventClicked)="handleEvent('Clicked', $event.event)"
-                (eventTimesChanged)="eventTimesChanged($event)"
+                (eventClicked)="openDialog($event)"
                 [refresh]="refresh"
                 [snapDraggedEvents]="false"
-                (eventTimesChanged)="eventDropped($event)"
+                (eventTimesChanged)="eventTimesChanged($event)"
             >
             </mwl-calendar-day-view>
             
