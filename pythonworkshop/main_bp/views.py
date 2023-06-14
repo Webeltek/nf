@@ -387,10 +387,11 @@ def db_get_payments():
                            .where(Payment.user_id==user_id)).scalars().all()
     paymnts = []
     for paymnt in vipps_sub_paymnts:
-         paymnts.append(jsons.dump({
-              "refer" : paymnt.reference,
-              "vipps_sub":paymnt.vipps_sub,
-              "amount": paymnt.amount}))
+         if not paymnt.is_consumed:
+            paymnts.append(jsons.dump({
+                "reference" : paymnt.reference,
+                "vipps_sub":paymnt.vipps_sub,
+                "amount": paymnt.amount}))
     return jsonify({ "vipps_sub_paymnts": paymnts})
 
 @main_bp.route('/api/services/db_update_payment',methods=['GET','POST'])
@@ -409,7 +410,7 @@ def db_update_payment():
     paymnts = []
     for paymnt in vipps_sub_paymnts:
          paymnts.append(jsons.dump({
-              "refer" : paymnt.reference,
+              "reference" : paymnt.reference,
               "vipps_sub":paymnt.vipps_sub,
               "amount": paymnt.amount}))
     return jsonify({ "vipps_sub_paymnts": paymnts})

@@ -186,16 +186,18 @@ export class DemoAppComponent implements OnInit, OnDestroy{
     newEnd,
   }: CalendarEventTimesChangedEvent): void {
     const externalIndex = this.externalEvents.indexOf(event);
-    console.log("DAC eventTimesChanged params event,newStart,newEnd",event,newStart,newEnd)
+    console.log("DAC eventTimesChanged params externalindex,event,newStart,newEnd",
+    externalIndex,event,newStart,newEnd)
     if (externalIndex > -1) {
-      this.externalEvents.splice(externalIndex, 1);
       this.authService.dbUpdateVippsPayment(
-        this.tokenStorage.getUser().user_id,
-        this.availableChips[externalIndex].reference,
+        this.tokenStorage.getUser().id,
+        this.externalEvents[externalIndex].paymntref,
         false)
       .subscribe((resp)=>{
         this.updateChips(resp);
       })
+      //this.externalEvents.splice(externalIndex, 1);
+      
       
       this.events.push(event);
     }
@@ -239,10 +241,11 @@ export class DemoAppComponent implements OnInit, OnDestroy{
       this.availableChips = [];
       const respObj = resp as any;
       const paymnts = respObj.vipps_sub_paymnts;
+      console.log("DA updateChips paymnts",paymnts)
       for (let paymnt of paymnts ){
         if(!paymnt.is_consumed){
           console.log("HC paymnt amount slice : ",paymnt.amount.slice(0,-2));
-          const chip : ChipItem= {
+          const chip : ChipItem= {               // phantom unused chip array
           name : paymnt.amount.slice(0,-2),
           reference : paymnt.reference,
           color : "warn",
@@ -250,8 +253,10 @@ export class DemoAppComponent implements OnInit, OnDestroy{
           dragable: true
         }
         this.availableChips.push(chip);
+        console.log("DA updateChipps paymnt.reference",paymnt.reference);
         let extEvent : CalendarEvent = {
           title : chip.name,
+          paymntref : paymnt.reference,
           color : {primary: '#ad2121',secondary: '#FAE3E3' },
           start : chip.start,
           draggable : true
@@ -262,6 +267,7 @@ export class DemoAppComponent implements OnInit, OnDestroy{
       }
       this.availableChips = [...this.availableChips];
       this.externalEvents = [...this.externalEvents];
+      console.log("DA updateChips extEvents",this.externalEvents);
     }
   }
 
@@ -272,8 +278,8 @@ export class DemoAppComponent implements OnInit, OnDestroy{
         if(authProtState){
           const currentUsr = this.tokenStorage.getUser();
           const vipps_sub = currentUsr.vipps_sub;
-          const user_id = currentUsr.id;
-          this.authService.dbGetVippsPayments(user_id).subscribe((resp)=>{
+          this.authService.dbGetVippsPayments(currentUsr.id).subscribe((resp)=>{
+            console.log(" DA getVippsPaymnts",resp);
             this.updateChips(resp);
           });
         }
