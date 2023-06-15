@@ -374,8 +374,13 @@ def db_save_payment():
     user_id = request.json['user_id']
     vipps_sub = request.json['vipps_sub']
     amount = request.json['amount']
+    bookname = request.json['bookname']
     print(f'main_bp refer,amount{refer,amount}')
-    db.session.add(Payment(reference=refer,user_id=user_id,vipps_sub=vipps_sub,amount=amount))
+    db.session.add(Payment(reference=refer,
+                           user_id=user_id,
+                           vipps_sub=vipps_sub,
+                           amount=amount,
+                           bookname=bookname))
     db.session.commit()
     return jsonify({ "payment": "saved_in_db"})
 
@@ -391,7 +396,8 @@ def db_get_payments():
             paymnts.append(jsons.dump({
                 "reference" : paymnt.reference,
                 "vipps_sub":paymnt.vipps_sub,
-                "amount": paymnt.amount}))
+                "amount": paymnt.amount,
+                "bookname": paymnt.bookname}))
     return jsonify({ "vipps_sub_paymnts": paymnts})
 
 @main_bp.route('/api/services/db_update_payment',methods=['GET','POST'])
@@ -400,9 +406,12 @@ def db_update_payment():
     user_id = request.args['user_id']
     reference = request.args['reference']
     isconsumed = request.args['isconsumed']
+    isconsumedbool = False
+    if isconsumed == "true":
+         isconsumedbool = True
     vipps_sub_paymnt = db.session.execute(db.select(Payment)
                            .where(Payment.reference==reference)).scalar_one_or_none()
-    vipps_sub_paymnt.is_consumed = isconsumed
+    vipps_sub_paymnt.is_consumed = isconsumedbool
     db.session.add(vipps_sub_paymnt)
     db.session.commit()
     vipps_sub_paymnts = db.session.execute(db.select(Payment)
@@ -412,6 +421,8 @@ def db_update_payment():
          paymnts.append(jsons.dump({
               "reference" : paymnt.reference,
               "vipps_sub":paymnt.vipps_sub,
-              "amount": paymnt.amount}))
+              "amount": paymnt.amount,
+              "bookname": paymnt.bookname,
+              "is_consumed": paymnt.is_consumed}))
     return jsonify({ "vipps_sub_paymnts": paymnts})
 

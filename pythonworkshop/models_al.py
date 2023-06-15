@@ -222,5 +222,6 @@ class Payment(db.Model):
   reference = db.Column(db.String,unique=True)
   vipps_sub = db.Column(db.String)
   amount = db.Column(db.String)
+  bookname = db.Column(db.String)
   is_consumed = db.Column(db.Boolean,default=False)  
       

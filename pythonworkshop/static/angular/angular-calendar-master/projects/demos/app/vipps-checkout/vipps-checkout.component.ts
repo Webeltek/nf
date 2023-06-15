@@ -81,7 +81,7 @@ export class VippsCheckoutComponent implements OnInit {
         });
 
         
-      } else if(params['reference']){
+      } else if(params['reference'] && params['bookname']){
         this.authService.queryVippsPayment(params['reference']).subscribe({
           next : (queryResponse) =>{
             const queryResp = queryResponse as any;
@@ -95,11 +95,14 @@ export class VippsCheckoutComponent implements OnInit {
                     reference : params['reference'],
                     vipps_sub : vipps_sub,
                     paymentState : this.paymentState,
-                    paymentAmount : this.paymentAmount
+                    paymentAmount : this.paymentAmount,
+                    bookname : params['bookname']
                   }
                   const user_id = this.tokenStorage.getUser().id;
                   this.authService.dbSaveVippsPayment(
-                    paymnt.reference,user_id,paymnt.vipps_sub,paymnt.paymentAmount).subscribe((respObj)=>{
+                    paymnt.reference,user_id,paymnt.vipps_sub,
+                    paymnt.paymentAmount,
+                    paymnt.bookname).subscribe((respObj)=>{
                       if (respObj){
                         const resp = respObj as any;
                         console.log("VC save paymnt resp: ",resp);

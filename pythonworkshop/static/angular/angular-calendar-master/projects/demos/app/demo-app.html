@@ -61,6 +61,7 @@
                     [dropData]="{event: event}"
                     [touchStartLongPress]="{ delay: 300, delta: 30 }"
                     dragActiveClass="drag-active"
+                    (selectionChange)="onSelectionChange($event)"
                     >
                     {{event.title}} 
                     </mat-chip-option>
@@ -82,7 +83,6 @@
                 [loggedInUserId]="loggedInUserId" 
                 [events]="events"
                 (eventClicked)="openDialog($event)"
-                [refresh]="refresh"
                 (eventTimesChanged)="eventTimesChanged($event)">
             </mwl-calendar-month-view>
         

@@ -89,6 +89,7 @@ def send_payment():
     merch_access_tkn = request.args.get('access_tkn')
     usr_phone = request.args.get('usr_phone')
     amount = request.args.get('amount')
+    bookname = request.args.get('bookname')
     idemp_key = request.args.get('idemp_key')
     msn = "298345"
     url= 'https://apitest.vipps.no/epayment/v1/payments'
@@ -117,7 +118,7 @@ def send_payment():
             "scope": "email"
         },
         "reference": reference,
-        "returnUrl": f"https://webeltek.org/vipps_checkout?reference={reference}",
+        "returnUrl": f"https://webeltek.org/vipps_checkout?reference={reference}&bookname={bookname}",
         "userFlow": "WEB_REDIRECT",
         "paymentDescription": "A simple payment"
         }

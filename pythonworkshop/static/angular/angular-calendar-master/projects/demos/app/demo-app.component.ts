@@ -26,9 +26,11 @@ import { TranslateService } from '@ngx-translate/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ThemePalette } from '@angular/material/core';
 import { AuthService } from './_services/auth.service';
+import { MatChipSelectionChange } from '@angular/material/chips';
 
 export interface ChipItem {
-  name: string;
+  bookname : string
+  amount: string;
   reference : string;
   color: ThemePalette;
   start : Date;
@@ -136,6 +138,12 @@ export class DemoAppComponent implements OnInit, OnDestroy{
     }
   } */
 
+  refresh = new Subject<void>(); //used with kitchensink when event input changes
+
+  onSelectionChange(selChangeEvt : MatChipSelectionChange){
+    //todo implement chip selection
+  }
+
   eventDropped({      //unused
     event,
     newStart,
@@ -178,8 +186,6 @@ export class DemoAppComponent implements OnInit, OnDestroy{
     }
   }
 
-  refresh = new Subject<void>();
-
   eventTimesChanged({
     event,
     newStart,
@@ -192,12 +198,11 @@ export class DemoAppComponent implements OnInit, OnDestroy{
       this.authService.dbUpdateVippsPayment(
         this.tokenStorage.getUser().id,
         this.externalEvents[externalIndex].paymntref,
-        false)
+        true)
       .subscribe((resp)=>{
         this.updateChips(resp);
       })
       //this.externalEvents.splice(externalIndex, 1);
-      
       
       this.events.push(event);
     }
@@ -239,29 +244,31 @@ export class DemoAppComponent implements OnInit, OnDestroy{
   updateChips(resp: any){
     if (resp && resp!=="access token expired"){
       this.availableChips = [];
+      this.externalEvents = [];
       const respObj = resp as any;
       const paymnts = respObj.vipps_sub_paymnts;
       console.log("DA updateChips paymnts",paymnts)
       for (let paymnt of paymnts ){
         if(!paymnt.is_consumed){
-          console.log("HC paymnt amount slice : ",paymnt.amount.slice(0,-2));
-          const chip : ChipItem= {               // phantom unused chip array
-          name : paymnt.amount.slice(0,-2),
-          reference : paymnt.reference,
-          color : "warn",
-          start : new Date(),
-          dragable: true
-        }
-        this.availableChips.push(chip);
-        console.log("DA updateChipps paymnt.reference",paymnt.reference);
-        let extEvent : CalendarEvent = {
-          title : chip.name,
-          paymntref : paymnt.reference,
-          color : {primary: '#ad2121',secondary: '#FAE3E3' },
-          start : chip.start,
-          draggable : true
-        }
-        this.externalEvents.push(extEvent);
+            console.log("HC paymnt amount slice : ",paymnt.amount.slice(0,-2));
+            const chip : ChipItem= {               // phantom unused chip array
+            bookname : paymnt.bookname,  
+            amount : paymnt.amount.slice(0,-2),
+            reference : paymnt.reference,
+            color : "warn",
+            start : new Date(),
+            dragable: true
+          }
+          this.availableChips.push(chip);
+          console.log("DA updateChipps paymnt.reference",paymnt.reference);
+          let extEvent : CalendarEvent = {
+            title : chip.amount + " " + paymnt.bookname,
+            paymntref : paymnt.reference,
+            color : {primary: '#ad2121',secondary: '#FAE3E3' },
+            start : chip.start,
+            draggable : true
+          }
+          this.externalEvents.push(extEvent);
         }
         
       }

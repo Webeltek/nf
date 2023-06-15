@@ -179,12 +179,13 @@ export class AuthService {
   }
 
   dbSaveVippsPayment( reference : string,user_id: string,vipps_sub : string,
-      amount : string): Observable<any> {
+      amount : string, bookname : string): Observable<any> {
     return this.http.post(baseurl+MAIN_API + 'db_save_payment', {
       reference : reference,
       user_id : user_id,
       vipps_sub : vipps_sub,
-      amount : amount
+      amount : amount,
+      bookname : bookname
     }, { headers : this.httpHeaders, observe : 'body', responseType : 'json'} );
   }
 
