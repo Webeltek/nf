@@ -1,0 +1,30 @@
+<h1 mat-dialog-title>Edit bookings 
+</h1>
+<div mat-dialog-content>
+  <form [formGroup]="booksFormGroup">
+    <div formArrayName="booksArr" *ngFor="let currBook of booksArr.controls; index as idx;last as isLast">
+        <mat-form-field appearance="fill">
+          <mat-label>{{currBook.value}}</mat-label>
+          <input matInput placeholder="Placeholder" #bookName 
+            (keyup)="updateInput(bookName.value,idx)">
+          <mat-icon matSuffix>meeting_room</mat-icon>
+          <mat-hint class="hint-warn-color"  
+            *ngIf="currBook.invalid">{{objErrValStr}}</mat-hint>
+        </mat-form-field>
+        <button mat-icon-button color="warn" (click)="markedBooksToDel[idx].markedToDel=true">
+          <mat-icon>remove_circle</mat-icon>
+        </button>
+        <button mat-raised-button color="warn" *ngIf="markedBooksToDel[idx]?.markedToDel" 
+          (click)="removeBook(idx)">Delete booking names?</button>
+        <button mat-icon-button color="primary" *ngIf="isLast" (click)="addBook(bookName.value)">
+          <mat-icon>add_circle</mat-icon>
+        </button>    
+    </div>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button 
+  color="primary" 
+  type="submit"
+  (click)="onSubmit()">Save bookings</button>
+</div>  

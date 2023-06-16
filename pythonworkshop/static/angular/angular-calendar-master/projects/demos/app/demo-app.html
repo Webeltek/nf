@@ -57,7 +57,7 @@
                     <mat-chip-option
                     *ngFor="let event of externalEvents"
                     mwlDraggable 
-                    [style.color]="event.color.primary"
+                    [style.color]="'warn'"
                     [dropData]="{event: event}"
                     [touchStartLongPress]="{ delay: 300, delta: 30 }"
                     dragActiveClass="drag-active"

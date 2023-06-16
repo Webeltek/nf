@@ -87,12 +87,12 @@ export class DemoAppComponent implements OnInit, OnDestroy{
   users : PythUser[] = [];
   loggedInUserId : number;
   toBeDeletedPythEvt : PythEvent;
-  availableChips: ChipItem[] = [
-    /* {name: 'none', color: undefined},
+  /*availableChips: ChipItem[] = [
+    {name: 'none', color: undefined},
     {name: 'Primary', color: 'primary'},
     {name: 'Accent', color: 'accent'},
-    {name: 'Warn', color: 'warn'}, */
-  ];
+    {name: 'Warn', color: 'warn'}, 
+  ]; */
   externalEvents : CalendarEvent[] = [];
 
   @Input() rooms : string[] = [];
@@ -251,7 +251,6 @@ export class DemoAppComponent implements OnInit, OnDestroy{
 
   updateChips(resp: any){
     if (resp && resp!=="access token expired"){
-      this.availableChips = [];
       this.externalEvents = [];
       const respObj = resp as any;
       const paymnts = respObj.vipps_sub_paymnts;
@@ -259,30 +258,20 @@ export class DemoAppComponent implements OnInit, OnDestroy{
       for (let paymnt of paymnts ){
         if(!paymnt.is_consumed){
             console.log("HC paymnt amount slice : ",paymnt.amount.slice(0,-2));
-            const chip : ChipItem= {               // phantom unused chip array
-            bookname : paymnt.bookname,  
-            amount : paymnt.amount.slice(0,-2),
-            reference : paymnt.reference,
-            color : "warn",
-            start : new Date(),
-            dragable: true
-          }
-          this.availableChips.push(chip);
           console.log("DA updateChipps paymnt.reference",paymnt.reference);
           let extEvent : CalendarEvent = {
-            title : chip.amount + " " + paymnt.bookname,
+            title : paymnt.amount.slice(0,-2) + "kr " + paymnt.bookname,
             paymntref : paymnt.reference,
             color : {primary: '#ad2121',secondary: '#FAE3E3' },
-            start : chip.start,
+            start : new Date(),
             draggable : true
           }
           this.externalEvents.push(extEvent);
         }
         
       }
-      this.availableChips = [...this.availableChips];
       this.externalEvents = [...this.externalEvents];
-      console.log("DA updateChips extEvents",this.externalEvents);
+      //console.log("DA updateChips extEvents",this.externalEvents);
     }
   }
 
@@ -404,16 +393,18 @@ export class DemoAppComponent implements OnInit, OnDestroy{
 
   getEventTitle(pythEv : PythEvent){
       let eventUser =  this.users.filter((user)=> {
-        console.log("DA getEventTitle() pythEv.bookname",pythEv.bookname)
+        console.log("DA getEventTitle() pythEv.bookname , user.id ,pythEv.user_id",pythEv.bookname,
+        user.id , pythEv.user_id);
         return user.id == pythEv.user_id
       });
       
       let ouname = pythEv.ou==="init ou" ? "" : pythEv.ou;
       let userEmail = typeof eventUser[0]=='undefined' ? '' : eventUser[0].user_email;
+      console.log("DA userEmail",userEmail);
       if ( this.tokenStorage.getUser().is_admin || this.tokenStorage.getUser().id==pythEv.user_id){
-        return `${pythEv.bookname}</br>${userEmail}`;
+        return `${pythEv.bookname}<br>${userEmail}`;
       } else {
-        return `${pythEv.bookname}</br>${ouname}`;
+        return `${pythEv.bookname}<br>${ouname}`;
       }
     
   }

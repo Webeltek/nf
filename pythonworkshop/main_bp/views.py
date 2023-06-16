@@ -222,7 +222,7 @@ def updatebooks():
 class eventd:
     id: int
     uid: str
-    userId : int
+    user_id : int
     bookname : str
     roomname : str
     ou : str
