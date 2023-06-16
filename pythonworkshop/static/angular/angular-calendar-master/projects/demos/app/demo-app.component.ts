@@ -194,7 +194,7 @@ export class DemoAppComponent implements OnInit, OnDestroy{
     const externalIndex = this.externalEvents.indexOf(event);
     console.log("DAC eventTimesChanged params externalindex,event,newStart,newEnd",
     externalIndex,event,newStart,newEnd)
-    if (externalIndex > -1) {
+    if (externalIndex > -1 && event.paymntref) {
       this.authService.dbUpdateVippsPayment(
         this.tokenStorage.getUser().id,
         this.externalEvents[externalIndex].paymntref,
@@ -205,6 +205,14 @@ export class DemoAppComponent implements OnInit, OnDestroy{
       //this.externalEvents.splice(externalIndex, 1);
       
       this.events.push(event);
+    } else if (event.paymntref){
+      this.authService.dbUpdateVippsPayment(
+        this.tokenStorage.getUser().id,
+        event.paymntref,
+        false
+      ).subscribe((resp)=>{
+        this.updateChips(resp);
+      })
     }
     event.start = newStart;
     if (newEnd) {
@@ -217,7 +225,7 @@ export class DemoAppComponent implements OnInit, OnDestroy{
       this.viewDate = newStart;
       this.activeDayIsOpen = true;
     }
-    console.log("DAC event changed",event);
+    //console.log("DAC event changed",event);
 
     this.events = this.events.map((iEvent) => {
       if (iEvent === event) {
@@ -396,16 +404,16 @@ export class DemoAppComponent implements OnInit, OnDestroy{
 
   getEventTitle(pythEv : PythEvent){
       let eventUser =  this.users.filter((user)=> {
-        //console.log("getEventTitle() user.id == pythEv.userId",user.id == pythEv.userId)
+        console.log("DA getEventTitle() pythEv.bookname",pythEv.bookname)
         return user.id == pythEv.user_id
       });
       
       let ouname = pythEv.ou==="init ou" ? "" : pythEv.ou;
       let userEmail = typeof eventUser[0]=='undefined' ? '' : eventUser[0].user_email;
       if ( this.tokenStorage.getUser().is_admin || this.tokenStorage.getUser().id==pythEv.user_id){
-        return `${ouname}</br>${userEmail}`;
+        return `${pythEv.bookname}</br>${userEmail}`;
       } else {
-        return `${ouname}`;
+        return `${pythEv.bookname}</br>${ouname}`;
       }
     
   }
