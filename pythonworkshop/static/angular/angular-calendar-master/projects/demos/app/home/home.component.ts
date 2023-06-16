@@ -378,12 +378,12 @@ export class EditEventsDialog {
               user_email : this.users.filter((user)=>objEvt.user_id==user.id)[0]?.user_email,
               room : objEvt.roomname,
               book : objEvt.bookname,
-              start : new Date(parseInt(objEvt.start,10)),
-              end : new Date(parseInt(objEvt.end,10)),
+              start : new Date(objEvt.startmills),
+              end : new Date(objEvt.endmills),
               title : String(objEvt.title).substring(0,3),
             }
           this.tableRows.push(tableRow);
-          console.log("HomeComp tableRow.user_email ",this.users.filter((user)=>objEvt.userId==user.id)[0].user_email);
+          console.log("HomeComp tableRow.user_email ",this.users.filter((user)=>objEvt.user_id==user.id)[0].user_email);
           let calEvent : CalendarEvent=  {
             title : objEvt.title,
             userId : objEvt.userId,

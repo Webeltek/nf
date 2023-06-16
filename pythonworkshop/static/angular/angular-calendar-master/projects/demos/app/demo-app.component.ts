@@ -254,11 +254,11 @@ export class DemoAppComponent implements OnInit, OnDestroy{
       this.externalEvents = [];
       const respObj = resp as any;
       const paymnts = respObj.vipps_sub_paymnts;
-      console.log("DA updateChips paymnts",paymnts)
+      //console.log("DA updateChips paymnts",paymnts)
       for (let paymnt of paymnts ){
         if(!paymnt.is_consumed){
             console.log("HC paymnt amount slice : ",paymnt.amount.slice(0,-2));
-          console.log("DA updateChipps paymnt.reference",paymnt.reference);
+          //console.log("DA updateChipps paymnt.reference",paymnt.reference);
           let extEvent : CalendarEvent = {
             title : paymnt.amount.slice(0,-2) + "kr " + paymnt.bookname,
             paymntref : paymnt.reference,
@@ -393,14 +393,13 @@ export class DemoAppComponent implements OnInit, OnDestroy{
 
   getEventTitle(pythEv : PythEvent){
       let eventUser =  this.users.filter((user)=> {
-        console.log("DA getEventTitle() pythEv.bookname , user.id ,pythEv.user_id",pythEv.bookname,
-        user.id , pythEv.user_id);
+        //console.log("DA getEventTitle() pythEv.bookname , user.id ,pythEv.user_id",pythEv.bookname,user.id , pythEv.user_id);
         return user.id == pythEv.user_id
       });
       
       let ouname = pythEv.ou==="init ou" ? "" : pythEv.ou;
       let userEmail = typeof eventUser[0]=='undefined' ? '' : eventUser[0].user_email;
-      console.log("DA userEmail",userEmail);
+      //console.log("DA userEmail",userEmail);
       if ( this.tokenStorage.getUser().is_admin || this.tokenStorage.getUser().id==pythEv.user_id){
         return `${pythEv.bookname}<br>${userEmail}`;
       } else {
