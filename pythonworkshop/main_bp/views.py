@@ -314,11 +314,11 @@ def update():
 def ajax_delete():
     if request.method == 'POST':
         req_json = request.get_json()
-        ids = req_json['numList']
-        if ids is not None:
-                for todelid in ids:
-                    print(f'To delete id{str(id)}')
-                    db.session.execute(db.delete(Event).where(Event.id == todelid))
+        uids = req_json['uidList']
+        if uids is not None:
+                for todeluid in uids:
+                    #print(f'To delete uid{str(todeluid)}')
+                    db.session.execute(db.delete(Event).where(Event.uid == todeluid))
                     db.session.commit()
         msg = 'Record/s deleted successfully' 
     return jsonify(msg)

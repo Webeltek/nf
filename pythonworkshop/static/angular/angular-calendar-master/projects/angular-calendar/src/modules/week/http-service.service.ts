@@ -201,8 +201,8 @@ export class HttpEventService{
         )
     }
 
-    deleteEvent(ids : number[] ){
-        this.http.post(this.baseurl+this.deleteUrl, {numList: ids},
+    deleteEvent(uids : string[]){
+        this.http.post(this.baseurl+this.deleteUrl, {uidList: uids},
             { headers : this.httpHeaders, observe: 'body', responseType : 'json'} ) 
             .subscribe({
                 next:(response) =>{

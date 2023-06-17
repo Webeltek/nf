@@ -123,7 +123,7 @@ export class HomeBBComponent implements OnInit, OnDestroy {
     this.tokenStorage.signOut();
   }
 
-  delEvents(eventIds : number[]){
+  delEvents(eventIds : string[]){
     this.httpService.deleteEvent(eventIds);
   }
 

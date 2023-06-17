@@ -181,7 +181,11 @@ export class DemoAppComponent implements OnInit, OnDestroy{
 
   externalDrop(event: CalendarEvent) {
     if (this.externalEvents.indexOf(event) === -1) {
-      this.events = this.events.filter((iEvent) => iEvent !== event);
+      console.log("DA extDrop event.id",event.id)
+      //this.events = this.events.filter((iEvent) => iEvent !== event);
+      const extDropEventUid : string =  event.id as string;
+      console.log("DA extDrop extDropEventUid",extDropEventUid)
+      this.deleteEvent([extDropEventUid])
       this.externalEvents.push(event);
     }
   }
@@ -218,8 +222,8 @@ export class DemoAppComponent implements OnInit, OnDestroy{
     if (newEnd) {
       event.end = newEnd;
     } else {
-      const newEventObj = new Date(event.start);
-      event.end = new Date(newEventObj.setHours(event.start.getHours()+1))
+      const newDateStartObj = new Date(event.start);
+      event.end = new Date(newDateStartObj.setHours(event.start.getHours()+1))
     }
     if (this.view === 'month') {
       this.viewDate = newStart;
@@ -232,7 +236,7 @@ export class DemoAppComponent implements OnInit, OnDestroy{
         this.httpService.generatePythEvent({
         user_id :this.tokenStorage.getUser().id,
         bookname : "Drop-in",
-        roomname : "initroom",
+        roomname : "",
         startmills : event.start.getTime(),
         endmills: event.end.getTime(),
         ou : this.tokenStorage.getUser().ou,
@@ -453,7 +457,7 @@ export class DemoAppComponent implements OnInit, OnDestroy{
   })
   }
 
-  deleteEvent(ids : number[]){
+  deleteEvent(ids : string[]){
     this.httpService.deleteEvent(ids);
   }
 

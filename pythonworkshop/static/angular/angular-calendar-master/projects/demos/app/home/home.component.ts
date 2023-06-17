@@ -136,8 +136,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.tokenStorage.signOut();
   }
 
-  delEvents(eventIds : number[]){
-    this.httpService.deleteEvent(eventIds);
+  delEvents(eventUids : string[]){
+    this.httpService.deleteEvent(eventUids);
   }
 
   editEvents(){
@@ -260,7 +260,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 }
 
 export interface TableRow {
-  id : number;
+  uid : number | string;
   user_email: string;
   room: string;
   book: string;
@@ -334,7 +334,7 @@ export class EditEventsDialog {
     if (!row) {
       return `${this.isAllSelected() ? 'deselect' : 'select'} all`;
     }
-    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.id + 1}`;
+    return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row ${row.uid}`;
   }
   
 
@@ -374,7 +374,7 @@ export class EditEventsDialog {
         let respObj  =  response as any;
         for (let objEvt of  respObj.events){
           let tableRow : TableRow=  {
-              id : objEvt.id,
+              uid : objEvt.uid,
               user_email : this.users.filter((user)=>objEvt.user_id==user.id)[0]?.user_email,
               room : objEvt.roomname,
               book : objEvt.bookname,
@@ -463,7 +463,7 @@ export class EditEventsDialog {
     //console.log(" Close dial selection.selected",this.selection.selected);
     //console.log("Close dial selection.selected.map",this.selection.selected.map(row=>row.id));
     this.dialogRef.close({
-      selectedRowsIds: this.selection.selected.map(row=>row.id),
+      selectedRowsIds: this.selection.selected.map(row=>row.uid),
       } )
   }
 
