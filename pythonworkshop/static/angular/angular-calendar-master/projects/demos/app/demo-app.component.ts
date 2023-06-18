@@ -86,7 +86,7 @@ export class DemoAppComponent implements OnInit, OnDestroy{
   events : CalendarEvent[] = [];
   users : PythUser[] = [];
   loggedInUserId : number;
-  toBeDeletedPythEvt : PythEvent;
+  toBeDeletedEvt : CalendarEvent;
   /*availableChips: ChipItem[] = [
     {name: 'none', color: undefined},
     {name: 'Primary', color: 'primary'},
@@ -181,12 +181,19 @@ export class DemoAppComponent implements OnInit, OnDestroy{
 
   externalDrop(event: CalendarEvent) {
     if (this.externalEvents.indexOf(event) === -1) {
-      console.log("DA extDrop event.id",event.id)
       //this.events = this.events.filter((iEvent) => iEvent !== event);
       const extDropEventUid : string =  event.id as string;
       console.log("DA extDrop extDropEventUid",extDropEventUid)
       this.deleteEvent([extDropEventUid])
-      this.externalEvents.push(event);
+      if (event.paymntref){
+        this.authService.dbUpdateVippsPayment(
+          this.tokenStorage.getUser().id,
+          event.paymntref,
+          false
+        ).subscribe((resp)=>{
+          this.updateChips(resp);
+        })
+      }
     }
   }
 
@@ -424,6 +431,9 @@ export class DemoAppComponent implements OnInit, OnDestroy{
           let calEvent : CalendarEvent=  {
               id : pythEvt.uid,
               userId : pythEvt.userId,
+              paymntref : pythEvt.paymntref,
+              bookname : pythEvt.bookname,
+              roomname : pythEvt.roomname,
               start : new Date(pythEvt.startmills),
               end : new Date(pythEvt.endmills),
               title : this.getEventTitle(pythEvt),
@@ -463,22 +473,17 @@ export class DemoAppComponent implements OnInit, OnDestroy{
 
   openDialog(clickedWeekViewEvent : {
     event: CalendarEvent;
-    sourceEvent: MouseEvent | KeyboardEvent;
-  }) {
+    sourceEvent: MouseEvent | KeyboardEvent;}) {
     console.log("demo-app openDialog userId id",clickedWeekViewEvent.event.userId,this.tokenStorage.getUser().id );
     if (clickedWeekViewEvent.event.userId===this.tokenStorage.getUser().id 
           || (this.tokenStorage.getUser().ou!=="init ou" && this.tokenStorage.getUser().ou===clickedWeekViewEvent.event.ou)
           || this.tokenStorage.getUser().is_admin) {
-      var hourContainedEvTitle = "";
-      
-      this.httpService.getEvents().subscribe((response) => {
-        if(response.hasOwnProperty('events')) {
-          let responseObj = response as any;
+          var hourContainedEvTitle = "";
           let clickedPythEvtStart = clickedWeekViewEvent.event.start.getTime();
           //console.log("clickedWeekViewEvent.event.start",clickedWeekViewEvent.event.start)
-          for (let pythEvt of responseObj.events) {
-            if ( pythEvt.startmills == clickedPythEvtStart ){
-              this.toBeDeletedPythEvt = pythEvt;
+          for (let evt of this.events) {
+            if ( evt.start.getTime() == clickedPythEvtStart ){
+              this.toBeDeletedEvt = evt;
               //console.log("this.toBeDeletedPythEvt",this.toBeDeletedPythEvt)
             }
             
@@ -487,14 +492,14 @@ export class DemoAppComponent implements OnInit, OnDestroy{
           const dialogRef = this.dialog.open(EventDialog, {
             data: {
               toBeDeleted : true,
-              toBeDeletedPythEvt : this.toBeDeletedPythEvt
+              toBeDeletedPythEvt : this.toBeDeletedEvt
             },
           });
           dialogRef.afterClosed().subscribe({
             next: (result) => {
               if (typeof result !== 'undefined') {
                 //console.log("result object",result)
-                this.deleteEvent([result.toBeDeletedPythEvt.id]);
+                this.deleteEvent([result.toBeDeletedEvt.id]);  // event.id is pythEvt.uid
               }
             },
             error: (error) => {
@@ -503,9 +508,6 @@ export class DemoAppComponent implements OnInit, OnDestroy{
           }
           );
         }
-        
-      });
-    }
   }
 
   activeDayIsOpen: boolean = false;

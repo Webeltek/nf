@@ -8,8 +8,8 @@
   <h1 mat-dialog-title>{{ 'EDdelTtl' | translate}}
   </h1>
   <mat-dialog-content class="mat-typography">
-    <div>{{ data.toBeDeletedPythEvt.bookname}}</div>
-    <div>Den {{ data.toBeDeletedPythEvt.startmills | date:'dd/MM/yyyy'}}</div>
+    <div>{{ data.toBeDeletedEvt.bookname}}</div>
+    <div>Den {{ data.toBeDeletedEvt.start.getTime() | date:'dd/MM/yyyy'}}</div>
     <div mat-dialog-actions>
       <button mat-button 
       mat-dialog-close

@@ -204,6 +204,7 @@ class Event(db.Model):
   startmills = db.Column(db.Integer)
   endmills = db.Column(db.Integer)
   color = db.Column(db.String)
+  paymntref = db.Column(db.String)
     
 class Book(db.Model):
   __tablename__ = "nf_book"

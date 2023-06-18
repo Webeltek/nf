@@ -114,6 +114,8 @@ export class CalendarWeekViewHourSegmentComponent {
     private httpService: HttpEventService,
     private tokenStorage: TokenStorageService) {}
 
+  @Input() events: CalendarEvent[] = [];  
+
   @Input() loggedInUserId : number;
 
   @Input() segment: WeekViewHourSegment;
@@ -165,8 +167,6 @@ export class CalendarWeekViewHourSegmentComponent {
     //console.log("HourSegm user_ou: ",this.user_ou)
   }
 
-  private events : CalendarEvent[] = [];
-
   isClickedOverEvent(){
     let clickedSegmDate = this.segment.date;
     return this.events.length > 0 && this.events.some( (dbEvent : CalendarEvent) => {
@@ -183,27 +183,6 @@ export class CalendarWeekViewHourSegmentComponent {
   openDialog() {
     var hourContainedEvTitle = "";
     //console.log("segment Date in openDialog(): ",this.segment.date ) ;
-    this.httpService.getEvents().subscribe((response) => {
-      if (response.hasOwnProperty('events')){
-        this.events = [];
-      let responseObj = response as any;
-      try {
-        for (let pythEvt of responseObj.events) {
-          let calEvent: CalendarEvent = {
-            id: pythEvt.uid,
-            userId: pythEvt.user_id,
-            start: new Date(parseInt(pythEvt.start, 10)),
-            end: new Date(parseInt(pythEvt.end, 10)),
-            title: pythEvt.title,
-            color: getColors(pythEvt.userId,this.loggedInUserId)
-          }
-          this.events.push(calEvent);
-        }
-      } catch (e){
-        // responseObj has no events and is not iterable
-      }
-      }
-    
 
       if (!this.isClickedOverEvent()) {
         //console.log("calWVhourSegm isClick",this.isClickedOverEvent());
@@ -255,7 +234,6 @@ export class CalendarWeekViewHourSegmentComponent {
           
         );
       }
-    });
   }
 
 }
@@ -270,7 +248,7 @@ export class EventDialog {
      @Inject(MAT_DIALOG_DATA) public data: {
       clickedDbEvt : CalendarEvent, 
       toBeDeleted : boolean,
-      toBeDeletedPythEvt : PythEvent,
+      toBeDeletedEvt : CalendarEvent,
       date:Date,
       romIndex:number,
       hourContainedBookTitle: string,
@@ -300,7 +278,7 @@ export class EventDialog {
       bookname : this.valgtBookCtrl.value,
       roomname : this.roomname,
       toBeDeleted : this.data.toBeDeleted, 
-      toBeDeletedPythEvt : this.data.toBeDeletedPythEvt
+      toBeDeletedEvt : this.data.toBeDeletedEvt
       } )
   }
   
