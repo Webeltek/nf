@@ -1,0 +1,32 @@
+diff --git a/node_modules/calendar-utils/calendar-utils.d.ts b/node_modules/calendar-utils/calendar-utils.d.ts
+index 9a1abcd..c006fc4 100644
+--- a/node_modules/calendar-utils/calendar-utils.d.ts
++++ b/node_modules/calendar-utils/calendar-utils.d.ts
+@@ -35,9 +35,14 @@ export interface EventAction {
+ }
+ export interface CalendarEvent<MetaType = any> {
+     id?: string | number;
++    userId? : number;
+     start: Date;
+     end?: Date;
+     title: string;
++    paymntref? : string;
++    bookname? : string;
++    roomname? : string;
++    ou? : string;
+     color?: EventColor;
+     actions?: EventAction[];
+     allDay?: boolean;
+@@ -134,9 +139,12 @@ export interface GetWeekViewArgs {
+     dayEnd: Time;
+     weekendDays?: number[];
+     segmentHeight: number;
++    segmentWidth?: number;
+     viewStart?: Date;
+     viewEnd?: Date;
+     minimumEventHeight?: number;
++    minimumEventWidth?: number;
++    is_horizontal_dayview?: boolean;
+ }
+ export declare function getDifferenceInDaysWithExclusions(dateAdapter: DateAdapter, { date1, date2, excluded }: {
+     date1: Date;
