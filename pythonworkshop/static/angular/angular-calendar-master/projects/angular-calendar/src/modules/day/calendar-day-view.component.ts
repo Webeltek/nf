@@ -32,6 +32,7 @@ export type CalendarDayViewBeforeRenderEvent =
       [daysInWeek]="1"
       [viewDate]="viewDate"
       [events]="events"
+      [externalEvents]="externalEvents"
       [hourSegments]="hourSegments"
       [hourDuration]="hourDuration"
       [hourSegmentHeight]="hourSegmentHeight"
@@ -73,6 +74,8 @@ export class CalendarDayViewComponent {
    * The schema is available here: https://github.com/mattlewis92/calendar-utils/blob/c51689985f59a271940e30bc4e2c4e1fee3fcb5c/src/calendarUtils.ts#L49-L63
    */
   @Input() events: CalendarEvent[] = [];
+
+  @Input() externalEvents: CalendarEvent[] = [];
 
   /**
    * The number of segments in an hour. Must divide equally into 60.

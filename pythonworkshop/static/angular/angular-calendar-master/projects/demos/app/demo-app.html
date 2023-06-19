@@ -74,6 +74,7 @@
                 [viewDate]="viewDate"
                 [weekStartsOn]=1
                 [events]="events"
+                [externalEvents]="externalEvents"
                 [refresh]="refresh"
                 [activeDayIsOpen]="activeDayIsOpen"
                 (dayClicked)="dayClicked($event.day)"
@@ -104,6 +105,7 @@
                     [weekStartsOn]=1
                     [loggedInUserId]="loggedInUserId" 
                     [events]="events"
+                    [externalEvents]="externalEvents"
                     (eventClicked)="openDialog($event)"
                     [refresh]="refresh"
                     [snapDraggedEvents]="false"
@@ -116,6 +118,7 @@
                 *ngSwitchCase="CalendarView.Day"
                 [viewDate]="viewDate"
                 [events]="events"
+                [externalEvents]="externalEvents"
                 (eventClicked)="openDialog($event)"
                 [refresh]="refresh"
                 [snapDraggedEvents]="false"

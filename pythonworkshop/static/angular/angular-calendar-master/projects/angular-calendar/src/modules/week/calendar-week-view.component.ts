@@ -138,6 +138,8 @@ export class CalendarWeekViewComponent
    */
   @Input() events: CalendarEvent[] = [];
 
+  @Input() externalEvents: CalendarEvent[] = [];
+
   @Input() loggedInUserId : number;
 
   /**

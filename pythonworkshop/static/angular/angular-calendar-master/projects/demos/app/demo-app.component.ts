@@ -170,6 +170,7 @@ export class DemoAppComponent implements OnInit, OnDestroy{
     const genNewEndDateMills = event.start.setHours(event.start.getHours()+1)
     this.httpService.generatePythEvent({
         user_id :this.tokenStorage.getUser().id,
+        paymntref: "undef",
         bookname : "Drop-in",
         roomname : "initroom",
         startmills : event.start.getTime(),
@@ -242,6 +243,7 @@ export class DemoAppComponent implements OnInit, OnDestroy{
       if (iEvent === event) {
         this.httpService.generatePythEvent({
         user_id :this.tokenStorage.getUser().id,
+        paymntref : event.paymntref,
         bookname : "Drop-in",
         roomname : "",
         startmills : event.start.getTime(),
@@ -421,7 +423,7 @@ export class DemoAppComponent implements OnInit, OnDestroy{
 
   getDbEvents(){
     this.httpService.getEvents().subscribe((response ) => {
-      //console.log("getDbEvents() Response: ",response);
+      console.log("getDbEvents() Response: ",response);
       //console.log("getDbEvents() Response type: "+ typeof response);
       if(response.hasOwnProperty('events')) {
         this.events = [];
@@ -430,7 +432,7 @@ export class DemoAppComponent implements OnInit, OnDestroy{
         for (let pythEvt of  respObj.events){
           let calEvent : CalendarEvent=  {
               id : pythEvt.uid,
-              userId : pythEvt.userId,
+              userId : pythEvt.user_id,
               paymntref : pythEvt.paymntref,
               bookname : pythEvt.bookname,
               roomname : pythEvt.roomname,
@@ -449,7 +451,7 @@ export class DemoAppComponent implements OnInit, OnDestroy{
           
         }
         this.events = [...this.events];
-        //console.log("getDbEvents() Follows events : ", this.events);  
+        console.log("getDbEvents() Follows events : ", this.events);  
         //console.log(this.events);
       } else {
         //console.log("getDbEvents() string response msg:",response);
@@ -474,7 +476,7 @@ export class DemoAppComponent implements OnInit, OnDestroy{
   openDialog(clickedWeekViewEvent : {
     event: CalendarEvent;
     sourceEvent: MouseEvent | KeyboardEvent;}) {
-    console.log("demo-app openDialog userId id",clickedWeekViewEvent.event.userId,this.tokenStorage.getUser().id );
+    console.log("demo-app openDialog event user.id",clickedWeekViewEvent.event,this.tokenStorage.getUser().id );
     if (clickedWeekViewEvent.event.userId===this.tokenStorage.getUser().id 
           || (this.tokenStorage.getUser().ou!=="init ou" && this.tokenStorage.getUser().ou===clickedWeekViewEvent.event.ou)
           || this.tokenStorage.getUser().is_admin) {

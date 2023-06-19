@@ -151,6 +151,7 @@ export interface CalendarMonthViewEventTimesChangedEvent<
             [weekStartsOn]=1
             [loggedInUserId]="loggedInUserId" 
             [events]="events"
+            [externalEvents]="externalEvents"
             (eventClicked)="eventClicked.emit(
               {
                 event: $event.event,
@@ -181,6 +182,8 @@ export class CalendarMonthViewComponent
    * The schema is available here: https://github.com/mattlewis92/calendar-utils/blob/c51689985f59a271940e30bc4e2c4e1fee3fcb5c/src/calendarUtils.ts#L49-L63
    */
   @Input() events: CalendarEvent[] = [];
+
+  @Input() externalEvents: CalendarEvent[] = [];
 
   /**
    * An array of day indexes (0 = sunday, 1 = monday etc) that will be hidden on the view

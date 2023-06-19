@@ -22,6 +22,7 @@ export interface PythEvent {
   id? : number;
   uid : string;
   user_id? : number;
+  paymntref : string;
   bookname : string;
   roomname? : string;
   ou? : string;
@@ -114,7 +115,8 @@ export class CalendarWeekViewHourSegmentComponent {
     private httpService: HttpEventService,
     private tokenStorage: TokenStorageService) {}
 
-  @Input() events: CalendarEvent[] = [];  
+  @Input() events: CalendarEvent[] = [];
+  @Input() externalEvents: CalendarEvent[] = [];  
 
   @Input() loggedInUserId : number;
 
@@ -216,6 +218,7 @@ export class CalendarWeekViewHourSegmentComponent {
               const endmills = this.segment.date.setHours(result.endTime.hour);
               this.httpService.generatePythEvent({
                   user_id :this.loggedInUserId,
+                  paymntref : this.externalEvents.at(-1).paymntref,
                   bookname :result.bookname,
                   roomname : result.roomname,
                   ou : this.user_ou,

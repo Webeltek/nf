@@ -220,6 +220,7 @@ export class HttpEventService{
 
     generatePythEvent( genPythEvtParams : 
         {   user_id: number,
+            paymntref : string,
             bookname: string,
             roomname: string,
             startmills : number, // object type converted to any
@@ -232,6 +233,7 @@ export class HttpEventService{
         const pythEvt : PythEvent={
             uid: uniqueId,
             user_id: genPythEvtParams.user_id,
+            paymntref: genPythEvtParams.paymntref,
             bookname: genPythEvtParams.bookname,
             roomname: genPythEvtParams.roomname,
             ou : genPythEvtParams.ou,

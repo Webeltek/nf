@@ -229,6 +229,7 @@ class eventd:
     startmills : int
     endmills : int
     color : str
+    paymntref : str
 
 @main_bp.route("/api/services/events", methods= ['GET'])
 @access_required
@@ -239,7 +240,7 @@ def index_events():
             event_list.append(jsons.dump(eventd(
                  event.id,event.uid,event.user_id,
                  event.bookname,event.roomname,event.ou,event.startmills,
-                 event.endmills,event.color))) 
+                 event.endmills,event.color,event.paymntref))) 
         return jsonify({'events':event_list})
 
 @dataclass
@@ -279,12 +280,14 @@ def insert():
         bookname = req_json['bookname']
         roomname = req_json['roomname']
         user_id = req_json['user_id']
+        paymntref = req_json['paymntref']
         #print('event userId foregnkey is : '+ str(user_id))
         ou = req_json['ou']
         startmills = req_json['startmills']
         endmills = req_json['endmills']
         color = req_json['color']
-        db.session.add(Event(uid=uid,user_id=user_id, 
+        db.session.add(Event(uid=uid,user_id=user_id,
+                             paymntref=paymntref, 
                              bookname=bookname,
                              roomname=roomname,ou=ou,
                              startmills=startmills,endmills=endmills, color=color))
