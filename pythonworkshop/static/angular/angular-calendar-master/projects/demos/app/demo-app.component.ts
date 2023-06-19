@@ -170,6 +170,7 @@ export class DemoAppComponent implements OnInit, OnDestroy{
     const genNewEndDateMills = event.start.setHours(event.start.getHours()+1)
     this.httpService.generatePythEvent({
         user_id :this.tokenStorage.getUser().id,
+        title: "undefined",
         paymntref: "undef",
         bookname : "Drop-in",
         roomname : "initroom",
@@ -243,6 +244,7 @@ export class DemoAppComponent implements OnInit, OnDestroy{
       if (iEvent === event) {
         this.httpService.generatePythEvent({
         user_id :this.tokenStorage.getUser().id,
+        title: this.tokenStorage.getEventTitle("Drop-in",event.userId,this.users),
         paymntref : event.paymntref,
         bookname : "Drop-in",
         roomname : "",
@@ -273,6 +275,7 @@ export class DemoAppComponent implements OnInit, OnDestroy{
             console.log("HC paymnt amount slice : ",paymnt.amount.slice(0,-2));
           //console.log("DA updateChipps paymnt.reference",paymnt.reference);
           let extEvent : CalendarEvent = {
+            userId: this.tokenStorage.getUser().id,
             title : paymnt.amount.slice(0,-2) + "kr " + paymnt.bookname,
             paymntref : paymnt.reference,
             color : {primary: '#ad2121',secondary: '#FAE3E3' },
@@ -404,23 +407,6 @@ export class DemoAppComponent implements OnInit, OnDestroy{
       })
   }
 
-  getEventTitle(pythEv : PythEvent){
-      let eventUser =  this.users.filter((user)=> {
-        //console.log("DA getEventTitle() pythEv.bookname , user.id ,pythEv.user_id",pythEv.bookname,user.id , pythEv.user_id);
-        return user.id == pythEv.user_id
-      });
-      
-      let ouname = pythEv.ou==="init ou" ? "" : pythEv.ou;
-      let userEmail = typeof eventUser[0]=='undefined' ? '' : eventUser[0].user_email;
-      //console.log("DA userEmail",userEmail);
-      if ( this.tokenStorage.getUser().is_admin || this.tokenStorage.getUser().id==pythEv.user_id){
-        return `${pythEv.bookname}<br>${userEmail}`;
-      } else {
-        return `${pythEv.bookname}<br>${ouname}`;
-      }
-    
-  }
-
   getDbEvents(){
     this.httpService.getEvents().subscribe((response ) => {
       console.log("getDbEvents() Response: ",response);
@@ -438,7 +424,7 @@ export class DemoAppComponent implements OnInit, OnDestroy{
               roomname : pythEvt.roomname,
               start : new Date(pythEvt.startmills),
               end : new Date(pythEvt.endmills),
-              title : this.getEventTitle(pythEvt),
+              title : pythEvt.title,
               ou: pythEvt.ou,
               color : getColors(pythEvt.userId,this.tokenStorage.getUser().id),
               draggable : true,

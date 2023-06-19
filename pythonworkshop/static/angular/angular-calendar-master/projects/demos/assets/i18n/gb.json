@@ -27,6 +27,7 @@
     "LCsignedOut": "Signed out!",
     "LCwrongUserPass": "Wrong username or password!",
     "LCloginLDAP": "Login LDAP",
+    "LCcreateAccount" : "Create account",
 
     "CCemailConfirmed": "Your account confirmation has successfully been taken into account. You can now login using the provided credentials.",
     "CCemailNotConfirmed": "Email is not confirmed!",

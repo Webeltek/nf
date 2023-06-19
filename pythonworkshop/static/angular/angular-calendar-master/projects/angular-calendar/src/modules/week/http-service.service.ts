@@ -15,6 +15,7 @@ export class HttpEventService{
     private servicesUrl = "/api/services/events";
     private usersUrl = "/api/services/users"
     private insertUrl = "/api/services/insert";
+    private updateUrl = "/api/services/update";
     private deleteUrl = "/api/services/delete";
     private roomsUrl = "/api/services/rooms";
     private insertRoomUrl = "/api/services/insertroom";
@@ -201,6 +202,23 @@ export class HttpEventService{
         )
     }
 
+    updateEvent(uid: string,
+        startmills : number,
+        endmills : number,
+        roomname : string ,emitAddedEvent?: boolean){
+        return this.http.get(this.baseurl+this.updateUrl, { 
+            headers : this.httpHeaders,
+            observe : 'body', 
+            responseType : 'json', 
+            params : {
+                'uid' : uid ,
+                'startmills' : startmills , 
+                'endmills' : endmills,
+                'roomname': roomname
+            }
+          });
+        }
+
     deleteEvent(uids : string[]){
         this.http.post(this.baseurl+this.deleteUrl, {uidList: uids},
             { headers : this.httpHeaders, observe: 'body', responseType : 'json'} ) 
@@ -220,6 +238,7 @@ export class HttpEventService{
 
     generatePythEvent( genPythEvtParams : 
         {   user_id: number,
+            title: string,
             paymntref : string,
             bookname: string,
             roomname: string,
@@ -233,6 +252,7 @@ export class HttpEventService{
         const pythEvt : PythEvent={
             uid: uniqueId,
             user_id: genPythEvtParams.user_id,
+            title: genPythEvtParams.title,
             paymntref: genPythEvtParams.paymntref,
             bookname: genPythEvtParams.bookname,
             roomname: genPythEvtParams.roomname,
@@ -242,5 +262,14 @@ export class HttpEventService{
             color: genPythEvtParams.color
         };
         return this.insertEvent(pythEvt,emitAddedEvent);
-    }       
+    }
+    
+    updatePythEvent(updatePythEvtParams :{
+        uid: string,
+        startmills : number,
+        endmills : number,
+        roomname : string
+    }) {
+
+    }
 }

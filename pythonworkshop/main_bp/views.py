@@ -223,6 +223,7 @@ class eventd:
     id: int
     uid: str
     user_id : int
+    title: str
     bookname : str
     roomname : str
     ou : str
@@ -238,7 +239,7 @@ def index_events():
         event_list = []
         for event in events:
             event_list.append(jsons.dump(eventd(
-                 event.id,event.uid,event.user_id,
+                 event.id,event.uid,event.user_id,event.title,
                  event.bookname,event.roomname,event.ou,event.startmills,
                  event.endmills,event.color,event.paymntref))) 
         return jsonify({'events':event_list})
@@ -280,13 +281,14 @@ def insert():
         bookname = req_json['bookname']
         roomname = req_json['roomname']
         user_id = req_json['user_id']
+        title = req_json['title']
         paymntref = req_json['paymntref']
         #print('event userId foregnkey is : '+ str(user_id))
         ou = req_json['ou']
         startmills = req_json['startmills']
         endmills = req_json['endmills']
         color = req_json['color']
-        db.session.add(Event(uid=uid,user_id=user_id,
+        db.session.add(Event(uid=uid,user_id=user_id,title=title,
                              paymntref=paymntref, 
                              bookname=bookname,
                              roomname=roomname,ou=ou,
@@ -299,15 +301,15 @@ def insert():
 @access_required
 def update():
     if request.method == 'POST':
-        req_json = request.get_json()
-        uid = req_json['uid']
-        userId = req_json['user_id']
-        title = req_json['title']
-        startmills = req_json['startmills']
-        endmills = req_json['endmills']
-        db.session.add(Event(uid=uid,user_id=userId, title=title,
-                             startmills=startmills,endmills=endmills)
-                       ).where(Event.uid == uid)
+        uid = request.args['uid']
+        startmills = request.args['startmills']
+        endmills = request.args['endmills']
+        roomname = request.args['roomname']
+        tobeupdated_event = db.session.execute(db.select(Event).where(Event.uid== uid)).scalar_one_or_none()
+        tobeupdated_event.startmills=startmills
+        tobeupdated_event.endmills=endmills
+        tobeupdated_event.roomname=roomname
+        db.session.add(tobeupdated_event)
         db.session.commit()       
         msg = 'Record updated successfully' 
     return jsonify(msg)    

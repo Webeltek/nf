@@ -2,6 +2,7 @@ import { Injectable ,  Output, EventEmitter} from '@angular/core';
 import { BehaviorSubject, map } from 'rxjs';
 import { NavigationEnd, Router } from '@angular/router'
 import { CalendarEventTimesChangedEvent, CalendarEventTimesChangedEventType } from 'angular-calendar';
+import { PythUser } from '../demo-app.component';
 
 
 const CONFIRM_KEY = 'confirm-token'
@@ -109,5 +110,21 @@ export class TokenStorageService {
     } 
     return {};
   }
+
+  public getEventTitle(bookname: string,evt_user_id: number, users : PythUser[]){
+    const eventUser =  users.filter((user)=> {
+      //console.log("DA getEventTitle() pythEv.bookname , user.id ,pythEv.user_id",pythEv.bookname,user.id , pythEv.user_id);
+      return user.id == evt_user_id
+    });
+    
+    let ouname = eventUser[0].ou==="init ou" ? "" : eventUser[0].ou;
+    let userEmail = typeof eventUser[0]=='undefined' ? '' : eventUser[0].user_email;
+    //console.log("DA userEmail",userEmail);
+    if ( this.getUser().is_admin || this.getUser().id==evt_user_id){
+      return `${bookname}<br>${userEmail}`;
+    } else {
+      return `${bookname}<br>${ouname}`;
+    }
+}
 }
 

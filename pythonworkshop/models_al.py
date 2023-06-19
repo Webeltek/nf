@@ -198,6 +198,7 @@ class Event(db.Model):
   id = db.Column(db.Integer, primary_key=True, autoincrement=True)
   uid = db.Column(db.String)
   user_id = db.Column(db.Integer, db.ForeignKey('nf_user.id'))
+  title = db.Column(db.String)
   bookname = db.Column(db.String)
   roomname = db.Column(db.String)
   ou = db.Column(db.String)
