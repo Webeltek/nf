@@ -264,12 +264,8 @@ export class HttpEventService{
         return this.insertEvent(pythEvt,emitAddedEvent);
     }
     
-    updatePythEvent(updatePythEvtParams :{
-        uid: string,
-        startmills : number,
-        endmills : number,
-        roomname : string
-    }) {
-
+    updatePythEvent(uid: string,startmills : number,
+        endmills : number,roomname : string,emitAddedEvent?:boolean){
+        this.updateEvent(uid,startmills,endmills,roomname,emitAddedEvent)
     }
 }

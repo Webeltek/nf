@@ -207,7 +207,7 @@ export class DemoAppComponent implements OnInit, OnDestroy{
     const externalIndex = this.externalEvents.indexOf(event);
     console.log("DAC eventTimesChanged params externalindex,event,newStart,newEnd",
     externalIndex,event,newStart,newEnd)
-    if (externalIndex > -1 && event.paymntref) {
+    if (externalIndex > -1 && event.paymntref) { // if event is dropped from chips to calendar
       this.authService.dbUpdateVippsPayment(
         this.tokenStorage.getUser().id,
         this.externalEvents[externalIndex].paymntref,
@@ -218,7 +218,7 @@ export class DemoAppComponent implements OnInit, OnDestroy{
       //this.externalEvents.splice(externalIndex, 1);
       
       this.events.push(event);
-    } else if (event.paymntref){
+    } else if (event.paymntref){   // if event is dropped from calendar to chips
       this.authService.dbUpdateVippsPayment(
         this.tokenStorage.getUser().id,
         event.paymntref,
@@ -228,11 +228,44 @@ export class DemoAppComponent implements OnInit, OnDestroy{
       })
     }
     event.start = newStart;
-    if (newEnd) {
+    if (newEnd) {   // if event is dropped from chips to calendar
       event.end = newEnd;
-    } else {
+      this.events = this.events.map((iEvent) => {
+        if (iEvent === event) {
+          this.httpService.updatePythEvent(event.id as string,event.start.getTime(),
+          event.end.getTime(),event.roomname, true);
+          return {
+            ...event,
+            start: newStart,
+            end: newEnd ? newEnd : event.end,
+          };
+        }
+        return iEvent;
+      });
+    } else {  // if event is resized or dragged inside calendar
       const newDateStartObj = new Date(event.start);
-      event.end = new Date(newDateStartObj.setHours(event.start.getHours()+1))
+      event.end = new Date(newDateStartObj.setHours(event.start.getHours()+1));
+      this.events = this.events.map((iEvent) => {
+        if (iEvent === event) {
+          this.httpService.generatePythEvent({
+          user_id :this.tokenStorage.getUser().id,
+          title: this.tokenStorage.getEventTitle("Drop-in",event.userId,this.users),
+          paymntref : event.paymntref,
+          bookname : "Drop-in",
+          roomname : "",
+          startmills : event.start.getTime(),
+          endmills: event.end.getTime(),
+          ou : this.tokenStorage.getUser().ou,
+          color: "blue",
+          },true);
+          return {
+            ...event,
+            start: newStart,
+            end: newEnd ? newEnd : event.end,
+          };
+        }
+        return iEvent;
+      });
     }
     if (this.view === 'month') {
       this.viewDate = newStart;
@@ -240,28 +273,7 @@ export class DemoAppComponent implements OnInit, OnDestroy{
     }
     //console.log("DAC event changed",event);
 
-    this.events = this.events.map((iEvent) => {
-      if (iEvent === event) {
-        this.httpService.generatePythEvent({
-        user_id :this.tokenStorage.getUser().id,
-        title: this.tokenStorage.getEventTitle("Drop-in",event.userId,this.users),
-        paymntref : event.paymntref,
-        bookname : "Drop-in",
-        roomname : "",
-        startmills : event.start.getTime(),
-        endmills: event.end.getTime(),
-        ou : this.tokenStorage.getUser().ou,
-        color: "blue"
-        });
-        return {
-          ...event,
-          start: newStart,
-          end: newEnd ? newEnd : event.end,
-        };
-      }
-      return iEvent;
-    });
-    this.events = [...this.events];
+    
   }
 
   updateChips(resp: any){
