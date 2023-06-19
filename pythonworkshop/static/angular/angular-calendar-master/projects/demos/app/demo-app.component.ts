@@ -494,7 +494,7 @@ export class DemoAppComponent implements OnInit, OnDestroy{
           const dialogRef = this.dialog.open(EventDialog, {
             data: {
               toBeDeleted : true,
-              toBeDeletedPythEvt : this.toBeDeletedEvt
+              toBeDeletedEvt : this.toBeDeletedEvt
             },
           });
           dialogRef.afterClosed().subscribe({
