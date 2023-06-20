@@ -214,35 +214,8 @@ export class DemoAppComponent implements OnInit, OnDestroy{
         true)
       .subscribe((resp)=>{
         this.updateChips(resp);
-      })
-      //this.externalEvents.splice(externalIndex, 1);
-      
-      this.events.push(event);
-    } else if (event.paymntref){   // if event is dropped from calendar to chips
-      this.authService.dbUpdateVippsPayment(
-        this.tokenStorage.getUser().id,
-        event.paymntref,
-        false
-      ).subscribe((resp)=>{
-        this.updateChips(resp);
-      })
-    }
-    event.start = newStart;
-    if (newEnd) {   // if event is dropped from chips to calendar
-      event.end = newEnd;
-      this.events = this.events.map((iEvent) => {
-        if (iEvent === event) {
-          this.httpService.updatePythEvent(event.id as string,event.start.getTime(),
-          event.end.getTime(),event.roomname, true);
-          return {
-            ...event,
-            start: newStart,
-            end: newEnd ? newEnd : event.end,
-          };
-        }
-        return iEvent;
       });
-    } else {  // if event is resized or dragged inside calendar
+
       const newDateStartObj = new Date(event.start);
       event.end = new Date(newDateStartObj.setHours(event.start.getHours()+1));
       this.events = this.events.map((iEvent) => {
@@ -257,7 +230,32 @@ export class DemoAppComponent implements OnInit, OnDestroy{
           endmills: event.end.getTime(),
           ou : this.tokenStorage.getUser().ou,
           color: "blue",
-          },true);
+          },false);
+          return {
+            ...event,
+            start: newStart,
+            end: newEnd ? newEnd : event.end,
+          };
+        }
+        return iEvent;
+      });
+
+    } else if (event.paymntref){   // if event is dropped from calendar to chips
+      this.authService.dbUpdateVippsPayment(
+        this.tokenStorage.getUser().id,
+        event.paymntref,
+        false
+      ).subscribe((resp)=>{
+        this.updateChips(resp);
+      })
+    }
+    event.start = newStart;
+    if (newEnd) {   // if event is resized or dragged inside calendar
+      event.end = newEnd;
+      this.events = this.events.map((iEvent) => {
+        if (iEvent === event) {
+          this.httpService.updatePythEvent(event.id as string,event.start.getTime(),
+          event.end.getTime(),event.roomname, false);
           return {
             ...event,
             start: newStart,
@@ -272,8 +270,7 @@ export class DemoAppComponent implements OnInit, OnDestroy{
       this.activeDayIsOpen = true;
     }
     //console.log("DAC event changed",event);
-
-    
+    this.events= [...this.events]
   }
 
   updateChips(resp: any){
