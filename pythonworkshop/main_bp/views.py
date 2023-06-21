@@ -261,6 +261,13 @@ class userd:
 @main_bp.route("/api/services/users", methods= ['GET'])
 @access_required
 def index_users():
+        events = db.session.execute(db.select(Event).order_by(Event.id.asc())).scalars().all()
+        event_list = []
+        for event in events:
+            event_list.append(jsons.dump(eventd(
+                 event.id,event.uid,event.user_id,event.title,
+                 event.bookname,event.roomname,event.ou,event.startmills,
+                 event.endmills,event.color,event.paymntref)))
         saved_users = db.session.execute(db.select(User).order_by(User.id.asc())).scalars().all()
         users_list = []
         for user in saved_users:
@@ -269,7 +276,7 @@ def index_users():
                   user.user_is_logged_in,user.user_confirmed,
                   user.user_conf_by_admin, user.access_token, 
                   user.last_seen,user.is_admin, user.ou, user.address)))
-        return jsonify({'users':users_list})    
+        return jsonify({'users':users_list,'events':event_list})    
        
   
 @main_bp.route("/api/services/insert",methods=["POST","GET"])

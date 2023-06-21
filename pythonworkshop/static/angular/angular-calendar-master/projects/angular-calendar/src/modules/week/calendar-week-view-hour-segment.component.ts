@@ -235,9 +235,10 @@ export class CalendarWeekViewHourSegmentComponent {
                   this.authService.dbUpdateVippsPayment(
                     this.tokenStorage.getUser().id,
                     paymntref,
-                    false
+                    true
                   ).subscribe((resp)=>{
-                    this.httpService.addedEvent.emit(null);
+                    this.httpService.modifiedPaymnt.emit(resp);
+
                   });
                 });
             }

@@ -296,7 +296,7 @@ export class DemoAppComponent implements OnInit, OnDestroy{
           const currentUsr = this.tokenStorage.getUser();
           const vipps_sub = currentUsr.vipps_sub;
           this.authService.dbGetVippsPayments(currentUsr.id).subscribe((resp)=>{
-            console.log(" DA getVippsPaymnts",resp);
+            //console.log(" DA getVippsPaymnts",resp);
             this.updateChips(resp);
           });
         }
@@ -383,7 +383,7 @@ export class DemoAppComponent implements OnInit, OnDestroy{
     this.httpService.getUsers().subscribe(
       {
           next: (response) => {
-            if(response.hasOwnProperty('users')) {
+            if(response.hasOwnProperty('users') && response.hasOwnProperty('events')) {
               let storageUsrObj = this.tokenStorage.getUser();
               this.loggedInUserId = storageUsrObj.id;
               //console.log("getDBUsers()  storageUsrObj.user_email", storageUsrObj.user_email);
@@ -393,6 +393,8 @@ export class DemoAppComponent implements OnInit, OnDestroy{
                 this.users.push(pythUser);
               }
               this.users = [...this.users];
+              const pythEvts = respObj.events;
+              this.events = [...this.convertDbEvents(pythEvts)];
               //console.log("getDBUsers() this.users",this.users)
             } else if (response === "access token expired") {
               //console.log("getDbUsers() string response msg:",response);
@@ -400,7 +402,7 @@ export class DemoAppComponent implements OnInit, OnDestroy{
             }
             
           },
-          complete: () => this.getDbEvents()
+          //complete: () => this.getDbEvents()
       })
   }
 
@@ -473,8 +475,12 @@ export class DemoAppComponent implements OnInit, OnDestroy{
         this.getDbEvents();
     })
     this.httpService.deletedEvent.subscribe((emitedValue: any) => { 
+      this.getDbEvents();  
+    })
+    this.httpService.modifiedPaymnt.subscribe((resp)=>{
+      this.updateChips(resp);
       this.getDbEvents();
-  })
+    })
   }
 
   deleteEvent(ids : string[]){
