@@ -208,7 +208,7 @@ $cal-month-view-vars: map-merge($cal-vars, $cal-month-view-vars);
   }
 
   .cal-event-title {
-    cursor: pointer;
+    //cursor: pointer;
 
     &:hover {
       text-decoration: underline;

@@ -157,7 +157,8 @@ export interface CalendarMonthViewEventTimesChangedEvent<
                 event: $event.event,
                 sourceEvent: $event.sourceEvent
               }
-            )">
+            )"
+            (eventTimesChanged)="eventTimesChangedW.emit($event)">
      </mwl-calendar-week-view>
         </div>
       </div>
@@ -311,6 +312,9 @@ export class CalendarMonthViewComponent
    */
   @Output()
   eventTimesChanged = new EventEmitter<CalendarMonthViewEventTimesChangedEvent>();
+
+  @Output() eventTimesChangedW =
+    new EventEmitter<CalendarEventTimesChangedEvent>();
 
   /**
    * @hidden
