@@ -295,24 +295,23 @@ def insert():
                              startmills=startmills,endmills=endmills, color=color))
         db.session.commit()
         msg = 'Record added successfully' 
-    return jsonify(msg)
+    return index_events()
   
 @main_bp.route("/api/services/update",methods=["POST","GET"])
 @access_required
 def update():
-    if request.method == 'POST':
-        uid = request.args['uid']
-        startmills = request.args['startmills']
-        endmills = request.args['endmills']
-        roomname = request.args['roomname']
-        tobeupdated_event = db.session.execute(db.select(Event).where(Event.uid== uid)).scalar_one_or_none()
-        tobeupdated_event.startmills=startmills
-        tobeupdated_event.endmills=endmills
-        tobeupdated_event.roomname=roomname
-        db.session.add(tobeupdated_event)
-        db.session.commit()       
-        msg = 'Record updated successfully' 
-    return jsonify(msg)    
+    uid = request.args['uid']
+    startmills = request.args['startmills']
+    endmills = request.args['endmills']
+    roomname = request.args['roomname']
+    tobeupdated_event = db.session.execute(db.select(Event).where(Event.uid== uid)).scalar_one_or_none()
+    tobeupdated_event.startmills=startmills
+    tobeupdated_event.endmills=endmills
+    tobeupdated_event.roomname=roomname
+    db.session.add(tobeupdated_event)
+    db.session.commit()       
+    msg = 'Record updated successfully' 
+    return index_events()    
   
 @main_bp.route("/api/services/delete",methods=["POST","GET"])
 @access_required

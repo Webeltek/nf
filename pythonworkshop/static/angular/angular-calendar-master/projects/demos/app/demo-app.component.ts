@@ -194,7 +194,7 @@ export class DemoAppComponent implements OnInit, OnDestroy{
           false
         ).subscribe((resp)=>{
           this.updateChips(resp);
-        })
+        });
       }
     }
   }
@@ -207,70 +207,58 @@ export class DemoAppComponent implements OnInit, OnDestroy{
     const externalIndex = this.externalEvents.indexOf(event);
     console.log("DAC eventTimesChanged params externalindex,event,newStart,newEnd",
     externalIndex,event,newStart,newEnd)
-    if (externalIndex > -1 && event.paymntref) { // if event is dropped from chips to calendar
-      this.authService.dbUpdateVippsPayment(
-        this.tokenStorage.getUser().id,
-        this.externalEvents[externalIndex].paymntref,
-        true)
-      .subscribe((resp)=>{
-        this.updateChips(resp);
-      });
-
+    if (externalIndex > -1) { // if event is dropped from chips to calendar
+      console.log("DA chips to cal")
+      event.start = newStart;
       const newDateStartObj = new Date(event.start);
       event.end = new Date(newDateStartObj.setHours(event.start.getHours()+1));
-      this.events = this.events.map((iEvent) => {
-        if (iEvent === event) {
-          this.httpService.generatePythEvent({
-          user_id :this.tokenStorage.getUser().id,
-          title: this.tokenStorage.getEventTitle("Drop-in",event.userId,this.users),
-          paymntref : event.paymntref,
-          bookname : "Drop-in",
-          roomname : "",
-          startmills : event.start.getTime(),
-          endmills: event.end.getTime(),
-          ou : this.tokenStorage.getUser().ou,
-          color: "blue",
-          },false);
-          return {
-            ...event,
-            start: newStart,
-            end: newEnd ? newEnd : event.end,
-          };
-        }
-        return iEvent;
-      });
-
-    } else if (event.paymntref){   // if event is dropped from calendar to chips
-      this.authService.dbUpdateVippsPayment(
-        this.tokenStorage.getUser().id,
-        event.paymntref,
-        false
-      ).subscribe((resp)=>{
-        this.updateChips(resp);
-      })
+      this.httpService.generatePythEvent({
+        user_id :this.tokenStorage.getUser().id,
+        title: this.tokenStorage.getEventTitle("Drop-in",event.userId,this.users),
+        paymntref : event.paymntref,
+        bookname : "Drop-in",
+        roomname : "",
+        startmills : event.start.getTime(),
+        endmills: event.end.getTime(),
+        ou : this.tokenStorage.getUser().ou,
+        color: "blue",
+        }).subscribe((resp)=>{
+          if(resp){
+            const pythEvts = (resp as any).events;
+            this.events=[...this.convertDbEvents(pythEvts)];
+            this.authService.dbUpdateVippsPayment(
+              this.tokenStorage.getUser().id,
+              this.externalEvents[externalIndex].paymntref,
+              true)
+            .subscribe((resp)=>{
+              this.updateChips(resp);
+            });
+          }
+        });
     }
-    event.start = newStart;
-    if (newEnd) {   // if event is resized or dragged inside calendar
+    if (newEnd) {   // if event is res/dragged
+      console.log("DA event modified")
       event.end = newEnd;
-      this.events = this.events.map((iEvent) => {
-        if (iEvent === event) {
-          this.httpService.updatePythEvent(event.id as string,event.start.getTime(),
-          event.end.getTime(),event.roomname, false);
-          return {
-            ...event,
-            start: newStart,
-            end: newEnd ? newEnd : event.end,
-          };
-        }
-        return iEvent;
-      });
+      if(newStart){
+        event.start=newStart;
+      }
+      console.log("DA event modified endmills",event.end.getTime())
+      this.httpService.updatePythEvent(event.id as string,event.start.getTime(),
+        event.end.getTime(),event.roomname).subscribe((resp)=>{
+          if(resp){
+            const pythEvts = (resp as any).events;
+            this.events=[...this.convertDbEvents(pythEvts)];
+          }
+        });
     }
+
     if (this.view === 'month') {
       this.viewDate = newStart;
       this.activeDayIsOpen = true;
     }
+
     //console.log("DAC event changed",event);
-    this.events= [...this.events]
+    //this.events=[...this.events]
   }
 
   updateChips(resp: any){
@@ -416,9 +404,34 @@ export class DemoAppComponent implements OnInit, OnDestroy{
       })
   }
 
+  convertDbEvents(pythEvts: PythEvent[]){
+    let calEvts : CalendarEvent[]=[]; 
+    for (let pythEvt of  pythEvts){
+      let calEvent : CalendarEvent=  {
+          id : pythEvt.uid,
+          userId : pythEvt.user_id,
+          paymntref : pythEvt.paymntref,
+          bookname : pythEvt.bookname,
+          roomname : pythEvt.roomname,
+          start : new Date(pythEvt.startmills),
+          end : new Date(pythEvt.endmills),
+          title : pythEvt.title,
+          ou: pythEvt.ou,
+          color : getColors(pythEvt.user_id,this.tokenStorage.getUser().id),
+          draggable : true,
+          resizable: {
+            beforeStart: true, // this allows you to configure the sides the event is resizable from
+            afterEnd: true,
+          }
+        }
+      calEvts.push(calEvent);  
+    }
+    return calEvts;
+  }
+
   getDbEvents(){
     this.httpService.getEvents().subscribe((response ) => {
-      console.log("getDbEvents() Response: ",response);
+      //console.log("getDbEvents() Response: ",response);
       //console.log("getDbEvents() Response type: "+ typeof response);
       if(response.hasOwnProperty('events')) {
         this.events = [];
@@ -435,7 +448,7 @@ export class DemoAppComponent implements OnInit, OnDestroy{
               end : new Date(pythEvt.endmills),
               title : pythEvt.title,
               ou: pythEvt.ou,
-              color : getColors(pythEvt.userId,this.tokenStorage.getUser().id),
+              color : getColors(pythEvt.user_id,this.tokenStorage.getUser().id),
               draggable : true,
               resizable: {
                 beforeStart: true, // this allows you to configure the sides the event is resizable from
@@ -446,7 +459,7 @@ export class DemoAppComponent implements OnInit, OnDestroy{
           
         }
         this.events = [...this.events];
-        console.log("getDbEvents() Follows events : ", this.events);  
+        //console.log("getDbEvents() Follows events : ", this.events);  
         //console.log(this.events);
       } else {
         //console.log("getDbEvents() string response msg:",response);

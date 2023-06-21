@@ -188,24 +188,15 @@ export class HttpEventService{
             { headers : this.httpHeaders, observe: 'body', responseType : 'json'})
     }
 
-    insertEvent(pythEvent : PythEvent ,emitAddedEvent?: boolean){
-    this.http.post(this.baseurl+this.insertUrl, pythEvent, 
-        { headers : this.httpHeaders, observe: 'body', responseType : 'json'} ) 
-        .subscribe({
-            next: (response) =>{
-                if(emitAddedEvent) this.addedEvent.emit(pythEvent);
-                console.log("addEvent() response: " + JSON.stringify(response));
-            },
-            error: (error) => { 
-                console.log("addEvent() error : " + JSON.stringify(error)) ; }
-            }
-        )
+    insertEvent(pythEvent : PythEvent ){
+        return this.http.post(this.baseurl+this.insertUrl, pythEvent, 
+            { headers : this.httpHeaders, observe: 'body', responseType : 'json'} )
     }
 
     updateEvent(uid: string,
         startmills : number,
         endmills : number,
-        roomname : string ,emitAddedEvent?: boolean){
+        roomname : string ){
         return this.http.get(this.baseurl+this.updateUrl, { 
             headers : this.httpHeaders,
             observe : 'body', 
@@ -245,8 +236,7 @@ export class HttpEventService{
             startmills : number, // object type converted to any
             endmills: number,    // object type converted to any
             ou : string,
-            color: "blue"  }
-        , emitAddedEvent?:boolean){       
+            color: "blue"  }){       
         const uniqueId = this.generateUniqueID();
         //console.log("hourSegment loggedInUserId : " + this.loggedInUserId);
         const pythEvt : PythEvent={
@@ -261,11 +251,11 @@ export class HttpEventService{
             endmills: genPythEvtParams.endmills,
             color: genPythEvtParams.color
         };
-        return this.insertEvent(pythEvt,emitAddedEvent);
+        return this.insertEvent(pythEvt);
     }
     
     updatePythEvent(uid: string,startmills : number,
-        endmills : number,roomname : string,emitAddedEvent?:boolean){
-        this.updateEvent(uid,startmills,endmills,roomname,emitAddedEvent)
+        endmills : number,roomname : string){
+        return this.updateEvent(uid,startmills,endmills,roomname)
     }
 }

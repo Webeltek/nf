@@ -12,6 +12,7 @@ import { HttpEventService } from './http-service.service';
 import { strictEqual } from 'assert';
 import { DateAdapter } from '../../date-adapters/date-adapter';
 import { TokenStorageService } from 'projects/demos/app/_services/token-storage.service';
+import { AuthService } from 'projects/demos/app/_services/auth.service';
 
 
 export interface DialogData {
@@ -114,6 +115,7 @@ export class CalendarWeekViewHourSegmentComponent {
   constructor(
     public dialog: MatDialog, 
     private httpService: HttpEventService,
+    private authService : AuthService,
     private tokenStorage: TokenStorageService) {}
 
   @Input() events: CalendarEvent[] = [];
@@ -188,7 +190,7 @@ export class CalendarWeekViewHourSegmentComponent {
     //console.log("segment Date in openDialog(): ",this.segment.date ) ;
 
       if (!this.isClickedOverEvent()) {
-        //console.log("calWVhourSegm isClick",this.isClickedOverEvent());
+        console.log("calWVhourSegm isClick",this.isClickedOverEvent());
         for (var dbEvt of this.events) {
           let segmStartHour = this.segment.date.getHours();
           console.log ("HS segmStartHour", segmStartHour);
@@ -213,24 +215,31 @@ export class CalendarWeekViewHourSegmentComponent {
 
         dialogRef.afterClosed().subscribe({
           next: (result) => {
-            if (typeof result !== 'undefined') {
-              
+            if (result) {
               const startmills = this.segment.date.setHours(result.startTime.hour);
               const endmills = this.segment.date.setHours(result.endTime.hour);
-              const loggedInUser = this.tokenStorage.getUser()
+              const paymntref = this.externalEvents.at(-1).paymntref;
+              const loggedInUser = this.tokenStorage.getUser();
+              console.log("WHS result,startmills,endmills",result,startmills,endmills);
               this.httpService.generatePythEvent({
                   user_id :this.loggedInUserId,
                   title : this.tokenStorage.getEventTitle(result.bookname,this.loggedInUserId,[loggedInUser]),
-                  paymntref : this.externalEvents.at(-1).paymntref,
+                  paymntref : paymntref,
                   bookname :result.bookname,
                   roomname : result.roomname,
                   ou : this.user_ou,
                   startmills : startmills,
                   endmills: endmills,
                   color: "blue"
-                },
-              true);
-              //console.log("afterClosed() result:", this.pythEvt);
+                }).subscribe((resp)=>{
+                  this.authService.dbUpdateVippsPayment(
+                    this.tokenStorage.getUser().id,
+                    paymntref,
+                    false
+                  ).subscribe((resp)=>{
+                    this.httpService.addedEvent.emit(null);
+                  });
+                });
             }
           },
           error : (error) => {
