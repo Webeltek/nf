@@ -20,6 +20,8 @@
   .cal-current-time-marker {
     margin-left: 70px;
     width: calc(100% - 70px);
+    width: 100%;
+    height: 2px;
 
     [dir='rtl'] & {
       margin-left: initial;

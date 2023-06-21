@@ -146,7 +146,7 @@ export interface CalendarMonthViewEventTimesChangedEvent<
             [rooms]="rooms"
             [books]="books"
             [dayStartHour]="0" 
-            [dayEndHour]="rooms.length-1" 
+            [dayEndHour]="23" 
             [viewDate]="viewDate" 
             [weekStartsOn]=1
             [loggedInUserId]="loggedInUserId" 

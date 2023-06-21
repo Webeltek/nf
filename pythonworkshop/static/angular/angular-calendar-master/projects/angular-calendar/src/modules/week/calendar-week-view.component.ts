@@ -117,8 +117,8 @@ export interface CalendarWeekViewBeforeRenderEvent extends WeekView {
 
 @Component({
   selector: 'mwl-calendar-week-view',
-  encapsulation : ViewEncapsulation.ShadowDom,
-  styleUrls: ['./calendar-week-view.scss'],
+  //encapsulation : ViewEncapsulation.ShadowDom,
+  //styleUrls: ['./calendar-week-view.scss'],
   templateUrl: './calendar-week-view.html',
   animations: [collapseAnimation]
 })
