@@ -235,14 +235,19 @@ class eventd:
 @main_bp.route("/api/services/events", methods= ['GET'])
 @access_required
 def index_events():
-        events = db.session.execute(db.select(Event).order_by(Event.id.asc())).scalars().all()
-        event_list = []
-        for event in events:
-            event_list.append(jsons.dump(eventd(
-                 event.id,event.uid,event.user_id,event.title,
-                 event.bookname,event.roomname,event.ou,event.startmills,
-                 event.endmills,event.color,event.paymntref))) 
+        event_list= get_events() 
         return jsonify({'events':event_list})
+
+def get_events():
+    events = db.session.execute(db.select(Event).order_by(Event.id.asc())).scalars().all()
+    event_list = []
+    for event in events:
+      event_list.append(jsons.dump(eventd(
+            event.id,event.uid,event.user_id,event.title,
+            event.bookname,event.roomname,event.ou,event.startmills,
+            event.endmills,event.color,event.paymntref)))
+    return event_list        
+
 
 @dataclass
 class userd:
@@ -261,13 +266,7 @@ class userd:
 @main_bp.route("/api/services/users", methods= ['GET'])
 @access_required
 def index_users():
-        events = db.session.execute(db.select(Event).order_by(Event.id.asc())).scalars().all()
-        event_list = []
-        for event in events:
-            event_list.append(jsons.dump(eventd(
-                 event.id,event.uid,event.user_id,event.title,
-                 event.bookname,event.roomname,event.ou,event.startmills,
-                 event.endmills,event.color,event.paymntref)))
+        event_list = get_events()
         saved_users = db.session.execute(db.select(User).order_by(User.id.asc())).scalars().all()
         users_list = []
         for user in saved_users:
@@ -301,13 +300,16 @@ def insert():
                              roomname=roomname,ou=ou,
                              startmills=startmills,endmills=endmills, color=color))
         db.session.commit()
-        msg = 'Record added successfully' 
-    return index_events()
+        msg = 'Record added successfully'
+        events = get_events()
+        payments = get_payments(user_id) 
+    return jsonify({"events":events,"payments":payments})
   
 @main_bp.route("/api/services/update",methods=["POST","GET"])
 @access_required
 def update():
     uid = request.args['uid']
+    user_id = request.args['user_id']
     startmills = request.args['startmills']
     endmills = request.args['endmills']
     roomname = request.args['roomname']
@@ -317,8 +319,10 @@ def update():
     tobeupdated_event.roomname=roomname
     db.session.add(tobeupdated_event)
     db.session.commit()       
-    msg = 'Record updated successfully' 
-    return index_events()    
+    msg = 'Record updated successfully'
+    events = get_events()
+    payments = get_payments(user_id) 
+    return jsonify({"events":events,"payments":payments})    
   
 @main_bp.route("/api/services/delete",methods=["POST","GET"])
 @access_required
@@ -331,8 +335,9 @@ def ajax_delete():
                     #print(f'To delete uid{str(todeluid)}')
                     db.session.execute(db.delete(Event).where(Event.uid == todeluid))
                     db.session.commit()
-        msg = 'Record/s deleted successfully' 
-    return jsonify(msg)
+        msg = 'Record/s deleted successfully'
+        events_list = get_events() 
+    return jsonify({"events":events_list})
 
 @main_bp.route('/api/services/change_email', methods=['GET', 'POST'])
 @access_required
@@ -395,45 +400,42 @@ def db_save_payment():
     db.session.commit()
     return jsonify({ "payment": "saved_in_db"})
 
+def get_payments(user_id):
+    vipps_sub_paymnts = db.session.execute(db.select(Payment)
+                            .where(Payment.user_id==user_id)).scalars().all()
+    paymnts = []
+    for paymnt in vipps_sub_paymnts:
+                paymnts.append(jsons.dump({
+                    "reference" : paymnt.reference,
+                    "vipps_sub":paymnt.vipps_sub,
+                    "amount": paymnt.amount,
+                    "is_consumed" : paymnt.is_consumed,
+                    "bookname": paymnt.bookname}))
+    return paymnts 
+
 @main_bp.route('/api/services/db_get_payments',methods=['GET','POST'])
 @access_required
 def db_get_payments():
     user_id = request.args['user_id']
-    vipps_sub_paymnts = db.session.execute(db.select(Payment)
-                           .where(Payment.user_id==user_id)).scalars().all()
-    paymnts = []
-    for paymnt in vipps_sub_paymnts:
-         if not paymnt.is_consumed:
-            paymnts.append(jsons.dump({
-                "reference" : paymnt.reference,
-                "vipps_sub":paymnt.vipps_sub,
-                "amount": paymnt.amount,
-                "bookname": paymnt.bookname}))
-    return jsonify({ "vipps_sub_paymnts": paymnts})
+    payments = get_payments(user_id)
+    return jsonify({ "payments": payments})
+
+           
 
 @main_bp.route('/api/services/db_update_payment',methods=['GET','POST'])
 @access_required
 def db_update_payment():
     user_id = request.args['user_id']
     reference = request.args['reference']
-    isconsumed = request.args['isconsumed']
+    is_consumed = request.args['is_consumed']
     isconsumedbool = False
-    if isconsumed == "true":
+    if is_consumed == "true":
          isconsumedbool = True
     vipps_sub_paymnt = db.session.execute(db.select(Payment)
                            .where(Payment.reference==reference)).scalar_one_or_none()
     vipps_sub_paymnt.is_consumed = isconsumedbool
     db.session.add(vipps_sub_paymnt)
     db.session.commit()
-    vipps_sub_paymnts = db.session.execute(db.select(Payment)
-                           .where(Payment.user_id==user_id)).scalars().all()
-    paymnts = []
-    for paymnt in vipps_sub_paymnts:
-         paymnts.append(jsons.dump({
-              "reference" : paymnt.reference,
-              "vipps_sub":paymnt.vipps_sub,
-              "amount": paymnt.amount,
-              "bookname": paymnt.bookname,
-              "is_consumed": paymnt.is_consumed}))
-    return jsonify({ "vipps_sub_paymnts": paymnts})
+    payments = get_payments(user_id)
+    return jsonify({ "payments": payments})
 

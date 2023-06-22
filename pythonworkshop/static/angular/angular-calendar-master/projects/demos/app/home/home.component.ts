@@ -138,6 +138,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   delEvents(eventUids : string[]){
     this.httpService.deleteEvent(eventUids);
+    this.httpService.deletedEvent.emit(null);
   }
 
   editEvents(){

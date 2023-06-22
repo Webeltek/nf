@@ -237,7 +237,7 @@ export class CalendarWeekViewHourSegmentComponent {
                     paymntref,
                     true
                   ).subscribe((resp)=>{
-                    this.httpService.modifiedPaymnt.emit(resp);
+                    this.httpService.modifiedPaymnt.emit((resp as any).payments);
 
                   });
                 });
@@ -266,6 +266,8 @@ export class EventDialog {
       toBeDeleted : boolean,
       toBeDeletedEvt : CalendarEvent,
       date:Date,
+      startDate?:Date,
+      endDate?:Date,
       romIndex:number,
       hourContainedBookTitle: string,
       books : string[],
@@ -273,8 +275,12 @@ export class EventDialog {
      public fb: UntypedFormBuilder) {}
 
     roomname = ""; 
-    startTime = { hour: 8, minute: 30};
-    endTime = { hour: 10, minute: 30};  
+    startTime = { hour: 8, minute: 0};
+    endTime = { hour: 18, minute: 0};
+    startDate = this.data.startDate ? this.data.startDate : new Date(this.data.date.setHours(
+      this.startTime.hour,this.startTime.minute));
+    endDate =this.data.endDate ? this.data.endDate : new Date(this.data.date.setHours(
+      this.endTime.hour,this.endTime.minute));    
     containedBookTitle = this.data.hourContainedBookTitle;
     books = this.data.books;
     toBeDeleted = this.data.toBeDeleted;

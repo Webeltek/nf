@@ -196,6 +196,7 @@ export class HttpEventService{
     }
 
     updateEvent(uid: string,
+        user_id : string,
         startmills : number,
         endmills : number,
         roomname : string ){
@@ -205,6 +206,7 @@ export class HttpEventService{
             responseType : 'json', 
             params : {
                 'uid' : uid ,
+                'user_id': user_id,
                 'startmills' : startmills , 
                 'endmills' : endmills,
                 'roomname': roomname
@@ -213,16 +215,9 @@ export class HttpEventService{
         }
 
     deleteEvent(uids : string[]){
-        this.http.post(this.baseurl+this.deleteUrl, {uidList: uids},
+        return this.http.post(this.baseurl+this.deleteUrl, {uidList: uids},
             { headers : this.httpHeaders, observe: 'body', responseType : 'json'} ) 
-            .subscribe({
-                next:(response) =>{
-                    this.deletedEvent.emit(null);
-                    console.log("deleteEvent() response: " + JSON.stringify(response));
-                },
-                error: (error) => { 
-                    console.log("deleteEvent() error : " + JSON.stringify(error)) ; }
-            })
+            
     }
 
     generateUniqueID( digit = 1000 ) {
@@ -256,8 +251,8 @@ export class HttpEventService{
         return this.insertEvent(pythEvt);
     }
     
-    updatePythEvent(uid: string,startmills : number,
+    updatePythEvent(uid: string,user_id:string,startmills : number,
         endmills : number,roomname : string){
-        return this.updateEvent(uid,startmills,endmills,roomname)
+        return this.updateEvent(uid,user_id,startmills,endmills,roomname)
     }
 }

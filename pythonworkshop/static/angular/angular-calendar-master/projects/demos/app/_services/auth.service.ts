@@ -198,12 +198,12 @@ export class AuthService {
       });
   }
 
-  dbUpdateVippsPayment(user_id : string,reference : string, isconsumed: boolean): Observable<any> {
+  dbUpdateVippsPayment(user_id : string,reference : string, is_consumed: boolean): Observable<any> {
     return this.http.get(baseurl+MAIN_API + 'db_update_payment', { 
         headers : this.httpHeaders,
         observe : 'body', 
         responseType : 'json', 
-        params : {'user_id' : user_id, 'reference' : reference , 'isconsumed' : isconsumed}
+        params : {'user_id' : user_id, 'reference' : reference , 'is_consumed' : is_consumed}
       });
   }
 

@@ -144,43 +144,6 @@ export class DemoAppComponent implements OnInit, OnDestroy{
     //todo implement chip selection
   }
 
-  eventDropped({      //unused
-    event,
-    newStart,
-    newEnd,
-    allDay,
-  }: CalendarEventTimesChangedEvent): void {
-    const externalIndex = this.externalEvents.indexOf(event);
-    if (typeof allDay !== 'undefined') {
-      event.allDay = allDay;
-    }
-    if (externalIndex > -1) {
-      this.externalEvents.splice(externalIndex, 1);
-      this.events.push(event);
-    }
-    event.start = newStart;
-    if (newEnd) {
-      event.end = newEnd;
-    }
-    if (this.view === 'month') {
-      this.viewDate = newStart;
-      this.activeDayIsOpen = true;
-    }
-
-    const genNewEndDateMills = event.start.setHours(event.start.getHours()+1)
-    this.httpService.generatePythEvent({
-        user_id :this.tokenStorage.getUser().id,
-        title: "undefined",
-        paymntref: "undef",
-        bookname : "Drop-in",
-        roomname : "initroom",
-        startmills : event.start.getTime(),
-        endmills: genNewEndDateMills,
-        ou : this.tokenStorage.getUser().ou,
-        color: "blue"
-    });
-  } 
-
   externalDrop(event: CalendarEvent) {
     if (this.externalEvents.indexOf(event) === -1) {
       //this.events = this.events.filter((iEvent) => iEvent !== event);
@@ -193,7 +156,8 @@ export class DemoAppComponent implements OnInit, OnDestroy{
           event.paymntref,
           false
         ).subscribe((resp)=>{
-          this.updateChips(resp);
+          const respObj = resp as any;
+          this.updateChips(respObj.payments);
         });
       }
     }
@@ -212,29 +176,30 @@ export class DemoAppComponent implements OnInit, OnDestroy{
       event.start = newStart;
       const newDateStartObj = new Date(event.start);
       event.end = new Date(newDateStartObj.setHours(event.start.getHours()+1));
-      this.httpService.generatePythEvent({
-        user_id :this.tokenStorage.getUser().id,
-        title: this.tokenStorage.getEventTitle("Drop-in",event.userId,this.users),
-        paymntref : event.paymntref,
-        bookname : "Drop-in",
-        roomname : "",
-        startmills : event.start.getTime(),
-        endmills: event.end.getTime(),
-        ou : this.tokenStorage.getUser().ou,
-        color: "blue",
-        }).subscribe((resp)=>{
-          if(resp){
-            const pythEvts = (resp as any).events;
-            this.events=[...this.convertDbEvents(pythEvts)];
-            this.authService.dbUpdateVippsPayment(
-              this.tokenStorage.getUser().id,
-              this.externalEvents[externalIndex].paymntref,
-              true)
-            .subscribe((resp)=>{
-              this.updateChips(resp);
-            });
-          }
-        });
+      this.authService.dbUpdateVippsPayment(
+        this.tokenStorage.getUser().id,
+        this.externalEvents[externalIndex].paymntref,
+        true)
+      .subscribe((resp)=>{
+        console.log("DA bookname",this.externalEvents[externalIndex].bookname);
+        this.httpService.generatePythEvent({
+          user_id :this.tokenStorage.getUser().id,
+          title: this.tokenStorage.getEventTitle(
+            this.externalEvents[externalIndex].bookname,event.userId,this.users),
+          paymntref : event.paymntref,
+          bookname : this.externalEvents[externalIndex].bookname,
+          roomname : "",
+          startmills : event.start.getTime(),
+          endmills: event.end.getTime(),
+          ou : this.tokenStorage.getUser().ou,
+          color: "blue",
+          }).subscribe((resp)=>{
+            if(resp){
+              this.events=[...this.convertDbEvents((resp as any).events)];
+              this.updateChips((resp as any).payments);
+            }
+          });
+      });
     }
     if (newEnd) {   // if event is res/dragged
       console.log("DA event modified")
@@ -243,11 +208,10 @@ export class DemoAppComponent implements OnInit, OnDestroy{
         event.start=newStart;
       }
       console.log("DA event modified endmills",event.end.getTime())
-      this.httpService.updatePythEvent(event.id as string,event.start.getTime(),
+      this.httpService.updatePythEvent(event.id as string,this.tokenStorage.getUser().id,event.start.getTime(),
         event.end.getTime(),event.roomname).subscribe((resp)=>{
           if(resp){
-            const pythEvts = (resp as any).events;
-            this.events=[...this.convertDbEvents(pythEvts)];
+            this.events=[...this.convertDbEvents((resp as any).events)];
           }
         });
     }
@@ -264,19 +228,20 @@ export class DemoAppComponent implements OnInit, OnDestroy{
   updateChips(resp: any){
     if (resp && resp!=="access token expired"){
       this.externalEvents = [];
-      const respObj = resp as any;
-      const paymnts = respObj.vipps_sub_paymnts;
-      //console.log("DA updateChips paymnts",paymnts)
+      const paymnts = resp;
+      console.log("DA updateChips paymnts",paymnts)
       for (let paymnt of paymnts ){
-        if(!paymnt.is_consumed){
+        if(paymnt.is_consumed===false && paymnt.bookname==="Drop-in"){
+            const start = new Date(new Date().setHours(8));
             console.log("HC paymnt amount slice : ",paymnt.amount.slice(0,-2));
           //console.log("DA updateChipps paymnt.reference",paymnt.reference);
           let extEvent : CalendarEvent = {
             userId: this.tokenStorage.getUser().id,
             title : paymnt.amount.slice(0,-2) + "kr " + paymnt.bookname,
             paymntref : paymnt.reference,
+            bookname : paymnt.bookname,
             color : {primary: '#ad2121',secondary: '#FAE3E3' },
-            start : new Date(),
+            start : start,
             draggable : true
           }
           this.externalEvents.push(extEvent);
@@ -297,7 +262,9 @@ export class DemoAppComponent implements OnInit, OnDestroy{
           const vipps_sub = currentUsr.vipps_sub;
           this.authService.dbGetVippsPayments(currentUsr.id).subscribe((resp)=>{
             //console.log(" DA getVippsPaymnts",resp);
-            this.updateChips(resp);
+            if(resp){
+              this.updateChips((resp as any).payments);
+            }
           });
         }
       });
@@ -407,27 +374,30 @@ export class DemoAppComponent implements OnInit, OnDestroy{
   }
 
   convertDbEvents(pythEvts: PythEvent[]){
-    let calEvts : CalendarEvent[]=[]; 
-    for (let pythEvt of  pythEvts){
-      let calEvent : CalendarEvent=  {
-          id : pythEvt.uid,
-          userId : pythEvt.user_id,
-          paymntref : pythEvt.paymntref,
-          bookname : pythEvt.bookname,
-          roomname : pythEvt.roomname,
-          start : new Date(pythEvt.startmills),
-          end : new Date(pythEvt.endmills),
-          title : pythEvt.title,
-          ou: pythEvt.ou,
-          color : getColors(pythEvt.user_id,this.tokenStorage.getUser().id),
-          draggable : true,
-          resizable: {
-            beforeStart: true, // this allows you to configure the sides the event is resizable from
-            afterEnd: true,
+    let calEvts : CalendarEvent[]=[];
+    if (pythEvts){
+      for (let pythEvt of  pythEvts){
+        let calEvent : CalendarEvent=  {
+            id : pythEvt.uid,
+            userId : pythEvt.user_id,
+            paymntref : pythEvt.paymntref,
+            bookname : pythEvt.bookname,
+            roomname : pythEvt.roomname,
+            start : new Date(pythEvt.startmills),
+            end : new Date(pythEvt.endmills),
+            title : pythEvt.title,
+            ou: pythEvt.ou,
+            color : getColors(pythEvt.user_id,this.tokenStorage.getUser().id),
+            draggable : true,
+            resizable: {
+              beforeStart: true, // this allows you to configure the sides the event is resizable from
+              afterEnd: true,
+            }
           }
-        }
-      calEvts.push(calEvent);  
-    }
+        calEvts.push(calEvent);  
+      }
+    } 
+    
     return calEvts;
   }
 
@@ -484,7 +454,11 @@ export class DemoAppComponent implements OnInit, OnDestroy{
   }
 
   deleteEvent(ids : string[]){
-    this.httpService.deleteEvent(ids);
+    this.httpService.deleteEvent(ids).subscribe((resp)=>{
+      if ( resp && resp.hasOwnProperty("events")){
+        this.events = [...(resp as any).events];
+      }
+    });
   }
 
   openDialog(clickedWeekViewEvent : {
@@ -507,6 +481,8 @@ export class DemoAppComponent implements OnInit, OnDestroy{
 
           const dialogRef = this.dialog.open(EventDialog, {
             data: {
+              startDate : this.toBeDeletedEvt.start,
+              endDate : this.toBeDeletedEvt.end,
               toBeDeleted : true,
               toBeDeletedEvt : this.toBeDeletedEvt
             },
@@ -514,8 +490,9 @@ export class DemoAppComponent implements OnInit, OnDestroy{
           dialogRef.afterClosed().subscribe({
             next: (result) => {
               if (typeof result !== 'undefined') {
+                this.externalDrop(this.toBeDeletedEvt);
                 //console.log("result object",result)
-                this.deleteEvent([result.toBeDeletedEvt.id]);  // event.id is pythEvt.uid
+                this.deleteEvent([result.toBeDeletedEvt.id])  // event.id is pythEvt.uid
               }
             },
             error: (error) => {

@@ -9,7 +9,8 @@
   </h1>
   <mat-dialog-content class="mat-typography">
     <div>{{ data.toBeDeletedEvt.bookname}}</div>
-    <div>Den {{ data.toBeDeletedEvt.start.getTime() | date:'dd/MM/yyyy'}}</div>
+    <div>{{ data.startDate | date:'dd/MM/yyyy HH:mm'}}</div>
+    <div>{{ data.endDate | date:'dd/MM/yyyy HH:mm'}}</div>
     <div mat-dialog-actions>
       <button mat-button 
       mat-dialog-close
@@ -23,39 +24,42 @@
   <h1 mat-dialog-title>{{'EDinsertTtl' | translate}}
   </h1>
   <mat-dialog-content class="mat-typography">
-  <form
-  [formGroup]="userForm"
-  (ngSubmit) = "closeDialog()">
-    <div mat-dialog-content
-    >{{data.date | date:'dd/MM/yyyy'}}
-      <br/>
-      <label id="example-radio-group-label">{{'EDchoosePer' | translate}}</label>
-      <br/>
-      <mat-radio-group 
-        aria-labelledby="example-radio-group-label"
-        class="example-radio-group"
-        formControlName="valgtBook">
-        <mat-radio-button class="example-radio-button" 
-          *ngFor="let book of books"
-            [value]="book">
-            {{book}}
-        </mat-radio-button>
-      </mat-radio-group>
-    </div>
-    <div>Ditt valg er: {{valgtBookCtrl.value}} den {{ data.date | date:'dd/MM/yyyy'}}</div>
-    <div mat-dialog-actions>
-      <button mat-button 
-      mat-dialog-close
-      color="primary" 
-      type="submit">{{'PCconfirm' | translate}}</button>
-    </div>
-  </form>
-  <ngb-timepicker [(ngModel)]="startTime"></ngb-timepicker>
-  <hr/>
-  <!-- <pre>Start time: {{ startTime | json }}</pre> -->
-  <ngb-timepicker [(ngModel)]="endTime"></ngb-timepicker>
-  <hr/>
-  <!-- <pre>End time: {{ endTime | json }}</pre>  -->  
+    <ngb-timepicker [(ngModel)]="startTime"></ngb-timepicker>
+    <hr/>
+    <!-- <pre>Start time: {{ startTime | json }}</pre> -->
+    <ngb-timepicker [(ngModel)]="endTime"></ngb-timepicker>
+    <hr/>
+    <!-- <pre>End time: {{ endTime | json }}</pre>  -->
+    <form
+    [formGroup]="userForm"
+    (ngSubmit) = "closeDialog()">
+      <div mat-dialog-content
+      >{{data.date | date:'dd/MM/yyyy'}}
+        <br/>
+        <label id="example-radio-group-label">{{'EDchoosePer' | translate}}</label>
+        <br/>
+        <mat-radio-group 
+          aria-labelledby="example-radio-group-label"
+          class="example-radio-group"
+          formControlName="valgtBook" >
+          <mat-radio-button class="example-radio-button" 
+            *ngFor="let book of books"
+              [value]="book">
+              {{book}}
+          </mat-radio-button>
+        </mat-radio-group>
+      </div>
+      <div>{{valgtBookCtrl.value}}<br/>
+         {{ startDate | date:'dd/MM/yyyy HH:mm'}}<br/> 
+         {{ endDate | date:'dd/MM/yyyy HH:mm' }}
+      </div>
+      <div mat-dialog-actions>
+        <button mat-button 
+        mat-dialog-close
+        color="primary" 
+        type="submit">{{'PCconfirm' | translate}}</button>
+      </div>
+    </form>  
   </mat-dialog-content>
 </ng-template>
 <ng-template
