@@ -6,7 +6,8 @@
       <mat-card-content class="profile-header">
           <mat-accordion class="example-headers-align" multi>
             <div class="p-5 text-dark rounded" [style.background-color]="'#f8f9fa'">
-              <h1>{{'PCuser' | translate }} : {{ user.user_email }}</h1>
+              <h3>{{'PCuser' | translate }} : {{ user.user_email }}</h3>
+              <p>{{'PCorg' | translate }} : {{user.ou }}</p>
               <p *ngIf="user.user_email">
               <br>
                       {{'PCfrom' | translate}}<a class="text-dark" href="http://maps.google.com/?q=">{{'PClocation' | translate}}</a><br>
@@ -81,6 +82,38 @@
               </form>
               <mat-action-row>
                 <button mat-button color="primary" (click)="changePass(changePassFG.value.email)">{{ 'PCsubmit' | translate}}</button>
+              </mat-action-row>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel>
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  {{'PCchangeOrg' |translate}}
+                </mat-panel-title>
+                <mat-panel-description>
+                  {{'PCchangePassDescr' | translate}}
+                  <mat-icon>corporate_fare</mat-icon>
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+          
+              <form [formGroup]="changeOrgFG">
+                <mat-form-field appearance="fill">
+                  <mat-label>{{'PCemail' |translate}}</mat-label>
+                  <input matInput formControlName="org" type="text"
+                  (keydown.enter)="changeOrg(changeOrgFG.value.org)">
+                    <mat-error *ngIf="changeOrgFG.controls.org.errors?.['minlength']">
+                    {{'PCorgTooshort' | translate}}
+                    </mat-error>
+                    <mat-error *ngIf="changeOrgFG.controls.org.errors?.['required']">
+                      {{ 'PCorgRequired' | translate}}
+                    </mat-error>
+                    <mat-error *ngIf="changePassFG.controls.email.errors?.['email']">
+                      {{ 'RCemailValid' | translate}}
+                    </mat-error>
+                </mat-form-field>
+              </form>
+              <mat-action-row>
+                <button mat-button color="primary" (click)="changeOrg(changeOrgFG.value.email)">{{ 'PCsubmit' | translate}}</button>
               </mat-action-row>
             </mat-expansion-panel>
           </mat-accordion>

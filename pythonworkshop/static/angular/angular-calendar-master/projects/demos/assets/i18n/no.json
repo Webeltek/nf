@@ -43,11 +43,16 @@
      "PCchangeEmail": "Endre e-postadresse",
      "PCchangeEmailDescr": "Skriv inn",
      "PCemailTooshort": "Epost skal være lenger!",
+     "PCemailRequired": "Epost påkreves!",
      "PCchangePass": "Endre passord",
      "PCchangePassDescr": "Skriv inn",
      "PCsubmit": "Bekreft",
      "PCemail": "E-post",
      "PCduplicateEmail": "Epost finnes allerede: {{value}}",
+     "PCorg" : "Organisasjon",
+     "PCchangeOrg": "Endre organization",
+     "PCorgTooshort": "Organization skal være lenger!",
+     "PCorgRequired": "Organization påkreves!",
 
      "CPCpassChangeSuccess" : "Passord endret for e-post : ",
 

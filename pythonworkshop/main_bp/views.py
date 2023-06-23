@@ -383,6 +383,24 @@ def change_pass_request():
             msg='Invalid email'    
     return jsonify({'user_email': user_email, 'msg':msg})
 
+@main_bp.route('/api/services/change_org', methods=['GET', 'POST'])
+@access_required
+def change_pass_request():
+    msg = ''
+    if request.method == 'POST':
+        req_json = request.get_json()
+        user_email = req_json['resPassEmail']
+        user = db.session.execute(db.select(User).where(User.user_email==user_email)).scalar_one_or_none()
+        if user is not None :
+            token = user.generate_org_change_token()
+            send_email(user.user_email, 'Reset Your Password',
+                       'auth/email/change_org',
+                       user=user, token=token)
+            msg='En e-post med instruksjoner for å innføre din ny passord er sendt til deg.'
+        else:
+            msg='Invalid email'    
+    return jsonify({'user_email': user_email, 'msg':msg})
+
 @main_bp.route('/api/services/db_save_payment',methods=['GET','POST'])
 @access_required
 def db_save_payment():

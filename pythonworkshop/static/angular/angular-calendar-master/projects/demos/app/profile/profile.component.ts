@@ -54,6 +54,10 @@ export class ProfileComponent implements OnInit {
     email: new UntypedFormControl('',[Validators.required, Validators.email,Validators.minLength(5)]),
   })
 
+  changeOrgFG = new UntypedFormGroup({
+    org: new UntypedFormControl('',[Validators.required,Validators.email,Validators.minLength(5)]),
+  })
+
   ngOnInit(): void {
     this.user=this.tokenStorage.getUser();
   }
@@ -78,6 +82,27 @@ export class ProfileComponent implements OnInit {
 
   changePass(resPassEmail: string ): void {
     this.authService.changePass(resPassEmail).subscribe({
+      next: (data) => {
+        let respAny = data.body as any;
+        //console.log("loginComp dataObj.user:",dataObj.user)
+        if (respAny.hasOwnProperty('user_email')){
+          this.param.value = respAny.user_email;
+          this.serviceMsg$.next(`RCalertSuccess`);
+        } else {
+          this.errorMessage = "Wrong username or password!";
+        }
+
+      },
+      error: err => {
+        this.errorMessage = err.error.message;
+        this.isPassResetFailed = true;
+      }
+    }
+    );
+  }
+
+  changeOrg(resOrgEmail: string ): void {
+    this.authService.changeOrg(resOrgEmail).subscribe({
       next: (data) => {
         let respAny = data.body as any;
         //console.log("loginComp dataObj.user:",dataObj.user)

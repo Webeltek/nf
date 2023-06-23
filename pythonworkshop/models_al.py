@@ -160,7 +160,21 @@ class User(db.Model):
           db.session.add(self)
           db.session.commit()
           return True
-        
+        return False
+  
+  def generate_org_change_token(self, expiration=3600):
+        encodeed = jwt.encode({'confirm': self.id,'exp': datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(seconds=expiration)},current_app.config['SECRET_KEY'], algorithm='HS256')
+        return encodeed
+  
+  def change_org(self,email,neworg):
+        user = db.session.execute(db.select(User).where(User.user_email == email)).scalar_one_or_none()
+        if user.id!=self.id:
+            return False
+        if neworg is not None:
+          self.ou = neworg
+          db.session.add(self)
+          db.session.commit()
+          return True
         return False
 
   def generate_email_change_token(self, new_email, expiration=3600):

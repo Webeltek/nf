@@ -104,6 +104,12 @@ export class AuthService {
     }, { headers : this.httpHeaders, observe : 'response', responseType : 'json'} );
   }
 
+  changeOrg(resOrgEmail: string): Observable<any> {
+    return this.http.post(baseurl+MAIN_API + 'change_org', {
+      resOrgEmail : resOrgEmail,
+    }, { headers : this.httpHeaders, observe : 'response', responseType : 'json'} );
+  }
+
   inputChangePass( email: string, oldpass: string,newpass: string): Observable<any> {
     return this.http.post(baseurl + AUTH_API + 'input_change_pass', {
       email : email,

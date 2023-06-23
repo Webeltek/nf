@@ -43,11 +43,17 @@
     "PCchangeEmail": "Change email",
     "PCchangeEmailDescr": "type in",
     "PCemailTooshort": "Email too short!",
+    "PCemailRequired": "Email required!",
     "PCchangePass": "Change password",
     "PCchangePassDescr": "type in",
     "PCsubmit": "Submit",
     "PCemail": "Email",
     "PCduplicateEmail": "Email already exists: {{value}}",
+    "PCorg" : "Organization",
+    "PCchangeOrg": "Change organization",
+    "PCorgTooshort": "Organization too short!",
+    "PCorgRequired": "Organization is required!",
+
 
     "CPCpassChangeSuccess" : "Successfully changed pass for: ",
 
