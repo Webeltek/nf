@@ -609,7 +609,7 @@ export class EditBooksDialog implements OnInit{
         const isUnique = isDuplicate ? "must be unique" : "";  
         const minLength = atIdxAbsCtrl.value.length < 3 ? "must be at least 3 characters" : "";
         const errorObj =  { error : isUnique+minLength };
-        console.log("HomeC isBookDuplicate() isBookDuplicate().error:",errorObj.error)
+        //console.log("HomeC isBookDuplicate() isBookDuplicate().error:",errorObj.error)
         
       return errorObj.error.length>0 ? errorObj: null;
     }
@@ -646,13 +646,15 @@ export class EditBooksDialog implements OnInit{
   }
 
   addBook(newBookName: string){
-    this.httpService.insertBook({row:'',title:newBookName})
-    this.booksArr.push(this.fb.control(newBookName));
-    this.updateValidators();
+      if (this.booksArr.at(this.booksArr.length).value){
+        this.httpService.insertBook({row:'',title:newBookName})
+        this.booksArr.push(this.fb.control(newBookName));
+        this.updateValidators();
+      }
   }
 
   removeBook(idx: number){
-    console.log("HomeC booksArr room to delete: ",this.booksArr.value[idx])
+    //console.log("HomeC booksArr book to delete: ",this.booksArr.value[idx])
     this.httpService.deleteBook({row:idx.toString(),title:this.booksArr.value[idx]});
     this.booksArr.removeAt(idx);
     this.markedBooksToDel = [];
@@ -660,7 +662,7 @@ export class EditBooksDialog implements OnInit{
       this.markedBooksToDel.push({idx:roomInd,markedToDel:false});
     }
     this.updateValidators();
-    console.log("HomeC markedbooksToDel:",this.markedBooksToDel)
+    //console.log("HomeC markedbooksToDel:",this.markedBooksToDel)
   }
 
   onSubmit(){

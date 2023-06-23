@@ -131,7 +131,7 @@ export class HttpEventService{
                 }
                 this.booksArr$.next(books);
                 this.addedEvent.emit(null);
-                console.log("HttpServ insertBook() response: " + JSON.stringify(response));
+                //console.log("HttpServ insertBook() response: " + JSON.stringify(response));
                 },
                 error: (error) => { 
                     console.log("HttpServ insertBook() error : " + JSON.stringify(error)) ; }
@@ -151,7 +151,7 @@ export class HttpEventService{
                     }
                     this.booksArr$.next(books);
                     this.addedEvent.emit(null);
-                    console.log("deleteEvent() response: " + JSON.stringify(response));
+                    //console.log("deleteBook() response: " + JSON.stringify(response));
                 },
                 error: (error) => { 
                     console.log("deleteBook() error : " + JSON.stringify(error)) ; }

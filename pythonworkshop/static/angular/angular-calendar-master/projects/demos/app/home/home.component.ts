@@ -578,7 +578,7 @@ export class EditRoomsDialog implements OnInit{
   }
 
   addRoom(newRoomName: string){
-    this.httpService.insertBook({row:'',title:newRoomName})
+    this.httpService.insertRoom({row:'',title:newRoomName})
     this.roomsArr.push(this.fb.control(newRoomName));
     this.updateValidators();
   }
@@ -660,18 +660,18 @@ export class EditBooksDialog implements OnInit{
   }
 
   updateValidators(){
-    for (let roomInd =0; roomInd < this.booksArr.length; roomInd++){
-      this.booksArr.at(roomInd).setValidators([this.isBookDuplicate(this.booksArr.at(roomInd),roomInd)])
+    for (let bookInd =0; bookInd < this.booksArr.length; bookInd++){
+      this.booksArr.at(bookInd).setValidators([this.isBookDuplicate(this.booksArr.at(bookInd),bookInd)])
     }
   }
 
   ngOnInit(): void {
-    for (let roomInd =0; roomInd < this.books.length; roomInd++){
-      this.booksArr.push(this.fb.control(this.books[roomInd]));
+    for (let bookInd =0; bookInd < this.books.length; bookInd++){
+      this.booksArr.push(this.fb.control(this.books[bookInd]));
     }
     this.updateValidators();
-    for (let roomInd =0; roomInd < this.booksArr.length; roomInd++){
-        this.markedBooksToDel.push({idx:roomInd,markedToDel:false});
+    for (let bookInd =0; bookInd < this.booksArr.length; bookInd++){
+        this.markedBooksToDel.push({idx:bookInd,markedToDel:false});
     }
   }
 
@@ -690,21 +690,27 @@ export class EditBooksDialog implements OnInit{
   }
 
   addBook(newBookName: string){
-    this.httpService.insertBook({row:'',title:newBookName})
-    this.booksArr.push(this.fb.control(newBookName));
-    this.updateValidators();
+    if (this.booksArr.at(this.booksArr.length-1).value){
+      this.httpService.insertBook({row:'',title:newBookName})
+      this.booksArr.push(this.fb.control(newBookName));
+      this.markedBooksToDel = [];
+      for (let bookInd =0; bookInd < this.booksArr.length; bookInd++){
+        this.markedBooksToDel.push({idx:bookInd,markedToDel:false});
+      }
+      this.updateValidators();
+    }
   }
 
   removeBook(idx: number){
-    console.log("HomeC booksArr room to delete: ",this.booksArr.value[idx])
+    //console.log("HomeC booksArr room to delete: ",this.booksArr.value[idx])
     this.httpService.deleteBook({row:idx.toString(),title:this.booksArr.value[idx]});
     this.booksArr.removeAt(idx);
     this.markedBooksToDel = [];
-    for (let roomInd =0; roomInd < this.booksArr.value.length; roomInd++){
-      this.markedBooksToDel.push({idx:roomInd,markedToDel:false});
+    for (let bookInd =0; bookInd < this.booksArr.value.length; bookInd++){
+      this.markedBooksToDel.push({idx:bookInd,markedToDel:false});
     }
     this.updateValidators();
-    console.log("HomeC markedbooksToDel:",this.markedBooksToDel)
+    //console.log("HomeC markedbooksToDel:",this.markedBooksToDel)
   }
 
   onSubmit(){
