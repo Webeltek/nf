@@ -29,7 +29,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 templ_dir = os.path.abspath('pythonworkshop/templates')
 static_dir = os.path.abspath('pythonworkshop/static')
-print('Static folder : ' + str(static_dir))
+#print('Static folder : ' + str(static_dir))
 
 db = SQLAlchemy()
 mail = Mail()
@@ -46,7 +46,7 @@ def create_app(config_name):
   _config = create_from_config_file(Configuration, entity_conf=[{"class": RPConfiguration, "attr": "rp"}],filename=conf)
   app=oidc_provider_init_app(_config.rp,template_folder=templ_dir)
 
-  print('config_name : ' + str(config[config_name]) )
+  #print('config_name : ' + str(config[config_name]) )
   #app.config.from_object(config[config_name]) warning!!render_template,  doesn't instatiate config object!!!
   #app.config.from_envvar('DOTENV_FILE')
   #python-dotenv doesn't override existing envvar SECRET_KEY value which defauts to None!
@@ -71,9 +71,9 @@ def create_app(config_name):
     "CACHE_DIR": tmp_dir})
 
   #login_manager.init_app(app)
-  print('mail server: ' + app.config['MAIL_SERVER'])
-  print('ENV value: ' + app.config['ENV'])
-  print('DEBUG value :' + str(app.config['DEBUG']))
+  #print('mail server: ' + app.config['MAIL_SERVER'])
+  #print('ENV value: ' + app.config['ENV'])
+  #print('DEBUG value :' + str(app.config['DEBUG']))
   print('mail user '+ str(os.environ.get('MAIL_USERNAME')) )
   from .main_bp import main_bp
   app.register_blueprint(main_bp)

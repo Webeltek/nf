@@ -426,7 +426,40 @@ def input_change_pass():
             return jsonify({'user_email':email,'msg':'Password changed!'})
         else:
             msg='Wrong username or password!'
-    return jsonify({'user':'nonexistent','msg':msg}) 
+    return jsonify({'user':'nonexistent','msg':msg})
+
+@auth_bp.route('/api/auth/change_org/<token>', methods=['GET', 'POST'])
+def change_pass(token):
+    msg=''
+    emailcheck=False
+    tokens_user_id = User.get_tokens_user_id(token)
+    user = db.session.execute(db.select(User).where(User.id==tokens_user_id)).scalar_one_or_none()
+    if user is not None :
+        msg='User exists'
+        emailcheck=True
+    else:
+        msg='Invalid email.'
+    #print(f'auth_bp.change_pass msg: {msg}')    
+    return redirect(f'https://webeltek.org/change_pass?emailcheck={emailcheck}&change_org={True}')
+
+@auth_bp.route('/api/auth/input_change_org', methods=['POST','GET'])
+def input_change_pass():
+    msg = ''
+    email= request.json['email']
+    oldpass = request.json['oldpass']
+    neworg = request.json['neworg']
+    #print(f'auth_bp.input_change_pass email, oldpass, newpass:{email,oldpass,neworg}')
+    if request.method == 'POST':
+        user = db.session.execute(db.select(User).where(User.user_email==email)).scalar_one_or_none()
+        if user is not None:
+            print(f'auth_bp.input_change_pass user email to change org:{user.user_email}')
+        if user is not None and user.verify_password(oldpass) and user.user_confirmed:
+            user.change_org(email,neworg)
+            #user.login_user()
+            return jsonify({'user_email':email,'neworg':neworg,'msg':'Org changed!'})
+        else:
+            msg='Wrong username or password!'
+    return jsonify({'user':'nonexistent','msg':msg})  
 
 """socketio disabled"""
 def confirm_event(userstate):

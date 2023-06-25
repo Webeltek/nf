@@ -23,6 +23,13 @@ export class ChangePassComponent implements OnInit {
   errorMessage = '';
   matcher = new MyErrorStateMatcher();
   color : ThemePalette = 'accent'
+  isChangeOrg = false;
+
+  changeOrgFG = new UntypedFormGroup({
+    email: new UntypedFormControl('',[Validators.required, Validators.email,Validators.minLength(5)]),
+    oldpass: new UntypedFormControl('',[Validators.required,Validators.minLength(6)]),
+    neworg : new UntypedFormControl('',[Validators.required,Validators.minLength(6)])
+  });
 
   constructor(private authService: AuthService, 
     private tokenStorage: TokenStorageService,
@@ -30,6 +37,7 @@ export class ChangePassComponent implements OnInit {
 
   ngOnInit(): void {
     let userEmailexists = this.actRoute.snapshot.queryParamMap.get('emailcheck');
+    this.isChangeOrg = this.actRoute.snapshot.queryParamMap.get('change_org')==="True";
   }
 
   isSendingChangePass : BehaviorSubject<boolean> = new BehaviorSubject(false);
@@ -40,20 +48,31 @@ export class ChangePassComponent implements OnInit {
     this.authService.inputChangePass( email, oldpass,newpass).subscribe({
       next : (response) => {
         this.isSendingChangePass.next(false);
-        let responseObj = response.body as any;
-        let user_id : number = responseObj.temp_user_id;
-          let sentToken = response.sent_token;
-          this.tokenStorage.saveConfirmToken(sentToken)
-          this.isSuccessful = true;
-          this.isInputChangePassFailed = false;
+        this.isSuccessful = true;
+        this.isInputChangePassFailed = false;
       },
       error : (err) => {
         this.isSendingChangePass.next(false);
         this.errorMessage = err.error.message;
         this.isInputChangePassFailed = true;
       }
-    }
-    );
-    
+    });
+  }
+
+  inputChangeOrg(email: string,oldpass: string,neworg: string): void {
+    //console .log("ChPC inputchangePass email, oldpass, newpass: ",email,oldpass,newpass)
+    this.isSendingChangePass.next(true);
+    this.authService.inputChangeOrg( email, oldpass,neworg).subscribe({
+      next : (response) => {
+        this.isSendingChangePass.next(false);
+        this.isSuccessful = true;
+        this.isInputChangePassFailed = false;
+      },
+      error : (err) => {
+        this.isSendingChangePass.next(false);
+        this.errorMessage = err.error.message;
+        this.isInputChangePassFailed = true;
+      }
+    });
   }
 }

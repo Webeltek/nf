@@ -19,45 +19,91 @@
                       [color]="color"></mat-spinner>
                     </div>
                   </ng-template>
-     <div class="mt-2 d-flex justify-content-center">              
-        <form [formGroup]="changePassFG">  
-          <mat-form-field appearance="fill">
-            <mat-label>{{'PCemail' |translate}}</mat-label>
-            <input matInput formControlName="email" type="email" [errorStateMatcher]="matcher">
-              <mat-error *ngIf="changePassFG.controls.email.errors?.['email']">
-                {{ 'PCemailTooshort' | translate}}
-              </mat-error>
-              <mat-error *ngIf="changePassFG.controls.email.errors?.['required']">
-                {{'RCemailRequired' | translate }}
-              </mat-error>
-          </mat-form-field>
-          <mat-form-field appearance="fill">
-            <mat-label>{{'PColdPass' |translate}}</mat-label>
-            <input matInput formControlName="oldpass" type="password" [errorStateMatcher]="matcher">
-              <mat-error *ngIf="changePassFG.controls.oldpass.errors?.['minlength']">
-              {{'LCpassMinChar' | translate}}
-              </mat-error>
-              <mat-error *ngIf="changePassFG.controls.oldpass.errors?.['required']">
-              {{'LCpassRequired' | translate }}
-              </mat-error>
-          </mat-form-field>
-          <mat-form-field appearance="fill">
-            <mat-label>{{'PCnewPass' |translate}}</mat-label>
-            <input matInput formControlName="newpass" type="password" [errorStateMatcher]="matcher">
-              <mat-error *ngIf="changePassFG.controls.newpass.errors?.['minlength']">
-              {{'LCpassMinChar' | translate}}
-              </mat-error>
-              <mat-error *ngIf="changePassFG.controls.newpass.errors?.['required']">
-              {{'LCpassRequired' | translate }}
-              </mat-error>
-          </mat-form-field>
-          <mat-action-row>
-            <button mat-button color="primary" 
-            (click)="inputChangePass(changePassFG.value.email,changePassFG.value.oldpass,changePassFG.value.newpass)">{{ 'PCsubmit' | translate}}</button>
-          </mat-action-row>
-        </form>  
-        <div class="alert alert-success" *ngIf="isSuccessful">
-          {{'CPCpassChangeSuccess' | translate }}{{changePassFG.value.email}}
-        </div>
+     <div class="mt-2 d-flex justify-content-center">
+      <ng-container class="d-flex justify-content-center"
+        ngIf*="!isChangeOrg ; then changePassTempl else changeOrgTempl"></ng-container>
+        <ng-template #changePassTempl>
+          <form [formGroup]="changePassFG">  
+            <mat-form-field appearance="fill">
+              <mat-label>{{'PCemail' |translate}}</mat-label>
+              <input matInput formControlName="email" type="email" [errorStateMatcher]="matcher">
+                <mat-error *ngIf="changePassFG.controls.email.errors?.['email']">
+                  {{ 'PCemailTooshort' | translate}}
+                </mat-error>
+                <mat-error *ngIf="changePassFG.controls.email.errors?.['required']">
+                  {{'RCemailRequired' | translate }}
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>{{'PColdPass' |translate}}</mat-label>
+              <input matInput formControlName="oldpass" type="password" [errorStateMatcher]="matcher">
+                <mat-error *ngIf="changePassFG.controls.oldpass.errors?.['minlength']">
+                {{'LCpassMinChar' | translate}}
+                </mat-error>
+                <mat-error *ngIf="changePassFG.controls.oldpass.errors?.['required']">
+                {{'LCpassRequired' | translate }}
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>{{'PCnewPass' |translate}}</mat-label>
+              <input matInput formControlName="newpass" type="password" [errorStateMatcher]="matcher">
+                <mat-error *ngIf="changePassFG.controls.newpass.errors?.['minlength']">
+                {{'LCpassMinChar' | translate}}
+                </mat-error>
+                <mat-error *ngIf="changePassFG.controls.newpass.errors?.['required']">
+                {{'LCpassRequired' | translate }}
+                </mat-error>
+            </mat-form-field>
+            <mat-action-row>
+              <button mat-button color="primary" 
+              (click)="inputChangePass(changePassFG.value.email,changePassFG.value.oldpass,changePassFG.value.newpass)">{{ 'PCsubmit' | translate}}</button>
+            </mat-action-row>
+          </form>  
+          <div class="alert alert-success" *ngIf="isSuccessful">
+            {{'CPCpassChangeSuccess' | translate }}{{changePassFG.value.email}}
+          </div>
+        </ng-template>
+        <ng-template #changeOrgTempl>
+          <form [formGroup]="changePassFG">  
+            <mat-form-field appearance="fill">
+              <mat-label>{{'PCemail' |translate}}</mat-label>
+              <input matInput formControlName="email" type="email" [errorStateMatcher]="matcher">
+                <mat-error *ngIf="changePassFG.controls.email.errors?.['email']">
+                  {{ 'PCemailTooshort' | translate}}
+                </mat-error>
+                <mat-error *ngIf="changePassFG.controls.email.errors?.['required']">
+                  {{'RCemailRequired' | translate }}
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>{{'PColdPass' |translate}}</mat-label>
+              <input matInput formControlName="oldpass" type="password" [errorStateMatcher]="matcher">
+                <mat-error *ngIf="changePassFG.controls.oldpass.errors?.['minlength']">
+                {{'LCpassMinChar' | translate}}
+                </mat-error>
+                <mat-error *ngIf="changePassFG.controls.oldpass.errors?.['required']">
+                {{'LCpassRequired' | translate }}
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="fill">
+              <mat-label>{{'PCnewPass' |translate}}</mat-label>
+              <input matInput formControlName="newpass" type="password" [errorStateMatcher]="matcher">
+                <mat-error *ngIf="changePassFG.controls.newpass.errors?.['minlength']">
+                {{'LCpassMinChar' | translate}}
+                </mat-error>
+                <mat-error *ngIf="changePassFG.controls.newpass.errors?.['required']">
+                {{'LCpassRequired' | translate }}
+                </mat-error>
+            </mat-form-field>
+            <mat-action-row>
+              <button mat-button color="primary" 
+              (click)="inputChangePass(changePassFG.value.email,changePassFG.value.oldpass,changePassFG.value.newpass)">{{ 'PCsubmit' | translate}}</button>
+            </mat-action-row>
+          </form>  
+          <div class="alert alert-success" *ngIf="isSuccessful">
+            {{'CPCpassChangeSuccess' | translate }}{{changePassFG.value.email}}
+          </div>
+        </ng-template>               
+        
     </div>
   </div>
