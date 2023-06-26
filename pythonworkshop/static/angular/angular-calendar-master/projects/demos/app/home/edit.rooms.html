@@ -20,6 +20,10 @@
           <mat-icon>add_circle</mat-icon>
         </button>    
     </div>
+    <mat-error *ngIf="roomsFormGroup.controls.roomsArr.errors?.['required'] ||
+    roomsFormGroup.controls.roomsArr.errors?.['minlength']">
+                {{'LCpassMinChar' | translate}}
+    </mat-error>
   </form>
 </div>
 <div mat-dialog-actions>

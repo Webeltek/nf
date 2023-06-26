@@ -400,14 +400,17 @@ def change_pass(token):
     msg=''
     emailcheck=False
     tokens_user_id = User.get_tokens_user_id(token)
-    user = db.session.execute(db.select(User).where(User.id==tokens_user_id)).scalar_one_or_none()
-    if user is not None :
-        msg='User exists'
-        emailcheck=True
+    if tokens_user_id is not False:
+        user = db.session.execute(db.select(User).where(User.id==tokens_user_id)).scalar_one_or_none()
+        if user is not None :
+            msg='User exists'
+            emailcheck=True
+        else:
+            msg='Invalid email.'
     else:
-        msg='Invalid email.'
+        return jsonify({'msg':'Error in get_tokens_id'})        
     print(f'auth_bp.change_pass msg: {msg}')    
-    return redirect(f'https://webeltek.org/change_pass?emailcheck={emailcheck}')
+    return redirect(f'https://webeltek.org/change_pass?emailcheck={emailcheck}&change_org={False}')
 
 @auth_bp.route('/api/auth/input_change_pass', methods=['POST','GET'])
 def input_change_pass():
@@ -429,7 +432,7 @@ def input_change_pass():
     return jsonify({'user':'nonexistent','msg':msg})
 
 @auth_bp.route('/api/auth/change_org/<token>', methods=['GET', 'POST'])
-def change_pass(token):
+def change_org(token):
     msg=''
     emailcheck=False
     tokens_user_id = User.get_tokens_user_id(token)
@@ -443,7 +446,7 @@ def change_pass(token):
     return redirect(f'https://webeltek.org/change_pass?emailcheck={emailcheck}&change_org={True}')
 
 @auth_bp.route('/api/auth/input_change_org', methods=['POST','GET'])
-def input_change_pass():
+def input_change_org():
     msg = ''
     email= request.json['email']
     oldpass = request.json['oldpass']

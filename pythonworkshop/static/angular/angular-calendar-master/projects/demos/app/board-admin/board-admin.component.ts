@@ -45,7 +45,7 @@ export class BoardAdminComponent implements OnInit {
     private httpService: HttpEventService,
     public tokenStorage: TokenStorageService) { }
 
-  displayedColumns: string[] = ['user_email','address','ou','is_logged_in','last_seen'];
+  displayedColumns: string[] = ['user_email','ou','is_logged_in','last_seen'];
   dataToDisplay = [...ELEMENT_DATA];
   dataSourceEx = new ExampleDataSource(this.dataToDisplay);
 

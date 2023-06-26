@@ -23,7 +23,7 @@ export class ChangePassComponent implements OnInit {
   errorMessage = '';
   matcher = new MyErrorStateMatcher();
   color : ThemePalette = 'accent'
-  isChangeOrg = false;
+  combEmailExistsChangeOrg$ : BehaviorSubject<boolean>= new BehaviorSubject(false);
 
   changeOrgFG = new UntypedFormGroup({
     email: new UntypedFormControl('',[Validators.required, Validators.email,Validators.minLength(5)]),
@@ -36,8 +36,14 @@ export class ChangePassComponent implements OnInit {
     private actRoute: ActivatedRoute, ) { }
 
   ngOnInit(): void {
-    let userEmailexists = this.actRoute.snapshot.queryParamMap.get('emailcheck');
-    this.isChangeOrg = this.actRoute.snapshot.queryParamMap.get('change_org')==="True";
+    this.actRoute.queryParams.subscribe(params=>{
+      if (params['emailcheck']==="True" && params['change_org']==="True"){
+
+         this.combEmailExistsChangeOrg$.next(params['change_org']==="True" && params['emailCheck']==="True");
+      }
+    });
+    
+    console.log("CP query param combEmailExistsChangeOrg$",this.combEmailExistsChangeOrg$);
   }
 
   isSendingChangePass : BehaviorSubject<boolean> = new BehaviorSubject(false);

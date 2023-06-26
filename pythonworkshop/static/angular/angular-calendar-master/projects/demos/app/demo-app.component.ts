@@ -202,18 +202,30 @@ export class DemoAppComponent implements OnInit, OnDestroy{
       });
     }
     if (newEnd) {   // if event is res/dragged
-      console.log("DA event modified")
+      //console.log("DA event modified")
       event.end = newEnd;
       if(newStart){
         event.start=newStart;
       }
-      console.log("DA event modified endmills",event.end.getTime())
+      //console.log("DA event modified endmills",event.end.getTime());
+      this.events = [...this.events.map((iEvent) => {
+        if (iEvent === event) {
+          return {
+            ...event,
+            start: newStart,
+            end: newEnd,
+          };
+        }
+        return iEvent;
+      })]; 
       this.httpService.updatePythEvent(event.id as string,this.tokenStorage.getUser().id,event.start.getTime(),
         event.end.getTime(),event.roomname).subscribe((resp)=>{
           if(resp){
-            this.events=[...this.convertDbEvents((resp as any).events)];
+            //this.events=this.convertDbEvents((resp as any).events);
           }
         });
+
+       
     }
 
     if (this.view === 'month') {

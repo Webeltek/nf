@@ -17,10 +17,10 @@ class User(db.Model):
   user_confirmed = db.Column(db.Boolean,default=False)
   user_conf_by_admin = db.Column(db.Boolean,default=False)
   access_token = db.Column(db.String,default='empty token')
-  last_seen = db.Column(db.String,default='initial date')
+  last_seen = db.Column(db.String,default='')
   is_admin = db.Column(db.Boolean,default=False)
-  ou = db.Column(db.String,default='init ou')
-  address = db.Column(db.String,default='init address')
+  ou = db.Column(db.String,default='')
+  address = db.Column(db.String,default='')
 
   events = db.relationship('Event', backref='user', lazy=True)
 

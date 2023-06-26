@@ -578,9 +578,14 @@ export class EditRoomsDialog implements OnInit{
   }
 
   addRoom(newRoomName: string){
-    this.httpService.insertRoom({row:'',title:newRoomName})
-    this.roomsArr.push(this.fb.control(newRoomName));
-    this.updateValidators();
+    if (this.roomsArr.at(this.roomsArr.length-1).value){
+      //this.httpService.insertRoom({row:'',title:newRoomName})
+      this.roomsArr.push(this.fb.control(newRoomName));
+      for (let roomInd =0; roomInd < this.roomsArr.length; roomInd++){
+        this.markedRoomsToDel.push({idx:roomInd,markedToDel:false});
+      }
+      this.updateValidators();
+    }
   }
 
   removeRoom(idx: number){
@@ -691,7 +696,7 @@ export class EditBooksDialog implements OnInit{
 
   addBook(newBookName: string){
     if (this.booksArr.at(this.booksArr.length-1).value){
-      this.httpService.insertBook({row:'',title:newBookName})
+      //this.httpService.insertBook({row:'',title:newBookName})
       this.booksArr.push(this.fb.control(newBookName));
       this.markedBooksToDel = [];
       for (let bookInd =0; bookInd < this.booksArr.length; bookInd++){

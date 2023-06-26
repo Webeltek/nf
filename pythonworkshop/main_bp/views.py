@@ -385,7 +385,7 @@ def change_pass_request():
 
 @main_bp.route('/api/services/change_org', methods=['GET', 'POST'])
 @access_required
-def change_pass_request():
+def change_org_request():
     msg = ''
     if request.method == 'POST':
         req_json = request.get_json()
