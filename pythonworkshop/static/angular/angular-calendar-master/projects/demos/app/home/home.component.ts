@@ -231,8 +231,8 @@ export class HomeComponent implements OnInit, OnDestroy {
         },
       });
   
-      dialogRef.afterClosed().subscribe(
-        (obj) => {
+      dialogRef.afterClosed().subscribe({
+        next :(obj) => {
           if (typeof obj !== 'undefined' && typeof obj.toEditRooms !== 'undefined') {
             console.log("HomeComp dial afterClosed() obj.toEditRooms",obj.toEditRooms);
             let roomTitles: string[] = obj.toEditRooms;
@@ -241,10 +241,10 @@ export class HomeComponent implements OnInit, OnDestroy {
             console.log("HomeC dial afterClosed obj is undefined")
           }
         },
-        (error) => {
+        error : (error) => {
           console.log("HomeComp editRooms() afterClosed() error : " + error);
         }
-      );
+      });
   
       dialogRef.backdropClick().subscribe((mouseEvent)=>{
         let roomTitles: string[] = this.httpService.roomsArr$.getValue()
@@ -590,7 +590,7 @@ export class EditRoomsDialog implements OnInit{
 
   removeRoom(idx: number){
     console.log("HomeC roomsArr room to delete: ",this.roomsArr.value[idx])
-    this.httpService.deleteBook({row:idx.toString(),title:this.roomsArr.value[idx]});
+    this.httpService.deleteRoom({row:idx.toString(),title:this.roomsArr.value[idx]});
     this.roomsArr.removeAt(idx);
     this.markedRoomsToDel = [];
     for (let roomInd =0; roomInd < this.roomsArr.value.length; roomInd++){
@@ -604,10 +604,11 @@ export class EditRoomsDialog implements OnInit{
     let roomNames : string[]= [];
     let controls = this.roomsArr.controls;
     for (let control of controls){
-      control.updateValueAndValidity();
+      this.updateInput(control.value,controls.indexOf(control));
       console.log("HomeComp roomsDialog onSubmit() control.errors: ",control.errors); 
       console.log("HomeComp roomsDialog onSubmit() valid",this.roomsArr.valid); 
     }
+    const toUpdateRooms = this.roomsArr.value;
     if(this.roomsArr.valid) {
       this.dialogRef.close({
         toEditRooms: this.roomsArr.value,

@@ -133,14 +133,18 @@ def deleteroom():
 @access_required
 def updaterooms():
     if request.method == 'POST':
-        req_rooms = request.get_json()
-        db_rooms = db.session.execute(db.select(Room)).scalars()
-        for index,db_room in enumerate(db_rooms):
-                db_room.title = req_rooms[index]
-                print(f'auth_bp updatetrooms index: {index}')
-                print(f'auth_bp updatetrooms row and title: {db_room.row, db_room.title}')  
-                db.session.add(db_room)
-                db.session.commit()
+        req_rooms = request.get_json()    
+        db_rooms = db.session.execute(db.select(Room)).scalars().all()
+        print(f'db_rooms,req_rooms{db_rooms},{req_rooms}'.encode('utf-8','ignore'))
+        for index,req_room in enumerate(req_rooms):
+             if index < len(db_rooms):
+                    db_room = db_rooms[index]
+                    db_room.title = req_room
+                    db.session.add(db_room)
+             else:
+                 print(f'req_room with higher index',req_room)
+                 db.session.add(Room(title=req_room))      
+        db.session.commit()
         new_rooms = db.session.execute(db.select(Room)).scalars().all()
         rooms_list = []    
         for room in new_rooms:
@@ -204,7 +208,7 @@ def deletebook():
 def updatebooks():
     if request.method == 'POST':
         req_books = request.get_json()
-        db_books = db.session.execute(db.select(Book)).scalars()
+        db_books = db.session.execute(db.select(Book)).scalars().all()
         for index,db_book in enumerate(db_books):
                 db_book.title = req_books[index]
                 print(f'auth_bp updatetbooks index: {index}')
