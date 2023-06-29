@@ -22,12 +22,12 @@ import { DateAdapter } from '../../date-adapters/date-adapter';
       let-dayEndHour="dayEndHour"
       let-dayEndMinute="dayEndMinute"
       let-isVisible="isVisible"
-      let-leftPx="leftPx"
+      let-topPx="topPx"
     >
       <div
         class="cal-current-time-marker"
         *ngIf="isVisible"
-        [style.left.px]="leftPx"
+        [style.top.px]="topPx"
       ></div>
     </ng-template>
     <ng-template
@@ -39,7 +39,7 @@ import { DateAdapter } from '../../date-adapters/date-adapter';
         dayEndHour: dayEndHour,
         dayEndMinute: dayEndMinute,
         isVisible: (marker$ | async)?.isVisible,
-        leftPx: (marker$ | async)?.left
+        topPx: (marker$ | async)?.top
       }"
     >
     </ng-template>
@@ -70,7 +70,7 @@ export class CalendarWeekViewCurrentTimeMarkerComponent implements OnChanges {
 
   columnDate$ = new BehaviorSubject<Date>(undefined);
 
-  marker$: Observable<{isVisible: boolean; left: number;}> 
+  marker$: Observable<{isVisible: boolean; top: number;}> 
   = this.zone.onStable.pipe(
     switchMap(() => interval(60 * 1000)),
     startWith(0),
@@ -89,16 +89,19 @@ export class CalendarWeekViewCurrentTimeMarkerComponent implements OnChanges {
         {
         //console.log("marker now-startOfDay diff in minutes",this.dateAdapter.differenceInMinutes(now, startOfDay))
         //console.log("marker start-end of day diff in min: ", this.dateAdapter.differenceInMinutes(endOfDay, startOfDay))
-        }
+        } 
       return {
         isVisible:
           this.dateAdapter.isSameDay(columnDate, now) &&
           now >= startOfDay &&
           now <= endOfDay,
-        left:
+        /* left:
           this.hourSegmentWidth * 
           this.dateAdapter.differenceInMinutes(now, startOfDay) /
-          this.dateAdapter.differenceInMinutes(endOfDay, startOfDay),
+          this.dateAdapter.differenceInMinutes(endOfDay, startOfDay), */
+        top:
+          this.dateAdapter.differenceInMinutes(now, startOfDay) *
+          hourHeightModifier,  
       };
     })
   );

@@ -100,7 +100,7 @@ export class HttpEventService{
             { headers : this.httpHeaders, observe: 'body', responseType : 'json'} ) 
             .subscribe({
                 next: (response) =>{
-                    if(response){
+                    if(response.hasOwnProperty("mod_rooms")){
                         let rooms : string[]=[];
                         let mod_rooms=(response as any).mod_rooms;
                         for (let room of mod_rooms){

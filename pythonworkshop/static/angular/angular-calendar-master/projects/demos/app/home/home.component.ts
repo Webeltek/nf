@@ -72,7 +72,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.httpService.booksArr$.subscribe((bookNamesArr)=>{
       this.booksArr= bookNamesArr;
-      //console.log("HomeComp ngOnInit() roomNamesArr",this.roomNamesArr);
+      console.log("HomeComp ngOnInit() roomNamesArr",this.roomNamesArr);
     });
     this.httpService.roomsArr$.subscribe((roomNamesArr)=>{
       this.roomNamesArr= roomNamesArr;

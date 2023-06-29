@@ -281,40 +281,6 @@ export class DemoAppComponent implements OnInit, OnDestroy{
         }
       });
 
-    this.httpService.getBooks().subscribe(result=>{
-      if( typeof result !=='undefined'){
-        let booksArr = result as any;
-        let booksArrVals = typeof booksArr.books !== 'undefined'? Object.values(booksArr.books):[];
-        let books = booksArrVals.map( (tablerow : {'row':string,'title':string}) => {
-        return tablerow.title
-      })
-      //console.log("DemoApp  getRooms().subscribe typeof roomNames:", roomNames);
-      this.httpService.booksArr$.next(books);
-      } 
-      
-    })
-    this.httpService.booksArr$.subscribe((booksArr)=>{
-      //console.log("DemoApp  roomNamesArr$.subscribe typeof roomNamesArr:", roomNamesArr);
-      this.books = booksArr;
-    });
-
-    this.httpService.getRooms().subscribe(result=>{
-      if( typeof result !=='undefined'){
-        let roomsArr = result as any;
-        let roomsArrVals = typeof roomsArr.rooms !== 'undefined'? Object.values(roomsArr.rooms):[];
-        let roomNames = roomsArrVals.map( (tablerow : {'row':string,'title':string}) => {
-        return tablerow.title
-      })
-      //console.log("DemoApp  getRooms().subscribe typeof roomNames:", roomNames);
-      this.httpService.roomsArr$.next(roomNames);
-      } 
-      
-    })
-    this.httpService.roomsArr$.subscribe((roomNamesArr)=>{
-      //console.log("DemoApp  roomNamesArr$.subscribe typeof roomNamesArr:", roomNamesArr);
-      this.rooms = roomNamesArr;
-    });
-
     this.getDbUsers();
     this.subscribeToInsertDelEvt();
     
@@ -362,7 +328,8 @@ export class DemoAppComponent implements OnInit, OnDestroy{
     this.httpService.getUsers().subscribe(
       {
           next: (response) => {
-            if(response.hasOwnProperty('users') && response.hasOwnProperty('events')) {
+            if(response.hasOwnProperty('users') && response.hasOwnProperty('events') 
+              && response.hasOwnProperty('books') && response.hasOwnProperty('rooms')) {
               let storageUsrObj = this.tokenStorage.getUser();
               this.loggedInUserId = storageUsrObj.id;
               //console.log("getDBUsers()  storageUsrObj.user_email", storageUsrObj.user_email);
@@ -374,6 +341,19 @@ export class DemoAppComponent implements OnInit, OnDestroy{
               this.users = [...this.users];
               const pythEvts = respObj.events;
               this.events = [...this.convertDbEvents(pythEvts)];
+              const bookRows = typeof respObj.books !== 'undefined'? Object.values(respObj.books):[];
+              const bookTitles = bookRows.map( (tablerow : {'row':string,'title':string}) => {
+                  return tablerow.title
+              })
+              //console.log("DemoApp  roomNamesArr$.subscribe typeof roomNamesArr:", roomNamesArr);
+              this.books = [...bookTitles];
+              this.httpService.booksArr$.next(bookTitles);
+              let roomRows = typeof respObj.rooms !== 'undefined'? Object.values(respObj.rooms):[];
+              let roomTitles = roomRows.map( (tablerow : {'row':string,'title':string}) => {
+                return tablerow.title
+              }) 
+              this.rooms = [...roomTitles];
+              this.httpService.roomsArr$.next(roomTitles);
               //console.log("getDBUsers() this.users",this.users)
             } else if (response === "access token expired") {
               //console.log("getDbUsers() string response msg:",response);
@@ -468,7 +448,7 @@ export class DemoAppComponent implements OnInit, OnDestroy{
   deleteEvent(ids : string[]){
     this.httpService.deleteEvent(ids).subscribe((resp)=>{
       if ( resp && resp.hasOwnProperty("events")){
-        this.events = [...(resp as any).events];
+        this.events = [...this.convertDbEvents((resp as any).events)];
       }
     });
   }

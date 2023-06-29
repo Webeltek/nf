@@ -86,16 +86,19 @@ class roomd:
 @main_bp.route("/api/services/rooms", methods= ['GET'])
 @access_required
 def index_rooms():
-        rooms = []
-        rooms = db.session.scalars(db.select(Room).order_by(Room.row.asc())).all()
-        if len(rooms)<=1:
-            db.session.execute(db.insert(Room),rooms_init)
-            db.session.commit()
-        print(f'main_bp rooms {rooms}')    
-        rooms_list = []    
-        for room in rooms:
-            rooms_list.append(jsons.dump(roomd(room.row,room.title)))              
+        rooms_list = get_rooms()              
         return jsonify({'rooms':rooms_list})
+
+def get_rooms():
+    rooms = db.session.scalars(db.select(Room).order_by(Room.row.asc())).all()
+    if len(rooms)<=1:
+        db.session.execute(db.insert(Room),rooms_init)
+        db.session.commit()
+    rooms_list = []    
+    for room in rooms:
+        rooms_list.append(jsons.dump(roomd(room.row,room.title)))
+    return rooms_list      
+     
 
 @main_bp.route("/api/services/insertroom",methods=["POST","GET"])
 @access_required
@@ -160,16 +163,20 @@ class bookd:
 @main_bp.route("/api/services/books", methods= ['GET'])
 @access_required
 def index_books():
-        books = []
-        books = db.session.scalars(db.select(Book).order_by(Book.row.asc())).all()
-        if len(books)<=1:
+        books_list = get_books()
+        return jsonify({'books':books_list})
+
+def get_books():
+    books = db.session.scalars(db.select(Book).order_by(Book.row.asc())).all()
+    if len(books)<=1:
             db.session.execute(db.insert(Book),books_init)
             db.session.commit()
-        print(f'main_bp books {books}')    
-        books_list = []    
-        for book in books:
-            books_list.append(jsons.dump(bookd(book.row,book.title)))              
-        return jsonify({'books':books_list})
+    books_list = []        
+    for book in books:
+        print(f'current book{book.title}'.encode('utf-8','ignore'))
+        books_list.append(jsons.dump(bookd(book.row,book.title)))
+    return books_list    
+
 
 @main_bp.route("/api/services/insertbook",methods=["POST","GET"])
 @access_required
@@ -196,10 +203,7 @@ def deletebook():
         db.session.execute(db.delete(Event).where(Event.bookname == title))
         db.session.execute(db.delete(Book).where(Book.title==title))
         db.session.commit()
-        new_books = db.session.execute(db.select(Book)).scalars().all()
-        books_list = []    
-        for book in new_books:
-            books_list.append(jsons.dump(bookd(book.row,book.title)))
+        books_list = get_books()
         msg = 'Book deleted successfully' 
     return jsonify({'mod_books': books_list})    
 
@@ -209,16 +213,14 @@ def updatebooks():
     if request.method == 'POST':
         req_books = request.get_json()
         db_books = db.session.execute(db.select(Book)).scalars().all()
-        for index,db_book in enumerate(db_books):
-                db_book.title = req_books[index]
-                print(f'auth_bp updatetbooks index: {index}')
+        for index,req_book in enumerate(req_books):
+            if index<len(db_books) :    
+                db_book = db_books[index]
+                db_book.title = req_book
                 print(f'auth_bp updatetbooks row and title: {db_book.row, db_book.title}')  
                 db.session.add(db_book)
-                db.session.commit()
-        new_books = db.session.execute(db.select(Book)).scalars().all()
-        books_list = []    
-        for book in new_books:
-            books_list.append(jsons.dump(bookd(book.row,book.title)))        
+        db.session.commit()
+        books_list = get_books()       
         msg = 'Books updated successfully'
     return jsonify({'mod_books': books_list})                       
 
@@ -270,7 +272,9 @@ class userd:
 @main_bp.route("/api/services/users", methods= ['GET'])
 @access_required
 def index_users():
-        event_list = get_events()
+        events_list = get_events()
+        books_list = get_books()
+        rooms_list = get_rooms()
         saved_users = db.session.execute(db.select(User).order_by(User.id.asc())).scalars().all()
         users_list = []
         for user in saved_users:
@@ -279,7 +283,7 @@ def index_users():
                   user.user_is_logged_in,user.user_confirmed,
                   user.user_conf_by_admin, user.access_token, 
                   user.last_seen,user.is_admin, user.ou, user.address)))
-        return jsonify({'users':users_list,'events':event_list})    
+        return jsonify({'users':users_list,'events':events_list,'books':books_list,'rooms':rooms_list})    
        
   
 @main_bp.route("/api/services/insert",methods=["POST","GET"])
@@ -338,7 +342,7 @@ def ajax_delete():
                 for todeluid in uids:
                     #print(f'To delete uid{str(todeluid)}')
                     db.session.execute(db.delete(Event).where(Event.uid == todeluid))
-                    db.session.commit()
+        db.session.commit()
         msg = 'Record/s deleted successfully'
         events_list = get_events() 
     return jsonify({"events":events_list})
