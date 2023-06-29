@@ -100,13 +100,15 @@ export class HttpEventService{
             { headers : this.httpHeaders, observe: 'body', responseType : 'json'} ) 
             .subscribe({
                 next: (response) =>{
-                    let rooms : string[]=[];
-                    let mod_rooms=(response as any).mod_rooms;
-                    for (let room of mod_rooms){
-                        rooms.push(room.title);
-                    }
+                    if(response){
+                        let rooms : string[]=[];
+                        let mod_rooms=(response as any).mod_rooms;
+                        for (let room of mod_rooms){
+                            rooms.push(room.title);
+                        }
                     this.roomsArr$.next(rooms);
                     console.log("HttpServ updateRooms() response: " + JSON.stringify(response));
+                    }
                 },
                 error: (error) => { 
                     console.log("HttpServ updateRooms() error : " + JSON.stringify(error)) ; }
