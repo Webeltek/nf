@@ -284,7 +284,7 @@ def finalize(op_identifier, request_args):
         print(f"oidc_rp finalize is_checkout {is_checkout}")
         if is_checkout=="True":
             print("inside if True condition finalise is checkout = True")
-            return redirect(f'https://webeltek.org/vipps_checkout?username={usr_email}&bookname=${bookname}&vipps_sub={usr_sub}&usr_phone={usr_phone}')
+            return redirect(f'https://webeltek.org/vipps_checkout?username={usr_email}&bookname={bookname}&vipps_sub={usr_sub}&usr_phone={usr_phone}')
         elif is_checkout=="False": 
             return redirect(f'https://webeltek.org/login?username={usr_email}&vipps_sub={usr_sub}')
     else:
