@@ -27,7 +27,7 @@ export class VippsCheckoutComponent implements OnInit {
   ngOnInit(): void {
 
     this.actRoute.queryParams.subscribe(params=>{
-      if (params['username'] && params['vipps_sub'] && params['usr_phone']){
+      if (params['username'] && params['bookname'] && params['vipps_sub'] && params['usr_phone']){
         const customerPhone = params['usr_phone'];
         this.authService.login({
           provider:"vipps",
@@ -55,7 +55,7 @@ export class VippsCheckoutComponent implements OnInit {
                       this.tokenStorage.saveVippsMerchToken( resp.access_token);
           
                       const amount = "4000" // valuta NOK with 00 suffix for øre
-                      this.authService.sendVippsPayment(resp.access_token,customerPhone,amount).subscribe({
+                      this.authService.sendVippsPayment(resp.access_token,customerPhone,amount,params['bookname']).subscribe({
                         next: (response) => {
                           if(response){
                             const resp = response as any;

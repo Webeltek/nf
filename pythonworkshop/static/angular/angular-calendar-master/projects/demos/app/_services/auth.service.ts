@@ -150,9 +150,9 @@ export class AuthService {
       console.log("AS vipps/rp is_checkout=False");
   }
 
-  vippsCheckout(){
+  vippsCheckout(bookname:string){
       console.log("AS vipps/rp is_checkout=True");
-      window.location.href = `https://api.webeltek.org/api/vipps/rp?is_checkout=True`
+      window.location.href = `https://api.webeltek.org/api/vipps/rp?is_checkout=True&bookname=${bookname}`
   }
 
   sendGetMerchAccTkn(){
@@ -165,7 +165,7 @@ export class AuthService {
     return new Date().getTime().toString(16) + Math.floor( digit * Math.random() ).toString(16)
   }
 
-  sendVippsPayment( access_tkn: string, usr_phone : string, amount: string){
+  sendVippsPayment( access_tkn: string, usr_phone : string, amount: string, bookname:string){
     console.log("AuthService sendVippsPayment usr_phone, amount",usr_phone,amount)
     return this.http.post(baseurl+'/api/vipps/send_payment',''
         ,  { headers : this.httpHeaders, 
@@ -174,6 +174,7 @@ export class AuthService {
                 'access_tkn' : access_tkn,
                 'usr_phone': usr_phone,
                 'amount': amount,
+                'bookname':bookname,
                 'idemp_key': this.generateUniqueID()
               },
               responseType : 'json'})

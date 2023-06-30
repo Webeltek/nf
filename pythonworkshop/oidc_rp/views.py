@@ -167,6 +167,8 @@ def rp():
     uid = "c16aebf0-d913-4b39-bfa8-0ae2a91f8b90"
     is_checkout = request.args['is_checkout']
     session["is_checkout"]=  is_checkout #is_checkout is string type
+    bookname = request.args['bookname']
+    session["bookname"] = bookname
     if not iss:
         iss = request.args['static_iss']
     print(f'inside /api/vipps/rp is_checkout: {is_checkout}') 
@@ -278,10 +280,11 @@ def finalize(op_identifier, request_args):
         usr_phone = res['userinfo']['phone_number']
 
         is_checkout= session['is_checkout'] #string type
+        bookname= session['bookname']
         print(f"oidc_rp finalize is_checkout {is_checkout}")
         if is_checkout=="True":
             print("inside if True condition finalise is checkout = True")
-            return redirect(f'https://webeltek.org/vipps_checkout?username={usr_email}&vipps_sub={usr_sub}&usr_phone={usr_phone}')
+            return redirect(f'https://webeltek.org/vipps_checkout?username={usr_email}&bookname=${bookname}&vipps_sub={usr_sub}&usr_phone={usr_phone}')
         elif is_checkout=="False": 
             return redirect(f'https://webeltek.org/login?username={usr_email}&vipps_sub={usr_sub}')
     else:

@@ -38,8 +38,8 @@ export class LandingPageComponent implements OnInit {
           });
   }
 
-  vippsCheckout(){
-    this.authService.vippsCheckout()
+  vippsCheckout(book:string){
+    this.authService.vippsCheckout(book)
   }
 
   // Move to specific slide
