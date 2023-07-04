@@ -39,8 +39,7 @@ export interface Room {
   
 })
 export class HomeComponent implements OnInit, OnDestroy {
-  @ViewChild(MatSidenav)
-  sidenav!: MatSidenav;
+  @ViewChild(MatSidenav) sidenav!: MatSidenav;
 
   constructor( 
     private BPobserver: BreakpointObserver,
@@ -136,11 +135,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.tokenStorage.signOut();
   }
 
-  delEvents(eventUids : string[]){
-    this.httpService.deleteEvent(eventUids);
-    this.httpService.deletedEvent.emit(null);
-  }
-
   editEvents(){
       if (this.tokenStorage.isCalendarActive$.value){
       //console.log("HomeC editEvents() this.roomNamesArr: ",this.bookNamesArr)
@@ -154,8 +148,9 @@ export class HomeComponent implements OnInit, OnDestroy {
         dialogRef.afterClosed().subscribe({
           next: (obj) => {
             if (typeof obj!=='undefined' && typeof obj.selectedRowsIds !== 'undefined') {
-              this.delEvents(obj.selectedRowsIds);
-              //console.log("HomeComp to delete ids",obj.selectedRowsIds)
+              this.httpService.modifiedEvent.emit({
+                "uids": obj.selectedRowsIds
+              });
             }
           },
           error: (error) => {
@@ -179,7 +174,9 @@ export class HomeComponent implements OnInit, OnDestroy {
       dialogRef.afterClosed().subscribe({
         next: (obj) => {
           if (typeof obj!=='undefined' && typeof obj.selectedRowsIds !== 'undefined') {
-            this.delEvents(obj.selectedRowsIds);
+            this.httpService.modifiedEvent.emit({
+              "uids": obj.selectedRowsIds
+            });
             //console.log("HomeComp to delete ids",obj.selectedRowsIds)
           }
         },
@@ -347,7 +344,7 @@ export class EditEventsDialog {
   getDbUsers(){
     this.httpService.getUsers().subscribe({
         next : (response) => {
-          if(response.hasOwnProperty('users')) {
+          if(response.hasOwnProperty('users') && response.hasOwnProperty('events')) {
             //console.log("getDBUsers()  storageUsrObj.user_email", storageUsrObj.user_email);
           
             let respObj  = response as any ;
@@ -355,58 +352,42 @@ export class EditEventsDialog {
               this.users.push(pythUser);
             }
             this.users = [...this.users];
-            console.log("getDBUsers() this.users",this.users)
+            console.log("getDBUsers() this.users",this.users);
+
+            for (let objEvt of  respObj.events){
+              let tableRow : TableRow=  {
+                  uid : objEvt.uid,
+                  user_email : this.users.filter((user)=>objEvt.user_id==user.id)[0]?.user_email,
+                  room : objEvt.roomname,
+                  book : objEvt.bookname,
+                  start : new Date(objEvt.startmills),
+                  end : new Date(objEvt.endmills),
+                  title : String(objEvt.title).substring(0,3),
+                }
+              this.tableRows.push(tableRow);
+              console.log("HomeComp tableRow.user_email ",this.users.filter((user)=>objEvt.user_id==user.id)[0].user_email);
+              let calEvent : CalendarEvent=  {
+                title : objEvt.title,
+                userId : objEvt.userId,
+                start : new Date(parseInt(objEvt.start,10)),
+                end : new Date(parseInt(objEvt.end,10)),
+              }
+              this.events.push(calEvent);
+            }
+            this.tableRows = [...this.tableRows];
+            this.dataSourceEx.setData(this.tableRows);
+            //console.log(this.events);
+             
           } else {
             console.log("getDbUsers() string response msg:",response);
           }
           
         },
         complete : () => {
-          this.getDbEvents();
+          this.subscribeToRangeChange();
+          this.subscribeToSelectChange();
         }
     })
-  }
-
-  getDbEvents(){
-    this.httpService.getEvents().subscribe({
-      next: (response)=>{
-      if(response.hasOwnProperty('events')) {
-        this.events = [];
-        let respObj  =  response as any;
-        for (let objEvt of  respObj.events){
-          let tableRow : TableRow=  {
-              uid : objEvt.uid,
-              user_email : this.users.filter((user)=>objEvt.user_id==user.id)[0]?.user_email,
-              room : objEvt.roomname,
-              book : objEvt.bookname,
-              start : new Date(objEvt.startmills),
-              end : new Date(objEvt.endmills),
-              title : String(objEvt.title).substring(0,3),
-            }
-          this.tableRows.push(tableRow);
-          console.log("HomeComp tableRow.user_email ",this.users.filter((user)=>objEvt.user_id==user.id)[0].user_email);
-          let calEvent : CalendarEvent=  {
-            title : objEvt.title,
-            userId : objEvt.userId,
-            start : new Date(parseInt(objEvt.start,10)),
-            end : new Date(parseInt(objEvt.end,10)),
-          }
-          this.events.push(calEvent);
-        }
-        this.tableRows = [...this.tableRows];
-        this.dataSourceEx.setData(this.tableRows);
-        console.log("getDbEvents() tableRows : ",this.tableRows);  
-        //console.log(this.events);
-        } else {
-          console.log("getDbEvents() string response msg:",response);
-          
-        }
-      },
-      complete: () => {
-        this.subscribeToRangeChange();
-        this.subscribeToSelectChange();
-      }
-    })   
   }
 
   rangeFilteredRows : TableRow[] = [];
@@ -462,7 +443,7 @@ export class EditEventsDialog {
 
   onSubmit(){
     //console.log(" Close dial selection.selected",this.selection.selected);
-    //console.log("Close dial selection.selected.map",this.selection.selected.map(row=>row.id));
+    console.log("Close dial selection.selected.map",this.selection.selected.map(row=>row.uid));
     this.dialogRef.close({
       selectedRowsIds: this.selection.selected.map(row=>row.uid),
       } )

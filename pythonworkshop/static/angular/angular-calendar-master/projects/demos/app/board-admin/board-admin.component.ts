@@ -66,11 +66,11 @@ export class BoardAdminComponent implements OnInit {
                   user_email: usrObj.user_email,
                   address: usrObj.address,
                   ou : usrObj.ou,
-                  user_is_logged_in: usrObj.user_is_logged_in===true ? "Has logged in" : "Hasn't logged in",
+                  user_is_logged_in: usrObj.user_is_logged_in===true ? "True" : "False",
                   last_seen: usrObj.last_seen
                 }  
                 this.dataToDisplay.push(LDAPprofRow);
-                console.log("board-admin getDbUsers user_is_logged_in: ",usrObj.user_is_logged_in===true ? "Has logged in" : "Hasn't logged in");
+                //console.log("board-admin getDbUsers user_is_logged_in: ",usrObj.user_is_logged_in===true ? "Has logged in" : "Hasn't logged in");
             }
             this.dataToDisplay = [...this.dataToDisplay];
             this.dataSourceEx.setData(this.dataToDisplay);

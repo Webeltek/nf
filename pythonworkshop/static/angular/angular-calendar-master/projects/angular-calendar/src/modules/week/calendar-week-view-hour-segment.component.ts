@@ -237,7 +237,7 @@ export class CalendarWeekViewHourSegmentComponent {
                     paymntref,
                     true
                   ).subscribe((resp)=>{
-                    this.httpService.modifiedPaymnt.emit((resp as any).payments);
+                    this.httpService.modifiedPaymnt.emit((resp as any));
 
                   });
                 });

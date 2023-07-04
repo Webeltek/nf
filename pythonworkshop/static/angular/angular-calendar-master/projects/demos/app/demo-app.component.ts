@@ -144,23 +144,34 @@ export class DemoAppComponent implements OnInit, OnDestroy{
     //todo implement chip selection
   }
 
-  externalDrop(event: CalendarEvent) {
-    if (this.externalEvents.indexOf(event) === -1) {
-      //this.events = this.events.filter((iEvent) => iEvent !== event);
-      const extDropEventUid : string =  event.id as string;
-      console.log("DA extDrop extDropEventUid",extDropEventUid)
-      this.deleteEvent([extDropEventUid])
-      if (event.paymntref){
-        this.authService.dbUpdateVippsPayment(
-          this.tokenStorage.getUser().id,
-          event.paymntref,
-          false
-        ).subscribe((resp)=>{
-          const respObj = resp as any;
-          this.updateChips(respObj.payments);
-        });
+  deleteEvent(ids : string[],user_id:number){
+    this.httpService.deleteEvent(ids,user_id).subscribe((resp)=>{
+      if ( resp && resp.hasOwnProperty("events")){
+        this.events = [...this.convertDbEvents((resp as any).events)];
+      }
+    });
+  }
+
+  externalDrop(events: CalendarEvent[]) {
+    for (let event of events){
+      if (this.externalEvents.indexOf(event) === -1) {
+        //this.events = this.events.filter((iEvent) => iEvent !== event);
+        const extDropEventUid : string =  event.id as string;
+        console.log("DA extDrop extDropEventUid",extDropEventUid)
+        this.deleteEvent([extDropEventUid],this.tokenStorage.getUser().id)
+        if (event.paymntref){
+          this.authService.dbUpdateVippsPayment(
+            this.tokenStorage.getUser().id,
+            event.paymntref,
+            false
+          ).subscribe((resp)=>{
+            const respObj = resp as any;
+            this.updateChips(respObj.payments);
+          });
+        }
       }
     }
+    
   }
 
   eventTimesChanged({
@@ -433,24 +444,28 @@ export class DemoAppComponent implements OnInit, OnDestroy{
   }
 
   subscribeToInsertDelEvt() {
-    this.httpService.addedEvent.subscribe((emitedValue: any) => { 
-        this.getDbEvents();
-    })
-    this.httpService.deletedEvent.subscribe((emitedValue: any) => { 
-      this.getDbEvents();  
-    })
-    this.httpService.modifiedPaymnt.subscribe((resp)=>{
-      this.updateChips(resp);
-      this.getDbEvents();
-    })
-  }
-
-  deleteEvent(ids : string[]){
-    this.httpService.deleteEvent(ids).subscribe((resp)=>{
-      if ( resp && resp.hasOwnProperty("events")){
-        this.events = [...this.convertDbEvents((resp as any).events)];
+    this.httpService.modifiedEvent.subscribe((resp: any) => { 
+      if (resp.hasOwnProperty("uids")){
+        const uids : string[]= resp.uids;
+        console.log("events",this.events);
+        console.log("Uids ",uids.map(uid=>this.events[uid]) )
+        let toBeDelCalEvents : CalendarEvent[]= [];
+        for (let uid of uids){
+          for (let event of this.events){
+            if(event.id === uid){
+              toBeDelCalEvents.push(event);
+            }
+          }
+        }
+        this.externalDrop(toBeDelCalEvents);
       }
     });
+    this.httpService.modifiedPaymnt.subscribe((resp)=>{
+      if ( resp.hasOwnProperty("payments") && resp.hasOwnProperty("events")){
+        this.events = [...this.convertDbEvents(resp.events)];
+        this.updateChips(resp.payments);
+      }
+    })
   }
 
   openDialog(clickedWeekViewEvent : {
@@ -482,9 +497,9 @@ export class DemoAppComponent implements OnInit, OnDestroy{
           dialogRef.afterClosed().subscribe({
             next: (result) => {
               if (typeof result !== 'undefined') {
-                this.externalDrop(this.toBeDeletedEvt);
+                this.externalDrop([this.toBeDeletedEvt]);
                 //console.log("result object",result)
-                this.deleteEvent([result.toBeDeletedEvt.id])  // event.id is pythEvt.uid
+                //this.deleteEvent([result.toBeDeletedEvt.id],this.tokenStorage.getUser().id)  // event.id is pythEvt.uid
               }
             },
             error: (error) => {

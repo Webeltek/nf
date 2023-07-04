@@ -76,5 +76,12 @@
 
     "EDdelTtl": "Delete event",
     "EDinsertTtl": "Select event",
-    "EDchoosePer": "Choose period"
+    "EDchoosePer": "Choose period",
+
+    "BAuserEmail": "User email",
+    "BAuserAddress": "User address",
+    "BAorgUnit": "Org. unit",
+    "BAhasLoggedIn": "Has logged in",
+    "BAlastSeen": "Last seen"
+
 }

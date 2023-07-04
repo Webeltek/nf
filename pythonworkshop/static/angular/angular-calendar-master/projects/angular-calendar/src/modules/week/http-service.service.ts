@@ -29,9 +29,7 @@ export class HttpEventService{
 
     private baseurl = 'https://api.webeltek.org';
 
-    @Output() addedEvent: EventEmitter<any> = new EventEmitter();
-
-    @Output() deletedEvent: EventEmitter<any> = new EventEmitter();
+    @Output() modifiedEvent: EventEmitter<any> = new EventEmitter();
 
     @Output() clickedEvent: EventEmitter<any> = new EventEmitter();
 
@@ -66,7 +64,7 @@ export class HttpEventService{
                     rooms.push(room.title);
                 }
                 this.roomsArr$.next(rooms);
-                this.addedEvent.emit(null);
+                this.modifiedEvent.emit(rooms);
                 console.log("HttpServ insertRoom() response: " + JSON.stringify(response));
                 },
                 error: (error) => { 
@@ -86,7 +84,7 @@ export class HttpEventService{
                         rooms.push(room.title);
                     }
                     this.roomsArr$.next(rooms);
-                    this.addedEvent.emit(null);
+                    this.modifiedEvent.emit(rooms);
                     console.log("deleteEvent() response: " + JSON.stringify(response));
                 },
                 error: (error) => { 
@@ -132,7 +130,7 @@ export class HttpEventService{
                     books.push(book.title);
                 }
                 this.booksArr$.next(books);
-                this.addedEvent.emit(null);
+                this.modifiedEvent.emit(books);
                 //console.log("HttpServ insertBook() response: " + JSON.stringify(response));
                 },
                 error: (error) => { 
@@ -152,7 +150,7 @@ export class HttpEventService{
                         books.push(book.title);
                     }
                     this.booksArr$.next(books);
-                    this.addedEvent.emit(null);
+                    this.modifiedEvent.emit(books);
                     //console.log("deleteBook() response: " + JSON.stringify(response));
                 },
                 error: (error) => { 
@@ -216,8 +214,9 @@ export class HttpEventService{
           });
         }
 
-    deleteEvent(uids : string[]){
-        return this.http.post(this.baseurl+this.deleteUrl, {uidList: uids},
+    deleteEvent(uids : string[],user_id:number){
+        console.log("HS deleteEvent uids",uids)
+        return this.http.post(this.baseurl+this.deleteUrl, {uidList: uids,user_id:user_id},
             { headers : this.httpHeaders, observe: 'body', responseType : 'json'} ) 
             
     }

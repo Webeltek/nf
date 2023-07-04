@@ -150,7 +150,7 @@
             <ng-container *ngIf="!tokenStorage.getUser().is_admin; then userCalendarView else adminCalendarView">
             </ng-container>
             <ng-template #userCalendarView>
-              <mat-expansion-panel [class.mat-elevation-z0]="true">
+              <mat-expansion-panel #userMep="matExpansionPanel" [expanded]="(tokenStorage.isCalendarActive$ | async)===true" [class.mat-elevation-z0]="true">
                 <mat-expansion-panel-header [style.padding-left]="0">
                   <button mat-button class="menu-button" routerLink="/calendar">
                     <mat-icon>calendar_month</mat-icon>
@@ -168,7 +168,7 @@
               </mat-expansion-panel>
             </ng-template>    
             <ng-template #adminCalendarView>
-              <mat-expansion-panel [class.mat-elevation-z0]="true">
+              <mat-expansion-panel #adminMep="matExpansionPanel" [expanded]="(tokenStorage.isCalendarActive$ | async)===true" [class.mat-elevation-z0]="true">
                 <mat-expansion-panel-header [style.padding-left]="0">
                   <button mat-button class="menu-button" routerLink="/calendar">
                     <mat-icon>calendar_month</mat-icon>

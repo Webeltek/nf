@@ -75,5 +75,11 @@
 
      "EDdelTtl": "Slett reservasjon av",
      "EDinsertTtl": "Velg reservasjon av",
-     "EDchoosePer": "Velg periode"
+     "EDchoosePer": "Velg periode",
+
+     "BAuserEmail": "Bruker e-post",
+     "BAuserAddress": "Brukeradresse",
+     "BAorgUnit": "Organisasjonsenhet",
+     "BAhasLoggedIn": "Har logget inn",
+     "BAlastSeen": "Sist sett"
 }

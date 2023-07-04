@@ -1,28 +1,28 @@
 <table mat-table [dataSource]="dataSourceEx" class="mat-elevation-z8">
     <!-- Position Column -->
     <ng-container matColumnDef="user_email">
-        <th mat-header-cell *matHeaderCellDef>  User email </th>
+        <th mat-header-cell *matHeaderCellDef>  {{'BAuserEmail' | translate }} </th>
         <td mat-cell *matCellDef="let element"> {{element.user_email}} </td>
       </ng-container>
 
       <ng-container matColumnDef="address">
-        <th mat-header-cell *matHeaderCellDef>  User address </th>
+        <th mat-header-cell *matHeaderCellDef>  {{'BAuserAddress' | translate}} </th>
         <td mat-cell *matCellDef="let element"> {{element.address}} </td>
       </ng-container>
     
       <!-- Name Column -->
       <ng-container matColumnDef="ou">
-        <th mat-header-cell *matHeaderCellDef>  Org. unit </th>
+        <th mat-header-cell *matHeaderCellDef>  {{'BAorgUnit' | translate}} </th>
         <td mat-cell *matCellDef="let element"> {{ element.ou}} </td>
       </ng-container>
 
       <ng-container matColumnDef="is_logged_in">
-        <th mat-header-cell *matHeaderCellDef>  Has logged in </th>
+        <th mat-header-cell *matHeaderCellDef>  {{'BAhasLoggedIn' | translate}} </th>
         <td mat-cell *matCellDef="let element"> {{ element.user_is_logged_in}} </td>
       </ng-container>
 
       <ng-container matColumnDef="last_seen">
-        <th mat-header-cell *matHeaderCellDef>  Last seen </th>
+        <th mat-header-cell *matHeaderCellDef>  {{'BAlastSeen' | translate}} </th>
         <td mat-cell *matCellDef="let element"> {{ element.last_seen==='initial date'? 'initial date' : element.last_seen | date:'shortDate'}} </td>
       </ng-container>
     

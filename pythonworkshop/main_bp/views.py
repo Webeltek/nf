@@ -54,7 +54,6 @@ rooms_init = [
 def contact_form():
         contact_form = forms.ContactForm(request.form)
         if request.method == 'POST' and contact_form.validate():
-            print(F'I got UFO name is {myform.ufoname.data}')
             return F'I got your autodata!!!'
         return render_template('/main/contact.jinja2', contact=contact_form)
 
@@ -74,7 +73,6 @@ def user_profile(username):
         user = db.session.execute(db.select(User).where(User.user_name==username)).scalar_one()
         about_us = forms.AboutUsForm(request.form)
         if request.method == 'POST' and about_us.validate():
-            print(F'I got UFO name is {myform.ufoname.data}')
             return F'I got your autodata!!!'
         return render_template('/main/user_profile.jinja2',user=user)
 
@@ -138,14 +136,14 @@ def updaterooms():
     if request.method == 'POST':
         req_rooms = request.get_json()    
         db_rooms = db.session.execute(db.select(Room)).scalars().all()
-        print(f'db_rooms,req_rooms{db_rooms},{req_rooms}'.encode('utf-8','ignore'))
+        #print(f'db_rooms,req_rooms{db_rooms},{req_rooms}'.encode('utf-8','ignore'))
         for index,req_room in enumerate(req_rooms):
              if index < len(db_rooms):
                     db_room = db_rooms[index]
                     db_room.title = req_room
                     db.session.add(db_room)
              else:
-                 print(f'req_room with higher index',req_room)
+                 #print(f'req_room with higher index',req_room)
                  db.session.add(Room(title=req_room))      
         db.session.commit()
         new_rooms = db.session.execute(db.select(Room)).scalars().all()
@@ -173,7 +171,7 @@ def get_books():
             db.session.commit()
     books_list = []        
     for book in books:
-        print(f'current book{book.title}'.encode('utf-8','ignore'))
+        #print(f'current book{book.title}'.encode('utf-8','ignore'))
         books_list.append(jsons.dump(bookd(book.row,book.title)))
     return books_list    
 
@@ -217,7 +215,7 @@ def updatebooks():
             if index<len(db_books) :    
                 db_book = db_books[index]
                 db_book.title = req_book
-                print(f'auth_bp updatetbooks row and title: {db_book.row, db_book.title}')  
+                #print(f'auth_bp updatetbooks row and title: {db_book.row, db_book.title}')  
                 db.session.add(db_book)
         db.session.commit()
         books_list = get_books()       
@@ -338,14 +336,16 @@ def ajax_delete():
     if request.method == 'POST':
         req_json = request.get_json()
         uids = req_json['uidList']
+        user_id = req_json['user_id']
         if uids is not None:
                 for todeluid in uids:
-                    #print(f'To delete uid{str(todeluid)}')
+                    print(f'To delete uid{str(todeluid)}')
                     db.session.execute(db.delete(Event).where(Event.uid == todeluid))
         db.session.commit()
         msg = 'Record/s deleted successfully'
-        events_list = get_events() 
-    return jsonify({"events":events_list})
+        events_list = get_events()
+        payments_list = get_payments(user_id=user_id) 
+    return jsonify({"events":events_list,"payments":payments_list})
 
 @main_bp.route('/api/services/change_email', methods=['GET', 'POST'])
 @access_required
@@ -363,7 +363,7 @@ def change_email_request():
         user = db.session.execute(db.select(User).where(User.id==userId)).scalar_one_or_none()
         if user is not None and user.verify_password(userPass):
             token = user.generate_email_change_token(newEmail)
-            print(f'main_bp change email: {newEmail}')
+            #print(f'main_bp change email: {newEmail}')
             send_email(newEmail, 'Confirm change of email address',
                        'auth/email/change_email',
                        user=user, token=token)
@@ -381,7 +381,7 @@ def change_pass_request():
         user_email = req_json['resPassEmail']
         user = db.session.execute(db.select(User).where(User.user_email==user_email)).scalar_one_or_none()
         if user is not None :
-            print(f'main_bp.change_pass_request selected user email: {user.user_email}') 
+            #print(f'main_bp.change_pass_request selected user email: {user.user_email}') 
             token = user.generate_pass_change_token()
             send_email(user.user_email, 'Reset Your Password',
                        'auth/email/change_password',
@@ -417,7 +417,7 @@ def db_save_payment():
     vipps_sub = request.json['vipps_sub']
     amount = request.json['amount']
     bookname = request.json['bookname']
-    print(f'main_bp refer,amount{refer,amount}')
+    #print(f'main_bp refer,amount{refer,amount}')
     db.session.add(Payment(reference=refer,
                            user_id=user_id,
                            vipps_sub=vipps_sub,
@@ -462,6 +462,7 @@ def db_update_payment():
     vipps_sub_paymnt.is_consumed = isconsumedbool
     db.session.add(vipps_sub_paymnt)
     db.session.commit()
-    payments = get_payments(user_id)
-    return jsonify({ "payments": payments})
+    payments_list = get_payments(user_id)
+    events_list = get_events()
+    return jsonify({"events":events_list, "payments": payments_list})
 

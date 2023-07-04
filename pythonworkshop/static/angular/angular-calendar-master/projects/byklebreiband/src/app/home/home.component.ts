@@ -123,10 +123,6 @@ export class HomeBBComponent implements OnInit, OnDestroy {
     this.tokenStorage.signOut();
   }
 
-  delEvents(eventIds : string[]){
-    this.httpService.deleteEvent(eventIds);
-  }
-
   editEvents(){
       if (this.isCalendarActive$.value){
       console.log("HomeC editEvents() this.booksArr: ",this.booksArr)
@@ -140,7 +136,9 @@ export class HomeBBComponent implements OnInit, OnDestroy {
         dialogRef.afterClosed().subscribe({
           next: (obj) => {
             if (typeof obj!=='undefined' && typeof obj.selectedRowsIds !== 'undefined') {
-              this.delEvents(obj.selectedRowsIds);
+                  this.httpService.modifiedEvent.emit({
+                    "uids": obj.selectedRowsIds
+                  });
               //console.log("HomeComp to delete ids",obj.selectedRowsIds)
             }
           },
@@ -166,7 +164,9 @@ export class HomeBBComponent implements OnInit, OnDestroy {
       dialogRef.afterClosed().subscribe({
         next: (obj) => {
           if (typeof obj!=='undefined' && typeof obj.selectedRowsIds !== 'undefined') {
-            this.delEvents(obj.selectedRowsIds);
+            this.httpService.modifiedEvent.emit({
+              "uids": obj.selectedRowsIds
+            });
             //console.log("HomeComp to delete ids",obj.selectedRowsIds)
           }
         },
@@ -303,7 +303,7 @@ export class EditEventsDialog {
   getDbUsers(){
     this.httpService.getUsers().subscribe({
         next : (response) => {
-          if(response.hasOwnProperty('users')) {
+          if(response.hasOwnProperty('users') && response.hasOwnProperty('events')) {
             let storageUsrObj = this.tokenStorage.getUser();
             //console.log("getDBUsers()  storageUsrObj.user_email", storageUsrObj.user_email);
           
@@ -313,56 +313,35 @@ export class EditEventsDialog {
             }
             this.users = [...this.users];
             //console.log("getDBUsers() this.users",this.users)
-          } else {
-            console.log("getDbUsers() string response msg:",response);
+            this.events = [];
+            for (let objEvt of  respObj.events){
+              let tableRow : TableRow=  {
+                  id : objEvt.id,
+                  user_email : this.users.filter((user)=>objEvt.userId==user.id)[0].user_email,
+                  room : objEvt.roomname,
+                  start : new Date(parseInt(objEvt.start,10)),
+                  end : new Date(parseInt(objEvt.end,10)),
+                  title : String(objEvt.title).substring(0,3),
+                }
+              this.tableRows.push(tableRow);
+              //console.log("HomeComp tableRow.user_email ",this.users.filter((user)=>objEvt.userId==user.id)[0].user_email);
+              let calEvent : CalendarEvent=  {
+                title : objEvt.title,
+                userId : objEvt.userId,
+                start : new Date(parseInt(objEvt.start,10)),
+                end : new Date(parseInt(objEvt.end,10)),
+              }
+              this.events.push(calEvent);
+            }
+            this.tableRows = [...this.tableRows];
+            this.dataSourceEx.setData(this.tableRows);
           }
-          
         },
         complete : () => {
-          this.getDbEvents();
+          this.subscribeToRangeChange();
+          this.subscribeToSelectChange();
         }
     })
-  }
-
-  getDbEvents(){
-    this.httpService.getEvents().subscribe({
-      next: (response)=>{
-      if(response.hasOwnProperty('events')) {
-        this.events = [];
-        let respObj  =  response as any;
-        for (let objEvt of  respObj.events){
-          let tableRow : TableRow=  {
-              id : objEvt.id,
-              user_email : this.users.filter((user)=>objEvt.userId==user.id)[0].user_email,
-              room : objEvt.roomname,
-              start : new Date(parseInt(objEvt.start,10)),
-              end : new Date(parseInt(objEvt.end,10)),
-              title : String(objEvt.title).substring(0,3),
-            }
-          this.tableRows.push(tableRow);
-          //console.log("HomeComp tableRow.user_email ",this.users.filter((user)=>objEvt.userId==user.id)[0].user_email);
-          let calEvent : CalendarEvent=  {
-            title : objEvt.title,
-            userId : objEvt.userId,
-            start : new Date(parseInt(objEvt.start,10)),
-            end : new Date(parseInt(objEvt.end,10)),
-          }
-          this.events.push(calEvent);
-        }
-        this.tableRows = [...this.tableRows];
-        this.dataSourceEx.setData(this.tableRows);
-        console.log("getDbEvents() tableRows : ",this.tableRows);  
-        //console.log(this.events);
-        } else {
-          console.log("getDbEvents() string response msg:",response);
-          
-        }
-      },
-      complete: () => {
-        this.subscribeToRangeChange();
-        this.subscribeToSelectChange();
-      }
-    })   
   }
 
   rangeFilteredRows : TableRow[] = [];
