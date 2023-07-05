@@ -13,6 +13,7 @@
      "SideNavProfile": "Profil",
      "SideNavLogout": "Logg ut",
      "SideNavLDAPprof": "Brukere",
+     "SideNavPayments": "Betalinger",
 
      "LCusername": "Brukernavn/epost",
      "LCuserRequired": "Brukernavn påkreves!",
@@ -81,5 +82,9 @@
      "BAuserAddress": "Brukeradresse",
      "BAorgUnit": "Organisasjonsenhet",
      "BAhasLoggedIn": "Har logget inn",
-     "BAlastSeen": "Sist sett"
+     "BAlastSeen": "Sist sett",
+
+     "PAbookname" : "Boknavn",
+     "PAamount" : "Beløp",
+     "PAisConsumed": "Er brukt"
 }

@@ -51,7 +51,7 @@ export class TokenStorageService {
     this.router.events.subscribe((routerEvent)=>{
       if (routerEvent instanceof NavigationEnd){
         const isProtectedRoute = 
-        /\/calendar(.*)$|\/profile(.*)$|\/logout(.*)$|\/board_admin(.*)$/.test(routerEvent.url) ? true : false;
+        /\/calendar(.*)$|\/profile(.*)$|\/logout(.*)$|\/board_admin(.*)$|\/payments(.*)$/.test(routerEvent.url) ? true : false;
         //console.log("TS isProtectedRoute, authenticated", isProtectedRoute,this.authenticated$.getValue())
         this.combAuthProtected$.next(this.authenticated$.getValue() && isProtectedRoute);
 

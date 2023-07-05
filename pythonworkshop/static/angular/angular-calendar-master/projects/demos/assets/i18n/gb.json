@@ -13,6 +13,7 @@
     "SideNavProfile": "Profile",
     "SideNavLogout": "Logout",
     "SideNavLDAPprof": "Users",
+    "SideNavPayments": "Payments",
 
     "LCusername": "Username/email",
     "LCuserRequired": "Username is required!",
@@ -82,6 +83,10 @@
     "BAuserAddress": "User address",
     "BAorgUnit": "Org. unit",
     "BAhasLoggedIn": "Has logged in",
-    "BAlastSeen": "Last seen"
+    "BAlastSeen": "Last seen",
+
+    "PAbookname" : "Bookname",
+    "PAamount" : "Amount",
+    "PAisConsumed": "Is consumed"
 
 }

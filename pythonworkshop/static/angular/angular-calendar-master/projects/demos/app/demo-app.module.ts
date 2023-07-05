@@ -53,7 +53,7 @@ import { VippsCheckoutComponent } from './vipps-checkout/vipps-checkout.componen
 import { SalgsbetingelserComponent } from './salgsbetingelser/salgsbetingelser.component';
 import { PaymentComponent } from './payment/payment.component';
 import { DragAndDropModule } from 'angular-draggable-droppable';
-import {MatSortModule} from '@angular/material/sort';
+import {MatSort, Sort,MatSortModule} from '@angular/material/sort';
 //import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 
 /* const config: SocketIoConfig = {
