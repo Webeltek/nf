@@ -3,11 +3,14 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 import { DemoAppModule } from './app/demo-app.module';
 import { environment } from './environments/environment';
+import { LOCALE_ID } from '@angular/core';
 
 if (environment.production) {
   enableProdMode();
 }
 
 platformBrowserDynamic()
-  .bootstrapModule(DemoAppModule)
+  .bootstrapModule(DemoAppModule,{
+    providers: [{provide: LOCALE_ID, useValue: 'nb' }]
+  })
   .catch((err) => console.log(err));

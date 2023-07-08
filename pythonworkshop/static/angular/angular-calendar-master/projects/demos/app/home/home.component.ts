@@ -19,7 +19,7 @@ import { DatePipe} from '@angular/common';
 import { SelectionModel } from '@angular/cdk/collections';
 import { TranslateService } from '@ngx-translate/core';
 import { Location } from '@angular/common';
-import { CalendarEventTimesChangedEvent } from 'angular-calendar';
+import { CalendarEventTimesChangedEvent ,DateAdapter} from 'angular-calendar';
 
 export interface Book {
   row: string,
@@ -280,7 +280,8 @@ export class EditEventsDialog {
         books : string[],
         rooms : string[] },
         private httpService: HttpEventService,
-        private tokenStorage: TokenStorageService,) {
+        private tokenStorage: TokenStorageService,
+        private _adapter: DateAdapter) {
         }
 
 
@@ -290,7 +291,7 @@ export class EditEventsDialog {
   events : CalendarEvent[] = [];
   pythEvents : PythEvent[] = [];
   tableRows : TableRow[] = [];
-  datepipe : DatePipe = new DatePipe('en-US');
+  datepipe : DatePipe = new DatePipe('nb');
   currentDate = new Date();
 
 

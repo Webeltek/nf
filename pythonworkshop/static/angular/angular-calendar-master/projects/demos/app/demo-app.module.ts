@@ -1,12 +1,11 @@
 import { registerLocaleData } from '@angular/common';
-import localeNo from '@angular/common/locales/nb';
-import { NgModule , Injectable, LOCALE_ID} from '@angular/core';
+import { NgModule , Injectable} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { DemoAppComponent } from './demo-app.component';
 
-import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { CalendarModule , DateAdapter} from 'angular-calendar';
 import { BBSharedModule } from 'projects/byklebreiband/src/app/app.module';
 import { HomeBBComponent } from 'projects/byklebreiband/src/app/home/home.component';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
@@ -31,7 +30,6 @@ import { ProfileComponent } from './profile/profile.component';
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDialogModule, MAT_DIALOG_DEFAULT_OPTIONS } from '@angular/material/dialog';
-import { MatNativeDateModule } from '@angular/material/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatTableModule} from '@angular/material/table'; 
 import { MatInputModule } from '@angular/material/input';
@@ -54,6 +52,9 @@ import { SalgsbetingelserComponent } from './salgsbetingelser/salgsbetingelser.c
 import { PaymentComponent } from './payment/payment.component';
 import { DragAndDropModule } from 'angular-draggable-droppable';
 import {MatSort, Sort,MatSortModule} from '@angular/material/sort';
+import {CurrencyPipe} from '@angular/common';
+import {MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
+
 //import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 
 /* const config: SocketIoConfig = {
@@ -63,6 +64,18 @@ import {MatSort, Sort,MatSortModule} from '@angular/material/sort';
 	}
 }
 */
+
+export const MY_FORMATS = {
+  parse: {
+    dateInput: 'DD/MM/YYYY',
+  },
+  display: {
+    dateInput: 'DD/MM/YYYY',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'YYYY',
+  },
+};
 
 @NgModule({
   declarations: [
@@ -102,7 +115,6 @@ import {MatSort, Sort,MatSortModule} from '@angular/material/sort';
     MatDividerModule,
     MatFormFieldModule,
     MatDatepickerModule,
-    MatNativeDateModule,
     MatTableModule,
     MatInputModule,
     MatCheckboxModule,
@@ -127,15 +139,15 @@ import {MatSort, Sort,MatSortModule} from '@angular/material/sort';
     MatSortModule
   ],
   providers : [
-    { provide: LOCALE_ID, useValue: 'nb' },
      authInterceptorProviders,
-    { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: true}}
+    { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: true}},
+    // { provide: MAT_DATE_LOCALE, useValue: 'nb'},
+    { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS}
   ],
     bootstrap: [HomeComponent]
 })
 export class DemoAppModule { 
   constructor(){
-    registerLocaleData(localeNo);
   }
 }
 

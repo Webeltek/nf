@@ -2,32 +2,38 @@
 (matSortChange)="announceSortChange($event)" class="mat-elevation-z8">
     
       <ng-container matColumnDef="user_email">
-        <th mat-header-cell *matHeaderCellDef>  {{'BAuserEmail' | translate }} </th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>  {{'BAuserEmail' | translate }} </th>
         <td mat-cell *matCellDef="let element"> {{element.user_email}} </td>
+        <td mat-footer-cell *matFooterCellDef> Total </td>
       </ng-container>
     
       <ng-container matColumnDef="ou">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>  {{'BAorgUnit' | translate}} </th>
         <td mat-cell *matCellDef="let element"> {{ element.ou}} </td>
+        <td mat-footer-cell *matFooterCellDef></td>
       </ng-container>
 
       <ng-container matColumnDef="bookname">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>  {{'PAbookname' | translate}} </th>
         <td mat-cell *matCellDef="let element"> {{ element.bookname}} </td>
+        <td mat-footer-cell *matFooterCellDef></td>
       </ng-container>
 
       <ng-container matColumnDef="amount">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>  {{'PAamount' | translate}} </th>
         <td mat-cell *matCellDef="let element"> {{ element.amount}} </td>
+        <td mat-footer-cell *matFooterCellDef> {{getTotalCost() | currency : 'NOK'}} </td>
       </ng-container>
 
       <ng-container matColumnDef="is_consumed">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>  {{'PAisConsumed' | translate}} </th>
         <td mat-cell *matCellDef="let element"> {{ element.is_consumed}} </td>
+        <td mat-footer-cell *matFooterCellDef></td>
       </ng-container>
     
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
     
       <!-- Row shown when there is no matching data. -->
       <tr class="mat-row" *matNoDataRow>

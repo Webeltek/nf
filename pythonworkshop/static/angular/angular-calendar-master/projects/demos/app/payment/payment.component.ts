@@ -1,9 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { BehaviorSubject, Observable, ReplaySubject } from 'rxjs';
 import { MatTableDataSource } from '@angular/material/table';
+import {DataSource} from '@angular/cdk/collections';
 import { HttpEventService } from 'projects/angular-calendar/src/modules/week/http-service.service';
 import { TokenStorageService } from '../_services/token-storage.service';
-import {MatSort, Sort} from '@angular/material/sort';
+import { MatSort, Sort } from '@angular/material/sort';
 import {LiveAnnouncer} from '@angular/cdk/a11y';
 import { AuthService } from '../_services/auth.service';
 
@@ -18,11 +19,15 @@ export interface PaymentRow{
 const ELEMENT_DATA : PaymentRow[] = [];
 
 class ExampleDataSource extends MatTableDataSource<PaymentRow> {
-  private _dataStream = new ReplaySubject<PaymentRow[]>();
+  private _dataStream = new BehaviorSubject<PaymentRow[]>([]);
 
   constructor(initialData: PaymentRow[]) {
     super();
     this.setData(initialData);
+  }
+
+  connect(): BehaviorSubject<PaymentRow[]> {
+    return this._dataStream;
   }
 
   disconnect() {}
@@ -98,6 +103,10 @@ export class PaymentComponent implements OnInit {
     } else {
       this._liveAnnouncer.announce('Sorting cleared');
     }
+  }
+
+  getTotalCost() {
+    return this.dataToDisplay.map(p => parseInt(p.amount)).reduce((acc, value) => acc + value, 0);
   }
 
 }
