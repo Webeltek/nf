@@ -291,6 +291,8 @@ export class EditEventsDialog {
 
   fromDate: NgbDate | null;
   toDate: NgbDate | null;
+
+  pickerRangeChange$ : BehaviorSubject<[NgbDate | null,NgbDate | null]>=new BehaviorSubject([null,null]);
   
   onDateSelection(date: NgbDate) {
 		if (!this.fromDate && !this.toDate) {
@@ -301,6 +303,7 @@ export class EditEventsDialog {
 			this.toDate = null;
 			this.fromDate = date;
 		}
+    this.pickerRangeChange$.next([this.fromDate,this.toDate]);
 	}
 
 	isHovered(date: NgbDate) {
@@ -436,6 +439,27 @@ export class EditEventsDialog {
   rangeFilteredRows : TableRow[] = [];
 
   subscribeToRangeChange(){
+    this.pickerRangeChange$.subscribe({
+      next: ([fromDate,toDate])=>{
+        if (fromDate && toDate){
+          const rangeStart = new Date(fromDate.year,fromDate.month-1,fromDate.day).getTime();
+          const rangeEnd = new Date(toDate.year,toDate.month-1,toDate.day,23,59,59,999).getTime();
+          this.rangeFilteredRows= [];
+          for (let row of this.tableRows){
+            if(typeof row.start.getTime()!=='undefined' 
+            && rangeStart<=row.start.getTime() && row.start.getTime()<=rangeEnd){
+              this.rangeFilteredRows.push(row);
+              //console.log("HomeComp rangeValue in loop",range);
+            }
+          }
+          this.dataSourceEx.setData(this.rangeFilteredRows);
+        }
+      },
+      complete : () =>{
+        
+      }
+  });
+
     this.range.valueChanges.subscribe({
       next: (range)=>{
         if(range.start!==null && range.end!==null){
@@ -456,7 +480,7 @@ export class EditEventsDialog {
       complete : () =>{
         
       }
-    })
+    });
   }
 
   selectFilteredRows : TableRow[] = [];

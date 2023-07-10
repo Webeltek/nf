@@ -54,6 +54,7 @@ import { DragAndDropModule } from 'angular-draggable-droppable';
 import {MatSort, Sort,MatSortModule} from '@angular/material/sort';
 import {CurrencyPipe} from '@angular/common';
 import {MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
+import { LOCALE_ID } from '@angular/core';
 
 //import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 
@@ -143,7 +144,8 @@ export const MY_FORMATS = {
      authInterceptorProviders,
     { provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: { hasBackdrop: true}},
     // { provide: MAT_DATE_LOCALE, useValue: 'nb'},
-    { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS}
+    //{ provide: MAT_DATE_FORMATS, useValue: MY_FORMATS},
+    {provide: LOCALE_ID, useValue: 'nb' }
   ],
     bootstrap: [HomeComponent]
 })
