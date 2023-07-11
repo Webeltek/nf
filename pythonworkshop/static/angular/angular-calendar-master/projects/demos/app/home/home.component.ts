@@ -19,8 +19,8 @@ import { DatePipe} from '@angular/common';
 import { SelectionModel } from '@angular/cdk/collections';
 import { TranslateService } from '@ngx-translate/core';
 import { Location } from '@angular/common';
-import { CalendarEventTimesChangedEvent ,DateAdapter} from 'angular-calendar';
-import { NgbDate, NgbCalendar, NgbDateParserFormatter, NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
+import { CalendarEventTimesChangedEvent} from 'angular-calendar';
+import { NgbDate, NgbCalendar, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
 
 export interface Book {
   row: string,
