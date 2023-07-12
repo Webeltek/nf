@@ -87,6 +87,14 @@
 
     "PAbookname" : "Bookname",
     "PAamount" : "Amount",
-    "PAisConsumed": "Is consumed"
+    "PAisConsumed": "Is consumed",
+
+    "EEselRoomAndPer": "Select room and time period",
+    "EEselPer" : "Select period",
+    "EEbook" : "Book",
+    "EEroom": "Room",
+    "EEemail": "Email",
+    "EEdate": "Date"
+
 
 }

@@ -13,6 +13,7 @@ import { strictEqual } from 'assert';
 import { DateAdapter } from '../../date-adapters/date-adapter';
 import { TokenStorageService } from 'projects/demos/app/_services/token-storage.service';
 import { AuthService } from 'projects/demos/app/_services/auth.service';
+import { NgbTimeStruct } from '@ng-bootstrap/ng-bootstrap';
 
 
 export interface DialogData {
@@ -216,8 +217,8 @@ export class CalendarWeekViewHourSegmentComponent {
         dialogRef.afterClosed().subscribe({
           next: (result) => {
             if (result) {
-              const startmills = this.segment.date.setHours(result.startTime.hour);
-              const endmills = this.segment.date.setHours(result.endTime.hour);
+              const startmills = result.startDate.getTime();
+              const endmills = result.endDate.getTime();
               const paymntref = this.externalEvents.at(-1).paymntref;
               const loggedInUser = this.tokenStorage.getUser();
               console.log("WHS result,startmills,endmills",result,startmills,endmills);
@@ -274,29 +275,54 @@ export class EventDialog {
       rooms: string[] },
      public fb: UntypedFormBuilder) {}
 
-    roomname = ""; 
-    startTime = { hour: 8, minute: 0};
-    endTime = { hour: 18, minute: 0};
-    startDate = this.data.startDate ? this.data.startDate : new Date(this.data.date.setHours(
-      this.startTime.hour,this.startTime.minute));
-    endDate =this.data.endDate ? this.data.endDate : new Date(this.data.date.setHours(
-      this.endTime.hour,this.endTime.minute));    
-    containedBookTitle = this.data.hourContainedBookTitle;
-    books = this.data.books;
-    toBeDeleted = this.data.toBeDeleted;
+  roomname = "";    
+  containedBookTitle = this.data.hourContainedBookTitle;
+  books = this.data.books;
+  toBeDeleted = this.data.toBeDeleted;
 
-    valgtBookCtrl = this.fb.control("");
-    userForm  = this.fb.group({
-        valgtBook : this.valgtBookCtrl
-      });
-      
-  
+  valgtBookCtrl = this.fb.control("");
+  userForm  = this.fb.group({
+      valgtBook : this.valgtBookCtrl
+    });
+    
+  startCtrl = new FormControl<NgbTimeStruct | null>({hour:8,minute:0,second:0}, (control: FormControl<NgbTimeStruct | null>) => {
+    const value = control.value;
+    if (!value) {
+      return null;
+    }
+    if (value.hour < 8) {
+      return { tooEarly: true };
+    }
+    if (value.hour > 18) {
+      return { tooLate: true };
+    }
+    return null;
+  });
+
+  endCtrl = new FormControl<NgbTimeStruct | null>({hour:18,minute:0,second:0}, (control: FormControl<NgbTimeStruct | null>) => {
+    const value = control.value;
+    if (!value) {
+      return null;
+    }
+    if (value.hour < 8) {
+      return { tooEarly: true };
+    }
+    if (value.hour > 18) {
+      return { tooLate: true };
+    }
+    return null;
+  });
+
+  startDate = this.data.startDate ? this.data.startDate : new Date(this.data.date.setHours(
+    this.startCtrl.value.hour,this.startCtrl.value.minute));
+  endDate =this.data.endDate ? this.data.endDate : new Date(this.data.date.setHours(
+    this.endCtrl.value.hour,this.endCtrl.value.minute)); 
 
   closeDialog(){
     this.dialogRef.close({
       clickedDbEvt: this.data.clickedDbEvt,
-      startTime: this.startTime,
-      endTime: this.endTime, 
+      startTime: this.startDate,
+      endTime: this.endDate, 
       bookname : this.valgtBookCtrl.value,
       roomname : this.roomname,
       toBeDeleted : this.data.toBeDeleted, 

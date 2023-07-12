@@ -75,7 +75,7 @@
      "DCday" : "Dag",
 
      "EDdelTtl": "Slett reservasjon av",
-     "EDinsertTtl": "Velg reservasjon av",
+     "EDinsertTtl": "Velg reservasjon",
      "EDchoosePer": "Velg periode",
 
      "BAuserEmail": "Bruker e-post",
@@ -86,5 +86,12 @@
 
      "PAbookname" : "Boknavn",
      "PAamount" : "Beløp",
-     "PAisConsumed": "Er brukt"
+     "PAisConsumed": "Er brukt",
+
+    "EEselRoomAndPer": "Velg rom og tidsperiode",
+    "EEselPer" : "Velg periode",
+    "EEbook" : "Bok",
+    "EEroom": "Rom",
+    "EEemail": "E-post",
+    "EEdate": "Dato"
 }

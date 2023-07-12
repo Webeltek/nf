@@ -24,10 +24,20 @@
   <h1 mat-dialog-title>{{'EDinsertTtl' | translate}}
   </h1>
   <mat-dialog-content class="mat-typography">
-    <ngb-timepicker [(ngModel)]="startTime"></ngb-timepicker>
+    <ngb-timepicker [size]="'small'" [formControl]="startCtrl"></ngb-timepicker>
+    <div *ngIf="startCtrl.errors" class="small form-text text-danger">
+      <div *ngIf="startCtrl.errors['required']">Select some time </div>
+      <div *ngIf="startCtrl.errors['tooLate']">Oh no, it's way too late</div>
+      <div *ngIf="startCtrl.errors['tooEarly']">It's a bit too early</div>
+    </div>
     <hr/>
     <!-- <pre>Start time: {{ startTime | json }}</pre> -->
-    <ngb-timepicker [(ngModel)]="endTime"></ngb-timepicker>
+    <ngb-timepicker [size]="'small'" [formControl]="endCtrl"></ngb-timepicker>
+    <div *ngIf="endCtrl.errors" class="small form-text text-danger">
+      <div *ngIf="endCtrl.errors['required']">Select some time </div>
+      <div *ngIf="endCtrl.errors['tooLate']">Oh no, it's way too late</div>
+      <div *ngIf="endCtrl.errors['tooEarly']">It's a bit too early</div>
+    </div>
     <hr/>
     <!-- <pre>End time: {{ endTime | json }}</pre>  -->
     <form

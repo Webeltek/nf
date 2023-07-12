@@ -1,10 +1,14 @@
 <div>
         <div class="row text-center">
             <div class="col-lg-4">
+                <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):(getLocaleFromTranslate(translate.currentLang)) :1 }}</h3>
+            </div>
+            <div class="col-lg-4">
                 <div  class="btn-group">
                     <div class="btn btn-primary" mwlCalendarPreviousView
                     (viewDateChange)="activeDayIsOpen=false" 
-                    [view]="view" [(viewDate)]="viewDate">
+                    [view]="view" [(viewDate)]="viewDate"
+                    [daysInWeek]="1">
                         {{'DCprevious' | translate}}
                     </div>
                     <div class="btn btn-outline-secondary" mwlCalendarToday
@@ -14,14 +18,12 @@
                     </div>
                     <div class="btn btn-primary" mwlCalendarNextView
                     (viewDateChange)="activeDayIsOpen=false" 
-                    [view]="view" [(viewDate)]="viewDate">
+                    [view]="view" [(viewDate)]="viewDate"
+                    [daysInWeek]="1">
                     {{'DCnext' | translate}}
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4">
-                <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):(getLocaleFromTranslate(translate.currentLang)) :1 }}</h3>
-              </div>
             <div class="col-lg-4">
                 <div class="btn-group">
                   <div
@@ -100,8 +102,8 @@
                     [rooms]="rooms"
                     [books]="books"
                     [daysInWeek]="daysInWeek"
-                    [dayStartHour]="0" 
-                    [dayEndHour]="24" 
+                    [dayStartHour]="8" 
+                    [dayEndHour]="18" 
                     [viewDate]="viewDate"
                     [weekStartsOn]=1
                     [loggedInUserId]="loggedInUserId" 
@@ -118,6 +120,8 @@
             <mwl-calendar-day-view
                 *ngSwitchCase="CalendarView.Day"
                 [viewDate]="viewDate"
+                [dayStartHour]="8" 
+                [dayEndHour]="18"
                 [events]="events"
                 [externalEvents]="externalEvents"
                 (eventClicked)="openDialog($event)"
