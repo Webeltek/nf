@@ -13,6 +13,8 @@ import { HjemComponent } from 'projects/byklebreiband/src/app/hjem/hjem.componen
 import { VippsCheckoutComponent } from './vipps-checkout/vipps-checkout.component';
 import { SalgsbetingelserComponent } from './salgsbetingelser/salgsbetingelser.component';
 import { PaymentComponent } from './payment/payment.component';
+import { FellesComponent } from './felles/felles.component';
+import { KontorComponent } from './kontor/kontor.component';
 
 export const ROUTES: Routes = [  
         { path: 'login', component: LoginComponent },
@@ -22,7 +24,13 @@ export const ROUTES: Routes = [
         { path: 'salgsbetingelser', component: SalgsbetingelserComponent },
         { path: 'vipps_checkout', component: VippsCheckoutComponent},
         { path: 'confirm', component: ConfirmComponent },
-        { path: 'calendar' , canActivate: [LoggedInGuardService], component : DemoAppComponent},
+        { path: 'calendar' , canActivate: [LoggedInGuardService], component : DemoAppComponent,
+            children: [ 
+                    { path: '', redirectTo: 'felles', pathMatch: 'full'},
+                    { path: 'felles',component: FellesComponent},
+                    { path: 'kontor', component: KontorComponent}
+            ]           
+        },
         { path: 'payment' , canActivate: [LoggedInGuardService], component : PaymentComponent},
         { path: 'profile' , canActivate: [LoggedInGuardService], component : ProfileComponent},
         { path: 'logout' , canActivate: [LoggedInGuardService], component: LoginComponent},

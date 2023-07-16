@@ -54,7 +54,12 @@ export class VippsCheckoutComponent implements OnInit {
                       let resp = response as any;
                       this.tokenStorage.saveVippsMerchToken( resp.access_token);
           
-                      const amount = "4000" // valuta NOK with 00 suffix for øre
+                      let amount="0";
+                      
+                      if(params['bookname']==="Drop-in"){
+                        amount="4000"// valuta NOK with 00 suffix for øre
+                      } else if(params['bookname']==="Kontor") amount="40000";
+
                       this.authService.sendVippsPayment(resp.access_token,customerPhone,amount,params['bookname']).subscribe({
                         next: (response) => {
                           if(response){

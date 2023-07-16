@@ -321,8 +321,8 @@ export class EventDialog {
   closeDialog(){
     this.dialogRef.close({
       clickedDbEvt: this.data.clickedDbEvt,
-      startTime: this.startDate,
-      endTime: this.endDate, 
+      startDate: this.startDate,
+      endDate: this.endDate, 
       bookname : this.valgtBookCtrl.value,
       roomname : this.roomname,
       toBeDeleted : this.data.toBeDeleted, 
