@@ -69,7 +69,7 @@ export class PaymentComponent implements OnInit {
                 user_email: storageUsrObj.user_email,
                 ou : storageUsrObj.ou,
                 bookname: usrObj.bookname,
-                amount: usrObj.amount,
+                amount: usrObj.amount.slice(0,-2),   //konvert øre to kroner
                 is_consumed: usrObj.is_consumed
               }  
               this.dataToDisplay.push(paymentRow);

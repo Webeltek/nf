@@ -115,7 +115,7 @@ export class VippsCheckoutComponent implements OnInit {
                       }
                     })
                 }
-                this.msg = this.paymentAmount + " is " + this.paymentState;
+                this.msg = this.paymentAmount.slice(0,-2) + " is " + this.paymentState;
             }
           },
           error: (err) => {
