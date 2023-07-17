@@ -15,18 +15,14 @@ import { takeUntil } from 'rxjs/operators';
 
 import { CustomDateFormatter } from './custom-date-formatter.provider';
 import { HttpEventService } from 'projects/angular-calendar/src/modules/week/http-service.service';
-import { EventDialog, PythEvent, getColors } from 'projects/angular-calendar/src/modules/week/calendar-week-view-hour-segment.component';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { HttpResponse } from '@angular/common/http';
 import { Router, ActivatedRoute, ParamMap, NavigationEnd  } from '@angular/router';
 import { TokenStorageService } from './_services/token-storage.service';
-import { stringify } from 'querystring';
-import { isSameDay,isSameMonth} from 'date-fns';
 import { TranslateService } from '@ngx-translate/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ThemePalette } from '@angular/material/core';
 import { AuthService } from './_services/auth.service';
-import { MatChipSelectionChange } from '@angular/material/chips';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 
 export interface ChipItem {
@@ -91,14 +87,7 @@ export class DemoAppComponent implements OnInit, OnDestroy{
   public set events(events : CalendarEvent[]){
     this._events = events;
   }
-  public get felEvents(){
-    return this.events.filter(evt => {
-      console.log("evt.bookname",evt.bookname);
-      return evt.bookname==="Drop-in"})
-  }
-  public get kontEvents(){
-    return this.events.filter(evt => {evt.bookname==="Kontor"})
-  } 
+   
   users : PythUser[] = [];
   loggedInUserId : number;
   toBeDeletedEvt : CalendarEvent;

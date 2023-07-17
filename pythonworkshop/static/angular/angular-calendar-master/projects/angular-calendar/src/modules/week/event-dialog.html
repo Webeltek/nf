@@ -51,12 +51,12 @@
         <mat-radio-group 
           aria-labelledby="example-radio-group-label"
           class="example-radio-group"
-          formControlName="valgtBook" >
-          <mat-radio-button class="example-radio-button" 
-            *ngFor="let book of books"
+          formControlName="valgtBook">
+            <mat-radio-button class="example-radio-button"
+            *ngFor="let book of books" 
               [value]="book">
               {{book}}
-          </mat-radio-button>
+            </mat-radio-button>
         </mat-radio-group>
       </div>
       <div>{{valgtBookCtrl.value}}<br/>

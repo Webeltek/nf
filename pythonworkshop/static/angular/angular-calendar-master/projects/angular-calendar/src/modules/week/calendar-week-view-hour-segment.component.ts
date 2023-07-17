@@ -194,7 +194,6 @@ export class CalendarWeekViewHourSegmentComponent {
         console.log("calWVhourSegm isClick",this.isClickedOverEvent());
         for (var dbEvt of this.events) {
           let segmStartHour = this.segment.date.getHours();
-          console.log ("HS segmStartHour", segmStartHour);
           let modifiedSegmentDate = new Date(this.segment.date);
           let segmStartHourDate = new Date(modifiedSegmentDate.setHours(segmStartHour, 0));
           let segmEndHourDate = new Date(modifiedSegmentDate.setHours(segmStartHour + 1, 0));
@@ -221,7 +220,6 @@ export class CalendarWeekViewHourSegmentComponent {
               const endmills = result.endDate.getTime();
               const paymntref = this.externalEvents.at(-1).paymntref;
               const loggedInUser = this.tokenStorage.getUser();
-              console.log("WHS result,startmills,endmills",result,startmills,endmills);
               this.httpService.generatePythEvent({
                   user_id :this.loggedInUserId,
                   title : this.tokenStorage.getEventTitle(result.bookname,this.loggedInUserId,[loggedInUser]),
