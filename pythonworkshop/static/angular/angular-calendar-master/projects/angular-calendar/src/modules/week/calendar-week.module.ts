@@ -23,6 +23,7 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { JsonPipe } from '@angular/common';
 import { NgbTimepickerModule } from '@ng-bootstrap/ng-bootstrap';
+import { MatSelectModule} from '@angular/material/select';
 
 export {
   CalendarWeekViewComponent,
@@ -53,6 +54,7 @@ export { CalendarWeekViewCurrentTimeMarkerComponent as ɵCalendarWeekViewCurrent
     MatRadioModule,
     FormsModule,
     ReactiveFormsModule,
+    MatSelectModule,
     HttpClientModule,
     NgbTimepickerModule,
     JsonPipe,

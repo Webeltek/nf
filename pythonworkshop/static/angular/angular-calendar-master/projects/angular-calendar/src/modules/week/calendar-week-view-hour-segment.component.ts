@@ -278,7 +278,7 @@ export class EventDialog {
   books = this.data.books;
   toBeDeleted = this.data.toBeDeleted;
 
-  valgtBookCtrl = this.fb.control("");
+  valgtBookCtrl = this.fb.control(this.books[0]);
   userForm  = this.fb.group({
       valgtBook : this.valgtBookCtrl
     });

@@ -78,6 +78,7 @@
     "EDdelTtl": "Delete event",
     "EDinsertTtl": "Select event",
     "EDchoosePer": "Choose period",
+    "EDchooseBook": "Choose booking",
 
     "BAuserEmail": "User email",
     "BAuserAddress": "User address",
@@ -85,13 +86,13 @@
     "BAhasLoggedIn": "Has logged in",
     "BAlastSeen": "Last seen",
 
-    "PAbookname" : "Bookname",
+    "PAbookname" : "Booking name",
     "PAamount" : "Amount",
     "PAisConsumed": "Is consumed",
 
     "EEselRoomAndPer": "Select room and time period",
     "EEselPer" : "Select period",
-    "EEbook" : "Book",
+    "EEbook" : "Booking",
     "EEroom": "Room",
     "EEemail": "Email",
     "EEdate": "Date"

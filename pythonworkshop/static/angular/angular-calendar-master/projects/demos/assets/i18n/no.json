@@ -77,6 +77,7 @@
      "EDdelTtl": "Slett reservasjon av",
      "EDinsertTtl": "Velg reservasjon",
      "EDchoosePer": "Velg periode",
+     "EDchooseBook": "Velg booking",
 
      "BAuserEmail": "Bruker e-post",
      "BAuserAddress": "Brukeradresse",
@@ -84,13 +85,13 @@
      "BAhasLoggedIn": "Har logget inn",
      "BAlastSeen": "Sist sett",
 
-     "PAbookname" : "Boknavn",
+     "PAbookname" : "Booking navn",
      "PAamount" : "Beløp",
      "PAisConsumed": "Er brukt",
 
     "EEselRoomAndPer": "Velg rom og tidsperiode",
     "EEselPer" : "Velg periode",
-    "EEbook" : "Bok",
+    "EEbook" : "Booking navn",
     "EEroom": "Rom",
     "EEemail": "E-post",
     "EEdate": "Dato"
