@@ -13,7 +13,7 @@ import { UntypedFormBuilder, UntypedFormGroup, UntypedFormControl, UntypedFormAr
 import { PythEvent } from 'projects/angular-calendar/src/modules/week/calendar-week-view-hour-segment.component';
 import { MatTableDataSource} from '@angular/material/table';
 import { CalendarEvent } from 'calendar-utils';
-import { DataSource } from '@angular/cdk/collections';
+import { DataSource, SelectionChange } from '@angular/cdk/collections';
 import { Observable, ReplaySubject, BehaviorSubject, map, Subscription, distinctUntilChanged, pipe} from 'rxjs';
 import { DatePipe} from '@angular/common';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -72,7 +72,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.httpService.booksArr$.subscribe((bookNamesArr)=>{
       this.booksArr= bookNamesArr;
-      console.log("HomeComp ngOnInit() roomNamesArr",this.roomNamesArr);
+      //console.log("HomeComp ngOnInit() roomNamesArr",this.roomNamesArr);
     });
     this.httpService.roomsArr$.subscribe((roomNamesArr)=>{
       this.roomNamesArr= roomNamesArr;
@@ -260,6 +260,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
 export interface TableRow {
   uid : number | string;
+  user_id: number;
   user_email: string;
   room: string;
   book: string;
@@ -281,6 +282,7 @@ export class EditEventsDialog {
         books : string[],
         rooms : string[] },
         private httpService: HttpEventService,
+        private tokenStorage : TokenStorageService,
         private calendar: NgbCalendar,
         public formatter: NgbDateParserFormatter) {
           this.fromDate = calendar.getToday();
@@ -387,6 +389,11 @@ export class EditEventsDialog {
     this.dataSourceEx.setData(this.dataToDisplay);
   } */
 
+  getUserEmailPrefix(userEmail:string){
+    const alphaIndx = userEmail.indexOf('@');
+    return userEmail.slice(0,alphaIndx);
+  }
+
   getDbUsers(){
     this.httpService.getUsers().subscribe({
         next : (response) => {
@@ -402,8 +409,10 @@ export class EditEventsDialog {
 
             for (let objEvt of  respObj.events){
               let tableRow : TableRow=  {
+                  user_id: objEvt.user_id,
                   uid : objEvt.uid,
-                  user_email : this.users.filter((user)=>objEvt.user_id==user.id)[0]?.user_email,
+                  user_email : 
+                    this.getUserEmailPrefix(this.users.filter((user)=>objEvt.user_id==user.id)[0]?.user_email),
                   room : objEvt.roomname,
                   book : objEvt.bookname,
                   start : new Date(objEvt.startmills),
@@ -511,6 +520,18 @@ export class EditEventsDialog {
   onSubmit(){
     //console.log(" Close dial selection.selected",this.selection.selected);
     console.log("Close dial selection.selected.map",this.selection.selected.map(row=>row.uid));
+    let selectedRows = this.selection.selected;
+    let currentUser = this.tokenStorage.getUser();
+    let filteredRows = selectedRows.filter((tableRow)=>{
+      const row_user_id = tableRow.user_id;
+      if (currentUser.is_admin){
+        return tableRow;
+      } else return row_user_id == currentUser.user_id;
+    });
+    this.selection.setSelection(...filteredRows);
+    if (filteredRows.length<selectedRows.length){
+      
+    }
     this.dialogRef.close({
       selectedRowsIds: this.selection.selected.map(row=>row.uid),
       } )

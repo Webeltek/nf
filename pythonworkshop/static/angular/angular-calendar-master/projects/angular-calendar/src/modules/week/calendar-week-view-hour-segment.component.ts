@@ -215,9 +215,10 @@ export class CalendarWeekViewHourSegmentComponent {
 
         dialogRef.afterClosed().subscribe({
           next: (result) => {
-            if (result) {
+            if (result && this.externalEvents.length>0) {
               const startmills = result.startDate.getTime();
               const endmills = result.endDate.getTime();
+              console.log("hourSegm this.externalEvents",this.externalEvents)
               const paymntref = this.externalEvents.at(-1).paymntref;
               const loggedInUser = this.tokenStorage.getUser();
               this.httpService.generatePythEvent({
