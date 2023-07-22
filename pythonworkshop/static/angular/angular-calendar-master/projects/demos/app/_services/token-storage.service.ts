@@ -121,8 +121,7 @@ export class TokenStorageService {
     const alphaIndx = eventUser[0].user_email.indexOf('@');
     let userEmailPrefix = typeof eventUser[0]=='undefined' ? '' : eventUser[0].user_email.slice(0,alphaIndx);
 
-    console.log("TS getEventTitle",eventUser[0].user_email,
-    userEmailPrefix,ouname);
+    //console.log("TS getEventTitle",eventUser[0].user_email,userEmailPrefix,ouname);
     if ( this.getUser().is_admin || this.getUser().id==evt_user_id){
       return `${bookname}<br>${eventUser[0].user_email}<br>${ouname}`;
     } else {

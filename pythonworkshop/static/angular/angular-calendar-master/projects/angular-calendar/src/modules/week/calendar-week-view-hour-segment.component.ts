@@ -14,6 +14,7 @@ import { DateAdapter } from '../../date-adapters/date-adapter';
 import { TokenStorageService } from 'projects/demos/app/_services/token-storage.service';
 import { AuthService } from 'projects/demos/app/_services/auth.service';
 import { NgbTimeStruct } from '@ng-bootstrap/ng-bootstrap';
+import { PythUser } from 'projects/demos/app/demo-app.component';
 
 
 export interface DialogData {
@@ -120,7 +121,9 @@ export class CalendarWeekViewHourSegmentComponent {
     private tokenStorage: TokenStorageService) {}
 
   @Input() events: CalendarEvent[] = [];
-  @Input() externalEvents: CalendarEvent[] = [];  
+  @Input() externalEvents: CalendarEvent[] = [];
+  
+  @Input() users: PythUser[]= [];
 
   @Input() loggedInUserId : number;
 
@@ -220,10 +223,9 @@ export class CalendarWeekViewHourSegmentComponent {
               const endmills = result.endDate.getTime();
               console.log("hourSegm this.externalEvents",this.externalEvents)
               const paymntref = this.externalEvents.at(-1).paymntref;
-              const loggedInUser = this.tokenStorage.getUser();
               this.httpService.generatePythEvent({
                   user_id :this.loggedInUserId,
-                  title : this.tokenStorage.getEventTitle(result.bookname,this.loggedInUserId,[loggedInUser]),
+                  title : this.tokenStorage.getEventTitle(result.bookname,this.loggedInUserId,this.users),
                   paymntref : paymntref,
                   bookname :result.bookname,
                   roomname : result.roomname,

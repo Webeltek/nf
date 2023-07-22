@@ -83,13 +83,15 @@
           <mat-error *ngIf="range.controls.end.hasError('matEndDateInvalid')">Invalid end date</mat-error>
         </mat-form-field> -->
         
-      
-        <mat-form-field appearance="fill">
-          <mat-label>room</mat-label>
-          <mat-select [formControl]="selectedRooms">
-                <mat-option *ngFor="let roomName of rooms" [value]="roomName" selected>{{roomName}}</mat-option>
-          </mat-select>
-        </mat-form-field>
+        <ng-container *ngIf="routerPath==='/calendar/kontor'">
+          <mat-form-field appearance="fill">
+            <mat-label>room</mat-label>
+            <mat-select [formControl]="selectedRooms">
+                  <mat-option *ngFor="let roomName of rooms" [value]="roomName" selected>{{roomName}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </ng-container>
+        
       
         <table mat-table [dataSource]="dataSourceEx" class="mat-elevation-z8">
           <!-- Checkbox Column -->
@@ -102,11 +104,13 @@
               </mat-checkbox>
             </th>
             <td mat-cell *matCellDef="let row">
-              <mat-checkbox (click)="$event.stopPropagation()"
+              <ng-container *ngIf="selectionToggleFilter(row)!==null">
+                <mat-checkbox (click)="$event.stopPropagation()"
                       (change)="$event ? selection.toggle(row) : null"
                       [checked]="selection.isSelected(row)"
                       [aria-label]="checkboxLabel(row)">
               </mat-checkbox>
+              </ng-container>
             </td>
           </ng-container>
         

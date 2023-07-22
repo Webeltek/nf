@@ -68,6 +68,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   isDesktop = false;
   viewDate = new Date();
   activeDayIsOpen = false;
+  routerPath = '';
 
   ngOnInit(): void {
     this.httpService.booksArr$.subscribe((bookNamesArr)=>{
@@ -77,6 +78,12 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.httpService.roomsArr$.subscribe((roomNamesArr)=>{
       this.roomNamesArr= roomNamesArr;
       //console.log("HomeComp ngOnInit() roomNamesArr",this.roomNamesArr);
+    });
+    this.router.events.subscribe((routerEvent)=>{
+      if (routerEvent instanceof NavigationEnd){
+        this.routerPath = routerEvent.url;
+        console.log(" Snapshot path",routerEvent.url);
+      }
     });
   }
 
@@ -168,7 +175,8 @@ export class HomeComponent implements OnInit, OnDestroy {
       const dialogRef = this.dialog.open(EditEventsDialog, {
         data: {
           rooms: this.roomNamesArr,
-          books: this.booksArr
+          books: this.booksArr,
+          routerPath: this.routerPath
         },
       });
   
@@ -280,7 +288,8 @@ export class EditEventsDialog {
   constructor( public dialogRef: MatDialogRef<EditEventsDialog>,
       @Inject(MAT_DIALOG_DATA) public data: {
         books : string[],
-        rooms : string[] },
+        rooms : string[] ,
+        routerPath: string},
         private httpService: HttpEventService,
         private tokenStorage : TokenStorageService,
         private calendar: NgbCalendar,
@@ -333,7 +342,8 @@ export class EditEventsDialog {
 	}
 
   rooms : string[]= this.data.rooms;
-  books: string[] = this.data.books
+  books: string[] = this.data.books;
+  routerPath = this.data.routerPath;
   users : PythUser[] = [];
   events : CalendarEvent[] = [];
   pythEvents : PythEvent[] = [];
@@ -356,6 +366,7 @@ export class EditEventsDialog {
 
   ngOnInit(){
     this.getDbUsers();
+    console.log("ED routerPath",this.data.routerPath);
   }
 
   /** Whether the number of selected elements matches the total number of rows. */
@@ -367,12 +378,28 @@ export class EditEventsDialog {
 
   /** Selects all rows if they are not all selected; otherwise clear selection. */
   toggleAllRows() {
-    if (this.isAllSelected()) {
+    if (this.selection.selected.length>0) {
       this.selection.clear();
       return;
     }
+    let filteredRows : TableRow[] = []; 
+    for (let row of this.tableRows){
+      if(this.selectionToggleFilter(row)){
+        filteredRows.push(row);
+      };
+    }
+    this.selection.select(...filteredRows);
+  }
 
-    this.selection.select(...this.tableRows);
+  selectionToggleFilter(row: TableRow){
+    const user_id = row.user_id;
+    const eventUser = this.users.filter((user)=>user.id==user_id)[0];
+    if(eventUser.id==this.tokenStorage.getUser().id
+    || eventUser.ou === this.tokenStorage.getUser().ou 
+    || this.tokenStorage.getUser().is_admin){
+      //this.selection.toggle(row);
+      return row;
+    } else return null;
   }
 
   /** The label for the checkbox on the passed row */
@@ -394,6 +421,16 @@ export class EditEventsDialog {
     return userEmail.slice(0,alphaIndx);
   }
 
+  filterEmailPrefix(users: PythUser[],user_id:number){
+    const eventUser = users.filter((user)=>user.id==user_id)[0]
+    const alphaIndx = eventUser.user_email.indexOf('@');
+    if ( this.tokenStorage.getUser().is_admin || this.tokenStorage.getUser().id==user_id){
+      return eventUser.user_email;
+    } else {
+      return eventUser.user_email.slice(0,alphaIndx);
+    }
+  }
+
   getDbUsers(){
     this.httpService.getUsers().subscribe({
         next : (response) => {
@@ -405,14 +442,14 @@ export class EditEventsDialog {
               this.users.push(pythUser);
             }
             this.users = [...this.users];
-            console.log("getDBUsers() this.users",this.users);
+            //console.log("getDBUsers() this.users",this.users);
 
             for (let objEvt of  respObj.events){
               let tableRow : TableRow=  {
                   user_id: objEvt.user_id,
                   uid : objEvt.uid,
                   user_email : 
-                    this.getUserEmailPrefix(this.users.filter((user)=>objEvt.user_id==user.id)[0]?.user_email),
+                  this.filterEmailPrefix(respObj.users,objEvt.user_id),
                   room : objEvt.roomname,
                   book : objEvt.bookname,
                   start : new Date(objEvt.startmills),
@@ -420,7 +457,7 @@ export class EditEventsDialog {
                   title : String(objEvt.title).substring(0,3),
                 }
               this.tableRows.push(tableRow);
-              console.log("HomeComp tableRow.user_email ",this.users.filter((user)=>objEvt.user_id==user.id)[0].user_email);
+              //console.log("HomeComp tableRow.user_email ",this.users.filter((user)=>objEvt.user_id==user.id)[0].user_email);
               let calEvent : CalendarEvent=  {
                 title : objEvt.title,
                 userId : objEvt.userId,
@@ -515,23 +552,10 @@ export class EditEventsDialog {
 
   closeDialog(){
   }
-  
 
   onSubmit(){
     //console.log(" Close dial selection.selected",this.selection.selected);
     console.log("Close dial selection.selected.map",this.selection.selected.map(row=>row.uid));
-    let selectedRows = this.selection.selected;
-    let currentUser = this.tokenStorage.getUser();
-    let filteredRows = selectedRows.filter((tableRow)=>{
-      const row_user_id = tableRow.user_id;
-      if (currentUser.is_admin){
-        return tableRow;
-      } else return row_user_id == currentUser.user_id;
-    });
-    this.selection.setSelection(...filteredRows);
-    if (filteredRows.length<selectedRows.length){
-      
-    }
     this.dialogRef.close({
       selectedRowsIds: this.selection.selected.map(row=>row.uid),
       } )
