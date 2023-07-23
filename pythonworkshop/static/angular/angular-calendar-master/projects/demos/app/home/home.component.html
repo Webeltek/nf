@@ -139,12 +139,12 @@
       </ng-template>
       
       <ng-template #loggedInSidenav>
-        <img
-        class="avatar mat-elevation-z8"
-        src="assets/ufo.jpg"
-        />
+        <div class="avatar mat-elevation-z8">
+          <span><mat-icon>person</mat-icon></span>
+        </div>
           <h4 class="name">{{tokenStorage.getUser().user_email}}</h4>
           <p class="designation">{{tokenStorage.getUser().is_admin ? "admin" : "user"}}</p>
+          <p class="designation">{{tokenStorage.getUser().ou}}</p>
           <mat-divider></mat-divider>
           <mat-nav-list dense>
             <ng-container *ngIf="!tokenStorage.getUser().is_admin; then userCalendarView else adminCalendarView">
