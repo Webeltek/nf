@@ -320,10 +320,13 @@ export class EventDialog {
     this.endCtrl.value.hour,this.endCtrl.value.minute)); 
 
   closeDialog(){
+
     this.dialogRef.close({
       clickedDbEvt: this.data.clickedDbEvt,
-      startDate: this.startDate,
-      endDate: this.endDate, 
+      startDate: this.data.startDate ? this.data.startDate : new Date(this.data.date.setHours(
+        this.startCtrl.value.hour,this.startCtrl.value.minute)),
+      endDate: this.data.endDate ? this.data.endDate : new Date(this.data.date.setHours(
+        this.endCtrl.value.hour,this.endCtrl.value.minute)), 
       bookname : this.valgtBookCtrl.value,
       roomname : this.roomname,
       toBeDeleted : this.data.toBeDeleted, 

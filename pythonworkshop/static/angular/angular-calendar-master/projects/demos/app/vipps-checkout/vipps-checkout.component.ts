@@ -93,14 +93,15 @@ export class VippsCheckoutComponent implements OnInit {
             console.log("VCheck queryResp: ",queryResponse);
             if (queryResp.state === "AUTHORIZED"){
                 this.paymentState = "AUTHORIZED";
-                this.paymentAmount = queryResp.amount.value;
+                //console.log("VC queryResp.amount.value",typeof queryResp.amount.value);
+                this.paymentAmount = queryResp.amount.value.toString().slice(0,-2);
                 const vipps_sub  = queryResp.profile.sub;
                 if (vipps_sub){
                   const paymnt = {
                     reference : params['reference'],
                     vipps_sub : vipps_sub,
                     paymentState : this.paymentState,
-                    paymentAmount : this.paymentAmount,
+                    paymentAmount : queryResp.amount.value,
                     bookname : params['bookname']
                   }
                   const user_id = this.tokenStorage.getUser().id;
@@ -115,7 +116,8 @@ export class VippsCheckoutComponent implements OnInit {
                       }
                     })
                 }
-                this.msg = this.paymentAmount.slice(0,-2) + " is " + this.paymentState;
+
+                this.msg = this.paymentAmount + " is " + this.paymentState;
             }
           },
           error: (err) => {
