@@ -164,7 +164,7 @@ def google_cb():
 
 @auth_bp.route('/api/auth/login', methods=['POST','GET'])
 def login_form():
-    #print('login_form call')
+    print('LOGIN call')
     msg = ''
     prov= request.json['provider']
     print(f'json[provider]  {prov}')
