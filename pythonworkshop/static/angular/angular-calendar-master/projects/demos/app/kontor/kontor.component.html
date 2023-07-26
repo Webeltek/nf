@@ -1,0 +1,134 @@
+<div class="row text-center">
+    <div class="col-lg-4">
+        <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):(getLocaleFromTranslate(translate.currentLang)) :1 }}</h3>
+    </div>
+    <div class="col-lg-4">
+        <div  class="btn-group">
+            <div class="btn btn-primary" mwlCalendarPreviousView
+            (viewDateChange)="activeDayIsOpen=false" 
+            [view]="view" [(viewDate)]="viewDate"
+            [daysInWeek]="1">
+                {{'DCprevious' | translate}}
+            </div>
+            <div class="btn btn-outline-secondary" mwlCalendarToday
+            (viewDateChange)="activeDayIsOpen=false" 
+            [(viewDate)]="viewDate">
+            {{'DCtoday' | translate}}
+            </div>
+            <div class="btn btn-primary" mwlCalendarNextView
+            (viewDateChange)="activeDayIsOpen=false" 
+            [view]="view" [(viewDate)]="viewDate"
+            [daysInWeek]="1">
+            {{'DCnext' | translate}}
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="btn-group">
+          <div
+            class="btn btn-primary"
+            (click)="setView(CalendarView.Month)"
+            [class.active]="view === CalendarView.Month"
+          >
+          {{'DCmonth' | translate}}
+          </div>
+          <div
+            class="btn btn-primary"
+            (click)="setView(CalendarView.Week)"
+            [class.active]="view === CalendarView.Week"
+          >
+          {{'DCweek' | translate}}
+          </div>
+          <div
+            class="btn btn-primary"
+            (click)="setView(CalendarView.Day)"
+            [class.active]="view === CalendarView.Day"
+          >
+          {{'DCday' | translate}}
+          </div>
+        </div>
+    </div>
+</div>
+<ng-container 
+    *ngIf="( tokenStorage.combAuthProtected$ | async) === true;">
+    <mat-chip-listbox aria-label="Drop-in selection"
+        mwlDroppable
+        (drop)="externalDrop($event.dropData.event)"
+        dragOverClass="drag-over" *ngFor="let event of externalKontEvents">
+            <mat-chip-option
+            *ngIf="event.bookname==='Kontor'"
+            mwlDraggable 
+            [style.color]="'warn'"
+            [dropData]="{event: event}"
+            [touchStartLongPress]="{ delay: 300, delta: 30 }"
+            dragActiveClass="drag-active"
+            (selectionChange)="onSelectionChange($event)"
+            >
+                {{event.title}} 
+            </mat-chip-option>
+        </mat-chip-listbox>
+</ng-container>
+<br />
+<div [ngSwitch]="view">
+    <mwl-calendar-month-view
+        *ngSwitchCase="CalendarView.Month"
+        [viewDate]="viewDate"
+        [weekStartsOn]=1
+        [events]="kontEvents"
+        [externalEvents]="externalKontEvents"
+        [refresh]="refresh"
+        [activeDayIsOpen]="activeDayIsOpen"
+        (dayClicked)="dayClicked($event.day)"
+        [rooms]="rooms"
+        [books]="books"
+        [dayStartHour]="0" 
+        [loggedInUserId]="loggedInUserId" 
+        [events]="kontEvents"
+        (eventClicked)="openDialog($event)"
+        (eventTimesChanged)="eventTimesChanged($event)"
+        (eventTimesChangedW)="eventTimesChanged($event)">
+    </mwl-calendar-month-view>
+
+    <ng-container 
+    *ngSwitchCase="CalendarView.Week">
+        <ng-container *ngIf="isMobLayout; then wideWeekTempl else wideWeekTempl">
+        </ng-container>
+    </ng-container>
+    <ng-template #wideWeekTempl>
+        <mwl-calendar-week-view  
+            [locale]="locale"
+            [isOpen]="true"
+            [rooms]="rooms"
+            [books]="books"
+            [daysInWeek]="daysInWeek"
+            [dayStartHour]="8" 
+            [dayEndHour]="18" 
+            [viewDate]="viewDate"
+            [weekStartsOn]=1
+            [loggedInUserId]="loggedInUserId" 
+            [events]="kontEvents"
+            [externalEvents]="externalKontEvents"
+            [users]="users"
+            (eventClicked)="openDialog($event)"
+            [refresh]="refresh"
+            [snapDraggedEvents]="false"
+            (eventTimesChanged)="eventTimesChanged($event)"
+            >
+        </mwl-calendar-week-view>
+    </ng-template>
+    
+    <mwl-calendar-day-view
+        *ngSwitchCase="CalendarView.Day"
+        [viewDate]="viewDate"
+        [dayStartHour]="8" 
+        [dayEndHour]="18"
+        [events]="kontEvents"
+        [externalEvents]="externalKontEvents"
+        (eventClicked)="openDialog($event)"
+        [refresh]="refresh"
+        [snapDraggedEvents]="false"
+        (eventTimesChanged)="eventTimesChanged($event)"
+    >
+    </mwl-calendar-day-view>
+    
+</div>

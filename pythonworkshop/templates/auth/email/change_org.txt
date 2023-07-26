@@ -1,0 +1,8 @@
+<p>Kjære {{ user.username }},</p>
+<p>For å tilbakestille organisasjonen din, trykk på lenken <a href="{{ url_for('auth_bp.change_org', token=token, _external=True) }}">trykk her</a>.</p>
+<p>Som alternativ kopier den følgende lenken og lim inn i url adresse feltet i browseren din:</p>
+<p>{{ url_for('auth_bp.change_org', token=token, _external=True) }}</p>
+<p>Hvis du ikke har bedt om en tilbakestilling av organisasjon, kan du se bort fra denne meldingen.</p>
+<p>MVH,</p>
+<p>HNF</p>
+<p><small>Melding: automatisk svar.</small></p>
