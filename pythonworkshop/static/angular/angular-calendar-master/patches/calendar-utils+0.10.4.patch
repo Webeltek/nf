@@ -1,0 +1,62 @@
+diff --git a/node_modules/calendar-utils/calendar-utils.d.ts b/node_modules/calendar-utils/calendar-utils.d.ts
+index 9a1abcd..c006fc4 100644
+--- a/node_modules/calendar-utils/calendar-utils.d.ts
++++ b/node_modules/calendar-utils/calendar-utils.d.ts
+@@ -35,9 +35,14 @@ export interface EventAction {
+ }
+ export interface CalendarEvent<MetaType = any> {
+     id?: string | number;
++    userId? : number;
+     start: Date;
+     end?: Date;
+     title: string;
++    paymntref? : string;
++    bookname? : string;
++    roomname? : string;
++    ou? : string;
+     color?: EventColor;
+     actions?: EventAction[];
+     allDay?: boolean;
+@@ -134,9 +139,12 @@ export interface GetWeekViewArgs {
+     dayEnd: Time;
+     weekendDays?: number[];
+     segmentHeight: number;
++    segmentWidth?: number;
+     viewStart?: Date;
+     viewEnd?: Date;
+     minimumEventHeight?: number;
++    minimumEventWidth?: number;
++    is_horizontal_dayview?: boolean;
+ }
+ export declare function getDifferenceInDaysWithExclusions(dateAdapter: DateAdapter, { date1, date2, excluded }: {
+     date1: Date;
+diff --git a/node_modules/calendar-utils/calendar-utils.js b/node_modules/calendar-utils/calendar-utils.js
+index 3ff9052..eb75481 100644
+--- a/node_modules/calendar-utils/calendar-utils.js
++++ b/node_modules/calendar-utils/calendar-utils.js
+@@ -549,9 +549,15 @@ function getDayView(dateAdapter, _a) {
+         var bottom = top + height;
+         var overlappingPreviousEvents = getOverLappingWeekViewEvents(previousDayEvents, top, bottom);
+         var left = 0;
+-        while (overlappingPreviousEvents.some(function (previousEvent) { return previousEvent.left === left; })) {
+-            left += eventWidth;
++        // while (overlappingPreviousEvents.some(function (previousEvent) { return previousEvent.left === left; })) {
++          //  left += eventWidth;
++        //} 
++        while (overlappingPreviousEvents.some(function (previousEvent) { return previousEvent.top === top})) {
++            var prevEvent = overlappingPreviousEvents.slice(-1);
++            top += prevEvent.height;
+         }
++        console.log("cal utils prevEvent.top",top);
++        var topTest = 1;
+         var dayEvent = {
+             event: event,
+             height: height,
+@@ -561,6 +567,7 @@ function getDayView(dateAdapter, _a) {
+             startsBeforeDay: startsBeforeDay,
+             endsAfterDay: endsAfterDay,
+         };
++        var topTest2 = 1;
+         previousDayEvents.push(dayEvent);
+         return dayEvent;
+     });

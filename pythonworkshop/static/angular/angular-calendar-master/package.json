@@ -40,8 +40,8 @@
     "gh-pages:compodoc": "compodoc -p tsconfig-compodoc.json -d dist/demos/docs --disableGraph --disableCoverage --disablePrivate --disableInternal --disableLifeCycleHooks --disableProtected --gaID UA-63367573-2",
     "gh-pages:deploy": "ng deploy",
     "gh-pages": "run-s build:clean gh-pages:demos gh-pages:compodoc gh-pages:deploy build:clean",
-    "prepare": "if [[ -x \"$(command -v husky)\" ]]; then husky install; fi & custompatch",
-    "postinstall": ""
+    "prepare": "if [[ -x \"$(command -v husky)\" ]]; then husky install; fi",
+    "postinstall": "patch-package"
   },
   "schematics": "./schematics/collection.json",
   "config": {
@@ -133,6 +133,7 @@
     "ng-packagr": "^15.1.1",
     "ngx-clipboard": "^15.1.0",
     "npm-run-all": "^4.1.5",
+    "patch-package": "^6.5.1",
     "postcss": "^8.3.6",
     "postcss-cli": "^8.3.1",
     "postcss-flexibility": "^3.0.0",
@@ -178,7 +179,6 @@
     "json5": "^1.0.2",
     "lodash": "^4.17.21",
     "ngx-socket-io": "^4.4.0",
-    "patch-package": "^6.4.7",
     "positioning": "^2.0.1",
     "sinon": "^4.0.2",
     "tslib": "^2.1.0"
