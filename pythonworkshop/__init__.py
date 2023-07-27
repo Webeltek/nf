@@ -111,6 +111,7 @@ def oidc_provider_init_app(config, name=None, **kwargs):
         r"/api/*/*": {"origins": [
         "https://138.109-247-35.customer.lyse.net",
         "http://localhost",
+        "https://192.168.3.225",
         "https://webeltek.line.pm",
         "https://webeltek.org"
         ], "allow_headers":"*"},
