@@ -31,10 +31,10 @@ index 9a1abcd..c006fc4 100644
  export declare function getDifferenceInDaysWithExclusions(dateAdapter: DateAdapter, { date1, date2, excluded }: {
      date1: Date;
 diff --git a/node_modules/calendar-utils/calendar-utils.js b/node_modules/calendar-utils/calendar-utils.js
-index 3ff9052..82a02d0 100644
+index 3ff9052..418c2d2 100644
 --- a/node_modules/calendar-utils/calendar-utils.js
 +++ b/node_modules/calendar-utils/calendar-utils.js
-@@ -549,8 +549,12 @@ function getDayView(dateAdapter, _a) {
+@@ -549,9 +549,15 @@ function getDayView(dateAdapter, _a) {
          var bottom = top + height;
          var overlappingPreviousEvents = getOverLappingWeekViewEvents(previousDayEvents, top, bottom);
          var left = 0;
@@ -47,5 +47,8 @@ index 3ff9052..82a02d0 100644
 +            var prevEvent = overlappingPreviousEvents.slice(-1);
 +            top += prevEvent.height;
          }
++        console.log("cal utils prevEvent.top",top);
++        var topTest = 1;
          var dayEvent = {
              event: event,
+             height: height,
