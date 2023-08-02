@@ -3,7 +3,7 @@
   "version": "0.29.0",
   "description": "A calendar component for angular 12.0+ that can display events on a month, week or day view",
   "funding": {
-    "url": ""
+    "url": "https://github.com/mattlewis92/calendar-utils"
   },
   "scripts": {
     "node:memory": "cross-env NODE_OPTIONS=--max_old_space_size=8192",
@@ -172,7 +172,7 @@
     "angular-draggable-droppable": "^8.0.0",
     "angular-resizable-element": "^7.0.0",
     "bootstrap-css-only": "^4.4.1",
-    "calendar-utils": "^0.9.0",
+    "calendar-utils": "file:dependencies/calendar-utils",
     "chai": "^4.0.2",
     "custompatch": "^1.0.22",
     "json5": "^1.0.2",
