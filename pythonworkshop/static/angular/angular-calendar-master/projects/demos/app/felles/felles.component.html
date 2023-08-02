@@ -101,8 +101,6 @@
             [rooms]="rooms"
             [books]="books"
             [daysInWeek]="daysInWeek"
-            [dayStartHour]="8" 
-            [dayEndHour]="18" 
             [viewDate]="viewDate"
             [weekStartsOn]=1
             [loggedInUserId]="loggedInUserId" 
@@ -120,8 +118,6 @@
     <mwl-calendar-day-view
         *ngSwitchCase="CalendarView.Day"
         [viewDate]="viewDate"
-        [dayStartHour]="8" 
-        [dayEndHour]="18"
         [events]="felEvents"
         [externalEvents]="externalFelEvents"
         (eventClicked)="openDialog($event)"

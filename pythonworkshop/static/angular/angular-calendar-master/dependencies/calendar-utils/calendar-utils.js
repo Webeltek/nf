@@ -487,16 +487,14 @@ function getOverLappingWeekViewEvents(events, top, bottom) {
     return events.filter(function (previousEvent) {
         var previousEventTop = previousEvent.top;
         var previousEventBottom = previousEvent.top + previousEvent.height;
-        if (top < previousEventBottom && previousEventBottom < bottom) {
+        if (top < previousEventBottom && bottom > previousEventBottom) {
             return true;
         }
-        else if (top < previousEventTop && previousEventTop < bottom) {
+        else if (top < previousEventTop && bottom > previousEventTop) {
             return true;
         }
-        else if (previousEventTop <= top && bottom <= previousEventBottom) {
-            return true;
-        }
-        else if(bottom > previousEventTop && bottom < previousEventBottom){
+        else if ( top >= previousEventTop && bottom <= previousEventBottom) {
+            console.log("top >= previousEventTop && bottom <= previousEventBottom",true)
             return true;
         }
         return false;
@@ -551,18 +549,24 @@ function getDayView(dateAdapter, _a) {
         height = Math.floor(height);
         var bottom = top + height;
         var overlappingPreviousEvents = getOverLappingWeekViewEvents(previousDayEvents, top, bottom);
+        console.log("overlappingPreviousEvents value",overlappingPreviousEvents);
         var left = 0;
         // while (overlappingPreviousEvents.some(function (previousEvent) { return previousEvent.left === left; })) {
           //  left += eventWidth;
         //} 
         while (overlappingPreviousEvents.some(function (previousEvent) { return previousEvent.top === top})) {
-            var prevEventHeight = overlappingPreviousEvents.pop().height;
-            top += prevEventHeight;
+            var prevEvent = overlappingPreviousEvents.pop();
+            var prevEventBottom = prevEvent.top + prevEvent.height;
+            if (top < prevEvent.top && bottom >= prevEvent.top && bottom <= prevEventBottom){
+                top = prevEvent.top -height; 
+                bottom = top + height;
+            } else if(top >= prevEvent.top && top <= prevEventBottom ){
+                top = prevEventBottom;
+                bottom = top + height;
+            }
         }
         console.log("cal utils prevEvent modified top",top);
-        console.log("test2");
-        console.log("test3");
-        console.log("test4");
+        
         var dayEvent = {
             event: event,
             height: height,

@@ -154,25 +154,26 @@ export class FellesComponent implements OnInit {
   }
 
   externalDrop(events: CalendarEvent[]) {
-    for (let event of events){
-      if (this.externalFelEvents.indexOf(event) === -1) {
-        //this.events = this.events.filter((iEvent) => iEvent !== event);
-        const extDropEventUid : string =  event.id as string;
-        console.log("DA extDrop extDropEventUid",extDropEventUid)
-        this.deleteEvent([extDropEventUid],this.tokenStorage.getUser().id)
-        if (event.paymntref){
-          this.authService.dbUpdateVippsPayment(
-            this.tokenStorage.getUser().id,
-            event.paymntref,
-            false
-          ).subscribe((resp)=>{
-            const respObj = resp as any;
-            this.updateChips(respObj.payments);
-          });
+    if (events.length>0){
+      for (let event of events){
+        if (this.externalFelEvents.indexOf(event) === -1) {
+          //this.events = this.events.filter((iEvent) => iEvent !== event);
+          const extDropEventUid : string =  event.id as string;
+          console.log("DA extDrop extDropEventUid",extDropEventUid)
+          this.deleteEvent([extDropEventUid],this.tokenStorage.getUser().id)
+          if (event.paymntref){
+            this.authService.dbUpdateVippsPayment(
+              this.tokenStorage.getUser().id,
+              event.paymntref,
+              false
+            ).subscribe((resp)=>{
+              const respObj = resp as any;
+              this.updateChips(respObj.payments);
+            });
+          }
         }
       }
     }
-    
   }
 
   eventTimesChanged({
