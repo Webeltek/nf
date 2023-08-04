@@ -82,7 +82,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.router.events.subscribe((routerEvent)=>{
       if (routerEvent instanceof NavigationEnd){
         this.routerPath = routerEvent.url;
-        console.log(" Snapshot path",routerEvent.url);
+        //console.log(" Snapshot path",routerEvent.url);
       }
     });
   }

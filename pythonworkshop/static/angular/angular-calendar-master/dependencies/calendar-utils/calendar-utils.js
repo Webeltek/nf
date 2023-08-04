@@ -494,7 +494,7 @@ function getOverLappingWeekViewEvents(events, top, bottom) {
             return true;
         }
         else if ( top >= previousEventTop && bottom <= previousEventBottom) {
-            console.log("top >= previousEventTop && bottom <= previousEventBottom",true)
+            //console.log("top >= previousEventTop && bottom <= previousEventBottom",true)
             return true;
         }
         return false;
@@ -549,12 +549,11 @@ function getDayView(dateAdapter, _a) {
         height = Math.floor(height);
         var bottom = top + height;
         var overlappingPreviousEvents = getOverLappingWeekViewEvents(previousDayEvents, top, bottom);
-        console.log("overlappingPreviousEvents value",overlappingPreviousEvents);
         var left = 0;
         // while (overlappingPreviousEvents.some(function (previousEvent) { return previousEvent.left === left; })) {
           //  left += eventWidth;
         //} 
-        while (overlappingPreviousEvents.some(function (previousEvent) { return previousEvent.top === top})) {
+        /* while (overlappingPreviousEvents.some(function (previousEvent) { return previousEvent.top === top})) {
             var prevEvent = overlappingPreviousEvents.pop();
             var prevEventBottom = prevEvent.top + prevEvent.height;
             if (top < prevEvent.top && bottom >= prevEvent.top && bottom <= prevEventBottom){
@@ -564,8 +563,8 @@ function getDayView(dateAdapter, _a) {
                 top = prevEventBottom;
                 bottom = top + height;
             }
-        }
-        console.log("cal utils prevEvent modified top",top);
+        } */
+        //console.log("cal utils prevEvent modified top",top);
         
         var dayEvent = {
             event: event,

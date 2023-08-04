@@ -95,7 +95,10 @@ export class KontorComponent implements OnInit, OnDestroy{
     {name: 'Warn', color: 'warn'}, 
   ]; */
   externalKontEvents : CalendarEvent[] = [];
-  
+  previousDayEvents : { 
+    start : Date,
+    end : Date
+  }[] = []
 
   @Input() rooms : string[] = [];
   books : string[] = [];
@@ -177,17 +180,55 @@ export class KontorComponent implements OnInit, OnDestroy{
     }
   }
 
+  getOverLappingWeekViewEvents(events, top, bottom) {
+    return events.filter( (previousEvent) =>{
+        var previousEventTop = previousEvent.top;
+        var previousEventBottom = previousEvent.top + previousEvent.height;
+        if (top < previousEventBottom && bottom > previousEventBottom) {
+            return true;
+        }
+        else if (top < previousEventTop && bottom > previousEventTop) {
+            return true;
+        }
+        else if ( top >= previousEventTop && bottom <= previousEventBottom) {
+            console.log("top >= previousEventTop && bottom <= previousEventBottom",true)
+            return true;
+        }
+        return false;
+    });
+}
+
   eventTimesChanged({
     event,
     newStart,
     newEnd,
   }: CalendarEventTimesChangedEvent): void {
     const externalIndex = this.externalKontEvents.indexOf(event);
-    console.log("DAC eventTimesChanged params externalindex,event,newStart,newEnd",
-    externalIndex,event,newStart,newEnd)
+    console.log("DAC eventTimesChanged params event, newStart,newEnd",event,newStart,newEnd);
+    if (externalIndex ==-1){
+      let dayEvents = this.events.filter((event)=>{
+        return event.start.getDay() == newStart.getDay();
+      });
+      for (let evt of dayEvents){
+        if(event.id!==evt.id){
+          const eventLength = event.end.getTime() - event.start.getTime();
+          if (newStart.getTime() >= evt.start.getTime() 
+              && newStart.getTime() < evt.end.getTime() 
+              && event.id!==evt.id){
+              console.log("set new time");
+              newStart.setTime(evt.end.getTime());
+              newEnd = new Date(newStart.getTime()+eventLength);
+          } else if ((newStart.getTime()+eventLength) < evt.end.getTime()
+            && (newStart.getTime()+eventLength) > evt.start.getTime()){
+              newEnd=new Date(evt.start.getTime());
+              newStart.setTime(newEnd.getTime()-eventLength); 
+          }
+        }
+      };
+    }
     if (externalIndex > -1) { // if event is dropped from chips to calendar
-      console.log("DA chips to cal")
       event.start = newStart;
+      console.log("KK modified start hour",newStart.getHours());
       const newDateStartObj = new Date(event.start);
       event.end = new Date(newDateStartObj.setHours(event.start.getHours()+1));
       this.authService.dbUpdateVippsPayment(
@@ -259,8 +300,8 @@ export class KontorComponent implements OnInit, OnDestroy{
       for (let paymnt of paymnts ){
         if(paymnt.is_consumed===false && paymnt.bookname==="Kontor"){
             const start = new Date(new Date().setHours(8));
-            console.log("HC paymnt amount slice : ",paymnt.amount.slice(0,-2));
-          //console.log("DA updateChipps paymnt.reference",paymnt.reference);
+            //console.log("HC paymnt amount slice : ",paymnt.amount.slice(0,-2));
+            //console.log("DA updateChipps paymnt.reference",paymnt.reference);
           let extEvent : CalendarEvent = {
             userId: this.tokenStorage.getUser().id,
             title : paymnt.amount.slice(0,-2) + "kr " + paymnt.bookname,
