@@ -51,6 +51,8 @@ export class FellesComponent implements OnInit {
   view: CalendarView = CalendarView.Week;
   CalendarView = CalendarView;
   daysInWeek = 7;
+  dayStartHour=8;
+  dayEndHour=18;
   locale : string = "nb";
   weekStartsOn: number = DAYS_OF_WEEK.MONDAY;
   weekendDays: number[] = [DAYS_OF_WEEK.FRIDAY, DAYS_OF_WEEK.SATURDAY];

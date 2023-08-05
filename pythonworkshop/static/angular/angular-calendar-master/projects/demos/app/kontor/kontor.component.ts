@@ -51,6 +51,8 @@ export class KontorComponent implements OnInit, OnDestroy{
   view: CalendarView = CalendarView.Week;
   CalendarView = CalendarView;
   daysInWeek = 7;
+  dayStartHour=8;
+  dayEndHour=18;
   locale : string = "nb";
   weekStartsOn: number = DAYS_OF_WEEK.MONDAY;
   weekendDays: number[] = [DAYS_OF_WEEK.FRIDAY, DAYS_OF_WEEK.SATURDAY];
@@ -164,7 +166,7 @@ export class KontorComponent implements OnInit, OnDestroy{
           //this.events = this.events.filter((iEvent) => iEvent !== event);
           const extDropEventUid : string =  event.id as string;
           console.log("DA extDrop extDropEventUid",extDropEventUid)
-          this.deleteEvent([extDropEventUid],this.tokenStorage.getUser().id)
+          this.deleteEvent([extDropEventUid],this.tokenStorage.getUser().id);
           if (event.paymntref){
             this.authService.dbUpdateVippsPayment(
               this.tokenStorage.getUser().id,
@@ -205,32 +207,68 @@ export class KontorComponent implements OnInit, OnDestroy{
   }: CalendarEventTimesChangedEvent): void {
     const externalIndex = this.externalKontEvents.indexOf(event);
     console.log("DAC eventTimesChanged params event, newStart,newEnd",event,newStart,newEnd);
+    let dayEvents = this.events.filter((event)=>{
+      return event.start.getDay() == newStart.getDay();
+    });
     if (externalIndex ==-1){
-      let dayEvents = this.events.filter((event)=>{
-        return event.start.getDay() == newStart.getDay();
-      });
       for (let evt of dayEvents){
         if(event.id!==evt.id){
           const eventLength = event.end.getTime() - event.start.getTime();
           if (newStart.getTime() >= evt.start.getTime() 
-              && newStart.getTime() < evt.end.getTime() 
-              && event.id!==evt.id){
+              && newStart.getTime() < evt.end.getTime() ){
               console.log("set new time");
               newStart.setTime(evt.end.getTime());
               newEnd = new Date(newStart.getTime()+eventLength);
           } else if ((newStart.getTime()+eventLength) < evt.end.getTime()
             && (newStart.getTime()+eventLength) > evt.start.getTime()){
+              newStart.setTime(evt.start.getTime()-eventLength);
+              newStart.getHours()<this.dayStartHour ? newStart.setHours(this.dayStartHour) : null;
+              newEnd=new Date(evt.start.getTime()); 
+          } else if(newStart.getTime()<evt.start.getTime()
+            && (newStart.getTime()+eventLength)>evt.end.getTime()){
+              newStart.setTime(evt.start.getTime()-eventLength);
+              newStart.getHours()<this.dayStartHour ? newStart.setHours(this.dayStartHour) : null;
+              newEnd=new Date(evt.start.getTime()); 
+          } else if (newStart.getTime()>evt.start.getTime() 
+            && (newStart.getTime()+eventLength)<evt.end.getTime()){
+              newStart.setTime(evt.start.getTime()-eventLength);
+              newStart.getHours()<this.dayStartHour ? newStart.setHours(this.dayStartHour) : null;
               newEnd=new Date(evt.start.getTime());
-              newStart.setTime(newEnd.getTime()-eventLength); 
-          }
+            } 
         }
       };
-    }
-    if (externalIndex > -1) { // if event is dropped from chips to calendar
+    } else if (externalIndex > -1) { // if event is dropped from chips to calendar
       event.start = newStart;
-      console.log("KK modified start hour",newStart.getHours());
       const newDateStartObj = new Date(event.start);
       event.end = new Date(newDateStartObj.setHours(event.start.getHours()+1));
+    
+      for (let evt of dayEvents){
+        if(event.id!==evt.id){
+          const eventLength = event.end.getTime() - event.start.getTime();
+          if (newStart.getTime() >= evt.start.getTime() 
+              && newStart.getTime() < evt.end.getTime() ){
+              console.log("set new time");
+              newStart.setTime(evt.end.getTime());
+              newEnd = new Date(newStart.getTime()+eventLength);
+          } else if ((newStart.getTime()+eventLength) < evt.end.getTime()
+            && (newStart.getTime()+eventLength) > evt.start.getTime()){
+              newStart.setTime(evt.start.getTime()-eventLength);
+              newStart.getHours()<this.dayStartHour ? newStart.setHours(this.dayStartHour) : null;
+              newEnd=new Date(evt.start.getTime()); 
+          } else if(newStart.getTime()<evt.start.getTime()
+            && (newStart.getTime()+eventLength)>evt.end.getTime()){
+              newStart.setTime(evt.start.getTime()-eventLength);
+              newStart.getHours()<this.dayStartHour ? newStart.setHours(this.dayStartHour) : null;
+              newEnd=new Date(evt.start.getTime()); 
+          } else if (newStart.getTime()>evt.start.getTime() 
+          && (newStart.getTime()+eventLength)<evt.end.getTime()){
+            newStart.getHours()<this.dayStartHour ? newStart.setHours(this.dayStartHour) : null;
+            newStart.setTime(evt.start.getTime()-eventLength);
+            newEnd=new Date(evt.start.getTime());
+          } 
+        }
+      };
+      
       this.authService.dbUpdateVippsPayment(
         this.tokenStorage.getUser().id,
         this.externalKontEvents[externalIndex].paymntref,
@@ -256,7 +294,8 @@ export class KontorComponent implements OnInit, OnDestroy{
           });
       });
     }
-    if (newEnd) {   // if event is res/dragged
+    
+    if (newEnd && externalIndex ==-1) {   // if event is res/dragged
       //console.log("DA event modified")
       event.end = newEnd;
       if(newStart){
