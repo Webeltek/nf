@@ -42,7 +42,7 @@ export interface Room {
 export class HomeComponent implements OnInit, OnDestroy {
   @ViewChild(MatSidenav) sidenav!: MatSidenav;
 
-  constructor( 
+  constructor(
     private BPobserver: BreakpointObserver,
     public tokenStorage: TokenStorageService,
     private router: Router,
@@ -69,6 +69,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   viewDate = new Date();
   activeDayIsOpen = false;
   routerPath = '';
+
+  private readonly darkThemeClass = 'dark-theme';
 
   ngOnInit(): void {
     this.httpService.booksArr$.subscribe((bookNamesArr)=>{

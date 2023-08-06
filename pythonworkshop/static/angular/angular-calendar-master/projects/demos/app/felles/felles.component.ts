@@ -5,7 +5,7 @@ import { Component, Input,
   ChangeDetectorRef, KeyValueDiffers,IterableDiffers, 
   DoCheck,
   ViewChild,
-  TemplateRef, ElementRef } from '@angular/core';
+  TemplateRef, ElementRef ,Inject, ViewEncapsulation} from '@angular/core';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { 
   CalendarDateFormatter, CalendarEventTimesChangedEvent,
@@ -30,11 +30,13 @@ import { MatChipSelectionChange } from '@angular/material/chips';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { PythUser } from '../demo-app.component';
 import { ChipItem } from '../demo-app.component';
+import { DOCUMENT } from '@angular/common';
 
 @Component({
   selector: 'mwl-felles',
   templateUrl: './felles.component.html',
   styleUrls: ['./felles.component.scss'],
+  encapsulation : ViewEncapsulation.None,
   changeDetection : ChangeDetectionStrategy.Default,
   providers: [
     {
@@ -103,8 +105,10 @@ export class FellesComponent implements OnInit {
   roomsArrDiffer : any;
 
   private destroy$ = new Subject<void>();
+  private readonly darkThemeClass = 'dark-theme';
 
   constructor(
+    @Inject(DOCUMENT) private document,
     public httpService: HttpEventService,
     public tokenStorage: TokenStorageService,
     private authService : AuthService,
@@ -277,6 +281,8 @@ export class FellesComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.document.body.classList.add(this.darkThemeClass);
+
     this.loginStateSubscription = this.tokenStorage.combAuthProtected$
       .pipe(distinctUntilChanged())
       .subscribe( (authProtState : boolean)=>{
@@ -505,6 +511,7 @@ export class FellesComponent implements OnInit {
 
   ngOnDestroy() {
     this.destroy$.next();
+    this.document.body.classList.remove(this.darkThemeClass);
   }
 
 }
