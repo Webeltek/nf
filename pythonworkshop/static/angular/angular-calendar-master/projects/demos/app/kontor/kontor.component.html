@@ -1,52 +1,54 @@
-<div class="row text-center">
-    <div class="col-lg-2">
+<div class="row text-center mt-2">
+    <div class="col-lg-4">
         <div  class="btn-group">
             <div class="btn btn-outline-secondary" mwlCalendarPreviousView
-            (viewDateChange)="activeDayIsOpen=false" 
-            [view]="view" [(viewDate)]="viewDate"
-            [daysInWeek]="1">
-            <mat-icon>arrow_back_ios</mat-icon>
+                (viewDateChange)="activeDayIsOpen=false" 
+                [view]="view" [(viewDate)]="viewDate"
+                [daysInWeek]="1">
+                <mat-icon>arrow_back_ios</mat-icon>
             </div>
             <div class="btn btn-outline-secondary" mwlCalendarToday
-            (viewDateChange)="activeDayIsOpen=false" 
-            [(viewDate)]="viewDate">
-            {{'DCtoday' | translate}}
+                (viewDateChange)="activeDayIsOpen=false" 
+                [(viewDate)]="viewDate">
+                {{'DCtoday' | translate}}
             </div>
             <div class="btn btn-outline-secondary" mwlCalendarNextView
-            (viewDateChange)="activeDayIsOpen=false" 
-            [view]="view" [(viewDate)]="viewDate"
-            [daysInWeek]="1">
-            <mat-icon>arrow_forward_ios</mat-icon>
+                (viewDateChange)="activeDayIsOpen=false" 
+                [view]="view" [(viewDate)]="viewDate"
+                [daysInWeek]="1">
+                <mat-icon>arrow_forward_ios</mat-icon>
             </div>
         </div>
     </div>
-    <div class="col-lg-2">
+    <div class="col-lg-4">
         <div class="btn-group">
-          <div
-            class="btn btn-outline-secondary"
-            (click)="setView(CalendarView.Month)"
-            [class.active]="view === CalendarView.Month"
-          >
-          {{'DCmonth' | translate}}
-          </div>
+            <div
+                class="btn btn-outline-secondary"
+                (click)="setView(CalendarView.Month)"
+                [class.active]="view === CalendarView.Month">
+                {{'DCmonth' | translate}}
+            </div>
           <div
             class="btn btn-outline-secondary"
             (click)="setView(CalendarView.Week)"
-            [class.active]="view === CalendarView.Week"
-          >
-          {{'DCweek' | translate}}
+            [class.active]="view === CalendarView.Week">
+            {{'DCweek' | translate}}
           </div>
           <div
             class="btn btn-outline-secondary"
             (click)="setView(CalendarView.Day)"
-            [class.active]="view === CalendarView.Day"
-          >
-          {{'DCday' | translate}}
+            [class.active]="view === CalendarView.Day">
+            {{'DCday' | translate}}
           </div>
         </div>
     </div>
     <div class="col-lg-4">
-        <h4>{{ viewDate | calendarDate:(view + 'ViewTitle'):(getLocaleFromTranslate(translate.currentLang)) :1 }}</h4>
+        <div class="btn-group">
+            <div 
+            class="btn btn-outline-secondary disabled">
+            <h4>{{ viewDate | calendarDate:(view + 'ViewTitle'):(getLocaleFromTranslate(translate.currentLang)) :1 }}</h4>
+          </div>
+        </div>
     </div>
 </div>
 <ng-container 
