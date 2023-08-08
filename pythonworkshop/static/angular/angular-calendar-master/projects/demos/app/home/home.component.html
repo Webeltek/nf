@@ -48,6 +48,13 @@
   </button> 
   {{'ToolbarTitle' | translate}}
   <span class="left-spacer"></span>
+  <button
+        mat-icon-button
+        (click)="toggleDarkTheme()"
+        class="theme-toggle"
+        aria-label="Toggle Dark Theme">
+        <mat-icon>{{ isDark ? "dark_mode" : "light_mode" }}</mat-icon>
+      </button>
   <flag [code]="translate.currentLang ? translate.currentLang : translate.getDefaultLang()" 
           [size]="'md'"  [effect]="'app'" style="margin-right: 0.5em;"></flag>
     <mat-select class="lang-select"

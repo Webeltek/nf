@@ -50,8 +50,12 @@
               }
             ],
             "styles": [
-              "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
-              "projects/demos/styles.scss"
+              "projects/demos/styles.scss",
+              {
+                "input": "projects/demos/dark.scss",
+                "bundleName": "dark",
+                "inject": false
+              }
             ],
             "scripts": [],
             "vendorChunk": true,

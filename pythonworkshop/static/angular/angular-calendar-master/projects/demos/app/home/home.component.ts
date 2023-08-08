@@ -22,7 +22,8 @@ import { Location } from '@angular/common';
 import { CalendarEventTimesChangedEvent} from 'angular-calendar';
 import { NgbDate, NgbCalendar, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
 import { DOCUMENT } from '@angular/common';
-import {OverlayModule,OverlayContainer} from '@angular/cdk/overlay'; 
+import {OverlayModule,OverlayContainer} from '@angular/cdk/overlay';
+import { StyleManager } from '../_services/style-manager'; 
 
 export interface Book {
   row: string,
@@ -45,8 +46,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   @ViewChild(MatSidenav) sidenav!: MatSidenav;
 
   constructor(
+    private styleManager: StyleManager,
     private overlayContainer: OverlayContainer,
-    @Inject(DOCUMENT) private document,
     private BPobserver: BreakpointObserver,
     public tokenStorage: TokenStorageService,
     private router: Router,
@@ -64,10 +65,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.translate.use(lang);
   }
 
-  isDark = this.tokenStorage.isDark;
+  isDark = this.styleManager.isDark;
   
   toggleDarkTheme() {
-    this.tokenStorage.toggleDarkTheme();
+    this.styleManager.toggleDarkTheme();
     this.isDark = !this.isDark;
   }
 
@@ -84,8 +85,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   private readonly darkThemeClass = 'dark-theme';
 
   ngOnInit(): void {
-    this.overlayContainer.getContainerElement().classList.add('dark-theme');
-    this.document.body.classList.add(this.darkThemeClass);
+    this.toggleDarkTheme();
 
     this.httpService.booksArr$.subscribe((bookNamesArr)=>{
       this.booksArr= bookNamesArr;
@@ -279,8 +279,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnDestroy(){
     this.breakPointObsSubscr.unsubscribe();
     this.loginStateSubscription.unsubscribe();
-    this.document.body.classList.remove(this.darkThemeClass);
-    this.overlayContainer.getContainerElement().classList.remove('dark-theme');
   }
 }
 
