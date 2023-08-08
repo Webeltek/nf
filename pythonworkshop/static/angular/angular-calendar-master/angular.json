@@ -50,6 +50,7 @@
               }
             ],
             "styles": [
+              "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
               "projects/demos/styles.scss"
             ],
             "scripts": [],

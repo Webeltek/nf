@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit , Inject, OnDestroy} from '@angular/core';
+import { Component, ViewChild, OnInit , Inject, ViewEncapsulation, OnDestroy} from '@angular/core';
 import { HttpEventService } from 'projects/angular-calendar/src/modules/week/http-service.service';
 import { AuthService } from '../_services/auth.service';
 import { PythUser } from '../demo-app.component';
@@ -21,6 +21,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { Location } from '@angular/common';
 import { CalendarEventTimesChangedEvent} from 'angular-calendar';
 import { NgbDate, NgbCalendar, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
+import { DOCUMENT } from '@angular/common';
+import {OverlayModule,OverlayContainer} from '@angular/cdk/overlay'; 
 
 export interface Book {
   row: string,
@@ -43,6 +45,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   @ViewChild(MatSidenav) sidenav!: MatSidenav;
 
   constructor(
+    private overlayContainer: OverlayContainer,
+    @Inject(DOCUMENT) private document,
     private BPobserver: BreakpointObserver,
     public tokenStorage: TokenStorageService,
     private router: Router,
@@ -58,7 +62,14 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   switchLang(lang: string) {
     this.translate.use(lang);
-  } 
+  }
+
+  isDark = this.tokenStorage.isDark;
+  
+  toggleDarkTheme() {
+    this.tokenStorage.toggleDarkTheme();
+    this.isDark = !this.isDark;
+  }
 
   loginStateSubscription: Subscription = new Subscription();
   breakPointObsSubscr : Subscription = new Subscription();
@@ -73,6 +84,9 @@ export class HomeComponent implements OnInit, OnDestroy {
   private readonly darkThemeClass = 'dark-theme';
 
   ngOnInit(): void {
+    this.overlayContainer.getContainerElement().classList.add('dark-theme');
+    this.document.body.classList.add(this.darkThemeClass);
+
     this.httpService.booksArr$.subscribe((bookNamesArr)=>{
       this.booksArr= bookNamesArr;
       //console.log("HomeComp ngOnInit() roomNamesArr",this.roomNamesArr);
@@ -265,6 +279,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnDestroy(){
     this.breakPointObsSubscr.unsubscribe();
     this.loginStateSubscription.unsubscribe();
+    this.document.body.classList.remove(this.darkThemeClass);
+    this.overlayContainer.getContainerElement().classList.remove('dark-theme');
   }
 }
 

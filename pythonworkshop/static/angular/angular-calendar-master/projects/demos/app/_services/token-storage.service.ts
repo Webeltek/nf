@@ -19,6 +19,18 @@ const VIPPS_PAYMNT_KEY = 'vipps-paymnt-key';
 export class TokenStorageService {
   constructor(private router: Router) { }
 
+  isDark = false;
+  toggleDarkTheme() {
+    if (this.isDark) {
+      document.body.classList.remove('dark-theme');
+      document.body.classList.add('light-theme');
+      this.isDark = false;
+    } else {
+      document.body.classList.remove('light-theme');
+      document.body.classList.add('dark-theme');
+      this.isDark = true;
+    }
+  }
 
   combAuthProtected$ : BehaviorSubject<boolean> = new BehaviorSubject(false);
   isCalendarActive$: BehaviorSubject<boolean> = new BehaviorSubject(false);

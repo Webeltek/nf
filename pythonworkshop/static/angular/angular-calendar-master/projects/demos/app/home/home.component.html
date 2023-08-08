@@ -98,6 +98,13 @@
         </ng-template>
 
       <span class="left-spacer"></span>
+      <button
+        mat-icon-button
+        (click)="toggleDarkTheme()"
+        class="theme-toggle"
+        aria-label="Toggle Dark Theme">
+        <mat-icon>{{ isDark ? "dark_mode" : "light_mode" }}</mat-icon>
+      </button>
       <button mat-button class="toolbar-button link link.dark-blue-gradient-bg float-end" routerLink="/login">
         <mat-icon>login</mat-icon>
         <span>{{'ToolbarLogin' | translate}}</span>
