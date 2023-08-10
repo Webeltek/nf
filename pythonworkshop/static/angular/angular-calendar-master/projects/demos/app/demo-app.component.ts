@@ -134,13 +134,15 @@ export class DemoAppComponent implements OnInit, OnDestroy{
   ngOnChanges(){}
 
   ngOnInit(): void {
-    this.router.navigate(['felles'],{relativeTo: this.actRoute});  
+    this.router.navigate(['dropin'],{relativeTo: this.actRoute});  
   }
 
   tabChange(tabChangeEvt: MatTabChangeEvent){
     if (tabChangeEvt.index==0) {
-      this.router.navigate(['felles'],{relativeTo: this.actRoute});
+      this.router.navigate(['dropin'],{relativeTo: this.actRoute});
     } else if (tabChangeEvt.index==1){
+      this.router.navigate(['avtale'],{relativeTo: this.actRoute});
+    } else if (tabChangeEvt.index==2){
       this.router.navigate(['kontor'],{relativeTo: this.actRoute});
     }
   }
