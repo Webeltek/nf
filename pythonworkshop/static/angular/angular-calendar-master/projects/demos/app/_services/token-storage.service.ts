@@ -22,6 +22,7 @@ export class TokenStorageService {
   combAuthProtected$ : BehaviorSubject<boolean> = new BehaviorSubject(false);
   isCalendarActive$: BehaviorSubject<boolean> = new BehaviorSubject(false);
   authenticated$: BehaviorSubject<boolean> = new BehaviorSubject(false);
+  hourSegmMsg$: BehaviorSubject<string> = new BehaviorSubject('');
   //currenLoginState = this.authenticated$.asObservable();
 
   signOut(msg?: string): void {

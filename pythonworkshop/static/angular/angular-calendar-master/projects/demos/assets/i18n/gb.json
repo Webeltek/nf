@@ -74,6 +74,9 @@
     "DCmonth": "Month",
     "DCweek": "Week",
     "DCday" : "Day",
+    "DCdropin": "Drop-in",
+    "DCsubscr": "Subscription",
+    "DCoffice": "Office",
 
     "EDdelTtl": "Delete event",
     "EDinsertTtl": "Select event",
@@ -95,7 +98,7 @@
     "EEbook" : "Booking",
     "EEroom": "Room",
     "EEemail": "Email",
-    "EEdate": "Date"
+    "EEdate": "Date",
 
-
+    "HSnoPayment": "No payment available"
 }

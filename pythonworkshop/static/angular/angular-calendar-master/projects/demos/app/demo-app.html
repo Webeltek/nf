@@ -1,10 +1,19 @@
 <mat-tab-group preserveContent
 (selectedTabChange)="tabChange($event)">
-    <mat-tab label="Drop-in">
+    <mat-tab>
+        <ng-template mat-tab-label>
+            {{ 'DCdropin' | translate}}
+        </ng-template>
     </mat-tab>
-    <mat-tab label="Avtale">
+    <mat-tab>
+        <ng-template mat-tab-label>
+            {{'DCsubscr' | translate}}
+        </ng-template>
     </mat-tab>
-    <mat-tab label="Kontor">
+    <mat-tab>
+        <ng-template mat-tab-label>
+            {{'DCoffice' | translate}}
+        </ng-template>
     </mat-tab>
 </mat-tab-group>
 <router-outlet></router-outlet>

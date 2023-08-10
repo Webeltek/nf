@@ -21,7 +21,7 @@
   </mat-dialog-content>
 </ng-template>
 <ng-template #insertTempl>
-  <h1 mat-dialog-title>{{'EDinsertTtl' | translate}}
+  <h1 mat-dialog-title>{{valgtBookCtrl.value}}
   </h1>
   <mat-dialog-content class="mat-typography">
     <br/>
@@ -46,8 +46,8 @@
     <form
     [formGroup]="userForm"
     (ngSubmit) = "closeDialog()">
-      <div mat-dialog-content
-      >{{data.date | date:'dd/MM/yyyy'}}
+      <!-- <div mat-dialog-content>
+        {{data.date | date:'dd/MM/yyyy'}}
         <br/>
         <label id="example-radio-group-label">{{'EDchooseBook' | translate}}</label>
         <br/>
@@ -60,7 +60,7 @@
               </ng-container>
             </mat-select>
         </mat-form-field>
-      </div>
+      </div> -->
       <div>{{valgtBookCtrl.value}}<br/>
          {{ startDate | date:'dd/MM/yyyy HH:mm'}}<br/> 
          {{ endDate | date:'dd/MM/yyyy HH:mm' }}

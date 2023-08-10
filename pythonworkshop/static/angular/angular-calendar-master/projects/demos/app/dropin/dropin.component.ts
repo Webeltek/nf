@@ -96,7 +96,6 @@ export class DropinComponent implements OnInit {
     {name: 'Warn', color: 'warn'}, 
   ]; */
   externalDropinEvents : CalendarEvent[] = [];
-  
 
   @Input() rooms : string[] = [];
   books : string[] = [];
@@ -216,7 +215,7 @@ export class DropinComponent implements OnInit {
           });
       });
     }
-    if (newEnd) {   // if event is res/dragged
+    if (newEnd && this.tokenStorage.getUser().ou === event.ou) {   // if event is res/dragged
       //console.log("DA event modified")
       event.end = newEnd;
       if(newStart){

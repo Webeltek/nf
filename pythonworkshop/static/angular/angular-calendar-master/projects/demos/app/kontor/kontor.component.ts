@@ -295,7 +295,7 @@ export class KontorComponent implements OnInit, OnDestroy{
       });
     }
     
-    if (newEnd && externalIndex ==-1) {   // if event is res/dragged
+    if (newEnd && externalIndex ==-1 && this.tokenStorage.getUser().ou === event.ou) {   // if event is res/dragged
       //console.log("DA event modified")
       event.end = newEnd;
       if(newStart){

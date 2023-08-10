@@ -83,7 +83,7 @@ export class AvtaleComponent implements OnInit {
   public set avtaleEvents(events: CalendarEvent[]){
     this._avtaleEvents= events.filter(evt => {
       //console.log("avtale evt.bookname",evt.bookname);
-      return evt.bookname==="Drop-in"})
+      return evt.bookname==="Avtale"})
   }
   
   users : PythUser[] = [];
@@ -216,7 +216,7 @@ export class AvtaleComponent implements OnInit {
           });
       });
     }
-    if (newEnd) {   // if event is res/dragged
+    if (newEnd && this.tokenStorage.getUser().ou === event.ou) {   // if event is res/dragged
       //console.log("DA event modified")
       event.end = newEnd;
       if(newStart){
@@ -401,6 +401,7 @@ export class AvtaleComponent implements OnInit {
             ou: pythEvt.ou,
             color : getColors(pythEvt.user_id,this.tokenStorage.getUser().id),
             draggable : true,
+            allDay : true,
             resizable: {
               beforeStart: true, // this allows you to configure the sides the event is resizable from
               afterEnd: true,

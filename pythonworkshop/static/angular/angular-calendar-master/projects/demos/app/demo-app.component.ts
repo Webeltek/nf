@@ -2,28 +2,27 @@ import { Component, Input,
   OnInit, Output, EventEmitter,
   ChangeDetectionStrategy,
   OnDestroy,
-  ChangeDetectorRef, KeyValueDiffers,IterableDiffers, 
-  DoCheck,
+  ChangeDetectorRef,
   ViewChild,
   TemplateRef, ElementRef } from '@angular/core';
-import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
+import { BreakpointObserver } from '@angular/cdk/layout';
 import { 
-  CalendarDateFormatter, CalendarEventTimesChangedEvent,
+  CalendarDateFormatter,
   CalendarView, CalendarEvent, DAYS_OF_WEEK } from 'angular-calendar';
 import { Subject, Subscription, distinctUntilChanged } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { CustomDateFormatter } from './custom-date-formatter.provider';
 import { HttpEventService } from 'projects/angular-calendar/src/modules/week/http-service.service';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { HttpResponse } from '@angular/common/http';
-import { Router, ActivatedRoute, ParamMap, NavigationEnd  } from '@angular/router';
+import { MatDialog} from '@angular/material/dialog';
+import { Router, ActivatedRoute } from '@angular/router';
 import { TokenStorageService } from './_services/token-storage.service';
 import { TranslateService } from '@ngx-translate/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ThemePalette } from '@angular/material/core';
 import { AuthService } from './_services/auth.service';
 import { MatTabChangeEvent } from '@angular/material/tabs';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 export interface ChipItem {
   bookname : string
@@ -105,6 +104,7 @@ export class DemoAppComponent implements OnInit, OnDestroy{
   @Input() rooms : string[] = [];
   books : string[] = [];
   roomsArrDiffer : any;
+  msg:string='';
 
   private destroy$ = new Subject<void>();
 
@@ -118,9 +118,8 @@ export class DemoAppComponent implements OnInit, OnDestroy{
     public translate: TranslateService,
     private router: Router,
     private actRoute : ActivatedRoute,
-    private kvDiffers: KeyValueDiffers,
-    private itDiffers: IterableDiffers,
-    private modal: NgbModal) {
+    private modal: NgbModal,
+    private _snackBar : MatSnackBar) {
       translate.addLangs(['gb', 'no']);
       translate.setDefaultLang('no');
     }
@@ -134,6 +133,13 @@ export class DemoAppComponent implements OnInit, OnDestroy{
   ngOnChanges(){}
 
   ngOnInit(): void {
+    this.tokenStorage.hourSegmMsg$.subscribe((msg)=>{
+      if(msg==="noPayment"){
+        this.translate.get('HSnoPayment').subscribe((res)=>{
+          this._snackBar.open(res,'Ok');
+        })
+      }
+    });
     this.router.navigate(['dropin'],{relativeTo: this.actRoute});  
   }
 

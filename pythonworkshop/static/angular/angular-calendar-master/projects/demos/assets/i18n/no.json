@@ -73,6 +73,9 @@
      "DCmonth": "Måned",
      "DCweek": "Uke",
      "DCday" : "Dag",
+     "DCdropin": "Drop-in",
+     "DCsubscr": "Abonnement",
+     "DCoffice": "Kontor",
 
      "EDdelTtl": "Slett reservasjon av",
      "EDinsertTtl": "Velg reservasjon",
@@ -94,5 +97,7 @@
     "EEbook" : "Booking navn",
     "EEroom": "Rom",
     "EEemail": "E-post",
-    "EEdate": "Dato"
+    "EEdate": "Dato",
+
+    "HSnoPayment": "Ingen betalinger tilgjengelig"
 }
