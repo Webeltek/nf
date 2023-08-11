@@ -57,8 +57,12 @@ export class VippsCheckoutComponent implements OnInit {
                       let amount="0";
                       
                       if(params['bookname']==="Drop-in"){
-                        amount="4000"// valuta NOK with 00 suffix for øre
-                      } else if(params['bookname']==="Kontor") amount="40000";
+                        amount="4000"// valuta NOK with 00 suffix for øre;
+                      } else if(params['bookname']==="Kontor") {
+                        amount="40000";
+                      } else if(params['bookname']==="Avtale"){
+                        amount="100000";
+                      }
 
                       this.authService.sendVippsPayment(resp.access_token,customerPhone,amount,params['bookname']).subscribe({
                         next: (response) => {
