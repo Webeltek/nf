@@ -359,7 +359,7 @@ export class DropinComponent implements OnInit {
               this.events = [...this.convertDbEvents(pythEvts)];
               const bookRows = typeof respObj.books !== 'undefined'? Object.values(respObj.books):[];
               const bookTitles = bookRows.map( (tablerow : {'row':string,'title':string}) => {
-                if(tablerow.title==='Drop-in' || tablerow.title==='Avtale'){
+                if(tablerow.title==='Drop-in'){
                   return tablerow.title;
                 } else return '';
               })
