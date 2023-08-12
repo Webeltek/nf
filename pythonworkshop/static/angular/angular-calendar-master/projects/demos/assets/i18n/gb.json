@@ -93,10 +93,10 @@
     "PAamount" : "Amount",
     "PAisConsumed": "Is consumed",
 
-    "EEselRoomAndPer": "Select room and time period",
+    "EEselRoomAndPer": "Select area and time period",
     "EEselPer" : "Select period",
     "EEbook" : "Booking",
-    "EEroom": "Room",
+    "EEroom": "Area",
     "EEemail": "Email",
     "EEdate": "Date",
 

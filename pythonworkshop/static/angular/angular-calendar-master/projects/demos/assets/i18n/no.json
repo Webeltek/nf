@@ -92,10 +92,10 @@
      "PAamount" : "Beløp",
      "PAisConsumed": "Er brukt",
 
-    "EEselRoomAndPer": "Velg rom og tidsperiode",
+    "EEselRoomAndPer": "Velg område og tidsperiode",
     "EEselPer" : "Velg periode",
     "EEbook" : "Booking navn",
-    "EEroom": "Rom",
+    "EEroom": "Område",
     "EEemail": "E-post",
     "EEdate": "Dato",
 

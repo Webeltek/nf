@@ -85,7 +85,7 @@
         
         <ng-container *ngIf="routerPath==='/calendar/kontor'">
           <mat-form-field appearance="fill">
-            <mat-label>room</mat-label>
+            <mat-label>{{ 'EEroom' | translate}}</mat-label>
             <mat-select [formControl]="selectedRooms">
                   <mat-option *ngFor="let roomName of rooms" [value]="roomName" selected>{{roomName}}</mat-option>
             </mat-select>
