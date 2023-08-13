@@ -96,13 +96,11 @@ export class AvtaleComponent implements OnInit {
     {name: 'Warn', color: 'warn'}, 
   ]; */
   externalAvtaleEvents : CalendarEvent[] = [];
-  
-
   @Input() rooms : string[] = [];
   books : string[] = [];
   roomsArrDiffer : any;
-
   private destroy$ = new Subject<void>();
+  routerPath = '';
 
   constructor(
     public httpService: HttpEventService,
@@ -277,6 +275,12 @@ export class AvtaleComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.router.events.subscribe((routerEvent)=>{
+      if (routerEvent instanceof NavigationEnd){
+        this.routerPath = routerEvent.url;
+        //console.log(" Snapshot path",routerEvent.url);
+      }
+    });
     this.loginStateSubscription = this.tokenStorage.combAuthProtected$
       .pipe(distinctUntilChanged())
       .subscribe( (authProtState : boolean)=>{

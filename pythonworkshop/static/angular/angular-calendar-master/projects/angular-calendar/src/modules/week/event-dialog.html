@@ -1,5 +1,6 @@
 <ng-template #mainTempl
   let-isToBeDeleted="isToBeDeleted"
+  let-tokenStorage="tokenStorage"
 >
   <ng-container *ngIf="isToBeDeleted; then deleteTempl else insertTempl">
   </ng-container>
@@ -20,7 +21,7 @@
     </div>
   </mat-dialog-content>
 </ng-template>
-<ng-template #insertTempl *ngIf="routerPath!=='/calendar/avtale';else avtaleTempl">
+<ng-template #insertTempl *ngIf="(tokenStorage.currentRoute$ | async)!=='/calendar/avtale';else avtaleTempl">
   <h1 mat-dialog-title>{{valgtBookCtrl.value}}
   </h1>
   <mat-dialog-content class="mat-typography">
@@ -141,6 +142,7 @@
 <ng-template
   [ngTemplateOutlet]="mainTempl"
   [ngTemplateOutletContext]="{
-  isToBeDeleted: toBeDeleted }"
+  isToBeDeleted: toBeDeleted,
+  tokenStorage: tokenStorage }"
   >
 </ng-template>

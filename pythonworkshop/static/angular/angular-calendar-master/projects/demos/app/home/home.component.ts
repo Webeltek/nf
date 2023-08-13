@@ -143,11 +143,11 @@ export class HomeComponent implements OnInit, OnDestroy {
           filter((e) => e instanceof NavigationEnd),
           distinctUntilChanged()
         )
-        .subscribe(() => {
+        .subscribe((e : NavigationEnd) => {
           if (this.sidenav?.mode === 'over') {
             this.sidenav?.close();
           }
-
+          this.tokenStorage.currentRoute$.next(e.url)
         });
 
       });

@@ -278,8 +278,12 @@ export class EventDialog {
       books : string[],
       rooms: string[] },
      public fb: UntypedFormBuilder,
+     public tokenStorage: TokenStorageService,
      private calendar: NgbCalendar,
-        public formatter: NgbDateParserFormatter) {}
+        public formatter: NgbDateParserFormatter) {
+          this.fromDate = calendar.getToday();
+		      this.toDate = calendar.getNext(calendar.getToday(), 'd', 10);
+        }
 
      hoveredDate: NgbDate | null = null;
 
