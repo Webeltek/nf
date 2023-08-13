@@ -5,7 +5,7 @@ import { WeekViewHourSegment } from 'calendar-utils';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CalendarEvent } from 'calendar-utils';
 import { FormControl, UntypedFormBuilder, FormGroup } from '@angular/forms';
-import { Observable, throwError } from 'rxjs';
+import { Observable, throwError,BehaviorSubject } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 import { Console } from 'console';
 import { HttpEventService } from './http-service.service';
@@ -15,6 +15,7 @@ import { TokenStorageService } from 'projects/demos/app/_services/token-storage.
 import { AuthService } from 'projects/demos/app/_services/auth.service';
 import { NgbTimeStruct } from '@ng-bootstrap/ng-bootstrap';
 import { PythUser } from 'projects/demos/app/demo-app.component';
+import { NgbDate, NgbCalendar, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
 
 
 export interface DialogData {
@@ -276,7 +277,52 @@ export class EventDialog {
       hourContainedBookTitle: string,
       books : string[],
       rooms: string[] },
-     public fb: UntypedFormBuilder) {}
+     public fb: UntypedFormBuilder,
+     private calendar: NgbCalendar,
+        public formatter: NgbDateParserFormatter) {}
+
+     hoveredDate: NgbDate | null = null;
+
+     fromDate: NgbDate | null;
+     toDate: NgbDate | null;
+   
+     pickerRangeChange$ : BehaviorSubject<[NgbDate | null,NgbDate | null]>=new BehaviorSubject([null,null]);
+     
+     onDateSelection(date: NgbDate) {
+       if (!this.fromDate && !this.toDate) {
+         this.fromDate = date;
+       } else if (this.fromDate && !this.toDate && date && date.after(this.fromDate)) {
+         this.toDate = date;
+       } else {
+         this.toDate = null;
+         this.fromDate = date;
+       }
+       this.pickerRangeChange$.next([this.fromDate,this.toDate]);
+     }
+   
+     isHovered(date: NgbDate) {
+       return (
+         this.fromDate && !this.toDate && this.hoveredDate && date.after(this.fromDate) && date.before(this.hoveredDate)
+       );
+     }
+   
+     isInside(date: NgbDate) {
+       return this.toDate && date.after(this.fromDate) && date.before(this.toDate);
+     }
+   
+     isRange(date: NgbDate) {
+       return (
+         date.equals(this.fromDate) ||
+         (this.toDate && date.equals(this.toDate)) ||
+         this.isInside(date) ||
+         this.isHovered(date)
+       );
+     }
+   
+     validateInput(currentValue: NgbDate | null, input: string): NgbDate | null {
+       const parsed = this.formatter.parse(input);
+       return parsed && this.calendar.isValid(NgbDate.from(parsed)) ? NgbDate.from(parsed) : currentValue;
+     }   
 
   roomname = "";    
   containedBookTitle = this.data.hourContainedBookTitle;
