@@ -332,7 +332,7 @@ export class EventDialog {
   containedBookTitle = this.data.hourContainedBookTitle;
   books = this.data.books;
   toBeDeleted = this.data.toBeDeleted;
-
+  currentDate = new Date();   
   
   valgtBookCtrl = this.fb.control(this.books[0]);
   userForm  = this.fb.group({

@@ -2,7 +2,7 @@
   let-isToBeDeleted="isToBeDeleted"
   let-tokenStorage="tokenStorage"
 >
-  <ng-container *ngIf="isToBeDeleted; then deleteTempl else insertTempl">
+  <ng-container *ngIf="isToBeDeleted; then deleteTempl; else insertTempl">
   </ng-container>
 </ng-template>
 <ng-template #deleteTempl>
