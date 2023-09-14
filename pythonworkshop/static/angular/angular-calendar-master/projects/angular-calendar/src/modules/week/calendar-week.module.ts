@@ -22,7 +22,7 @@ import { HttpEventService } from './http-service.service';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { JsonPipe } from '@angular/common';
-import { NgbTimepickerModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbTimepickerModule , NgbDatepickerModule} from '@ng-bootstrap/ng-bootstrap';
 import { MatSelectModule} from '@angular/material/select';
 
 export {
@@ -64,7 +64,8 @@ export { CalendarWeekViewCurrentTimeMarkerComponent as ɵCalendarWeekViewCurrent
         useFactory: httpTranslateLoader,
         deps: [HttpClient]
       }
-    })
+    }),
+    NgbDatepickerModule
   ],
   declarations: [
     CalendarWeekViewComponent,
