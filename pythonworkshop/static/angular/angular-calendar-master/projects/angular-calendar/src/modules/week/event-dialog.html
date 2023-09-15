@@ -1,86 +1,142 @@
-<ng-template #mainTempl
-  let-isToBeDeleted="isToBeDeleted"
-  let-tokenStorage="tokenStorage"
->
-  <ng-container *ngIf="isToBeDeleted; then deleteTempl; else insertTempl">
-  </ng-container>
+<ng-template #mainTempl>
+    <ng-container *ngIf="toBeDeleted===true; then deleteTempl else insertTempl"></ng-container>
 
-  <ng-template #deleteTempl>
-    <h1 mat-dialog-title>{{ 'EDdelTtl' | translate}}
-    </h1>
-    <mat-dialog-content class="mat-typography">
-      <div>{{ data.toBeDeletedEvt.bookname}}</div>
-      <div>{{ data.startDate | date:'dd/MM/yyyy HH:mm'}}</div>
-      <div>{{ data.endDate | date:'dd/MM/yyyy HH:mm'}}</div>
-      <div mat-dialog-actions>
-        <button mat-button 
-        mat-dialog-close
-        color="primary" 
-        type="submit"
-        (click)="closeDialog()">{{'PCconfirm' | translate}}</button>
-      </div>
-    </mat-dialog-content>
-  </ng-template>
-  <ng-template #insertTempl>
-    <h1 mat-dialog-title>{{valgtBookCtrl.value}}
-    </h1>
-    <mat-dialog-content class="mat-typography">
-      <br/>
-          <label id="example-radio-group-label">{{'EDchoosePer' | translate}}</label>
-          <br/>
-      <ngb-timepicker [size]="'small'" [formControl]="startCtrl"></ngb-timepicker>
-      <div *ngIf="startCtrl.errors" class="small form-text text-danger">
-        <div *ngIf="startCtrl.errors['required']">Select some time </div>
-        <div *ngIf="startCtrl.errors['tooLate']">Oh no, it's way too late</div>
-        <div *ngIf="startCtrl.errors['tooEarly']">It's a bit too early</div>
-      </div>
-      <hr/>
-      <!-- <pre>Start time: {{ startTime | json }}</pre> -->
-      <ngb-timepicker [size]="'small'" [formControl]="endCtrl"></ngb-timepicker>
-      <div *ngIf="endCtrl.errors" class="small form-text text-danger">
-        <div *ngIf="endCtrl.errors['required']">Select some time </div>
-        <div *ngIf="endCtrl.errors['tooLate']">Oh no, it's way too late</div>
-        <div *ngIf="endCtrl.errors['tooEarly']">It's a bit too early</div>
-      </div>
-      <hr/>
-      <!-- <pre>End time: {{ endTime | json }}</pre>  -->
-      <form
-      [formGroup]="userForm"
-      (ngSubmit) = "closeDialog()">
-        <!-- <div mat-dialog-content>
-          {{data.date | date:'dd/MM/yyyy'}}
-          <br/>
-          <label id="example-radio-group-label">{{'EDchooseBook' | translate}}</label>
-          <br/>
-          <mat-form-field >
-              <mat-select formControlName="valgtBook">
-                <ng-container *ngFor="let book of books">
-                  <mat-option [value]="book" *ngIf="book!=='' ;">
-                  {{book}}
-                  </mat-option>
-                </ng-container>
-              </mat-select>
-          </mat-form-field>
-        </div> -->
-        <div>{{valgtBookCtrl.value}}<br/>
-          {{ startDate | date:'dd/MM/yyyy HH:mm'}}<br/> 
-          {{ endDate | date:'dd/MM/yyyy HH:mm' }}
-        </div>
+    <ng-template #deleteTempl>
+      <h1 mat-dialog-title>{{ 'EDdelTtl' | translate}}
+      </h1>
+      <mat-dialog-content class="mat-typography">
+        <div>{{ data.toBeDeletedEvt.bookname}}</div>
+        <div>{{ data.startDate | date:'dd/MM/yyyy HH:mm'}}</div>
+        <div>{{ data.endDate | date:'dd/MM/yyyy HH:mm'}}</div>
         <div mat-dialog-actions>
           <button mat-button 
           mat-dialog-close
           color="primary" 
-          type="submit">{{'PCconfirm' | translate}}</button>
+          type="submit"
+          (click)="closeDialog()">{{'PCconfirm' | translate}}</button>
         </div>
-      </form>  
-    </mat-dialog-content>
-  </ng-template>
-  
-</ng-template>
-<ng-template
-  [ngTemplateOutlet]="mainTempl"
-  [ngTemplateOutletContext]="{
-  isToBeDeleted: toBeDeleted,
-  tokenStorage: tokenStorage}"
-  >
-</ng-template>
+      </mat-dialog-content>
+    </ng-template>
+    <ng-template  #insertTempl>
+        <h1 mat-dialog-title>{{valgtBookCtrl.value}}</h1>
+        <mat-dialog-content class="mat-typography">
+          <br/>
+              <label id="example-radio-group-label">{{'EDchoosePer' | translate}}</label>
+              <br/>
+          <ngb-timepicker [size]="'small'" [formControl]="startCtrl"></ngb-timepicker>
+          <div *ngIf="startCtrl.errors" class="small form-text text-danger">
+            <div *ngIf="startCtrl.errors['required']">Select some time </div>
+            <div *ngIf="startCtrl.errors['tooLate']">Oh no, it's way too late</div>
+            <div *ngIf="startCtrl.errors['tooEarly']">It's a bit too early</div>
+          </div>
+          <hr/>
+          <!-- <pre>Start time: {{ startTime | json }}</pre> -->
+          <ngb-timepicker [size]="'small'" [formControl]="endCtrl"></ngb-timepicker>
+          <div *ngIf="endCtrl.errors" class="small form-text text-danger">
+            <div *ngIf="endCtrl.errors['required']">Select some time </div>
+            <div *ngIf="endCtrl.errors['tooLate']">Oh no, it's way too late</div>
+            <div *ngIf="endCtrl.errors['tooEarly']">It's a bit too early</div>
+          </div>
+          <hr/>
+          <!-- <pre>End time: {{ endTime | json }}</pre>  -->
+          <form
+          [formGroup]="userForm"
+          (ngSubmit) = "closeDialog()">
+            <!-- <div mat-dialog-content>
+              {{data.date | date:'dd/MM/yyyy'}}
+              <br/>
+              <label id="example-radio-group-label">{{'EDchooseBook' | translate}}</label>
+              <br/>
+              <mat-form-field >
+                  <mat-select formControlName="valgtBook">
+                    <ng-container *ngFor="let book of books">
+                      <mat-option [value]="book" *ngIf="book!=='' ;">
+                      {{book}}
+                      </mat-option>
+                    </ng-container>
+                  </mat-select>
+              </mat-form-field>
+            </div> -->
+            <div>{{valgtBookCtrl.value}}<br/>
+              {{ startDate | date:'dd/MM/yyyy HH:mm'}}<br/> 
+              {{ endDate | date:'dd/MM/yyyy HH:mm' }}
+            </div>
+            <div mat-dialog-actions>
+              <button mat-button 
+              mat-dialog-close
+              color="primary" 
+              type="submit">{{'PCconfirm' | translate}}</button>
+            </div>
+          </form>  
+        </mat-dialog-content>
+        </ng-template>
+      </ng-template>
+      <ng-template #avtaleTempl>
+        <h1 mat-dialog-title>{{valgtBookCtrl.value}}</h1>
+        <mat-dialog-content class="mat-typography">
+        {{ currentDate | date: 'd/M/yyyy' }}
+        <br/>
+        <label id="example-radio-group-label">{{'EEselPer' | translate}}</label>
+        <br/>
+        <form class="row row-cols-sm-auto">
+          <div class="col-12">
+            <div class="dp-hidden position-absolute">
+              <div class="input-group">
+                <input
+                  name="datepicker"
+                  class="form-control"
+                  ngbDatepicker
+                  #datepicker="ngbDatepicker"
+                  [autoClose]="'outside'"
+                  (dateSelect)="onDateSelection($event)"
+                  [displayMonths]="1"
+                  [dayTemplate]="t"
+                  outsideDays="hidden"
+                  [startDate]="fromDate!"
+                  tabindex="-1"
+                />
+                <ng-template #t let-date let-focused="focused">
+                  <span
+                    class="custom-day"
+                    [class.focused]="focused"
+                    [class.range]="isRange(date)"
+                    [class.faded]="isHovered(date) || isInside(date)"
+                    (mouseenter)="hoveredDate = date"
+                    (mouseleave)="hoveredDate = null"
+                  >
+                    {{ date.day }}
+                  </span>
+                </ng-template>
+              </div>
+            </div>
+            <div class="input-group">
+              <input
+                #dpFromDate
+                class="form-control"
+                placeholder="dd/mm/yyyy"
+                name="dpFromDate"
+                [value]="formatter.format(fromDate)"
+                (input)="fromDate = validateInput(fromDate, dpFromDate.value)"
+              />
+              <button class="btn btn-outline-secondary bi bi-calendar3" (click)="datepicker.toggle()" type="button"></button>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="input-group">
+              <input
+                #dpToDate
+                class="form-control"
+                placeholder="dd/mm/yyyy"
+                name="dpToDate"
+                [value]="formatter.format(toDate)"
+                (input)="toDate = validateInput(toDate, dpToDate.value)"
+              />
+              <button class="btn btn-outline-secondary bi bi-calendar3" (click)="datepicker.toggle()" type="button"></button>
+            </div>
+          </div>
+        </form>
+        </mat-dialog-content>
+    </ng-template>
+    <ng-template
+      [ngTemplateOutlet]="(tokenStorage.currentRoute$ | async)!=='/calendar/avtale' ? mainTempl : avtaleTempl">
+    </ng-template>

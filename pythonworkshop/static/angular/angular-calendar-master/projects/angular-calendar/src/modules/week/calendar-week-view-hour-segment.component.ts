@@ -190,10 +190,13 @@ export class CalendarWeekViewHourSegmentComponent {
       })
   }
 
+  openAvtaleDialog(){
+
+  }
+
   openDialog() {
     var hourContainedEvTitle = "";
     //console.log("segment Date in openDialog(): ",this.segment.date ) ;
-
       if (!this.isClickedOverEvent()) {
         console.log("calWVhourSegm isClick",this.isClickedOverEvent());
         for (var dbEvt of this.events) {
@@ -287,7 +290,7 @@ export class EventDialog {
 
      hoveredDate: NgbDate | null = null;
 
-     fromDate: NgbDate | null;
+     fromDate: NgbDate | null =this.calendar.getToday();
      toDate: NgbDate | null;
    
      pickerRangeChange$ : BehaviorSubject<[NgbDate | null,NgbDate | null]>=new BehaviorSubject([null,null]);
