@@ -216,6 +216,7 @@ class Event(db.Model):
   bookname = db.Column(db.String)
   roomname = db.Column(db.String)
   ou = db.Column(db.String)
+  #stmills = db.Column(db.datetime)
   startmills = db.Column(db.Integer)
   endmills = db.Column(db.Integer)
   color = db.Column(db.String)

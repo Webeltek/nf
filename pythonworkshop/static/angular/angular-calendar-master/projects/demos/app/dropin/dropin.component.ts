@@ -271,7 +271,7 @@ export class DropinComponent implements OnInit {
         
       }
       this.externalDropinEvents = [...this.externalDropinEvents];
-      console.log("dropinles updateChips extEvents",this.externalDropinEvents);
+      console.log("dropin updateChips extEvents",this.externalDropinEvents);
     }
   }
 
@@ -380,7 +380,7 @@ export class DropinComponent implements OnInit {
             }
             
           },
-          //complete: () => this.getDbEvents()
+          //complete: () => this.getDbEvents
       })
   }
 
