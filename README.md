@@ -1,3 +1,1 @@
-# pythonworkshop
-Just a temp project for a python workshop
-# bootstrap
+# Rooom reservation with angular frontend and flask backend
