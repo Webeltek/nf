@@ -11,6 +11,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { delay } from 'rxjs/operators';
 import { BehaviorSubject } from 'rxjs';
 import { ThemePalette } from '@angular/material/core';
+import { DOCUMENT } from '@angular/common';
 
 let apiLoaded = false;
 
@@ -91,7 +92,10 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private BPobserver: BreakpointObserver,
     private renderer: Renderer2
-    ) {}  
+    ) {} 
+    
+  ngOnDestroy(){
+  }  
     
   ngOnInit(): void {
      //script for youtube-player

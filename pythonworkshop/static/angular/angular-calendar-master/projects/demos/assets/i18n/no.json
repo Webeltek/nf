@@ -73,6 +73,9 @@
      "DCmonth": "Måned",
      "DCweek": "Uke",
      "DCday" : "Dag",
+     "DCdropin": "Drop-in",
+     "DCsubscr": "Avtale",
+     "DCoffice": "Kontor",
 
      "EDdelTtl": "Slett reservasjon av",
      "EDinsertTtl": "Velg reservasjon",
@@ -89,10 +92,12 @@
      "PAamount" : "Beløp",
      "PAisConsumed": "Er brukt",
 
-    "EEselRoomAndPer": "Velg rom og tidsperiode",
+    "EEselRoomAndPer": "Velg område og tidsperiode",
     "EEselPer" : "Velg periode",
     "EEbook" : "Booking navn",
-    "EEroom": "Rom",
+    "EEroom": "Område",
     "EEemail": "E-post",
-    "EEdate": "Dato"
+    "EEdate": "Dato",
+
+    "HSnoPayment": "Ingen betalinger tilgjengelig"
 }

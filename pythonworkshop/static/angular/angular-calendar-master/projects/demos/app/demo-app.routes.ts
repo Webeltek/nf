@@ -13,8 +13,9 @@ import { HjemComponent } from 'projects/byklebreiband/src/app/hjem/hjem.componen
 import { VippsCheckoutComponent } from './vipps-checkout/vipps-checkout.component';
 import { SalgsbetingelserComponent } from './salgsbetingelser/salgsbetingelser.component';
 import { PaymentComponent } from './payment/payment.component';
-import { FellesComponent } from './felles/felles.component';
+import { DropinComponent } from './dropin/dropin.component';
 import { KontorComponent } from './kontor/kontor.component';
+import { AvtaleComponent } from './avtale/avtale.component';
 
 export const ROUTES: Routes = [  
         { path: 'login', component: LoginComponent },
@@ -26,9 +27,11 @@ export const ROUTES: Routes = [
         { path: 'confirm', component: ConfirmComponent },
         { path: 'calendar' , canActivate: [LoggedInGuardService], component : DemoAppComponent,
             children: [ 
-                    { path: '', redirectTo: 'felles', pathMatch: 'full'},
-                    { path: 'felles',component: FellesComponent},
-                    { path: 'kontor', component: KontorComponent}
+                    { path: '', redirectTo: 'dropin', pathMatch: 'full'},
+                    { path: 'dropin',component: DropinComponent},
+                    { path: 'avtale',component: AvtaleComponent},
+                    { path: 'kontor', component: KontorComponent},
+                    { path: '**', redirectTo: 'dropin', pathMatch: 'full'}
             ]           
         },
         { path: 'payment' , canActivate: [LoggedInGuardService], component : PaymentComponent},

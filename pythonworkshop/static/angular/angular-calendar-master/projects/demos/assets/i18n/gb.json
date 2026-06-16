@@ -74,6 +74,9 @@
     "DCmonth": "Month",
     "DCweek": "Week",
     "DCday" : "Day",
+    "DCdropin": "Drop-in",
+    "DCsubscr": "Subscription",
+    "DCoffice": "Office",
 
     "EDdelTtl": "Delete event",
     "EDinsertTtl": "Select event",
@@ -90,12 +93,12 @@
     "PAamount" : "Amount",
     "PAisConsumed": "Is consumed",
 
-    "EEselRoomAndPer": "Select room and time period",
+    "EEselRoomAndPer": "Select area and time period",
     "EEselPer" : "Select period",
     "EEbook" : "Booking",
-    "EEroom": "Room",
+    "EEroom": "Area",
     "EEemail": "Email",
-    "EEdate": "Date"
+    "EEdate": "Date",
 
-
+    "HSnoPayment": "No payment available"
 }

@@ -3,7 +3,7 @@
   "version": "0.29.0",
   "description": "A calendar component for angular 12.0+ that can display events on a month, week or day view",
   "funding": {
-    "url": ""
+    "url": "https://github.com/mattlewis92/calendar-utils"
   },
   "scripts": {
     "node:memory": "cross-env NODE_OPTIONS=--max_old_space_size=8192",
@@ -101,7 +101,7 @@
     "@stackblitz/sdk": "^1.5.2",
     "@types/chai": "^4.2.21",
     "@types/mocha": "^7.0.2",
-    "@types/node": "^16.18.11",
+    "@types/node": "^16.18.39",
     "@types/sinon": "^10.0.2",
     "@types/sinon-chai": "^3.2.5",
     "@typescript-eslint/eslint-plugin": "4.28.2",
@@ -133,7 +133,6 @@
     "ng-packagr": "^15.1.1",
     "ngx-clipboard": "^15.1.0",
     "npm-run-all": "^4.1.5",
-    "patch-package": "^6.5.1",
     "postcss": "^8.3.6",
     "postcss-cli": "^8.3.1",
     "postcss-flexibility": "^3.0.0",
@@ -169,19 +168,22 @@
     "@scarf/scarf": "^1.1.1",
     "@types/gapi": "0.0.44",
     "angular-auth-oidc-client": "^15.0.3",
-    "angular-countries-flags": "0.0.5",
+    "angular-countries-flags": "^0.0.5",
     "angular-draggable-droppable": "^8.0.0",
     "angular-resizable-element": "^7.0.0",
     "bootstrap-css-only": "^4.4.1",
-    "calendar-utils": "^0.10.4",
+    "calendar-utils": "file:dependencies/calendar-utils",
     "chai": "^4.0.2",
     "custompatch": "^1.0.22",
     "json5": "^1.0.2",
     "lodash": "^4.17.21",
     "ngx-socket-io": "^4.4.0",
+    "npm": "^6.14.18",
+    "patch-package": "^6.5.1",
     "positioning": "^2.0.1",
     "sinon": "^4.0.2",
-    "tslib": "^2.1.0"
+    "tslib": "^2.1.0",
+    "webpack-cli": "^4.9.2"
   },
   "sideEffects": [
     "*.css",

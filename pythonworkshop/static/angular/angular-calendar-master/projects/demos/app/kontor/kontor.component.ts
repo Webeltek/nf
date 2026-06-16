@@ -51,6 +51,8 @@ export class KontorComponent implements OnInit, OnDestroy{
   view: CalendarView = CalendarView.Week;
   CalendarView = CalendarView;
   daysInWeek = 7;
+  dayStartHour=8;
+  dayEndHour=18;
   locale : string = "nb";
   weekStartsOn: number = DAYS_OF_WEEK.MONDAY;
   weekendDays: number[] = [DAYS_OF_WEEK.FRIDAY, DAYS_OF_WEEK.SATURDAY];
@@ -95,7 +97,10 @@ export class KontorComponent implements OnInit, OnDestroy{
     {name: 'Warn', color: 'warn'}, 
   ]; */
   externalKontEvents : CalendarEvent[] = [];
-  
+  previousDayEvents : { 
+    start : Date,
+    end : Date
+  }[] = []
 
   @Input() rooms : string[] = [];
   books : string[] = [];
@@ -155,26 +160,45 @@ export class KontorComponent implements OnInit, OnDestroy{
   }
 
   externalDrop(events: CalendarEvent[]) {
-    for (let event of events){
-      if (this.externalKontEvents.indexOf(event) === -1) {
-        //this.events = this.events.filter((iEvent) => iEvent !== event);
-        const extDropEventUid : string =  event.id as string;
-        console.log("DA extDrop extDropEventUid",extDropEventUid)
-        this.deleteEvent([extDropEventUid],this.tokenStorage.getUser().id)
-        if (event.paymntref){
-          this.authService.dbUpdateVippsPayment(
-            this.tokenStorage.getUser().id,
-            event.paymntref,
-            false
-          ).subscribe((resp)=>{
-            const respObj = resp as any;
-            this.updateChips(respObj.payments);
-          });
+    if (events.length>0){
+      for (let event of events){
+        if (this.externalKontEvents.indexOf(event) === -1) {
+          //this.events = this.events.filter((iEvent) => iEvent !== event);
+          const extDropEventUid : string =  event.id as string;
+          console.log("DA extDrop extDropEventUid",extDropEventUid)
+          this.deleteEvent([extDropEventUid],this.tokenStorage.getUser().id);
+          if (event.paymntref){
+            this.authService.dbUpdateVippsPayment(
+              this.tokenStorage.getUser().id,
+              event.paymntref,
+              false
+            ).subscribe((resp)=>{
+              const respObj = resp as any;
+              this.updateChips(respObj.payments);
+            });
+          }
         }
       }
     }
-    
   }
+
+  getOverLappingWeekViewEvents(events, top, bottom) {
+    return events.filter( (previousEvent) =>{
+        var previousEventTop = previousEvent.top;
+        var previousEventBottom = previousEvent.top + previousEvent.height;
+        if (top < previousEventBottom && bottom > previousEventBottom) {
+            return true;
+        }
+        else if (top < previousEventTop && bottom > previousEventTop) {
+            return true;
+        }
+        else if ( top >= previousEventTop && bottom <= previousEventBottom) {
+            console.log("top >= previousEventTop && bottom <= previousEventBottom",true)
+            return true;
+        }
+        return false;
+    });
+}
 
   eventTimesChanged({
     event,
@@ -182,13 +206,69 @@ export class KontorComponent implements OnInit, OnDestroy{
     newEnd,
   }: CalendarEventTimesChangedEvent): void {
     const externalIndex = this.externalKontEvents.indexOf(event);
-    console.log("DAC eventTimesChanged params externalindex,event,newStart,newEnd",
-    externalIndex,event,newStart,newEnd)
-    if (externalIndex > -1) { // if event is dropped from chips to calendar
-      console.log("DA chips to cal")
+    console.log("DAC eventTimesChanged params event, newStart,newEnd",event,newStart,newEnd);
+    let dayEvents = this.events.filter((event)=>{
+      return event.start.getDay() == newStart.getDay();
+    });
+    if (externalIndex ==-1){
+      for (let evt of dayEvents){
+        if(event.id!==evt.id){
+          const eventLength = event.end.getTime() - event.start.getTime();
+          if (newStart.getTime() >= evt.start.getTime() 
+              && newStart.getTime() < evt.end.getTime() ){
+              console.log("set new time");
+              newStart.setTime(evt.end.getTime());
+              newEnd = new Date(newStart.getTime()+eventLength);
+          } else if ((newStart.getTime()+eventLength) < evt.end.getTime()
+            && (newStart.getTime()+eventLength) > evt.start.getTime()){
+              newStart.setTime(evt.start.getTime()-eventLength);
+              newStart.getHours()<this.dayStartHour ? newStart.setHours(this.dayStartHour) : null;
+              newEnd=new Date(evt.start.getTime()); 
+          } else if(newStart.getTime()<evt.start.getTime()
+            && (newStart.getTime()+eventLength)>evt.end.getTime()){
+              newStart.setTime(evt.start.getTime()-eventLength);
+              newStart.getHours()<this.dayStartHour ? newStart.setHours(this.dayStartHour) : null;
+              newEnd=new Date(evt.start.getTime()); 
+          } else if (newStart.getTime()>evt.start.getTime() 
+            && (newStart.getTime()+eventLength)<evt.end.getTime()){
+              newStart.setTime(evt.start.getTime()-eventLength);
+              newStart.getHours()<this.dayStartHour ? newStart.setHours(this.dayStartHour) : null;
+              newEnd=new Date(evt.start.getTime());
+            } 
+        }
+      };
+    } else if (externalIndex > -1) { // if event is dropped from chips to calendar
       event.start = newStart;
       const newDateStartObj = new Date(event.start);
       event.end = new Date(newDateStartObj.setHours(event.start.getHours()+1));
+    
+      for (let evt of dayEvents){
+        if(event.id!==evt.id){
+          const eventLength = event.end.getTime() - event.start.getTime();
+          if (newStart.getTime() >= evt.start.getTime() 
+              && newStart.getTime() < evt.end.getTime() ){
+              console.log("set new time");
+              newStart.setTime(evt.end.getTime());
+              newEnd = new Date(newStart.getTime()+eventLength);
+          } else if ((newStart.getTime()+eventLength) < evt.end.getTime()
+            && (newStart.getTime()+eventLength) > evt.start.getTime()){
+              newStart.setTime(evt.start.getTime()-eventLength);
+              newStart.getHours()<this.dayStartHour ? newStart.setHours(this.dayStartHour) : null;
+              newEnd=new Date(evt.start.getTime()); 
+          } else if(newStart.getTime()<evt.start.getTime()
+            && (newStart.getTime()+eventLength)>evt.end.getTime()){
+              newStart.setTime(evt.start.getTime()-eventLength);
+              newStart.getHours()<this.dayStartHour ? newStart.setHours(this.dayStartHour) : null;
+              newEnd=new Date(evt.start.getTime()); 
+          } else if (newStart.getTime()>evt.start.getTime() 
+          && (newStart.getTime()+eventLength)<evt.end.getTime()){
+            newStart.getHours()<this.dayStartHour ? newStart.setHours(this.dayStartHour) : null;
+            newStart.setTime(evt.start.getTime()-eventLength);
+            newEnd=new Date(evt.start.getTime());
+          } 
+        }
+      };
+      
       this.authService.dbUpdateVippsPayment(
         this.tokenStorage.getUser().id,
         this.externalKontEvents[externalIndex].paymntref,
@@ -214,7 +294,8 @@ export class KontorComponent implements OnInit, OnDestroy{
           });
       });
     }
-    if (newEnd) {   // if event is res/dragged
+    
+    if (newEnd && externalIndex ==-1 && this.tokenStorage.getUser().ou === event.ou) {   // if event is res/dragged
       //console.log("DA event modified")
       event.end = newEnd;
       if(newStart){
@@ -258,8 +339,8 @@ export class KontorComponent implements OnInit, OnDestroy{
       for (let paymnt of paymnts ){
         if(paymnt.is_consumed===false && paymnt.bookname==="Kontor"){
             const start = new Date(new Date().setHours(8));
-            console.log("HC paymnt amount slice : ",paymnt.amount.slice(0,-2));
-          //console.log("DA updateChipps paymnt.reference",paymnt.reference);
+            //console.log("HC paymnt amount slice : ",paymnt.amount.slice(0,-2));
+            //console.log("DA updateChipps paymnt.reference",paymnt.reference);
           let extEvent : CalendarEvent = {
             userId: this.tokenStorage.getUser().id,
             title : paymnt.amount.slice(0,-2) + "kr " + paymnt.bookname,

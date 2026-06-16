@@ -57,9 +57,11 @@ import {MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 import { LOCALE_ID } from '@angular/core';
 import { CustomAdapter, CustomDateParserFormatter } from './_services/custom-adapter.service';
 import { NgbDateAdapter, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
-import {MatTabsModule} from '@angular/material/tabs';
-import { FellesComponent } from './felles/felles.component';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatSnackBarModule} from '@angular/material/snack-bar';
+import { DropinComponent } from './dropin/dropin.component';
 import { KontorComponent } from './kontor/kontor.component';
+import { AvtaleComponent } from './avtale/avtale.component';
 
 //import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 
@@ -100,8 +102,9 @@ export const MY_FORMATS = {
     VippsCheckoutComponent,
     SalgsbetingelserComponent,
     PaymentComponent,
-    FellesComponent,
+    DropinComponent,
     KontorComponent,
+    AvtaleComponent,
   ],
   imports: [
     CommonModule,
@@ -146,7 +149,8 @@ export const MY_FORMATS = {
     MatMenuModule,
     MatChipsModule,
     MatSortModule,
-    MatTabsModule
+    MatTabsModule,
+    MatSnackBarModule
   ],
   providers : [
      authInterceptorProviders,

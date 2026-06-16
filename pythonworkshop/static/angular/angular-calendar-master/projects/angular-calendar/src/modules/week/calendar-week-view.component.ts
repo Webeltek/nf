@@ -897,6 +897,7 @@ export class CalendarWeekViewComponent
       isDraggedWithinPeriod(start, end, this.view.period)
     ) {
       this.lastDraggedEvent = weekEvent.event;
+      console.log("CW dragEnded evenTimesChanged fired")
       this.eventTimesChanged.emit({
         newStart: start,
         newEnd: end,

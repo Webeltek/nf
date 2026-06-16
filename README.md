@@ -1,3 +1,3 @@
-# pythonworkshop
-Just a temp project for a python workshop
-# bootstrap
+# Meeting & Conference Room Booking
+ ## Angular 15 frontend with flask backend
+

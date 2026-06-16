@@ -17,12 +17,13 @@ const VIPPS_PAYMNT_KEY = 'vipps-paymnt-key';
   providedIn: 'root'
 })
 export class TokenStorageService {
-  constructor(private router: Router) { }
-
+  constructor(private router: Router) {}
 
   combAuthProtected$ : BehaviorSubject<boolean> = new BehaviorSubject(false);
   isCalendarActive$: BehaviorSubject<boolean> = new BehaviorSubject(false);
   authenticated$: BehaviorSubject<boolean> = new BehaviorSubject(false);
+  hourSegmMsg$: BehaviorSubject<string> = new BehaviorSubject('');
+  currentRoute$ : BehaviorSubject<string> = new BehaviorSubject('');
   //currenLoginState = this.authenticated$.asObservable();
 
   signOut(msg?: string): void {

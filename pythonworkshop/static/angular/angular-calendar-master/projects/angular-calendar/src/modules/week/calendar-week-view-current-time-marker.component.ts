@@ -77,9 +77,9 @@ export class CalendarWeekViewCurrentTimeMarkerComponent implements OnChanges {
     switchMapTo(this.columnDate$),
     map((columnDate) => {
       const startOfDay = this.dateAdapter.setMinutes(
-        this.dateAdapter.setHours(columnDate, 0),0);
+        this.dateAdapter.setHours(columnDate, this.dayStartHour),0);
       const endOfDay = this.dateAdapter.setMinutes(
-        this.dateAdapter.setHours(columnDate, 23),59);
+        this.dateAdapter.setHours(columnDate, this.dayEndHour),59);
       const hourWidthModifier = 1;
       const hourHeightModifier =
         (this.hourSegments * this.hourSegmentHeight) /

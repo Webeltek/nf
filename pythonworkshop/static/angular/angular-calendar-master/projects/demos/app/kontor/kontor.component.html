@@ -1,73 +1,65 @@
-<div class="row text-center">
-    <div class="col-lg-4">
-        <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):(getLocaleFromTranslate(translate.currentLang)) :1 }}</h3>
-    </div>
-    <div class="col-lg-4">
-        <div  class="btn-group">
-            <div class="btn btn-primary" mwlCalendarPreviousView
-            (viewDateChange)="activeDayIsOpen=false" 
-            [view]="view" [(viewDate)]="viewDate"
-            [daysInWeek]="1">
-                {{'DCprevious' | translate}}
+<div class="row mt-2">
+    <div class="btn-toolbar" role="toolbar">
+        <div  class="btn-group btn-group-sm mr-4" role="group">
+            <div class="btn btn-outline-secondary d-flex align-items-center" mwlCalendarPreviousView
+                (viewDateChange)="activeDayIsOpen=false" 
+                [view]="view" [(viewDate)]="viewDate"
+                [daysInWeek]="1">
+                <mat-icon>arrow_back_ios</mat-icon>
             </div>
-            <div class="btn btn-outline-secondary" mwlCalendarToday
-            (viewDateChange)="activeDayIsOpen=false" 
-            [(viewDate)]="viewDate">
-            {{'DCtoday' | translate}}
+            <div class="btn btn-outline-secondary d-flex align-items-center" mwlCalendarToday
+                (viewDateChange)="activeDayIsOpen=false" 
+                [(viewDate)]="viewDate">
+                {{'DCtoday' | translate}}
             </div>
-            <div class="btn btn-primary" mwlCalendarNextView
-            (viewDateChange)="activeDayIsOpen=false" 
-            [view]="view" [(viewDate)]="viewDate"
-            [daysInWeek]="1">
-            {{'DCnext' | translate}}
+            <div class="btn btn-outline-secondary d-flex align-items-center" mwlCalendarNextView
+                (viewDateChange)="activeDayIsOpen=false" 
+                [view]="view" [(viewDate)]="viewDate"
+                [daysInWeek]="1">
+                <mat-icon>arrow_forward_ios</mat-icon>
             </div>
         </div>
-    </div>
-    <div class="col-lg-4">
-        <div class="btn-group">
+        <div class="btn-group btn-group-sm mr-4" role="group">
+                <h4>{{ viewDate | calendarDate:(view + 'ViewTitle'):(getLocaleFromTranslate(translate.currentLang)) :1 }}</h4>
+        </div>
+        <div class="btn-group btn-group-sm mr-4" role="group">
           <div
-            class="btn btn-primary"
+            class="btn btn-outline-secondary d-flex align-items-center"
             (click)="setView(CalendarView.Month)"
-            [class.active]="view === CalendarView.Month"
-          >
-          {{'DCmonth' | translate}}
+            [class.active]="view === CalendarView.Month">
+            {{'DCmonth' | translate}}
           </div>
           <div
-            class="btn btn-primary"
+            class="btn btn-outline-secondary d-flex align-items-center"
             (click)="setView(CalendarView.Week)"
-            [class.active]="view === CalendarView.Week"
-          >
-          {{'DCweek' | translate}}
+            [class.active]="view === CalendarView.Week">
+            {{'DCweek' | translate}}
           </div>
           <div
-            class="btn btn-primary"
+            class="btn btn-outline-secondary d-flex align-items-center"
             (click)="setView(CalendarView.Day)"
-            [class.active]="view === CalendarView.Day"
-          >
-          {{'DCday' | translate}}
+            [class.active]="view === CalendarView.Day">
+            {{'DCday' | translate}}
           </div>
         </div>
-    </div>
+    </div>    
 </div>
-<ng-container 
-    *ngIf="( tokenStorage.combAuthProtected$ | async) === true;">
-    <mat-chip-listbox aria-label="Drop-in selection"
+    <mat-chip-listbox class="mt-2" aria-label="Kontor selection"
         mwlDroppable
         (drop)="externalDrop($event.dropData.event)"
-        dragOverClass="drag-over" *ngFor="let event of externalKontEvents">
+        dragOverClass="drag-over">
             <mat-chip-option
-            *ngIf="event.bookname==='Kontor'"
-            mwlDraggable 
-            [style.color]="'warn'"
-            [dropData]="{event: event}"
-            [touchStartLongPress]="{ delay: 300, delta: 30 }"
-            dragActiveClass="drag-active"
-            (selectionChange)="onSelectionChange($event)"
+                *ngFor="let event of externalKontEvents"
+                mwlDraggable 
+                [style.color]="'warn'"
+                [dropData]="{event: event}"
+                [touchStartLongPress]="{ delay: 300, delta: 30 }"
+                dragActiveClass="drag-active"
+                (selectionChange)="onSelectionChange($event)"
             >
                 {{event.title}} 
             </mat-chip-option>
-        </mat-chip-listbox>
-</ng-container>
+    </mat-chip-listbox>
 <br />
 <div [ngSwitch]="view">
     <mwl-calendar-month-view
@@ -81,7 +73,8 @@
         (dayClicked)="dayClicked($event.day)"
         [rooms]="rooms"
         [books]="books"
-        [dayStartHour]="0" 
+        [dayStartHour]="dayStartHour"
+        [dayEndHour]="dayEndHour" 
         [loggedInUserId]="loggedInUserId" 
         [events]="kontEvents"
         (eventClicked)="openDialog($event)"
@@ -101,8 +94,8 @@
             [rooms]="rooms"
             [books]="books"
             [daysInWeek]="daysInWeek"
-            [dayStartHour]="8" 
-            [dayEndHour]="18" 
+            [dayStartHour]="dayStartHour"
+            [dayEndHour]="dayEndHour"
             [viewDate]="viewDate"
             [weekStartsOn]=1
             [loggedInUserId]="loggedInUserId" 
@@ -120,8 +113,8 @@
     <mwl-calendar-day-view
         *ngSwitchCase="CalendarView.Day"
         [viewDate]="viewDate"
-        [dayStartHour]="8" 
-        [dayEndHour]="18"
+        [dayStartHour]="dayStartHour"
+        [dayEndHour]="dayEndHour"
         [events]="kontEvents"
         [externalEvents]="externalKontEvents"
         (eventClicked)="openDialog($event)"

@@ -31,10 +31,21 @@ index 9a1abcd..c006fc4 100644
  export declare function getDifferenceInDaysWithExclusions(dateAdapter: DateAdapter, { date1, date2, excluded }: {
      date1: Date;
 diff --git a/node_modules/calendar-utils/calendar-utils.js b/node_modules/calendar-utils/calendar-utils.js
-index 3ff9052..cad6f67 100644
+index 3ff9052..3315b3c 100644
 --- a/node_modules/calendar-utils/calendar-utils.js
 +++ b/node_modules/calendar-utils/calendar-utils.js
-@@ -550,8 +550,14 @@ function getDayView(dateAdapter, _a) {
+@@ -496,6 +496,9 @@ function getOverLappingWeekViewEvents(events, top, bottom) {
+         else if (previousEventTop <= top && bottom <= previousEventBottom) {
+             return true;
+         }
++        else if(bottom > previousEventTop && bottom < previousEventBottom){
++            return true;
++        }
+         return false;
+     });
+ }
+@@ -549,9 +552,16 @@ function getDayView(dateAdapter, _a) {
+         var bottom = top + height;
          var overlappingPreviousEvents = getOverLappingWeekViewEvents(previousDayEvents, top, bottom);
          var left = 0;
          while (overlappingPreviousEvents.some(function (previousEvent) { return previousEvent.left === left; })) {
@@ -42,19 +53,12 @@ index 3ff9052..cad6f67 100644
 +          left += eventWidth;
          } 
 +        while (overlappingPreviousEvents.some(function (previousEvent) { return previousEvent.top === top})) {
-+            var prevEvent = overlappingPreviousEvents.slice(-1);
-+            top += prevEvent.height;
-+        }
-+        console.log("cal utils prevEvent.top",top);
-+        var topTest = 1;
++            var prevEventHeight = overlappingPreviousEvents.pop().height;
++            top += prevEventHeight;
+         }
++        console.log("cal utils prevEvent modified top",top);
++        console.log("test2");
++        console.log("test3");
          var dayEvent = {
              event: event,
              height: height,
-@@ -561,6 +567,7 @@ function getDayView(dateAdapter, _a) {
-             startsBeforeDay: startsBeforeDay,
-             endsAfterDay: endsAfterDay,
-         };
-+        var topTest2 = 1;
-         previousDayEvents.push(dayEvent);
-         return dayEvent;
-     });

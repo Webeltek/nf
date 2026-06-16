@@ -5,7 +5,7 @@ import { Component, Input,
   ChangeDetectorRef, KeyValueDiffers,IterableDiffers, 
   DoCheck,
   ViewChild,
-  TemplateRef, ElementRef } from '@angular/core';
+  TemplateRef, ElementRef , ViewEncapsulation} from '@angular/core';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { 
   CalendarDateFormatter, CalendarEventTimesChangedEvent,
@@ -29,12 +29,12 @@ import { AuthService } from '../_services/auth.service';
 import { MatChipSelectionChange } from '@angular/material/chips';
 import { MatTabChangeEvent } from '@angular/material/tabs';
 import { PythUser } from '../demo-app.component';
-import { ChipItem } from '../demo-app.component';
+import { DOCUMENT } from '@angular/common';
 
 @Component({
-  selector: 'mwl-felles',
-  templateUrl: './felles.component.html',
-  styleUrls: ['./felles.component.scss'],
+  selector: 'mwl-avtale',
+  templateUrl: './avtale.component.html',
+  styleUrls: ['./avtale.component.scss'],
   changeDetection : ChangeDetectionStrategy.Default,
   providers: [
     {
@@ -43,7 +43,7 @@ import { ChipItem } from '../demo-app.component';
     },
   ],
 })
-export class FellesComponent implements OnInit {
+export class AvtaleComponent implements OnInit {
   @ViewChild('modalContent', { static: true }) modalContent: TemplateRef<any>;
 
   isMobLayout = false;
@@ -51,6 +51,8 @@ export class FellesComponent implements OnInit {
   view: CalendarView = CalendarView.Week;
   CalendarView = CalendarView;
   daysInWeek = 7;
+  dayStartHour=8;
+  dayEndHour=18;
   locale : string = "nb";
   weekStartsOn: number = DAYS_OF_WEEK.MONDAY;
   weekendDays: number[] = [DAYS_OF_WEEK.FRIDAY, DAYS_OF_WEEK.SATURDAY];
@@ -65,23 +67,23 @@ export class FellesComponent implements OnInit {
     this.view = view;
   }
 
-  private _felEvents : CalendarEvent[]=[];
+  private _avtaleEvents : CalendarEvent[]=[];
   private _events : CalendarEvent[] = [];
   public get events(){
     return this._events;
   }
   public set events(events : CalendarEvent[]){
     this._events = events;
-    this.felEvents= events;
+    this.avtaleEvents= events;
   }
-  public get felEvents(){
-    return this._felEvents;
+  public get avtaleEvents(){
+    return this._avtaleEvents;
   }
 
-  public set felEvents(events: CalendarEvent[]){
-    this._felEvents= events.filter(evt => {
-      //console.log("fel evt.bookname",evt.bookname);
-      return evt.bookname==="Drop-in"})
+  public set avtaleEvents(events: CalendarEvent[]){
+    this._avtaleEvents= events.filter(evt => {
+      //console.log("avtale evt.bookname",evt.bookname);
+      return evt.bookname==="Avtale"})
   }
   
   users : PythUser[] = [];
@@ -93,14 +95,12 @@ export class FellesComponent implements OnInit {
     {name: 'Accent', color: 'accent'},
     {name: 'Warn', color: 'warn'}, 
   ]; */
-  externalFelEvents : CalendarEvent[] = [];
-  
-
+  externalAvtaleEvents : CalendarEvent[] = [];
   @Input() rooms : string[] = [];
   books : string[] = [];
   roomsArrDiffer : any;
-
   private destroy$ = new Subject<void>();
+  routerPath = '';
 
   constructor(
     public httpService: HttpEventService,
@@ -154,25 +154,26 @@ export class FellesComponent implements OnInit {
   }
 
   externalDrop(events: CalendarEvent[]) {
-    for (let event of events){
-      if (this.externalFelEvents.indexOf(event) === -1) {
-        //this.events = this.events.filter((iEvent) => iEvent !== event);
-        const extDropEventUid : string =  event.id as string;
-        console.log("DA extDrop extDropEventUid",extDropEventUid)
-        this.deleteEvent([extDropEventUid],this.tokenStorage.getUser().id)
-        if (event.paymntref){
-          this.authService.dbUpdateVippsPayment(
-            this.tokenStorage.getUser().id,
-            event.paymntref,
-            false
-          ).subscribe((resp)=>{
-            const respObj = resp as any;
-            this.updateChips(respObj.payments);
-          });
+    if (events.length>0){
+      for (let event of events){
+        if (this.externalAvtaleEvents.indexOf(event) === -1) {
+          //this.events = this.events.filter((iEvent) => iEvent !== event);
+          const extDropEventUid : string =  event.id as string;
+          console.log("DA extDrop extDropEventUid",extDropEventUid)
+          this.deleteEvent([extDropEventUid],this.tokenStorage.getUser().id)
+          if (event.paymntref){
+            this.authService.dbUpdateVippsPayment(
+              this.tokenStorage.getUser().id,
+              event.paymntref,
+              false
+            ).subscribe((resp)=>{
+              const respObj = resp as any;
+              this.updateChips(respObj.payments);
+            });
+          }
         }
       }
     }
-    
   }
 
   eventTimesChanged({
@@ -180,7 +181,7 @@ export class FellesComponent implements OnInit {
     newStart,
     newEnd,
   }: CalendarEventTimesChangedEvent): void {
-    const externalIndex = this.externalFelEvents.indexOf(event);
+    const externalIndex = this.externalAvtaleEvents.indexOf(event);
     console.log("DAC eventTimesChanged params externalindex,event,newStart,newEnd",
     externalIndex,event,newStart,newEnd)
     if (externalIndex > -1) { // if event is dropped from chips to calendar
@@ -190,16 +191,16 @@ export class FellesComponent implements OnInit {
       event.end = new Date(newDateStartObj.setHours(event.start.getHours()+1));
       this.authService.dbUpdateVippsPayment(
         this.tokenStorage.getUser().id,
-        this.externalFelEvents[externalIndex].paymntref,
+        this.externalAvtaleEvents[externalIndex].paymntref,
         true)
       .subscribe((resp)=>{
-        console.log("DA bookname",this.externalFelEvents[externalIndex].bookname);
+        console.log("DA bookname",this.externalAvtaleEvents[externalIndex].bookname);
         this.httpService.generatePythEvent({
           user_id :this.tokenStorage.getUser().id,
           title: this.tokenStorage.getEventTitle(
-            this.externalFelEvents[externalIndex].bookname,event.userId,this.users),
+            this.externalAvtaleEvents[externalIndex].bookname,event.userId,this.users),
           paymntref : event.paymntref,
-          bookname : this.externalFelEvents[externalIndex].bookname,
+          bookname : this.externalAvtaleEvents[externalIndex].bookname,
           roomname : "",
           startmills : event.start.getTime(),
           endmills: event.end.getTime(),
@@ -213,7 +214,7 @@ export class FellesComponent implements OnInit {
           });
       });
     }
-    if (newEnd) {   // if event is res/dragged
+    if (newEnd && this.tokenStorage.getUser().ou === event.ou) {   // if event is res/dragged
       //console.log("DA event modified")
       event.end = newEnd;
       if(newStart){
@@ -248,11 +249,11 @@ export class FellesComponent implements OnInit {
 
   updateChips(resp: any){
     if (resp && resp!=="access token expired"){
-      this.externalFelEvents = [];
+      this.externalAvtaleEvents = [];
       const paymnts = resp;
       //console.log("DA updateChips paymnts",paymnts)
       for (let paymnt of paymnts ){
-        if(paymnt.is_consumed===false && paymnt.bookname==="Drop-in"){
+        if(paymnt.is_consumed===false && paymnt.bookname==="Avtale"){
             const start = new Date(new Date().setHours(8));
           //console.log("DA updateChipps paymnt.reference",paymnt.reference);
           let extEvent : CalendarEvent = {
@@ -264,16 +265,22 @@ export class FellesComponent implements OnInit {
             start : start,
             draggable : true
           }
-          this.externalFelEvents.push(extEvent);
+          this.externalAvtaleEvents.push(extEvent);
         }
         
       }
-      this.externalFelEvents = [...this.externalFelEvents];
-      console.log("felles updateChips extEvents",this.externalFelEvents);
+      this.externalAvtaleEvents = [...this.externalAvtaleEvents];
+      console.log("avtaleles updateChips extEvents",this.externalAvtaleEvents);
     }
   }
 
   ngOnInit() {
+    this.router.events.subscribe((routerEvent)=>{
+      if (routerEvent instanceof NavigationEnd){
+        this.routerPath = routerEvent.url;
+        //console.log(" Snapshot path",routerEvent.url);
+      }
+    });
     this.loginStateSubscription = this.tokenStorage.combAuthProtected$
       .pipe(distinctUntilChanged())
       .subscribe( (authProtState : boolean)=>{
@@ -357,13 +364,13 @@ export class FellesComponent implements OnInit {
               this.events = [...this.convertDbEvents(pythEvts)];
               const bookRows = typeof respObj.books !== 'undefined'? Object.values(respObj.books):[];
               const bookTitles = bookRows.map( (tablerow : {'row':string,'title':string}) => {
-                if(tablerow.title==='Drop-in' || tablerow.title==='Avtale'){
+                if(tablerow.title==='Avtale'){
                   return tablerow.title;
                 } else return '';
               })
-              const fellesTitles = bookTitles.filter((title)=>title==='Drop-in' || title==='Avtale')
+              const avtaleTitles = bookTitles.filter((title)=> title==='Avtale')
               //console.log("DemoApp  roomNamesArr$.subscribe typeof roomNamesArr:", roomNamesArr);
-              this.books = [...fellesTitles];
+              this.books = [...avtaleTitles];
               this.httpService.booksArr$.next(bookTitles);
               let roomRows = typeof respObj.rooms !== 'undefined'? Object.values(respObj.rooms):[];
               let roomTitles = roomRows.map( (tablerow : {'row':string,'title':string}) => {
@@ -398,6 +405,7 @@ export class FellesComponent implements OnInit {
             ou: pythEvt.ou,
             color : getColors(pythEvt.user_id,this.tokenStorage.getUser().id),
             draggable : true,
+            allDay : true,
             resizable: {
               beforeStart: true, // this allows you to configure the sides the event is resizable from
               afterEnd: true,
@@ -443,7 +451,7 @@ export class FellesComponent implements OnInit {
   openDialog(clickedWeekViewEvent : {
     event: CalendarEvent;
     sourceEvent: MouseEvent | KeyboardEvent;}) {
-    console.log("felles openDialog event user.id",clickedWeekViewEvent.event,this.tokenStorage.getUser().id );
+    console.log("avtale openDialog event user.id",clickedWeekViewEvent.event,this.tokenStorage.getUser().id );
     if (clickedWeekViewEvent.event.userId===this.tokenStorage.getUser().id 
           || (this.tokenStorage.getUser().ou!=="init ou" && this.tokenStorage.getUser().ou===clickedWeekViewEvent.event.ou)
           || this.tokenStorage.getUser().is_admin) {
@@ -505,3 +513,4 @@ export class FellesComponent implements OnInit {
   }
 
 }
+

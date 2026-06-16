@@ -145,8 +145,8 @@ export interface CalendarMonthViewEventTimesChangedEvent<
             [isOpen]="openRowIndex === rowIndex"
             [rooms]="rooms"
             [books]="books"
-            [dayStartHour]="0" 
-            [dayEndHour]="23" 
+            [dayStartHour]="dayStartHour" 
+            [dayEndHour]="dayEndHour" 
             [viewDate]="viewDate" 
             [weekStartsOn]=1
             [loggedInUserId]="loggedInUserId" 
@@ -171,6 +171,7 @@ export class CalendarMonthViewComponent
   @Input() rooms : string[];
   @Input() books : string[];
   @Input() dayStartHour: number;
+  @Input() dayEndHour: number;
   @Input() daysInWeek: number;
   @Input() loggedInUserId: number;
   /**

@@ -48,6 +48,13 @@
   </button> 
   {{'ToolbarTitle' | translate}}
   <span class="left-spacer"></span>
+  <button
+        mat-icon-button
+        (click)="toggleDarkTheme()"
+        class="theme-toggle"
+        aria-label="Toggle Dark Theme">
+        <mat-icon>{{ isDark ? "dark_mode" : "light_mode" }}</mat-icon>
+      </button>
   <flag [code]="translate.currentLang ? translate.currentLang : translate.getDefaultLang()" 
           [size]="'md'"  [effect]="'app'" style="margin-right: 0.5em;"></flag>
     <mat-select class="lang-select"
@@ -98,6 +105,13 @@
         </ng-template>
 
       <span class="left-spacer"></span>
+      <button
+        mat-icon-button
+        (click)="toggleDarkTheme()"
+        class="theme-toggle"
+        aria-label="Toggle Dark Theme">
+        <mat-icon>{{ isDark ? "dark_mode" : "light_mode" }}</mat-icon>
+      </button>
       <button mat-button class="toolbar-button link link.dark-blue-gradient-bg float-end" routerLink="/login">
         <mat-icon>login</mat-icon>
         <span>{{'ToolbarLogin' | translate}}</span>
@@ -119,7 +133,7 @@
 <mat-sidenav-container>
     <mat-sidenav  #sidenav="matSidenav" class="mat-elevation-z8">
       <ng-container 
-      *ngIf="( tokenStorage.combAuthProtected$ | async) === true; then loggedInSidenav  else loggedOutSidenav"></ng-container>
+        *ngIf="( tokenStorage.combAuthProtected$ | async) === true; then loggedInSidenav  else loggedOutSidenav"></ng-container>
       <ng-template #loggedOutSidenav>
         <button mat-button class="menu-button" routerLink="/landing">
           <mat-icon>home</mat-icon>
@@ -182,12 +196,12 @@
                         <span>{{'SideNavEditEvents' | translate}}</span>
                       </button>
                     </mat-list-item>
-                    <mat-list-item [style.padding-left]="0" [style.padding-right]="0" (click)="editBooks()">
+                    <!-- <mat-list-item [style.padding-left]="0" [style.padding-right]="0" (click)="editBooks()">
                       <button mat-button class="menu-button" >
                         <mat-icon>tune</mat-icon>
                         <span>{{'SideNavEditBooks' | translate}}</span>
                       </button>
-                    </mat-list-item>
+                    </mat-list-item> -->
                     <mat-list-item [style.padding-left]="0" [style.padding-right]="0" (click)="editRooms()">
                       <button mat-button class="menu-button" >
                         <mat-icon>tune</mat-icon>

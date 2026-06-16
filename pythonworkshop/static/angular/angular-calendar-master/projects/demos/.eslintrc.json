@@ -5,7 +5,7 @@
     {
       "files": ["*.ts"],
       "parserOptions": {
-        "project": ["projects/demos/tsconfig.app.json"],
+        "project": ["pythonworkshop/pythonworkshop/static/angular/angular-calendar-master/projects/demos/tsconfig.app.json"],
         "createDefaultProgram": true
       },
       "rules": {

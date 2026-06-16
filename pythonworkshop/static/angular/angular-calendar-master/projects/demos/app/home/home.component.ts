@@ -1,4 +1,4 @@
-import { Component, ViewChild, OnInit , Inject, OnDestroy} from '@angular/core';
+import { Component, ViewChild, OnInit , Inject, ViewEncapsulation, OnDestroy} from '@angular/core';
 import { HttpEventService } from 'projects/angular-calendar/src/modules/week/http-service.service';
 import { AuthService } from '../_services/auth.service';
 import { PythUser } from '../demo-app.component';
@@ -21,6 +21,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { Location } from '@angular/common';
 import { CalendarEventTimesChangedEvent} from 'angular-calendar';
 import { NgbDate, NgbCalendar, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
+import { DOCUMENT } from '@angular/common';
+import {OverlayModule,OverlayContainer} from '@angular/cdk/overlay';
+import { StyleManager } from '../_services/style-manager'; 
 
 export interface Book {
   row: string,
@@ -42,7 +45,9 @@ export interface Room {
 export class HomeComponent implements OnInit, OnDestroy {
   @ViewChild(MatSidenav) sidenav!: MatSidenav;
 
-  constructor( 
+  constructor(
+    private styleManager: StyleManager,
+    private overlayContainer: OverlayContainer,
     private BPobserver: BreakpointObserver,
     public tokenStorage: TokenStorageService,
     private router: Router,
@@ -58,7 +63,14 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   switchLang(lang: string) {
     this.translate.use(lang);
-  } 
+  }
+
+  isDark = this.styleManager.isDark;
+  
+  toggleDarkTheme() {
+    this.styleManager.toggleDarkTheme();
+    this.isDark = !this.isDark;
+  }
 
   loginStateSubscription: Subscription = new Subscription();
   breakPointObsSubscr : Subscription = new Subscription();
@@ -70,7 +82,11 @@ export class HomeComponent implements OnInit, OnDestroy {
   activeDayIsOpen = false;
   routerPath = '';
 
+  private readonly darkThemeClass = 'dark-theme';
+
   ngOnInit(): void {
+    this.toggleDarkTheme();
+
     this.httpService.booksArr$.subscribe((bookNamesArr)=>{
       this.booksArr= bookNamesArr;
       //console.log("HomeComp ngOnInit() roomNamesArr",this.roomNamesArr);
@@ -82,7 +98,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.router.events.subscribe((routerEvent)=>{
       if (routerEvent instanceof NavigationEnd){
         this.routerPath = routerEvent.url;
-        console.log(" Snapshot path",routerEvent.url);
+        //console.log(" Snapshot path",routerEvent.url);
       }
     });
   }
@@ -127,11 +143,11 @@ export class HomeComponent implements OnInit, OnDestroy {
           filter((e) => e instanceof NavigationEnd),
           distinctUntilChanged()
         )
-        .subscribe(() => {
+        .subscribe((e : NavigationEnd) => {
           if (this.sidenav?.mode === 'over') {
             this.sidenav?.close();
           }
-
+          this.tokenStorage.currentRoute$.next(e.url)
         });
 
       });

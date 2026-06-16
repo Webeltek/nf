@@ -32,20 +32,23 @@
     <button (click)="stopCarousel()">Pause</button>
   </div>
   <div class="row py-2">
-    <div class="col p-3 d-flex justify-content-center">
+    <div class="col p-3 d-flex align-items-center">
       <a (click)="vippsCheckout('Drop-in')">
-        <img class="rounded" [style.width]="isDesktop? '200px':'100px'" 
-          src="assets/199.png">
+        <img class="rounded" [style.width]="isDesktop? '200px':'100px'" src="assets/199.png">
       </a>
     </div>
-    <div class="col p-3 d-flex justify-content-center">
-      <img class="rounded" [style.width]="isDesktop? '200px':'100px'" src="assets/FLEX-4-225x300.jpg">
+    <div class="col p-3 d-flex align-items-center">
+      <a (click)="vippsCheckout('Avtale')">
+        <img class="rounded" [style.width]="isDesktop? '200px':'100px'" src="assets/avtale.png">
+      </a>
     </div>
-    <div class="col p-3 d-flex justify-content-center">
-      <img class="rounded" [style.width]="isDesktop? '200px':'100px'" src="assets/DESK-1-225x300.jpg">
-    </div>
-    <div  class="col p-3 d-flex justify-content-center">
+    <div class="col p-3 d-flex align-items-center">
       <a (click)="vippsCheckout('Kontor')">
+        <img class="rounded" [style.width]="isDesktop? '200px':'100px'" src="assets/kontor.png">
+      </a>
+    </div>
+    <div  class="col p-3 d-flex align-items-center">
+      <a (click)="vippsCheckout('Rom')">
       <img class="rounded" [style.width]="isDesktop? '200px':'100px'" src="assets/EGET-KONTOR-225x300.jpg">
       </a>
     </div>

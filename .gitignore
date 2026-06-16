@@ -132,4 +132,6 @@ dmypy.json
 
 node_modules
 
+flask_session
+
 
