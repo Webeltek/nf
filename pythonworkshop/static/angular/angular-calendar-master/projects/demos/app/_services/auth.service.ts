@@ -8,7 +8,7 @@ import { UserIdentity } from '../login/login.component';
 
 const AUTH_API = '/api/auth/';
 const MAIN_API = '/api/services/';
-const baseurl = 'https://api.webeltek.org';
+const baseurl = 'https://localhost';
 
 @Injectable({
   providedIn: 'root'

@@ -27,7 +27,7 @@ export class HttpEventService{
     private deleteBookUrl = "/api/services/deletebook";
     private updateBooksUrl = "/api/services/updatebooks";
 
-    private baseurl = 'https://api.webeltek.org';
+    private baseurl = 'https://192.168.3.225';
 
     @Output() modifiedEvent: EventEmitter<any> = new EventEmitter();
 

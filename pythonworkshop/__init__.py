@@ -111,6 +111,7 @@ def oidc_provider_init_app(config, name=None, **kwargs):
         r"/api/*/*": {"origins": [
         "https://138.109-247-35.customer.lyse.net",
         "http://localhost",
+        "https://localhost",
         "https://192.168.3.225",
         "https://webeltek.line.pm",
         "https://webeltek.org"
@@ -118,6 +119,7 @@ def oidc_provider_init_app(config, name=None, **kwargs):
         r"/*": {"origins":[
             "https://138.109-247-35.customer.lyse.net",
             "http://localhost",
+            "https://localhost",
             "https://webeltek.line.pm",
             "https://webeltek.org",
             "https://api.vipps.no/epayment/v1/payments",
