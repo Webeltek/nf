@@ -134,4 +134,6 @@ node_modules
 
 flask_session
 
+private/
+
 

@@ -27,9 +27,10 @@ from flask import current_app
 from oidcrp.rp_handler import RPHandler
 from flask_sqlalchemy import SQLAlchemy
 
-templ_dir = os.path.abspath('pythonworkshop/templates')
-static_dir = os.path.abspath('pythonworkshop/static')
-#print('Static folder : ' + str(static_dir))
+# Get the absolute path to the package directory
+package_dir = os.path.dirname(os.path.abspath(__file__))
+templ_dir = os.path.join(package_dir, 'templates')
+static_dir = os.path.join(package_dir, 'static')
 
 db = SQLAlchemy()
 mail = Mail()
@@ -106,6 +107,16 @@ def init_oidc_rp_handler(app):
 def oidc_provider_init_app(config, name=None, **kwargs):
     name = name or __name__
     app = Flask(__name__ , static_folder=static_dir, **kwargs)
+    
+    # Configure MIME types for static files
+    import mimetypes
+    mimetypes.add_type('application/javascript', '.js')
+    mimetypes.add_type('text/css', '.css')
+    mimetypes.add_type('application/json', '.json')
+    mimetypes.add_type('font/woff', '.woff')
+    mimetypes.add_type('font/woff2', '.woff2')
+    mimetypes.add_type('font/ttf', '.ttf')
+    mimetypes.add_type('image/svg+xml', '.svg')
     
     cors = CORS(app,resources={
         r"/api/*/*": {"origins": [
