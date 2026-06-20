@@ -21,7 +21,7 @@
                   </ng-template>
      <div class="mt-2 d-flex justify-content-center">
       <ng-container class="d-flex justify-content-center"
-        ngIf*="(combEmailExistsChangeOrg$ | async)!==true ; then changePassTempl else changeOrgTempl"></ng-container>
+        *ngIf="(combEmailExistsChangeOrg$ | async)!==true ; then changePassTempl else changeOrgTempl"></ng-container>
         <ng-template #changePassTempl>
           <form [formGroup]="changePassFG">  
             <mat-form-field appearance="fill">
