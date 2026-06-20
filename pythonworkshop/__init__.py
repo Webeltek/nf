@@ -120,9 +120,10 @@ def oidc_provider_init_app(config, name=None, **kwargs):
     
     cors = CORS(app,resources={
         r"/api/*/*": {"origins": [
-        "https://138.109-247-35.customer.lyse.net",
         "http://localhost",
         "http://localhost:4200",
+        "http://192.168.3.228",
+        "http://192.168.2.228",
         "https://localhost",
         "https://localhost",
         "https://192.168.3.225",
@@ -130,8 +131,9 @@ def oidc_provider_init_app(config, name=None, **kwargs):
         "https://webeltek.org"
         ], "allow_headers":"*"},
         r"/*": {"origins":[
-            "https://138.109-247-35.customer.lyse.net",
             "http://localhost",
+            "http://192.168.3.228",
+            "http://192.168.2.228",
             "https://localhost",
             "https://webeltek.line.pm",
             "https://webeltek.org",

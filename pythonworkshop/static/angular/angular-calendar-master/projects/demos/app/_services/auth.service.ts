@@ -8,7 +8,8 @@ import { UserIdentity } from '../login/login.component';
 
 const AUTH_API = '/api/auth/';
 const MAIN_API = '/api/services/';
-const baseurl = 'http://192.168.2.228';
+// Use relative base so requests are same-origin with the frontend
+const baseurl = '';
 
 @Injectable({
   providedIn: 'root'
