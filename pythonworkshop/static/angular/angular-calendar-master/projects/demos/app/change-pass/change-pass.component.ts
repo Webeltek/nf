@@ -37,10 +37,9 @@ export class ChangePassComponent implements OnInit {
 
   ngOnInit(): void {
     this.actRoute.queryParams.subscribe(params=>{
-      if (params['emailcheck']==="True" && params['change_org']==="True"){
-
-         this.combEmailExistsChangeOrg$.next(params['change_org']==="True" && params['emailCheck']==="True");
-      }
+      const emailCheck = params['emailcheck'] === 'True';
+      const changeOrg = params['change_org'] === 'True';
+      this.combEmailExistsChangeOrg$.next(changeOrg && emailCheck);
     });
     
     console.log("CP query param combEmailExistsChangeOrg$",this.combEmailExistsChangeOrg$);

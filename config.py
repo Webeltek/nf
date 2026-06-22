@@ -8,8 +8,8 @@ class Config(object):
         ['true', 'on', '1']
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
-    FLASKY_MAIL_SUBJECT_PREFIX = '[NF admin]'
-    FLASKY_MAIL_SENDER = 'NF admin <webeltek@1337.no>'  #replace with site email
+    FLASKY_MAIL_SUBJECT_PREFIX = os.environ.get('FLASKY_MAIL_SUBJECT_PREFIX')
+    FLASKY_MAIL_SENDER = os.environ.get('FLASKY_MAIL_SENDER')
     FLASKY_ADMIN = os.environ.get('FLASKY_ADMIN')
 
     @staticmethod

@@ -48,11 +48,10 @@ index 3ff9052..3315b3c 100644
          var bottom = top + height;
          var overlappingPreviousEvents = getOverLappingWeekViewEvents(previousDayEvents, top, bottom);
          var left = 0;
--        while (overlappingPreviousEvents.some(function (previousEvent) { return previousEvent.left === left; })) {
+         while (overlappingPreviousEvents.some(function (previousEvent) { return previousEvent.left === left; })) {
 -            left += eventWidth;
-+        // while (overlappingPreviousEvents.some(function (previousEvent) { return previousEvent.left === left; })) {
-+          //  left += eventWidth;
-+        //} 
++          left += eventWidth;
+         } 
 +        while (overlappingPreviousEvents.some(function (previousEvent) { return previousEvent.top === top})) {
 +            var prevEventHeight = overlappingPreviousEvents.pop().height;
 +            top += prevEventHeight;

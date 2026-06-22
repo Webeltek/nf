@@ -1,6 +1,7 @@
 import logging
 from urllib.parse import parse_qs
 from urllib.parse import splitquery
+import mimetypes
 
 from flask import Blueprint
 from flask import current_app
@@ -39,9 +40,25 @@ def compact(qsdict):
     return res
 
 
+@oidc_rp_views.route('/static/<path:path>')
+def serve_static(path):
+    """Serve static files with correct MIME types"""
+    mimetypes.add_type('application/javascript', '.js')
+    mimetypes.add_type('text/css', '.css')
+    mimetypes.add_type('application/json', '.json')
+    mimetypes.add_type('font/woff', '.woff')
+    mimetypes.add_type('font/woff2', '.woff2')
+    mimetypes.add_type('font/ttf', '.ttf')
+    mimetypes.add_type('image/svg+xml', '.svg')
+    return send_from_directory(current_app.static_folder, path)
+
 @oidc_rp_views.route('/api/vipps/static/<path:path>')
 def send_js(path):
-    return send_from_directory('static', path)
+    mimetypes.add_type('application/javascript', '.js')
+    mimetypes.add_type('text/css', '.css')
+    return send_from_directory(current_app.static_folder, path)
+
+
 
 
 @oidc_rp_views.route('/api/vipps/rp_landing')

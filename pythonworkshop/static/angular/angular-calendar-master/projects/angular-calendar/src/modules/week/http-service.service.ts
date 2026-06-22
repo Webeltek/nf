@@ -35,9 +35,9 @@ export class HttpEventService{
 
     @Output() modifiedPaymnt : EventEmitter<any> = new EventEmitter();
 
-    booksArr$ : BehaviorSubject<string[]> = new BehaviorSubject([]);
+    booksArr$ : BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
 
-    roomsArr$ : BehaviorSubject<string[]> = new BehaviorSubject([])
+    roomsArr$ : BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
 
     constructor(private http: HttpClient) { }
 
