@@ -19,9 +19,10 @@
                       [color]="color"></mat-spinner>
                     </div>
                   </ng-template>
-     <div class="mt-2 d-flex justify-content-center">
-      <ng-container class="d-flex justify-content-center"
-        *ngIf="(combEmailExistsChangeOrg$ | async)!==true ; then changePassTempl else changeOrgTempl"></ng-container>
+     <div class="mt-2 d-flex flex-column justify-content-center">
+      <ng-container
+        *ngIf="(combEmailExistsChangeOrg$ | async)!==true ; then changePassTempl else changeOrgTempl">
+      </ng-container>
         <ng-template #changePassTempl>
           <form [formGroup]="changePassFG">  
             <mat-form-field appearance="fill">
@@ -59,7 +60,7 @@
               (click)="inputChangePass(changePassFG.value.email,changePassFG.value.oldpass,changePassFG.value.newpass)">{{ 'PCsubmit' | translate}}</button>
             </mat-action-row>
           </form>  
-          <div class="alert alert-success" *ngIf="isSuccessful">
+          <div class="alert alert-success order-first" *ngIf="isSuccessful">
             {{'CPCpassChangeSuccess' | translate }}{{changePassFG.value.email}}
           </div>
         </ng-template>
