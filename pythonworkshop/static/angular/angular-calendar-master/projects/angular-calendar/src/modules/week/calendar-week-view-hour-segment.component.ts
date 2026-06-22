@@ -222,11 +222,12 @@ export class CalendarWeekViewHourSegmentComponent {
 
         dialogRef.afterClosed().subscribe({
           next: (result) => {
-            if (result && this.externalEvents.length>0) {
+            if (result) {
               const startmills = result.startDate.getTime();
               const endmills = result.endDate.getTime();
-              console.log("hourSegm this.externalEvents",this.externalEvents)
-              const paymntref = this.externalEvents.at(-1).paymntref;
+              const hasPayment = this.externalEvents.length > 0;
+              const paymntref = hasPayment ? this.externalEvents.at(-1).paymntref : '';
+
               this.httpService.generatePythEvent({
                   user_id :this.loggedInUserId,
                   title : this.tokenStorage.getEventTitle(result.bookname,this.loggedInUserId,this.users),
@@ -238,17 +239,18 @@ export class CalendarWeekViewHourSegmentComponent {
                   endmills: endmills,
                   color: "blue"
                 }).subscribe((resp)=>{
-                  this.authService.dbUpdateVippsPayment(
-                    this.tokenStorage.getUser().id,
-                    paymntref,
-                    true
-                  ).subscribe((resp)=>{
+                  if (hasPayment) {
+                    this.authService.dbUpdateVippsPayment(
+                      this.tokenStorage.getUser().id,
+                      paymntref,
+                      true
+                    ).subscribe((resp)=>{
+                      this.httpService.modifiedPaymnt.emit((resp as any));
+                    });
+                  } else {
                     this.httpService.modifiedPaymnt.emit((resp as any));
-
-                  });
+                  }
                 });
-            } else if(this.externalEvents.length==0){
-              this.tokenStorage.hourSegmMsg$.next("noPayment");
             }
           },
           error : (error) => {
