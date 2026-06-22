@@ -8,7 +8,8 @@ export class StyleManager {
     if (this.isDark) { 
       this.removeStyle('dark-theme');
       document.body.classList.remove('dark-theme');
-      const href = "styles.css";  
+      const href = "styles.css";
+      //styles.css is already imported by angular  
       getLinkElementForKey("light-theme").setAttribute('href',href);
       document.body.classList.add('light-theme');
       this.isDark = false; 
@@ -16,6 +17,7 @@ export class StyleManager {
       this.removeStyle('light-theme');
       document.body.classList.remove('light-theme');
       const href = 'dark.css';
+      //dark.css content is moved to styles.css
       getLinkElementForKey('dark-theme').setAttribute('href', href);
       document.body.classList.add('dark-theme');
       this.isDark = true;

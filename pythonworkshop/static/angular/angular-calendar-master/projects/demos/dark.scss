@@ -131,11 +131,11 @@ $dark-theme: mat.define-dark-theme((
       .content {
         height: calc(100vh - 65px);
         border-radius: 5px;
-        margin: 8px;
+        // margin: 8px;
         margin-left: 16px;
         padding: 8px;
       
-        overflow: auto;
+        overflow-y: auto;
       }
     
       .toolbar-button {

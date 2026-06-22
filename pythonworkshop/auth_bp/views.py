@@ -148,14 +148,14 @@ def google_cb():
     msg= ''
     if request.method == 'POST':
         token = request.form['credential']
-        CLIENT_ID = "770720313920-4dj3m27dp66d8ejnfmd21rtb50rkg6vm.apps.googleusercontent.com"
+        CLIENT_ID = "210597371533-jc81p2d1tgdg580i1o1u7turibirapbq.apps.googleusercontent.com"
         try:
             # Specify the CLIENT_ID of the app that accesses the backend:
             idinfo = id_token.verify_oauth2_token(token, requests.Request(), CLIENT_ID)
             # ID token is valid. Get the user's Google Account ID from the decoded token.
             google_sub = idinfo['sub']
             user_email = idinfo['email']
-            return redirect(f'https://webeltek.org/login?username={user_email}&google_sub={google_sub}')
+            return redirect(f'http://localhost/login?username={user_email}&google_sub={google_sub}')
         except ValueError:
             # Invalid token
             pass
