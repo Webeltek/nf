@@ -155,7 +155,7 @@ def google_cb():
             # ID token is valid. Get the user's Google Account ID from the decoded token.
             google_sub = idinfo['sub']
             user_email = idinfo['email']
-            return redirect(f'http://localhost/login?username={user_email}&google_sub={google_sub}')
+            return redirect(f'{env["FRONTEND_URL"]}/login?username={user_email}&google_sub={google_sub}')
         except ValueError:
             # Invalid token
             pass

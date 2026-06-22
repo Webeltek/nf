@@ -27,7 +27,7 @@ export class HttpEventService{
     private deleteBookUrl = "/api/services/deletebook";
     private updateBooksUrl = "/api/services/updatebooks";
 
-    private baseurl = 'http://localhost';
+    private baseurl = '';
 
     @Output() modifiedEvent: EventEmitter<any> = new EventEmitter();
 

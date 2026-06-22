@@ -217,8 +217,8 @@ class Event(db.Model):
   roomname = db.Column(db.String)
   ou = db.Column(db.String)
   #stmills = db.Column(db.datetime)
-  startmills = db.Column(db.Integer)
-  endmills = db.Column(db.Integer)
+  startmills = db.Column(db.BigInteger)
+  endmills = db.Column(db.BigInteger)
   color = db.Column(db.String)
   paymntref = db.Column(db.String)
     

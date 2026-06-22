@@ -459,6 +459,8 @@ def db_update_payment():
          isconsumedbool = True
     vipps_sub_paymnt = db.session.execute(db.select(Payment)
                            .where(Payment.reference==reference)).scalar_one_or_none()
+    if vipps_sub_paymnt is None:
+        return jsonify({"error": "payment_not_found", "reference": reference}), 404
     vipps_sub_paymnt.is_consumed = isconsumedbool
     db.session.add(vipps_sub_paymnt)
     db.session.commit()
