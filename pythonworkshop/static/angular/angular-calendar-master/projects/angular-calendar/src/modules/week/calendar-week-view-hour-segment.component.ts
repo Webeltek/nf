@@ -295,7 +295,7 @@ export class EventDialog {
      fromDate: NgbDate | null =this.calendar.getToday();
      toDate: NgbDate | null;
    
-     pickerRangeChange$ : BehaviorSubject<[NgbDate | null,NgbDate | null]>=new BehaviorSubject([null,null]);
+     pickerRangeChange$ : BehaviorSubject<[NgbDate | null,NgbDate | null]>=new BehaviorSubject<[NgbDate | null,NgbDate | null]>([null,null]);
      
      onDateSelection(date: NgbDate) {
        if (!this.fromDate && !this.toDate) {

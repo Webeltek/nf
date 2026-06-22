@@ -679,7 +679,7 @@ export class EditRoomsDialog implements OnInit{
   updateInput(roomName:string,idx:number){
     this.roomsArr.at(idx).setValue(roomName);
     this.roomsArr.at(idx).updateValueAndValidity();
-    this.objErrValStr = this.roomsArr.at(idx).errors? this.roomsArr.at(idx).errors.error : "";
+    this.objErrValStr = this.roomsArr.at(idx).errors? this.roomsArr?.at(idx)?.errors?.error : "";
     // console.log("HomeC updateInput() this.roomsArr.value ", this.roomsArr.value);
     // console.log("HomeComp roomsDialog updateInput() errors",this.roomsArr.at(idx).errors)
     // console.log("HomeComp roomsDialog updateInput() is invalid",this.roomsArr.at(idx).invalid); 
